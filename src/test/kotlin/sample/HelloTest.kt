@@ -1,3 +1,5 @@
+package sample
+
 import org.junit.Test
 
 class HelloTest {
