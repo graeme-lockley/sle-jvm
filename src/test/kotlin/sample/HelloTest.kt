@@ -15,6 +15,12 @@ class HelloTest {
         val parser = ExprParser(tokens)
         val p : ParseTree = parser.prog()
 
+        assertEquals(p.childCount, 2)
+        assertEquals(p.getChild(0).childCount, 3)
+        assertEquals(p.getChild(0).text, "1+1")
+        assertEquals(p.getChild(1).childCount, 0)
+        assertEquals(p.getChild(1).text, "\n")
+
         assertEquals("(prog (expr (expr 1) + (expr 1)) \\n)", p.toStringTree(parser))
     }
 }
