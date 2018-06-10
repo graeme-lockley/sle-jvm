@@ -1,13 +1,13 @@
 import cucumber.api.java8.En
-import za.co.no9.sle.ParseState
-import za.co.no9.sle.parseText
+import za.co.no9.sle.*
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 
 private object State {
     var inputText: String? = null
 
-    var parseState: ParseState? = null
+    var parseResult: ParseResult = value("")
 }
 
 
@@ -23,18 +23,18 @@ class ParserStepDefs : En {
             if (inputText == null) {
                 throw IllegalArgumentException("Unable to parse as no input has been supplied")
             } else {
-                State.parseState = parseText(inputText)
+                State.parseResult = parseText(inputText)
             }
         }
 
         Then("the parse tree is {string}") { string: String ->
-            val parseState = State.parseState
+            val parseTree = State.parseResult.right()
 
-            if (parseState == null) {
-                throw IllegalArgumentException("Unable to validate parse tree as it is not set")
-            } else {
-                assertEquals(string, parseState.stringTree)
-            }
+            assertEquals(string, parseTree ?: "")
+        }
+
+        Then("I expect a syntax error to be reported") {
+            assertNotNull(State.parseResult.left())
         }
     }
 }

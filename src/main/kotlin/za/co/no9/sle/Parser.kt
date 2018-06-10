@@ -1,20 +1,37 @@
 package za.co.no9.sle
 
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
+import org.antlr.v4.runtime.*
 
 
-class ParseState(val parser: ParserParser) {
-    private val parseTree = parser.module()
+typealias ParseResult =
+        Either<SyntaxError, String>
 
-    val stringTree: String
-        get() = parseTree.toStringTree(parser)
+
+private class ParserErrorListener : BaseErrorListener() {
+    var syntaxError: SyntaxError? = null
+
+    override fun syntaxError(recognizer: Recognizer<*, *>?, offendingSymbol: Any?, line: Int, charPositionInLine: Int, msg: String?, e: RecognitionException?) {
+        syntaxError = SyntaxError(Position(line, charPositionInLine), msg ?: "Syntax error")
+    }
 }
 
 
-fun parseText(text: String): ParseState {
+fun parseText(text: String): ParseResult {
     val lexer = ParserLexer(CharStreams.fromString(text))
     val tokens = CommonTokenStream(lexer)
 
-    return ParseState(ParserParser(tokens))
+    val parser = ParserParser(tokens)
+    val errorListener = ParserErrorListener()
+
+    parser.removeErrorListeners()
+    parser.addErrorListener(errorListener)
+
+    val parseTree = parser.module()
+
+    val syntaxError = errorListener.syntaxError
+    return when (syntaxError) {
+        null ->
+            value(parseTree.toStringTree(parser))
+        else -> error(syntaxError)
+    }
 }
