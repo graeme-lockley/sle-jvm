@@ -1,17 +1,13 @@
 import cucumber.api.java8.En
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import org.antlr.v4.runtime.tree.ParseTree
-import za.co.no9.sle.ParserLexer
-import za.co.no9.sle.ParserParser
+import za.co.no9.sle.ParseState
+import za.co.no9.sle.parseText
 import kotlin.test.assertEquals
 
 
 private object State {
     var inputText: String? = null
 
-    var parser: ParserParser? = null
-    var parseTree: ParseTree? = null
+    var parseState: ParseState? = null
 }
 
 
@@ -22,28 +18,22 @@ class ParserStepDefs : En {
         }
 
         When("I parse the supplied input as a module") {
-            if (State.inputText == null) {
+            val inputText = State.inputText
+
+            if (inputText == null) {
                 throw IllegalArgumentException("Unable to parse as no input has been supplied")
             } else {
-                val lexer = ParserLexer(CharStreams.fromString(State.inputText))
-                val tokens = CommonTokenStream(lexer)
-
-                val parser = ParserParser(tokens)
-                State.parseTree = parser.module()
-
-                State.parser = parser
+                State.parseState = parseText(inputText)
             }
         }
 
         Then("the parse tree is {string}") { string: String ->
-            val parseTree = State.parseTree
+            val parseState = State.parseState
 
-            if (parseTree == null) {
+            if (parseState == null) {
                 throw IllegalArgumentException("Unable to validate parse tree as it is not set")
             } else {
-                val parseTreeValue = parseTree.toStringTree(State.parser)
-
-                assertEquals(string, parseTreeValue)
+                assertEquals(string, parseState.stringTree)
             }
         }
     }
