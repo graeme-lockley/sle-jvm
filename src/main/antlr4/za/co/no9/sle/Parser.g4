@@ -10,23 +10,38 @@ declaration
 
 expression
     : factor expression*
-    | expression ('*' | '/') expression
-    | expression ('+' | '-') expression
-    | expression ('==' | '!=' | '<=' | '<' | '>=' | '>') expression
+        # CallExpression
+    | expression op=('*' | '/') expression
+        # MultiplicativeExpression
+    | expression op=('+' | '-') expression
+        # AdditiveExpression
+    | expression op=('==' | '!=' | '<=' | '<' | '>=' | '>') expression
+        # RelationalOpExpression
     | expression '&&' expression
+        # BooleanAndExpression
     | expression '||' expression
+        # BooleanOrExpression
     | LowerID+ '->' expression
+        # LambdaExpression
     | 'if' expression 'then' expression 'else' expression
+        # IfExpression
     ;
 
 factor
     : '(' expression ')'
+        # ParenExpression
     | ConstantInt
+        # ConstantIntExpression
     | 'true'
+        # TrueExpression
     | 'false'
+        # FalseExpression
     | ConstantString
+        # ConstantStringExpression
     | '!' expression
+        # NotExpression
     | LowerID
+        # LowerIDExpression
     ;
 
 LowerID
