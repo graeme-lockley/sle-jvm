@@ -1,6 +1,6 @@
 grammar Expr;
 
-prog:	(expr NEWLINE)* ;
+prog:	(expr NEWLINE?)* ;
 
 expr:	expr ('*'|'/') expr
     |	expr ('+'|'-') expr
