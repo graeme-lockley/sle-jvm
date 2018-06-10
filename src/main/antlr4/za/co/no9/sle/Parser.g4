@@ -9,14 +9,14 @@ declaration
     ;
 
 expression
-    : 'if' expression 'then' expression 'else' expression
-    | LowerID+ '->' expression
-    | expression '||' expression
-    | expression '&&' expression
-    | expression ('==' | '!=' | '<=' | '<' | '>=' | '>') expression
-    | expression ('+' | '-') expression
+    : factor expression*
     | expression ('*' | '/') expression
-    | factor expression*
+    | expression ('+' | '-') expression
+    | expression ('==' | '!=' | '<=' | '<' | '>=' | '>') expression
+    | expression '&&' expression
+    | expression '||' expression
+    | LowerID+ '->' expression
+    | 'if' expression 'then' expression 'else' expression
     ;
 
 factor
