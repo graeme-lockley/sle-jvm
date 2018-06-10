@@ -32,6 +32,7 @@ fun parseText(text: String): ParseResult {
     return when (syntaxError) {
         null ->
             value(parseTree.toStringTree(parser))
-        else -> error(syntaxError)
+        else ->
+            error(syntaxError)
     }
 }
