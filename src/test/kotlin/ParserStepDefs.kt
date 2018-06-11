@@ -8,11 +8,13 @@ class ParserStepDefs : En {
     init {
         var inputText: String? = null
 
-        var parseResult: ParseResult = value("")
+        var parseResult: ParseResult? = null
+
 
         Given("the sle text {string}") { string: String ->
             inputText = string
         }
+
 
         When("I parse the supplied input as a module") {
             val text = inputText
@@ -24,14 +26,38 @@ class ParserStepDefs : En {
             }
         }
 
-        Then("the parse tree is {string}") { string: String ->
-            val parseTree = parseResult.right()
 
-            assertEquals(string, parseTree ?: "")
+        When("I parse the input as a factor") {
+            val text = inputText
+
+            if (text == null) {
+                throw IllegalArgumentException("Unable to parse as no input has been supplied")
+            } else {
+                parseResult = parseTextAsFactor(text)
+            }
         }
 
+
+        Then("the parse tree is {string}") { string: String ->
+            val parseTree = parseResult?.right()
+
+            assertEquals(string, parseTree?.stringTree)
+        }
+
+
         Then("I expect a syntax error to be reported") {
-            assertNotNull(parseResult.left())
+            assertNotNull(parseResult?.left())
+        }
+
+
+        Then("no type constraints are inferred") {
+            val parseTree = parseResult?.right()
+
+            assertEquals(0, parseTree?.constraints?.size)
+        }
+
+
+        Then("the tree's schema is {string}") { string: String ->
         }
     }
 }
