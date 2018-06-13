@@ -50,6 +50,10 @@ class ParserStepDefs : En {
         }
 
 
+        Then("I expect the AST to be {string}") { string: String ->
+        }
+
+
         Then("no type constraints are inferred") {
             val parseTree = parseResult?.right()
 
