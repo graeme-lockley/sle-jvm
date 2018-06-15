@@ -32,9 +32,9 @@ factor
         # ParenExpression
     | ConstantInt
         # ConstantIntExpression
-    | 'true'
+    | 'True'
         # TrueExpression
-    | 'false'
+    | 'False'
         # FalseExpression
     | ConstantString
         # ConstantStringExpression
