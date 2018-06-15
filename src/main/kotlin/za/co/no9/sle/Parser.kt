@@ -107,6 +107,10 @@ class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) {
-        pushExpression(True(ASTPosition(0, 0)))
+        pushExpression(True(position(ctx!!)))
     }
 }
+
+
+private fun position(ctx: ParserRuleContext) =
+        ASTPosition(ctx.start.line, ctx.start.charPositionInLine)

@@ -16,4 +16,3 @@ sealed class Expression(position: Position) : Node(position)
 data class True(override val position: Position) : Expression(position)
 
 data class False(override val position: Position) : Expression(position)
-
