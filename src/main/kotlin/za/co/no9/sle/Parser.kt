@@ -3,6 +3,7 @@ package za.co.no9.sle
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import za.co.no9.sle.ast.Expression
+import za.co.no9.sle.ast.False
 import za.co.no9.sle.ast.True
 import za.co.no9.sle.ast.Position as ASTPosition
 
@@ -108,6 +109,11 @@ class ParserToAST : ParserBaseListener() {
 
     override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) {
         pushExpression(True(position(ctx!!)))
+    }
+
+
+    override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) {
+        pushExpression(False(position(ctx!!)))
     }
 }
 

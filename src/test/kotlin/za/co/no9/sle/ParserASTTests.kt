@@ -3,6 +3,7 @@ package za.co.no9.sle
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.ast.False
 import za.co.no9.sle.ast.True
 
 class ParserASTTests : StringSpec({
@@ -16,5 +17,18 @@ class ParserASTTests : StringSpec({
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<True>()
         expression.toString().shouldBe("True(position=(1, 0))")
+    }
+
+
+    "\"False\" should produce corresponding AST" {
+        val parseResult =
+                parseTextAsFactor("False")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<False>()
+        expression.toString().shouldBe("False(position=(1, 0))")
     }
 })
