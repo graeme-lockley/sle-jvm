@@ -57,7 +57,7 @@ ConstantString
     ;
 
 fragment ESC
-    : '\\' ('"' | '\\') '\\'
+    : '\\' ('"' | '\\')
     ;
 
 WS

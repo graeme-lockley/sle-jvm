@@ -18,3 +18,5 @@ data class True(override val position: Position) : Expression(position)
 data class False(override val position: Position) : Expression(position)
 
 data class ConstantInt(override val position: Position, val value: Int): Expression(position)
+
+data class ConstantString(override val position: Position, val value: String): Expression(position)
