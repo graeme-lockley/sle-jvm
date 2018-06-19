@@ -3,8 +3,10 @@ package za.co.no9.sle
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.ast.ConstantInt
 import za.co.no9.sle.ast.False
 import za.co.no9.sle.ast.True
+
 
 class ParserASTTests : StringSpec({
     "\"True\" should produce corresponding AST" {
@@ -30,5 +32,18 @@ class ParserASTTests : StringSpec({
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<False>()
         expression.toString().shouldBe("False(position=(1, 0))")
+    }
+
+
+    "\"234\" should produce corresponding AST" {
+        val parseResult =
+                parseTextAsFactor("234")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<ConstantInt>()
+        expression.toString().shouldBe("ConstantInt(position=(1, 0), value=234)")
     }
 })

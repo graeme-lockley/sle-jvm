@@ -2,6 +2,7 @@ package za.co.no9.sle
 
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.tree.ParseTreeWalker
+import za.co.no9.sle.ast.ConstantInt
 import za.co.no9.sle.ast.Expression
 import za.co.no9.sle.ast.False
 import za.co.no9.sle.ast.True
@@ -114,6 +115,10 @@ class ParserToAST : ParserBaseListener() {
 
     override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) {
         pushExpression(False(position(ctx!!)))
+    }
+
+    override fun exitConstantIntExpression(ctx: ParserParser.ConstantIntExpressionContext?) {
+        pushExpression(ConstantInt(position(ctx!!), ctx.text.toInt()))
     }
 }
 
