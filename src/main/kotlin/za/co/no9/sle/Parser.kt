@@ -63,7 +63,7 @@ fun parseText(text: String): ParseResult {
 }
 
 
-fun parseTextAsFactor(text: String): ParseResult {
+fun parseTextAsExpression(text: String): ParseResult {
     val lexer = ParserLexer(CharStreams.fromString(text))
     val tokens = CommonTokenStream(lexer)
 
@@ -73,7 +73,7 @@ fun parseTextAsFactor(text: String): ParseResult {
     parser.removeErrorListeners()
     parser.addErrorListener(errorListener)
 
-    val parseTree = parser.factor()
+    val parseTree = parser.expression()
 
     val syntaxError = errorListener.syntaxError
     return when (syntaxError) {
@@ -135,6 +135,19 @@ class ParserToAST : ParserBaseListener() {
 
     override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) {
         pushExpression(IdReference(ctx!!.location(), ctx.text))
+    }
+
+    override fun exitIfExpression(ctx: ParserParser.IfExpressionContext?) {
+        val elseExpression =
+                popExpression()
+
+        val thenExpression =
+                popExpression()
+
+        val guardExpression =
+                popExpression()
+
+        pushExpression(IfExpression(ctx!!.location(), guardExpression, thenExpression, elseExpression))
     }
 }
 

@@ -9,7 +9,7 @@ import za.co.no9.sle.ast.*
 class ParserASTTests : StringSpec({
     "\"True\" should produce corresponding AST" {
         val parseResult =
-                parseTextAsFactor("True")
+                parseTextAsExpression("True")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -22,7 +22,7 @@ class ParserASTTests : StringSpec({
 
     "\"False\" should produce corresponding AST" {
         val parseResult =
-                parseTextAsFactor("False")
+                parseTextAsExpression("False")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -35,7 +35,7 @@ class ParserASTTests : StringSpec({
 
     "\"234\" should produce corresponding AST" {
         val parseResult =
-                parseTextAsFactor("234")
+                parseTextAsExpression("234")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -48,7 +48,7 @@ class ParserASTTests : StringSpec({
 
     "\"Hello World\" should produce AST ConstantString with value \"Hello World\"" {
         val parseResult =
-                parseTextAsFactor("\"Hello World\"")
+                parseTextAsExpression("\"Hello World\"")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -61,7 +61,7 @@ class ParserASTTests : StringSpec({
 
     "\"Hello\\\\ \\\"World\" should produce AST ConstantString with value \"Hello\\ \"World\"" {
         val parseResult =
-                parseTextAsFactor("\"Hello\\\\ \\\" World\"")
+                parseTextAsExpression("\"Hello\\\\ \\\" World\"")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -74,7 +74,7 @@ class ParserASTTests : StringSpec({
 
     "\"!True\" should produce AST NotExpression" {
         val parseResult =
-                parseTextAsFactor("!True")
+                parseTextAsExpression("!True")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -87,7 +87,7 @@ class ParserASTTests : StringSpec({
 
     "\"a\" should produce AST IdReference" {
         val parseResult =
-                parseTextAsFactor("a")
+                parseTextAsExpression("a")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -97,9 +97,10 @@ class ParserASTTests : StringSpec({
         expression.toString().shouldBe("IdReference(location=[(1, 0) (1, 0)], id=a)")
     }
 
+
     "\"(a)\" should produce AST IdReference" {
         val parseResult =
-                parseTextAsFactor("(a)")
+                parseTextAsExpression("(a)")
 
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
@@ -107,5 +108,19 @@ class ParserASTTests : StringSpec({
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<IdReference>()
         expression.toString().shouldBe("IdReference(location=[(1, 1) (1, 1)], id=a)")
+    }
+
+
+    "\"if True then 1 else 2\" should produce AST IfExpression" {
+        val parseResult =
+                parseTextAsExpression("if True then 1 else 2")
+
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<IfExpression>()
+        expression.toString().shouldBe("IfExpression(location=[(1, 0) (1, 20)], guardExpression=True(location=[(1, 3) (1, 6)]), thenExpression=ConstantInt(location=[(1, 13) (1, 13)], value=1), elseExpression=ConstantInt(location=[(1, 20) (1, 20)], value=2))")
     }
 })
