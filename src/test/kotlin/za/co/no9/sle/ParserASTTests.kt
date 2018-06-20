@@ -16,7 +16,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<True>()
-        expression.toString().shouldBe("True(position=(1, 0))")
+        expression.toString().shouldBe("True(location=[(1, 0) (1, 3)])")
     }
 
 
@@ -29,7 +29,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<False>()
-        expression.toString().shouldBe("False(position=(1, 0))")
+        expression.toString().shouldBe("False(location=[(1, 0) (1, 4)])")
     }
 
 
@@ -42,7 +42,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<ConstantInt>()
-        expression.toString().shouldBe("ConstantInt(position=(1, 0), value=234)")
+        expression.toString().shouldBe("ConstantInt(location=[(1, 0) (1, 2)], value=234)")
     }
 
 
@@ -55,7 +55,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<ConstantString>()
-        expression.toString().shouldBe("ConstantString(position=(1, 0), value=Hello World)")
+        expression.toString().shouldBe("ConstantString(location=[(1, 0) (1, 12)], value=Hello World)")
     }
 
 
@@ -68,7 +68,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<ConstantString>()
-        expression.toString().shouldBe("ConstantString(position=(1, 0), value=Hello\\ \" World)")
+        expression.toString().shouldBe("ConstantString(location=[(1, 0) (1, 17)], value=Hello\\ \" World)")
     }
 
 
@@ -81,7 +81,7 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<NotExpression>()
-        expression.toString().shouldBe("NotExpression(position=(1, 0), expression=True(position=(1, 1)))")
+        expression.toString().shouldBe("NotExpression(location=[(1, 0) (1, 4)], expression=True(location=[(1, 1) (1, 4)]))")
     }
 
 
@@ -93,8 +93,8 @@ class ParserASTTests : StringSpec({
                 parseResult.right()!!.parserToAST().popExpression()
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        expression.shouldBeTypeOf<IdRefernce>()
-        expression.toString().shouldBe("IdRefernce(position=(1, 0), id=a)")
+        expression.shouldBeTypeOf<IdReference>()
+        expression.toString().shouldBe("IdReference(location=[(1, 0) (1, 0)], id=a)")
     }
 
     "\"(a)\" should produce AST IdReference" {
@@ -105,7 +105,7 @@ class ParserASTTests : StringSpec({
                 parseResult.right()!!.parserToAST().popExpression()
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        expression.shouldBeTypeOf<IdRefernce>()
-        expression.toString().shouldBe("IdRefernce(position=(1, 1), id=a)")
+        expression.shouldBeTypeOf<IdReference>()
+        expression.toString().shouldBe("IdReference(location=[(1, 1) (1, 1)], id=a)")
     }
 })

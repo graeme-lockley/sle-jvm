@@ -106,16 +106,16 @@ class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) {
-        pushExpression(True(position(ctx!!)))
+        pushExpression(True(ctx!!.location()))
     }
 
 
     override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) {
-        pushExpression(False(position(ctx!!)))
+        pushExpression(False(ctx!!.location()))
     }
 
     override fun exitConstantIntExpression(ctx: ParserParser.ConstantIntExpressionContext?) {
-        pushExpression(ConstantInt(position(ctx!!), ctx.text.toInt()))
+        pushExpression(ConstantInt(ctx!!.location(), ctx.text.toInt()))
     }
 
     override fun exitConstantStringExpression(ctx: ParserParser.ConstantStringExpressionContext?) {
@@ -126,18 +126,24 @@ class ParserToAST : ParserBaseListener() {
                         .replace("\\\\", "\\")
                         .replace("\\\"", "\"")
 
-        pushExpression(ConstantString(position(ctx), text))
+        pushExpression(ConstantString(ctx.location(), text))
     }
 
     override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) {
-        pushExpression(NotExpression(position(ctx!!), popExpression()))
+        pushExpression(NotExpression(ctx!!.location(), popExpression()))
     }
 
     override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) {
-        pushExpression(IdRefernce(position(ctx!!), ctx.text))
+        pushExpression(IdReference(ctx!!.location(), ctx.text))
     }
 }
 
 
-private fun position(ctx: ParserRuleContext) =
-        ASTPosition(ctx.start.line, ctx.start.charPositionInLine)
+private fun ParserRuleContext.startPosition() =
+        ASTPosition(this.start.line, this.start.charPositionInLine)
+
+private fun ParserRuleContext.endPosition() =
+        ASTPosition(this.stop.line, this.stop.charPositionInLine + this.stop.text.length - 1)
+
+private fun ParserRuleContext.location() =
+        Location(this.startPosition(), this.endPosition())

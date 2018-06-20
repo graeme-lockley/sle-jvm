@@ -6,22 +6,27 @@ data class Position(private val line: Int, private val column: Int) {
             "($line, $column)"
 }
 
+data class Location(private val start: Position, private val end: Position) {
+    override fun toString(): String =
+            "[$start $end]"
+}
 
-sealed class Node(open val position: Position)
+
+sealed class Node(open val location: Location)
 
 
-sealed class Expression(position: Position) : Node(position)
+sealed class Expression(location: Location) : Node(location)
 
 
-data class True(override val position: Position) : Expression(position)
+data class True(override val location: Location) : Expression(location)
 
-data class False(override val position: Position) : Expression(position)
+data class False(override val location: Location) : Expression(location)
 
-data class ConstantInt(override val position: Position, val value: Int): Expression(position)
+data class ConstantInt(override val location: Location, val value: Int): Expression(location)
 
-data class ConstantString(override val position: Position, val value: String): Expression(position)
+data class ConstantString(override val location: Location, val value: String): Expression(location)
 
-data class NotExpression(override val position: Position, val expression: Expression): Expression(position)
+data class NotExpression(override val location: Location, val expression: Expression): Expression(location)
 
-data class IdRefernce(override val position: Position, val id: String): Expression(position)
+data class IdReference(override val location: Location, val id: String): Expression(location)
 
