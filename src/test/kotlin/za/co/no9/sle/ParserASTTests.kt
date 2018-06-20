@@ -72,7 +72,7 @@ class ParserASTTests : StringSpec({
     }
 
 
-    "given !True should produce AST NotExpression" {
+    "\"!True\" should produce AST NotExpression" {
         val parseResult =
                 parseTextAsFactor("!True")
 
@@ -82,5 +82,18 @@ class ParserASTTests : StringSpec({
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<NotExpression>()
         expression.toString().shouldBe("NotExpression(position=(1, 0), expression=True(position=(1, 1)))")
+    }
+
+
+    "\"a\" should produce AST IdReference" {
+        val parseResult =
+                parseTextAsFactor("a")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<IdRefernce>()
+        expression.toString().shouldBe("IdRefernce(position=(1, 0), id=a)")
     }
 })

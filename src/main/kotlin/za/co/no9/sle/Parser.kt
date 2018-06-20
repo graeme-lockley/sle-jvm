@@ -132,6 +132,10 @@ class ParserToAST : ParserBaseListener() {
     override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) {
         pushExpression(NotExpression(position(ctx!!), popExpression()))
     }
+
+    override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) {
+        pushExpression(IdRefernce(position(ctx!!), ctx.text))
+    }
 }
 
 

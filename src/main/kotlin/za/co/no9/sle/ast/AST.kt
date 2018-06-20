@@ -22,3 +22,6 @@ data class ConstantInt(override val position: Position, val value: Int): Express
 data class ConstantString(override val position: Position, val value: String): Expression(position)
 
 data class NotExpression(override val position: Position, val expression: Expression): Expression(position)
+
+data class IdRefernce(override val position: Position, val id: String): Expression(position)
+
