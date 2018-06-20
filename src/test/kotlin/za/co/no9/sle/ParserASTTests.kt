@@ -96,4 +96,16 @@ class ParserASTTests : StringSpec({
         expression.shouldBeTypeOf<IdRefernce>()
         expression.toString().shouldBe("IdRefernce(position=(1, 0), id=a)")
     }
+
+    "\"(a)\" should produce AST IdReference" {
+        val parseResult =
+                parseTextAsFactor("(a)")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<IdRefernce>()
+        expression.toString().shouldBe("IdRefernce(position=(1, 1), id=a)")
+    }
 })
