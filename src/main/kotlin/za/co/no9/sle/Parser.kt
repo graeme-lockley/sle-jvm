@@ -149,6 +149,13 @@ class ParserToAST : ParserBaseListener() {
 
         pushExpression(IfExpression(ctx!!.location(), guardExpression, thenExpression, elseExpression))
     }
+
+    override fun exitLambdaExpression(ctx: ParserParser.LambdaExpressionContext?) {
+        val expression =
+                popExpression()
+
+        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { it.text }, expression))
+    }
 }
 
 

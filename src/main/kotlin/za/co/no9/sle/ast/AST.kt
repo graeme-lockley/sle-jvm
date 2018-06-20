@@ -22,12 +22,14 @@ data class True(override val location: Location) : Expression(location)
 
 data class False(override val location: Location) : Expression(location)
 
-data class ConstantInt(override val location: Location, val value: Int): Expression(location)
+data class ConstantInt(override val location: Location, val value: Int) : Expression(location)
 
-data class ConstantString(override val location: Location, val value: String): Expression(location)
+data class ConstantString(override val location: Location, val value: String) : Expression(location)
 
-data class NotExpression(override val location: Location, val expression: Expression): Expression(location)
+data class NotExpression(override val location: Location, val expression: Expression) : Expression(location)
 
-data class IdReference(override val location: Location, val id: String): Expression(location)
+data class IdReference(override val location: Location, val id: String) : Expression(location)
 
-data class IfExpression(override val location: Location, val guardExpression: Expression, val thenExpression: Expression, val elseExpression: Expression): Expression(location)
+data class IfExpression(override val location: Location, val guardExpression: Expression, val thenExpression: Expression, val elseExpression: Expression) : Expression(location)
+
+data class LambdaExpression(override val location: Location, val variables: List<String>, val expression: Expression) : Expression(location)

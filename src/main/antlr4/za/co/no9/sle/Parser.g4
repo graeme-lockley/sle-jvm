@@ -21,7 +21,7 @@ expression
         # BooleanAndExpression
     | expression '||' expression
         # BooleanOrExpression
-    | LowerID+ '->' expression
+    | '\\' LowerID+ '->' expression
         # LambdaExpression
     | 'if' expression 'then' expression 'else' expression
         # IfExpression

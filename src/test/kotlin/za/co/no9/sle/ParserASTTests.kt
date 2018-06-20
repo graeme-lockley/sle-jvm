@@ -115,12 +115,25 @@ class ParserASTTests : StringSpec({
         val parseResult =
                 parseTextAsExpression("if True then 1 else 2")
 
-
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<IfExpression>()
         expression.toString().shouldBe("IfExpression(location=[(1, 0) (1, 20)], guardExpression=True(location=[(1, 3) (1, 6)]), thenExpression=ConstantInt(location=[(1, 13) (1, 13)], value=1), elseExpression=ConstantInt(location=[(1, 20) (1, 20)], value=2))")
+    }
+
+
+    "\"\\x y -> x\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("\\x y -> x")
+
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<LambdaExpression>()
+        expression.toString().shouldBe("LambdaExpression(location=[(1, 0) (1, 8)], variables=[x, y], expression=IdReference(location=[(1, 8) (1, 8)], id=x))")
     }
 })
