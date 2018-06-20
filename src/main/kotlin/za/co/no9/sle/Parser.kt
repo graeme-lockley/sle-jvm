@@ -128,6 +128,10 @@ class ParserToAST : ParserBaseListener() {
 
         pushExpression(ConstantString(position(ctx), text))
     }
+
+    override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) {
+        pushExpression(NotExpression(position(ctx!!), popExpression()))
+    }
 }
 
 
