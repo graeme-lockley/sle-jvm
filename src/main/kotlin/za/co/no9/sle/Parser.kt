@@ -157,6 +157,15 @@ class ParserToAST : ParserBaseListener() {
 
         pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { IdReference(it.location(), it.text) }, expression))
     }
+
+    override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) {
+        val right =
+                popExpression()
+        val left =
+                popExpression()
+
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+    }
 }
 
 
@@ -169,9 +178,8 @@ private fun ParserRuleContext.endPosition() =
 private fun ParserRuleContext.location() =
         Location(this.startPosition(), this.endPosition())
 
-private fun TerminalNode.location(): Location {
-    val symbol =
-            this.symbol
+private fun TerminalNode.location(): Location =
+        this.symbol.location()
 
-    return Location(ASTPosition(symbol.line, symbol.charPositionInLine), ASTPosition(symbol.line, symbol.charPositionInLine + symbol.text.length - 1))
-}
+private fun Token.location(): Location =
+        Location(ASTPosition(this.line, this.charPositionInLine), ASTPosition(this.line, this.charPositionInLine + this.text.length - 1))

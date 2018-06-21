@@ -19,7 +19,7 @@ expression
         # RelationalOpExpression
     | expression '&&' expression
         # BooleanAndExpression
-    | expression '||' expression
+    | expression op='||' expression
         # BooleanOrExpression
     | '\\' LowerID+ '->' expression
         # LambdaExpression

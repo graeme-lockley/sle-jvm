@@ -33,3 +33,5 @@ data class IdReference(override val location: Location, val id: String) : Expres
 data class IfExpression(override val location: Location, val guardExpression: Expression, val thenExpression: Expression, val elseExpression: Expression) : Expression(location)
 
 data class LambdaExpression(override val location: Location, val arguments: List<IdReference>, val expression: Expression) : Expression(location)
+
+data class BinaryOpExpression(override val location: Location, val left: Expression, val operator: IdReference, val right: Expression) : Expression(location)

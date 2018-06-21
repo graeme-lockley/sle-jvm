@@ -136,4 +136,19 @@ class ParserASTTests : StringSpec({
         expression.shouldBeTypeOf<LambdaExpression>()
         expression.toString().shouldBe("LambdaExpression(location=[(1, 0) (1, 8)], arguments=[IdReference(location=[(1, 1) (1, 1)], id=x), IdReference(location=[(1, 3) (1, 3)], id=y)], expression=IdReference(location=[(1, 8) (1, 8)], id=x))")
     }
+
+
+    "\"x || y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x || y")
+
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=||), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
 })
