@@ -134,6 +134,6 @@ class ParserASTTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         expression.shouldBeTypeOf<LambdaExpression>()
-        expression.toString().shouldBe("LambdaExpression(location=[(1, 0) (1, 8)], variables=[x, y], expression=IdReference(location=[(1, 8) (1, 8)], id=x))")
+        expression.toString().shouldBe("LambdaExpression(location=[(1, 0) (1, 8)], arguments=[IdReference(location=[(1, 1) (1, 1)], id=x), IdReference(location=[(1, 3) (1, 3)], id=y)], expression=IdReference(location=[(1, 8) (1, 8)], id=x))")
     }
 })

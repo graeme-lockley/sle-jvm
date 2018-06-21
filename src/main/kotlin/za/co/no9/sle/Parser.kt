@@ -2,6 +2,7 @@ package za.co.no9.sle
 
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.tree.ParseTreeWalker
+import org.antlr.v4.runtime.tree.TerminalNode
 import za.co.no9.sle.ast.*
 import za.co.no9.sle.ast.Position as ASTPosition
 
@@ -154,7 +155,7 @@ class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { it.text }, expression))
+        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { IdReference(it.location(), it.text) }, expression))
     }
 }
 
@@ -167,3 +168,10 @@ private fun ParserRuleContext.endPosition() =
 
 private fun ParserRuleContext.location() =
         Location(this.startPosition(), this.endPosition())
+
+private fun TerminalNode.location(): Location {
+    val symbol =
+            this.symbol
+
+    return Location(ASTPosition(symbol.line, symbol.charPositionInLine), ASTPosition(symbol.line, symbol.charPositionInLine + symbol.text.length - 1))
+}
