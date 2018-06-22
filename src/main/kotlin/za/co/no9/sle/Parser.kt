@@ -106,18 +106,14 @@ class ParserToAST : ParserBaseListener() {
     }
 
 
-    override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) {
-        pushExpression(True(ctx!!.location()))
-    }
+    override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) =
+            pushExpression(True(ctx!!.location()))
 
+    override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) =
+            pushExpression(False(ctx!!.location()))
 
-    override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) {
-        pushExpression(False(ctx!!.location()))
-    }
-
-    override fun exitConstantIntExpression(ctx: ParserParser.ConstantIntExpressionContext?) {
-        pushExpression(ConstantInt(ctx!!.location(), ctx.text.toInt()))
-    }
+    override fun exitConstantIntExpression(ctx: ParserParser.ConstantIntExpressionContext?) =
+            pushExpression(ConstantInt(ctx!!.location(), ctx.text.toInt()))
 
     override fun exitConstantStringExpression(ctx: ParserParser.ConstantStringExpressionContext?) {
         val text =
@@ -130,13 +126,11 @@ class ParserToAST : ParserBaseListener() {
         pushExpression(ConstantString(ctx.location(), text))
     }
 
-    override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) {
-        pushExpression(NotExpression(ctx!!.location(), popExpression()))
-    }
+    override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) =
+            pushExpression(NotExpression(ctx!!.location(), popExpression()))
 
-    override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) {
-        pushExpression(IdReference(ctx!!.location(), ctx.text))
-    }
+    override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) =
+            pushExpression(IdReference(ctx!!.location(), ctx.text))
 
     override fun exitIfExpression(ctx: ParserParser.IfExpressionContext?) {
         val elseExpression =
@@ -184,14 +178,15 @@ class ParserToAST : ParserBaseListener() {
 }
 
 
-private fun ParserRuleContext.startPosition() =
-        ASTPosition(this.start.line, this.start.charPositionInLine)
+private fun ParserRuleContext.location(): Location {
+    fun ParserRuleContext.startPosition() =
+            ASTPosition(this.start.line, this.start.charPositionInLine)
 
-private fun ParserRuleContext.endPosition() =
-        ASTPosition(this.stop.line, this.stop.charPositionInLine + this.stop.text.length - 1)
+    fun ParserRuleContext.endPosition() =
+            ASTPosition(this.stop.line, this.stop.charPositionInLine + this.stop.text.length - 1)
 
-private fun ParserRuleContext.location() =
-        Location(this.startPosition(), this.endPosition())
+    return Location(this.startPosition(), this.endPosition())
+}
 
 private fun TerminalNode.location(): Location =
         this.symbol.location()
