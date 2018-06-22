@@ -28,7 +28,7 @@ data class ConstantString(override val location: Location, val value: String) : 
 
 data class NotExpression(override val location: Location, val expression: Expression) : Expression(location)
 
-data class IdReference(override val location: Location, val id: String) : Expression(location)
+data class IdReference(override val location: Location, val name: String) : Expression(location)
 
 data class IfExpression(override val location: Location, val guardExpression: Expression, val thenExpression: Expression, val elseExpression: Expression) : Expression(location)
 

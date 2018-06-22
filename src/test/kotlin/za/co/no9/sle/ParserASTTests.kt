@@ -51,14 +51,14 @@ class ParserASTTests : StringSpec({
     "\"a\" should produce AST IdReference" {
         parseExpressionSuccess(
                 "a",
-                "IdReference(location=[(1, 0) (1, 0)], id=a)")
+                "IdReference(location=[(1, 0) (1, 0)], name=a)")
     }
 
 
     "\"(a)\" should produce AST IdReference" {
         parseExpressionSuccess(
                 "(a)",
-                "IdReference(location=[(1, 1) (1, 1)], id=a)")
+                "IdReference(location=[(1, 1) (1, 1)], name=a)")
     }
 
 
@@ -72,91 +72,91 @@ class ParserASTTests : StringSpec({
     "\"\\x y -> x\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "\\x y -> x",
-                "LambdaExpression(location=[(1, 0) (1, 8)], arguments=[IdReference(location=[(1, 1) (1, 1)], id=x), IdReference(location=[(1, 3) (1, 3)], id=y)], expression=IdReference(location=[(1, 8) (1, 8)], id=x))")
+                "LambdaExpression(location=[(1, 0) (1, 8)], arguments=[IdReference(location=[(1, 1) (1, 1)], name=x), IdReference(location=[(1, 3) (1, 3)], name=y)], expression=IdReference(location=[(1, 8) (1, 8)], name=x))")
     }
 
 
     "\"x || y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x || y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=||), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name=||), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x && y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x && y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=&&), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name=&&), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x == y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x == y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id===), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name===), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x != y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x != y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=!=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name=!=), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x <= y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x <= y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=<=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name=<=), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x < y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x < y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=<), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=<), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 
 
     "\"x >= y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x >= y",
-                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=>=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 3)], name=>=), right=IdReference(location=[(1, 5) (1, 5)], name=y))")
     }
 
 
     "\"x > y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x > y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=>), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=>), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 
 
     "\"x + y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x + y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=+), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=+), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 
 
     "\"x - y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x - y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=-), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=-), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 
 
     "\"x * y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x * y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=*), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=*), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 
 
     "\"x / y\" should produce AST LambdaExpression" {
         parseExpressionSuccess(
                 "x / y",
-                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=/), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+                "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=/), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
 })
 
