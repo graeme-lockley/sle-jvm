@@ -158,49 +158,28 @@ class ParserToAST : ParserBaseListener() {
         pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { IdReference(it.location(), it.text) }, expression))
     }
 
-    override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) {
+    override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) =
+            translateBinaryOperatorExpression(ctx!!, ctx.op)
+
+    override fun exitBooleanAndExpression(ctx: ParserParser.BooleanAndExpressionContext?) =
+            translateBinaryOperatorExpression(ctx!!, ctx.op)
+
+    override fun exitRelationalOpExpression(ctx: ParserParser.RelationalOpExpressionContext?) =
+            translateBinaryOperatorExpression(ctx!!, ctx.op)
+
+    override fun exitAdditiveExpression(ctx: ParserParser.AdditiveExpressionContext?) =
+            translateBinaryOperatorExpression(ctx!!, ctx.op)
+
+    override fun exitMultiplicativeExpression(ctx: ParserParser.MultiplicativeExpressionContext?) =
+            translateBinaryOperatorExpression(ctx!!, ctx.op)
+
+    private fun translateBinaryOperatorExpression(ctx: ParserParser.ExpressionContext, op: Token) {
         val right =
                 popExpression()
         val left =
                 popExpression()
 
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
-    }
-
-    override fun exitBooleanAndExpression(ctx: ParserParser.BooleanAndExpressionContext?) {
-        val right =
-                popExpression()
-        val left =
-                popExpression()
-
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
-    }
-
-    override fun exitRelationalOpExpression(ctx: ParserParser.RelationalOpExpressionContext?) {
-        val right =
-                popExpression()
-        val left =
-                popExpression()
-
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
-    }
-
-    override fun exitAdditiveExpression(ctx: ParserParser.AdditiveExpressionContext?) {
-        val right =
-                popExpression()
-        val left =
-                popExpression()
-
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
-    }
-
-    override fun exitMultiplicativeExpression(ctx: ParserParser.MultiplicativeExpressionContext?) {
-        val right =
-                popExpression()
-        val left =
-                popExpression()
-
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(op.location(), op.text), right))
     }
 }
 
