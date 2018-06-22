@@ -1,11 +1,12 @@
 grammar Parser;
 
+
 module
     : declaration*
     ;
 
 declaration
-    : LowerID+ '=' expression
+    : 'let' LowerID+ '=' expression
     ;
 
 expression
