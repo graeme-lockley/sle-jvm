@@ -17,7 +17,7 @@ expression
         # AdditiveExpression
     | expression op=('==' | '!=' | '<=' | '<' | '>=' | '>') expression
         # RelationalOpExpression
-    | expression '&&' expression
+    | expression op='&&' expression
         # BooleanAndExpression
     | expression op='||' expression
         # BooleanOrExpression

@@ -128,7 +128,6 @@ class ParserASTTests : StringSpec({
         val parseResult =
                 parseTextAsExpression("\\x y -> x")
 
-
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
 
@@ -142,7 +141,6 @@ class ParserASTTests : StringSpec({
         val parseResult =
                 parseTextAsExpression("x || y")
 
-
         val expression =
                 parseResult.right()!!.parserToAST().popExpression()
 
@@ -151,4 +149,146 @@ class ParserASTTests : StringSpec({
         expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=||), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
     }
 
+
+    "\"x && y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x && y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=&&), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
+
+    "\"x == y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x == y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id===), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
+
+    "\"x != y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x != y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=!=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
+
+    "\"x <= y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x <= y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=<=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
+
+    "\"x < y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x < y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=<), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
+
+
+    "\"x >= y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x >= y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 5)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 3)], id=>=), right=IdReference(location=[(1, 5) (1, 5)], id=y))")
+    }
+
+
+    "\"x > y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x > y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=>), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
+
+
+    "\"x + y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x + y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=+), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
+
+
+    "\"x - y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x - y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=-), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
+
+
+    "\"x * y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x * y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=*), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
+
+
+    "\"x / y\" should produce AST LambdaExpression" {
+        val parseResult =
+                parseTextAsExpression("x / y")
+
+        val expression =
+                parseResult.right()!!.parserToAST().popExpression()
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+        expression.shouldBeTypeOf<BinaryOpExpression>()
+        expression.toString().shouldBe("BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], id=x), operator=IdReference(location=[(1, 2) (1, 2)], id=/), right=IdReference(location=[(1, 4) (1, 4)], id=y))")
+    }
 })

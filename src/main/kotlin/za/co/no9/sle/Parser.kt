@@ -166,6 +166,42 @@ class ParserToAST : ParserBaseListener() {
 
         pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
     }
+
+    override fun exitBooleanAndExpression(ctx: ParserParser.BooleanAndExpressionContext?) {
+        val right =
+                popExpression()
+        val left =
+                popExpression()
+
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+    }
+
+    override fun exitRelationalOpExpression(ctx: ParserParser.RelationalOpExpressionContext?) {
+        val right =
+                popExpression()
+        val left =
+                popExpression()
+
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+    }
+
+    override fun exitAdditiveExpression(ctx: ParserParser.AdditiveExpressionContext?) {
+        val right =
+                popExpression()
+        val left =
+                popExpression()
+
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+    }
+
+    override fun exitMultiplicativeExpression(ctx: ParserParser.MultiplicativeExpressionContext?) {
+        val right =
+                popExpression()
+        val left =
+                popExpression()
+
+        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(ctx.op.location(), ctx.op.text), right))
+    }
 }
 
 
