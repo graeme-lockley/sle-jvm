@@ -158,6 +158,20 @@ class ParserASTTests : StringSpec({
                 "x / y",
                 "BinaryOpExpression(location=[(1, 0) (1, 4)], left=IdReference(location=[(1, 0) (1, 0)], name=x), operator=IdReference(location=[(1, 2) (1, 2)], name=/), right=IdReference(location=[(1, 4) (1, 4)], name=y))")
     }
+
+
+    "\"identity 123\" should produce AST CallExpression" {
+        parseExpressionSuccess(
+                "identity 123",
+                "CallExpression(location=[(1, 0) (1, 11)], operator=IdReference(location=[(1, 0) (1, 7)], name=identity), operands=[ConstantInt(location=[(1, 9) (1, 11)], value=123)])")
+    }
+
+
+    "\"add 1 2\" should produce AST CallExpression" {
+        parseExpressionSuccess(
+                "add 1 2",
+                "CallExpression(location=[(1, 0) (1, 6)], operator=IdReference(location=[(1, 0) (1, 2)], name=add), operands=[CallExpression(location=[(1, 4) (1, 6)], operator=ConstantInt(location=[(1, 4) (1, 4)], value=1), operands=[ConstantInt(location=[(1, 6) (1, 6)], value=2)])])")
+    }
 })
 
 

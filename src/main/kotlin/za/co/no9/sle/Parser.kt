@@ -173,7 +173,25 @@ class ParserToAST : ParserBaseListener() {
         val left =
                 popExpression()
 
-        pushExpression(BinaryOpExpression(ctx!!.location(), left, IdReference(op.location(), op.text), right))
+        pushExpression(BinaryOpExpression(ctx.location(), left, IdReference(op.location(), op.text), right))
+    }
+
+    override fun exitCallExpression(ctx: ParserParser.CallExpressionContext?) {
+        val numberOfOperands = ctx!!.childCount - 1
+
+        if (numberOfOperands > 0) {
+            val operands =
+                    mutableListOf<Expression>()
+
+            for (lp in 1..numberOfOperands) {
+                operands.add(popExpression())
+            }
+
+            val operator =
+                    popExpression()
+
+            pushExpression(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
+        }
     }
 }
 

@@ -62,3 +62,8 @@ data class BinaryOpExpression(
         val left: Expression,
         val operator: IdReference,
         val right: Expression) : Expression(location)
+
+data class CallExpression(
+        override val location: Location,
+        val operator: Expression,
+        val operands: List<Expression>) : Expression(location)
