@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.antlr.v4.runtime.tree.TerminalNode
 import za.co.no9.sle.ast.*
+import za.co.no9.sle.ast.pass1.*
 import za.co.no9.sle.ast.Position as ASTPosition
 
 
