@@ -42,7 +42,15 @@ class Result(val parser: ParserParser, val node: ParserRuleContext) {
 }
 
 
-fun parseText(text: String): ParseResult {
+fun parseText(text: String): ParseResult =
+        parse({ parser -> parser.module() }, text)
+
+
+fun parseTextAsExpression(text: String): ParseResult =
+        parse({ parser -> parser.expression() }, text)
+
+
+private fun parse(production: (ParserParser) -> ParserRuleContext, text: String): ParseResult {
     val lexer = ParserLexer(CharStreams.fromString(text))
     val tokens = CommonTokenStream(lexer)
 
@@ -52,29 +60,7 @@ fun parseText(text: String): ParseResult {
     parser.removeErrorListeners()
     parser.addErrorListener(errorListener)
 
-    val parseTree = parser.module()
-
-    val syntaxError = errorListener.syntaxError
-    return when (syntaxError) {
-        null ->
-            value(Result(parser, parseTree))
-        else ->
-            error(syntaxError)
-    }
-}
-
-
-fun parseTextAsExpression(text: String): ParseResult {
-    val lexer = ParserLexer(CharStreams.fromString(text))
-    val tokens = CommonTokenStream(lexer)
-
-    val parser = ParserParser(tokens)
-    val errorListener = ParserErrorListener()
-
-    parser.removeErrorListeners()
-    parser.addErrorListener(errorListener)
-
-    val parseTree = parser.expression()
+    val parseTree = production(parser)
 
     val syntaxError = errorListener.syntaxError
     return when (syntaxError) {
