@@ -90,9 +90,13 @@ class ParserToAST : ParserBaseListener() {
     private var expressionStack =
             emptyList<Expression>()
 
-    var declarations =
-            emptyList<Declaration>()
+    var module: Module? =
+            null
         private set
+
+
+    private var declarations =
+            emptyList<Declaration>()
 
 
     fun popExpression(): Expression {
@@ -112,6 +116,16 @@ class ParserToAST : ParserBaseListener() {
 
     private fun addDeclaration(declaration: Declaration) {
         declarations += declaration
+    }
+
+
+    private fun popDeclarations(): List<Declaration> {
+        val result =
+                declarations
+
+        declarations = emptyList()
+
+        return result
     }
 
 
@@ -211,6 +225,11 @@ class ParserToAST : ParserBaseListener() {
                 popExpression()
 
         addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
+    }
+
+
+    override fun exitModule(ctx: ParserParser.ModuleContext?) {
+        module = Module(ctx!!.location(), popDeclarations())
     }
 }
 

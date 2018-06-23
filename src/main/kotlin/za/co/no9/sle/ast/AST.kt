@@ -20,6 +20,11 @@ sealed class Node(
         open val location: Location)
 
 
+data class Module (
+        override val location: Location,
+        val declarations: List<Declaration>): Node(location)
+
+
 sealed class Declaration (
         location: Location): Node(location)
 

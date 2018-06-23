@@ -173,10 +173,20 @@ class ParserASTTests : StringSpec({
                 "CallExpression(location=[(1, 0) (1, 6)], operator=IdReference(location=[(1, 0) (1, 2)], name=add), operands=[CallExpression(location=[(1, 4) (1, 6)], operator=ConstantInt(location=[(1, 4) (1, 4)], value=1), operands=[ConstantInt(location=[(1, 6) (1, 6)], value=2)])])")
     }
 
+
     "\"let add x y = x + y\" should product AST LetDeclaration" {
         parseSuccess(
                 "let add x y = x + y",
-                "[LetDeclaration(location=[(1, 0) (1, 18)], name=IdReference(location=[(1, 4) (1, 6)], name=add), arguments=[IdReference(location=[(1, 8) (1, 8)], name=x), IdReference(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=IdReference(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y)))]"
+                "Module(location=[(1, 0) (1, 18)], declarations=[LetDeclaration(location=[(1, 0) (1, 18)], name=IdReference(location=[(1, 4) (1, 6)], name=add), arguments=[IdReference(location=[(1, 8) (1, 8)], name=x), IdReference(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=IdReference(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y)))])"
+        )
+    }
+
+
+    "\"let add x y = x + y\nlet sub a b = a - b\" should product AST Module" {
+        parseSuccess(
+                "let add x y = x + y\n" +
+                        "let sub a b = a - b",
+                "Module(location=[(1, 0) (2, 18)], declarations=[LetDeclaration(location=[(1, 0) (1, 18)], name=IdReference(location=[(1, 4) (1, 6)], name=add), arguments=[IdReference(location=[(1, 8) (1, 8)], name=x), IdReference(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=IdReference(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y))), LetDeclaration(location=[(2, 0) (2, 18)], name=IdReference(location=[(2, 4) (2, 6)], name=sub), arguments=[IdReference(location=[(2, 8) (2, 8)], name=a), IdReference(location=[(2, 10) (2, 10)], name=b)], expression=BinaryOpExpression(location=[(2, 14) (2, 18)], left=IdReference(location=[(2, 14) (2, 14)], name=a), operator=IdReference(location=[(2, 16) (2, 16)], name=-), right=IdReference(location=[(2, 18) (2, 18)], name=b)))])"
         )
     }
 })
@@ -198,9 +208,9 @@ private fun parseSuccess(input: String, output: String) {
     val parseResult =
             parseText(input)
 
-    val declarations =
-            parseResult.right()!!.parserToAST().declarations
+    val module =
+            parseResult.right()!!.parserToAST().module
 
     parseResult.shouldBeTypeOf<Either.Value<Result>>()
-    declarations.toString().shouldBe(output)
+    module.toString().shouldBe(output)
 }
