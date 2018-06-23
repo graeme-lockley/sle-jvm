@@ -11,7 +11,7 @@ class ParserTest : StringSpec({
                 parseText("let identity x = x")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        parseResult.right()?.stringTree.shouldBe("(module (declaration let identity x = (expression (factor x))))")
+        parseResult.right()?.stringTree.shouldBe("(module (declaration let identity x = (toExpression (factor x))))")
     }
 
 
@@ -20,7 +20,7 @@ class ParserTest : StringSpec({
                 parseText("let f a b c = a + b * c")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        parseResult.right()?.stringTree.shouldBe("(module (declaration let f a b c = (expression (expression (factor a)) + (expression (expression (factor b)) * (expression (factor c))))))")
+        parseResult.right()?.stringTree.shouldBe("(module (declaration let f a b c = (toExpression (toExpression (factor a)) + (toExpression (toExpression (factor b)) * (toExpression (factor c))))))")
     }
 
 
