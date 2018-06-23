@@ -20,9 +20,18 @@ sealed class Node(
         open val location: Location)
 
 
+sealed class Declaration (
+        location: Location): Node(location)
+
+data class LetDeclaration (
+        override val location: Location,
+        val name: IdReference,
+        val arguments: List<IdReference>,
+        val expression: Expression): Declaration(location)
+
+
 sealed class Expression(
         location: Location) : Node(location)
-
 
 data class True(
         override val location: Location) : Expression(location)

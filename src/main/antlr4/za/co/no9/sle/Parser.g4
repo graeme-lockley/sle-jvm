@@ -7,6 +7,7 @@ module
 
 declaration
     : 'let' LowerID+ '=' expression
+        # LetDeclaration
     ;
 
 expression

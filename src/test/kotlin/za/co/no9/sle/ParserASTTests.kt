@@ -172,6 +172,13 @@ class ParserASTTests : StringSpec({
                 "add 1 2",
                 "CallExpression(location=[(1, 0) (1, 6)], operator=IdReference(location=[(1, 0) (1, 2)], name=add), operands=[CallExpression(location=[(1, 4) (1, 6)], operator=ConstantInt(location=[(1, 4) (1, 4)], value=1), operands=[ConstantInt(location=[(1, 6) (1, 6)], value=2)])])")
     }
+
+    "\"let add x y = x + y\" should product AST LetDeclaration" {
+        parseSuccess(
+                "let add x y = x + y",
+                "[LetDeclaration(location=[(1, 0) (1, 18)], name=IdReference(location=[(1, 4) (1, 6)], name=add), arguments=[IdReference(location=[(1, 8) (1, 8)], name=x), IdReference(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=IdReference(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y)))]"
+        )
+    }
 })
 
 
@@ -184,4 +191,16 @@ private fun parseExpressionSuccess(input: String, output: String) {
 
     parseResult.shouldBeTypeOf<Either.Value<Result>>()
     expression.toString().shouldBe(output)
+}
+
+
+private fun parseSuccess(input: String, output: String) {
+    val parseResult =
+            parseText(input)
+
+    val declarations =
+            parseResult.right()!!.parserToAST().declarations
+
+    parseResult.shouldBeTypeOf<Either.Value<Result>>()
+    declarations.toString().shouldBe(output)
 }

@@ -90,6 +90,10 @@ class ParserToAST : ParserBaseListener() {
     private var expressionStack =
             emptyList<Expression>()
 
+    var declarations =
+            emptyList<Declaration>()
+        private set
+
 
     fun popExpression(): Expression {
         val result =
@@ -102,7 +106,12 @@ class ParserToAST : ParserBaseListener() {
 
 
     private fun pushExpression(expression: Expression) {
-        expressionStack = expressionStack.plus(expression)
+        expressionStack += expression
+    }
+
+
+    private fun addDeclaration(declaration: Declaration) {
+        declarations += declaration
     }
 
 
@@ -192,6 +201,16 @@ class ParserToAST : ParserBaseListener() {
 
             pushExpression(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
         }
+    }
+
+    override fun exitLetDeclaration(ctx: ParserParser.LetDeclarationContext?) {
+        val names =
+                ctx!!.LowerID().toList().map { IdReference(it.location(), it.text) }
+
+        val expression =
+                popExpression()
+
+        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
     }
 }
 
