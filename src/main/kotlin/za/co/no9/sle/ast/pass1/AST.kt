@@ -17,9 +17,14 @@ sealed class Declaration(
 
 data class LetDeclaration(
         override val location: Location,
-        val name: IdReference,
-        val arguments: List<IdReference>,
+        val name: ID,
+        val arguments: List<ID>,
         val expression: Expression) : Declaration(location)
+
+
+data class ID(
+        override val location: Location,
+        val name: String) : Node(location)
 
 
 sealed class Expression(
@@ -55,7 +60,7 @@ data class IfExpression(
 
 data class LambdaExpression(
         override val location: Location,
-        val arguments: List<IdReference>,
+        val arguments: List<ID>,
         val expression: Expression) : Expression(location)
 
 data class BinaryOpExpression(

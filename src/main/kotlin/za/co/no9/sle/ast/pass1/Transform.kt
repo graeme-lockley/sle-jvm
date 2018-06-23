@@ -117,7 +117,7 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { IdReference(it.location(), it.text) }, expression))
+        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { ID(it.location(), it.text) }, expression))
     }
 
     override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) =
@@ -164,7 +164,7 @@ private class ParserToAST : ParserBaseListener() {
 
     override fun exitLetDeclaration(ctx: ParserParser.LetDeclarationContext?) {
         val names =
-                ctx!!.LowerID().toList().map { IdReference(it.location(), it.text) }
+                ctx!!.LowerID().toList().map { ID(it.location(), it.text) }
 
         val expression =
                 popExpression()
