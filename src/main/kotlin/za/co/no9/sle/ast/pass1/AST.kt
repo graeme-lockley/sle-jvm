@@ -66,7 +66,7 @@ data class LambdaExpression(
 data class BinaryOpExpression(
         override val location: Location,
         val left: Expression,
-        val operator: IdReference,
+        val operator: ID,
         val right: Expression) : Expression(location)
 
 data class CallExpression(

@@ -141,7 +141,7 @@ private class ParserToAST : ParserBaseListener() {
         val left =
                 popExpression()
 
-        pushExpression(BinaryOpExpression(ctx.location(), left, IdReference(op.location(), op.text), right))
+        pushExpression(BinaryOpExpression(ctx.location(), left, ID(op.location(), op.text), right))
     }
 
     override fun exitCallExpression(ctx: ParserParser.CallExpressionContext?) {
