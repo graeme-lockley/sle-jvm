@@ -1,6 +1,6 @@
 package za.co.no9.sle.ast.pass1
 
-import za.co.no9.sle.ast.Location
+import za.co.no9.sle.Location
 
 
 sealed class Node(

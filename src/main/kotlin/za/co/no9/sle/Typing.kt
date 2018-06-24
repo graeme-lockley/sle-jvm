@@ -56,7 +56,7 @@ val typeString =
         TCon("String")
 
 
-data class Schema(private val variable: List<Var>, private val type: Type) {
+data class Schema(val variable: List<Var>, val type: Type) {
     fun apply(s: Subst): Schema =
             Schema(variable, type.apply(s.minus(variable)))
 
@@ -76,3 +76,12 @@ data class TypeEnv(private val env: Map<Var, Schema>) {
             env.values.map { it.ftv() }.fold(emptySet()) { s1, s2 -> s1.plus(s2) }
 }
 
+
+data class Environment(private val env: Map<String, Schema>) {
+    fun lookup(name: String): Schema? =
+            env[name]
+}
+
+
+val emptyEnvironment =
+        Environment(emptyMap())

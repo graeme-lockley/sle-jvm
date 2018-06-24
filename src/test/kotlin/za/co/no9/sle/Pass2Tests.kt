@@ -3,8 +3,6 @@ package za.co.no9.sle
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.ast.Location
-import za.co.no9.sle.ast.Position
 import za.co.no9.sle.ast.pass1.BinaryOpExpression
 import za.co.no9.sle.ast.pass1.False
 import za.co.no9.sle.ast.pass1.NotExpression

@@ -1,7 +1,6 @@
 package za.co.no9.sle
 
 import org.antlr.v4.runtime.*
-import za.co.no9.sle.ast.Position as ASTPosition
 
 
 typealias ParseResult =
@@ -48,7 +47,7 @@ private class ParserErrorListener : BaseErrorListener() {
     var syntaxError: SyntaxError? = null
 
     override fun syntaxError(recognizer: Recognizer<*, *>?, offendingSymbol: Any?, line: Int, charPositionInLine: Int, msg: String?, e: RecognitionException?) {
-        syntaxError = SyntaxError(Position(line, charPositionInLine), msg ?: "Syntax error")
+        syntaxError = SyntaxError(Location(Position(line, charPositionInLine)), msg ?: "Syntax error")
     }
 }
 

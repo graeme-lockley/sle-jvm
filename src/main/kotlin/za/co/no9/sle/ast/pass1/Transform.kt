@@ -4,10 +4,10 @@ import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.antlr.v4.runtime.tree.TerminalNode
+import za.co.no9.sle.Location
 import za.co.no9.sle.ParserBaseListener
 import za.co.no9.sle.ParserParser
-import za.co.no9.sle.ast.Location
-import za.co.no9.sle.ast.Position
+import za.co.no9.sle.Position
 
 
 fun toModule(node: ParserRuleContext): Module =

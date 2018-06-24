@@ -34,11 +34,25 @@ class Pass3Tests : StringSpec({
                     .shouldBe(typeString)
         }
     }
+
+    "\"a\" infers to TCon String where a is bound to Schema [] String" {
+        inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
+                .shouldBe(typeString)
+    }
+
+    "\"a\" infers to an UnboundVariable error where a not within the environment" {
+        inferExpressionError("a")
+                .shouldBe(UnboundVariable(Location(Position(1, 0)), "a"))
+    }
 })
 
 
-fun inferExpression(input: String): Type =
-        infer(parseExpression(input))
+fun inferExpression(input: String, env: Environment = emptyEnvironment): Type =
+        infer(parseExpression(input), env).right()!!
+
+
+fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Error =
+        infer(parseExpression(input), env).left()!!
 
 
 fun parseExpression(input: String): Expression =
