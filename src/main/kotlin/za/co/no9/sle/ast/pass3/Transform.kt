@@ -4,8 +4,22 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.pass2.*
 
 
+typealias Constraints =
+        List<Pair<Type, Type>>
+
+
 fun infer(expression: Expression, env: Environment): Either<Error, Type> =
         MapState(env).infer(expression)
+
+
+fun constraints(expression: Expression, env: Environment): Constraints {
+    val state =
+            MapState(env)
+
+    state.infer(expression)
+
+    return state.constraints
+}
 
 
 private class VarPump {
@@ -38,6 +52,9 @@ class MapState(var env: Environment) {
     private val varPump =
             VarPump()
 
+    val constraints =
+            mutableListOf<Pair<Type, Type>>()
+
 
     fun infer(expression: Expression): Either<Error, Type> =
             when (expression) {
@@ -63,8 +80,35 @@ class MapState(var env: Environment) {
                     }
                 }
 
-                is IfExpression -> TODO()
+                is IfExpression -> {
+                    val t1 =
+                            infer(expression.guardExpression)
+
+                    val t2 =
+                            infer(expression.thenExpression)
+
+                    val t3 =
+                            infer(expression.elseExpression)
+
+                    unify(t1, value(typeBool))
+                    unify(t2, t3)
+
+                    t2
+                }
+
                 is LambdaExpression -> TODO()
                 is CallExpression -> TODO()
             }
+
+    private fun unify(et1: Either<Error, Type>, et2: Either<Error, Type>) {
+        val t1 =
+                et1.right()
+
+        val t2 =
+                et2.right()
+
+        if (t1 != null && t2 != null) {
+            constraints.add(Pair(t1, t2))
+        }
+    }
 }
