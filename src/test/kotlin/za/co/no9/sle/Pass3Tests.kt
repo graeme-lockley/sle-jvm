@@ -27,6 +27,13 @@ class Pass3Tests : StringSpec({
                     .shouldBe(typeInt)
         }
     }
+
+    "\"<string>\" infers to TCon String" {
+        assertAll { s: String ->
+            inferExpression("\"${s.markup()}\"")
+                    .shouldBe(typeString)
+        }
+    }
 })
 
 
@@ -36,3 +43,7 @@ fun inferExpression(input: String): Type =
 
 fun parseExpression(input: String): Expression =
         map(toExpression(parseTextAsExpression(input).right()!!.node))
+
+
+fun String.markup(): String =
+        this.replace("\\", "\\\\").replace("\"", "\\\"")

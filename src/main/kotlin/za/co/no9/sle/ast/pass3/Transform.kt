@@ -4,6 +4,7 @@ import za.co.no9.sle.Type
 import za.co.no9.sle.ast.pass2.*
 import za.co.no9.sle.typeBool
 import za.co.no9.sle.typeInt
+import za.co.no9.sle.typeString
 
 
 fun infer(expression: Expression): Type =
@@ -19,7 +20,9 @@ class MapState {
                 is ConstantInt ->
                     typeInt
 
-                is ConstantString -> TODO()
+                is ConstantString ->
+                    typeString
+
                 is IdReference -> TODO()
                 is IfExpression -> TODO()
                 is LambdaExpression -> TODO()
