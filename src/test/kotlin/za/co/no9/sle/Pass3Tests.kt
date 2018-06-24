@@ -14,6 +14,11 @@ class Pass3Tests : FreeSpec({
             infer(parseExpression("True"))
                     .shouldBe(typeBool)
         }
+
+        "\"False\" infers to TCon Boolean" {
+            infer(parseExpression("False"))
+                    .shouldBe(typeBool)
+        }
     }
 })
 
