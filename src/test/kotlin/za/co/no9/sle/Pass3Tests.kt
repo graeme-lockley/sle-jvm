@@ -14,31 +14,41 @@ import za.co.no9.sle.ast.pass3.infer
 class Pass3Tests : StringSpec({
     "\"True\" infers to TCon Boolean" {
         inferExpression("True")
-                .shouldBe(typeBool)
+                .shouldBe(Pair(
+                        typeBool,
+                        emptyList<Constraints>()))
     }
 
     "\"False\" infers to TCon Boolean" {
         inferExpression("False")
-                .shouldBe(typeBool)
+                .shouldBe(Pair(
+                        typeBool,
+                        emptyList<Constraints>()))
     }
 
     "\"<int>\" infers to TCon Int" {
         assertAll(Gen.positiveIntegers()) { n: Int ->
             inferExpression(n.toString())
-                    .shouldBe(typeInt)
+                    .shouldBe(Pair(
+                            typeInt,
+                            emptyList<Constraints>()))
         }
     }
 
     "\"<string>\" infers to TCon String" {
         assertAll { s: String ->
             inferExpression("\"${s.markup()}\"")
-                    .shouldBe(typeString)
+                    .shouldBe(Pair(
+                            typeString,
+                            emptyList<Constraints>()))
         }
     }
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
         inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
-                .shouldBe(typeString)
+                .shouldBe(Pair(
+                        typeString,
+                        emptyList<Constraints>()))
     }
 
     "\"a\" infers to an UnboundVariable error where a not within the environment" {
@@ -51,21 +61,19 @@ class Pass3Tests : StringSpec({
                 Environment(mapOf(Pair("a", Schema(listOf(), TVar(1))), Pair("b", Schema(listOf(), TVar(2))), Pair("c", Schema(listOf(), TVar(3)))))
 
         inferExpression("if a then b else c", environment)
-                .shouldBe(TVar(2))
-
-        constraints("if a then b else c", environment)
-                .shouldBe(listOf(Pair(TVar(1), typeBool), Pair(TVar(2), TVar(3))))
+                .shouldBe(Pair(
+                        TVar(2),
+                        listOf(Pair(TVar(1), typeBool), Pair(TVar(2), TVar(3)))))
     }
 })
 
 
-fun inferExpression(input: String, env: Environment = emptyEnvironment): Type =
-        infer(parseExpression(input), env).right()!!
+fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Type, Constraints> {
+    val expression =
+            parseExpression(input)
 
-
-fun constraints(input: String, env: Environment = emptyEnvironment): Constraints =
-        za.co.no9.sle.ast.pass3.constraints(parseExpression(input), env)
-
+    return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
+}
 
 fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Error =
         infer(parseExpression(input), env).left()!!
