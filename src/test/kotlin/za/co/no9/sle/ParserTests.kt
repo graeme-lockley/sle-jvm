@@ -5,7 +5,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 
-class ParserTest : StringSpec({
+class ParserTests : StringSpec({
     "the sle text \"let identity x = x\" should parse" {
         val parseResult =
                 parseText("let identity x = x")
