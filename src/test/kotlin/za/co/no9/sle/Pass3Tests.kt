@@ -66,7 +66,9 @@ class Pass3Tests : StringSpec({
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
                         TVar(2),
-                        listOf(Pair(TVar(1), typeBool), Pair(TVar(2), TVar(3)))))
+                        listOf(
+                                Pair(TVar(1), typeBool),
+                                Pair(TVar(2), TVar(3)))))
     }
 
     "\"\\a -> a\"" {
@@ -74,6 +76,15 @@ class Pass3Tests : StringSpec({
                 .shouldBe(Pair(
                         TArr(TVar(0), TVar(0)),
                         listOf<Constraints>()))
+    }
+
+    "\"\\a -> a 10\"" {
+        inferExpression("\\a -> a 10")
+                .shouldBe(Pair(
+                        TArr(TVar(0), TVar(1)),
+                        listOf(
+                                Pair(TVar(0), TArr(typeInt, TVar(1)))
+                        )))
     }
 })
 

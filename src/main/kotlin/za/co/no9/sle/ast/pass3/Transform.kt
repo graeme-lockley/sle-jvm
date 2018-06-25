@@ -109,7 +109,22 @@ class MapState(val env: Environment) {
                     t.map { TArr(tv, it) }
                 }
 
-                is CallExpression -> TODO()
+                is CallExpression -> {
+                    val t1 =
+                            infer(expression.operator)
+
+                    val t2 =
+                            infer(expression.operands)
+
+                    val tv =
+                            varPump.fresh()
+
+                    if (t1.right() != null && t2.right() != null) {
+                        unify(t1, value(TArr(t2.right()!!, tv)))
+                    }
+
+                    value(tv)
+                }
             }
 
     private fun unify(et1: Either<Error, Type>, et2: Either<Error, Type>) {
