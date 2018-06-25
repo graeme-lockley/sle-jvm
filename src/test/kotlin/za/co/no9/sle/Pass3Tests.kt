@@ -58,12 +58,22 @@ class Pass3Tests : StringSpec({
 
     "\"if a then b else c\"" {
         val environment =
-                Environment(mapOf(Pair("a", Schema(listOf(), TVar(1))), Pair("b", Schema(listOf(), TVar(2))), Pair("c", Schema(listOf(), TVar(3)))))
+                Environment(mapOf(
+                        Pair("a", Schema(listOf(), TVar(1))),
+                        Pair("b", Schema(listOf(), TVar(2))),
+                        Pair("c", Schema(listOf(), TVar(3)))))
 
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
                         TVar(2),
                         listOf(Pair(TVar(1), typeBool), Pair(TVar(2), TVar(3)))))
+    }
+
+    "\"\\a -> a\"" {
+        inferExpression("\\a -> a")
+                .shouldBe(Pair(
+                        TArr(TVar(0), TVar(0)),
+                        listOf<Constraints>()))
     }
 })
 

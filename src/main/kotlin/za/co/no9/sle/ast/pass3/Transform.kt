@@ -48,7 +48,7 @@ private fun Schema.instantiate(varPump: VarPump): Type {
 }
 
 
-class MapState(var env: Environment) {
+class MapState(val env: Environment) {
     private val varPump =
             VarPump()
 
@@ -96,7 +96,19 @@ class MapState(var env: Environment) {
                     t2
                 }
 
-                is LambdaExpression -> TODO()
+                is LambdaExpression -> {
+                    val tv =
+                            varPump.fresh()
+
+                    env.openScope()
+                    env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+                    val t =
+                            infer(expression.expression)
+                    env.closeScope()
+
+                    t.map { TArr(tv, it) }
+                }
+
                 is CallExpression -> TODO()
             }
 
