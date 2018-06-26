@@ -90,7 +90,7 @@ class MapState(val env: Environment) {
                     val t3 =
                             infer(expression.elseExpression)
 
-                    unify(t1, value(typeBool))
+                    unify(t1, typeBool)
                     unify(t2, t3)
 
                     t2
@@ -120,7 +120,7 @@ class MapState(val env: Environment) {
                             varPump.fresh()
 
                     if (t1.right() != null && t2.right() != null) {
-                        unify(t1, value(TArr(t2.right()!!, tv)))
+                        unify(t1, TArr(t2.right()!!, tv))
                     }
 
                     value(tv)
@@ -135,6 +135,15 @@ class MapState(val env: Environment) {
                 et2.right()
 
         if (t1 != null && t2 != null) {
+            constraints.add(Pair(t1, t2))
+        }
+    }
+
+    private fun unify(et1: Either<Error, Type>, t2: Type) {
+        val t1 =
+                et1.right()
+
+        if (t1 != null) {
             constraints.add(Pair(t1, t2))
         }
     }
