@@ -48,7 +48,7 @@ private fun Schema.instantiate(varPump: VarPump): Type {
 }
 
 
-class MapState(val env: Environment) {
+class MapState(var env: Environment) {
     private val varPump =
             VarPump()
 
@@ -100,11 +100,11 @@ class MapState(val env: Environment) {
                     val tv =
                             varPump.fresh()
 
-                    env.openScope()
-                    env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+                    env = env.openScope()
+                    env = env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
                     val t =
                             infer(expression.expression)
-                    env.closeScope()
+                    env = env.closeScope()
 
                     t.map { TArr(tv, it) }
                 }

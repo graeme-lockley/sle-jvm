@@ -77,22 +77,26 @@ data class TypeEnv(private val env: Map<Var, Schema>) {
 }
 
 
-data class Environment(private val env: MutableList<MutableMap<String, Schema>>) {
-    constructor(env: Map<String, Schema>): this(mutableListOf(env.toMutableMap()))
+data class Environment constructor(private val env: List<Map<String, Schema>>) {
+    constructor(env: Map<String, Schema>) : this(listOf(env))
 
     fun lookup(name: String): Schema? =
-            env[0][name]
+            env[env.lastIndex][name]
 
-    fun openScope() {
-        env.add(0, mutableMapOf())
-    }
+    fun openScope() =
+            Environment(env + mapOf())
 
-    fun closeScope() {
-        env.drop(1)
-    }
+    fun closeScope() =
+            Environment(env.dropLast(1))
 
-    fun bindInScope(name: String, schema: Schema) {
-        env[0][name] = schema
+    fun bindInScope(name: String, schema: Schema): Environment {
+        val lastMap =
+                env[env.lastIndex]
+
+        val newMap =
+                lastMap + Pair(name, schema)
+
+        return Environment(env.dropLast(1) + newMap)
     }
 }
 
