@@ -8,8 +8,18 @@ typealias Constraints =
         List<Pair<Type, Type>>
 
 
-fun infer(expression: Expression, env: Environment): Either<Error, Type> =
-        MapState(env).infer(expression)
+fun infer(expression: Expression, env: Environment): Either<Errors, Type> {
+    val context =
+            MapState(env)
+
+    val t =
+            context.infer(expression)
+
+    return if (context.errors.isEmpty())
+        value(t)
+    else
+        (error(context.errors))
+}
 
 
 fun constraints(expression: Expression, env: Environment): Constraints {
@@ -55,28 +65,34 @@ class MapState(var env: Environment) {
     val constraints =
             mutableListOf<Pair<Type, Type>>()
 
+    val errors =
+            mutableListOf<Error>()
 
-    fun infer(expression: Expression): Either<Error, Type> =
+
+    fun infer(expression: Expression): Type =
             when (expression) {
                 is ConstantBool ->
-                    value(typeBool)
+                    typeBool
 
                 is ConstantInt ->
-                    value(typeInt)
+                    typeInt
 
                 is ConstantString ->
-                    value(typeString)
+                    typeString
 
                 is IdReference -> {
                     val schema =
                             env.lookup(expression.name)
 
                     when (schema) {
-                        null ->
-                            error(UnboundVariable(expression.location, expression.name))
+                        null -> {
+                            errors.add(UnboundVariable(expression.location, expression.name))
+
+                            typeError
+                        }
 
                         else ->
-                            value(schema.instantiate(varPump))
+                            schema.instantiate(varPump)
                     }
                 }
 
@@ -100,13 +116,19 @@ class MapState(var env: Environment) {
                     val tv =
                             varPump.fresh()
 
-                    env = env.openScope()
-                    env = env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+                    env =
+                            env.openScope()
+
+                    env =
+                            env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+
                     val t =
                             infer(expression.expression)
-                    env = env.closeScope()
 
-                    t.map { TArr(tv, it) }
+                    env =
+                            env.closeScope()
+
+                    TArr(tv, t)
                 }
 
                 is CallExpression -> {
@@ -119,32 +141,13 @@ class MapState(var env: Environment) {
                     val tv =
                             varPump.fresh()
 
-                    if (t1.right() != null && t2.right() != null) {
-                        unify(t1, TArr(t2.right()!!, tv))
-                    }
+                    unify(t1, TArr(t2, tv))
 
-                    value(tv)
+                    tv
                 }
             }
 
-    private fun unify(et1: Either<Error, Type>, et2: Either<Error, Type>) {
-        val t1 =
-                et1.right()
-
-        val t2 =
-                et2.right()
-
-        if (t1 != null && t2 != null) {
-            constraints.add(Pair(t1, t2))
-        }
-    }
-
-    private fun unify(et1: Either<Error, Type>, t2: Type) {
-        val t1 =
-                et1.right()
-
-        if (t1 != null) {
-            constraints.add(Pair(t1, t2))
-        }
+    private fun unify(t1: Type, t2: Type) {
+        constraints.add(Pair(t1, t2))
     }
 }

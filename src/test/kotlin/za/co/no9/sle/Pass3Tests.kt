@@ -84,7 +84,16 @@ class Pass3Tests : StringSpec({
 
     "\"a\" infers to an UnboundVariable error where a not within the environment" {
         inferExpressionError("a")
-                .shouldBe(UnboundVariable(Location(Position(1, 0)), "a"))
+                .shouldBe(listOf(
+                        UnboundVariable(Location(Position(1, 0)), "a")))
+    }
+
+
+    "\"a + 1\" infers to an UnboundVariable error where a not within the environment" {
+        inferExpressionError("a + 1")
+                .shouldBe(listOf(
+                        UnboundVariable(Location(Position(1, 2)), "(+)"),
+                        UnboundVariable(Location(Position(1, 0)), "a")))
     }
 })
 
@@ -96,8 +105,15 @@ fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Ty
     return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
 }
 
-fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Error =
-        infer(parseExpression(input), env).left()!!
+fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
+    val expression =
+            parseExpression(input)
+
+    val infer =
+            infer(expression, env)
+
+    return infer.left()!!
+}
 
 
 fun parseExpression(input: String): Expression =
