@@ -45,7 +45,7 @@ class Pass3Tests : StringSpec({
     }
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
-        inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
+        inferExpression("a", mapOf(Pair("a", Schema(listOf(), typeString))))
                 .shouldBe(Pair(
                         typeString,
                         emptyList<Constraints>()))
@@ -53,10 +53,10 @@ class Pass3Tests : StringSpec({
 
     "\"if a then b else c\"" {
         val environment =
-                Environment(mapOf(
+                mapOf(
                         Pair("a", Schema(listOf(), TVar(1))),
                         Pair("b", Schema(listOf(), TVar(2))),
-                        Pair("c", Schema(listOf(), TVar(3)))))
+                        Pair("c", Schema(listOf(), TVar(3))))
 
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(

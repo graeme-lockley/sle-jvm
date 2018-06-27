@@ -116,17 +116,14 @@ class MapState(var env: Environment) {
                     val tv =
                             varPump.fresh()
 
-                    env =
-                            env.openScope()
+                    val currentEnv = env
 
-                    env =
-                            env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+                    env = env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
 
                     val t =
                             infer(expression.expression)
 
-                    env =
-                            env.closeScope()
+                    env = currentEnv
 
                     TArr(tv, t)
                 }

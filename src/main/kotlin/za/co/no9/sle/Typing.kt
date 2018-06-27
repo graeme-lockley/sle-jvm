@@ -80,29 +80,16 @@ data class TypeEnv(private val env: Map<Var, Schema>) {
 }
 
 
-data class Environment constructor(private val env: List<Map<String, Schema>>) {
-    constructor(env: Map<String, Schema>) : this(listOf(env))
+typealias Environment =
+        Map<String, Schema>
 
-    fun lookup(name: String): Schema? =
-            env[env.lastIndex][name]
 
-    fun openScope() =
-            Environment(env + mapOf())
+fun Environment.lookup(name: String): Schema? =
+        this[name]
 
-    fun closeScope() =
-            Environment(env.dropLast(1))
-
-    fun bindInScope(name: String, schema: Schema): Environment {
-        val lastMap =
-                env[env.lastIndex]
-
-        val newMap =
-                lastMap + Pair(name, schema)
-
-        return Environment(env.dropLast(1) + newMap)
-    }
-}
+fun Environment.bindInScope(name: String, schema: Schema): Environment =
+        this + Pair(name, schema)
 
 
 val emptyEnvironment =
-        Environment(mapOf())
+        mapOf<String, Schema>()
