@@ -10,7 +10,7 @@ typealias Constraints =
 
 fun infer(expression: Expression, env: Environment): Either<Errors, Type> {
     val context =
-            MapState(env)
+            InferContext(env)
 
     val t =
             context.infer(expression)
@@ -24,7 +24,7 @@ fun infer(expression: Expression, env: Environment): Either<Errors, Type> {
 
 fun constraints(expression: Expression, env: Environment): Constraints {
     val state =
-            MapState(env)
+            InferContext(env)
 
     state.infer(expression)
 
@@ -58,7 +58,7 @@ private fun Schema.instantiate(varPump: VarPump): Type {
 }
 
 
-class MapState(var env: Environment) {
+private class InferContext(private var env: Environment) {
     private val varPump =
             VarPump()
 
