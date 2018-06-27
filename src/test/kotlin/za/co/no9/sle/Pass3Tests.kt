@@ -82,6 +82,22 @@ class Pass3Tests : StringSpec({
                         )))
     }
 
+
+    "\"a + 1\" infers to an Int when (+) is added to the environment" {
+        val environment =
+                mapOf(
+                        Pair("a", Schema(listOf(), typeInt)),
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+
+        inferExpression("a + 1", environment)
+                .shouldBe(Pair(
+                        TVar(1),
+                        listOf(
+                                Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(typeInt, TVar(0))),
+                                Pair(TVar(0), TArr(typeInt, TVar(1))))))
+    }
+
+
     "\"a\" infers to an UnboundVariable error where a not within the environment" {
         inferExpressionError("a")
                 .shouldBe(listOf(
@@ -95,6 +111,7 @@ class Pass3Tests : StringSpec({
                         UnboundVariable(Location(Position(1, 2)), "(+)"),
                         UnboundVariable(Location(Position(1, 0)), "a")))
     }
+
 })
 
 
