@@ -46,6 +46,9 @@ data class TArr(private val domain: Type, private val range: Type) : Type() {
 }
 
 
+val typeError =
+        TCon(":Error:")
+
 val typeInt =
         TCon("Int")
 
