@@ -15,10 +15,13 @@ fun infer(expression: Expression, env: Environment): Either<Errors, Type> {
     val t =
             context.infer(expression)
 
-    return if (context.errors.isEmpty())
-        value(t)
-    else
-        (error(context.errors))
+    return when {
+        context.errors.isEmpty() ->
+            value(t)
+
+        else ->
+            error(context.errors)
+    }
 }
 
 
