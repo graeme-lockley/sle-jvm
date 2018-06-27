@@ -18,6 +18,10 @@ data class Location(
 }
 
 
+typealias Errors =
+        List<Error>
+
+
 sealed class Error(
         open val location: Location)
 
