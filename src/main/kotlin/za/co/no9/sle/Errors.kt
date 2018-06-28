@@ -32,3 +32,7 @@ data class SyntaxError(
 data class UnboundVariable(
         override val location: Location,
         val name: String) : Error(location)
+
+data class DuplicateLetDeclaration(
+        override val location: Location,
+        val name: String): Error(location)
