@@ -8,6 +8,19 @@ typealias Constraints =
         List<Pair<Type, Type>>
 
 
+fun infer(module: Module, env: Environment): Either<Errors, Pair<Environment, Constraints>> {
+    val context =
+            InferContext(env)
+
+    context.infer(module)
+
+    return if (context.errors.isEmpty())
+        value(Pair(context.env, context.constraints))
+    else
+        error(context.errors)
+}
+
+
 fun infer(expression: Expression, env: Environment): Either<Errors, Type> {
     val context =
             InferContext(env)
@@ -61,7 +74,7 @@ private fun Schema.instantiate(varPump: VarPump): Type {
 }
 
 
-private class InferContext(private var env: Environment) {
+private class InferContext(internal var env: Environment) {
     private val varPump =
             VarPump()
 
@@ -71,6 +84,30 @@ private class InferContext(private var env: Environment) {
     val errors =
             mutableListOf<Error>()
 
+
+    fun infer(module: Module) {
+        env = module.declarations.fold(env) { e: Environment, d: Declaration ->
+            when (d) {
+                is LetDeclaration -> {
+                    val name =
+                            d.name.name
+
+                    if (env.containsKey(name)) {
+                        errors.add(DuplicateLetDeclaration(d.location, name))
+                        e
+                    } else {
+                        e.bindInScope(name, Schema(listOf(), TVar(0)))
+                    }
+                }
+            }
+        }
+
+        module.declarations.map { d ->
+            when (d) {
+                is LetDeclaration -> infer(d.expression)
+            }
+        }
+    }
 
     fun infer(expression: Expression): Type =
             when (expression) {

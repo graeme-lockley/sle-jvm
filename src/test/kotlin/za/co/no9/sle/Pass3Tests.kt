@@ -5,6 +5,7 @@ import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.ast.pass1.toExpression
+import za.co.no9.sle.ast.pass1.toModule
 import za.co.no9.sle.ast.pass2.Expression
 import za.co.no9.sle.ast.pass2.map
 import za.co.no9.sle.ast.pass3.Constraints
@@ -95,6 +96,38 @@ class Pass3Tests : StringSpec({
                         listOf(
                                 Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(typeInt, TVar(0))),
                                 Pair(TVar(0), TArr(typeInt, TVar(1))))))
+    }
+
+
+    "f:\"let add a b = a + b\nlet inc = add 1\"" {
+        val environment =
+                mapOf(Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+
+        val module =
+                map(toModule(parseText("let add a b = a + b\n" +
+                        "let inc = add 1").right()!!.node))
+
+        val inferResult =
+                infer(module, environment).right()!!
+
+        val inferEnv =
+                inferResult.first
+
+
+        inferEnv["(+)"]
+                .shouldBe(Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+
+        inferEnv["add"]
+                .shouldBe(Schema(listOf(), TVar(0)))
+
+        inferEnv["inc"]
+                .shouldBe(Schema(listOf(), TVar(0)))
+
+        inferResult.second
+                .shouldBe(listOf(
+                        Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(TVar(0), TVar(2))),
+                        Pair(TVar(2), TArr(TVar(1), TVar(3))),
+                        Pair(TVar(0), TArr(typeInt, TVar(4)))))
     }
 
 
