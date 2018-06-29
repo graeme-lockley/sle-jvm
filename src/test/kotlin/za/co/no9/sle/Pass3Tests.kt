@@ -125,11 +125,11 @@ class Pass3Tests : StringSpec({
         inferEnv["inc"].toString()
                 .shouldBe("'0")
 
-        inferResult.second
+        inferResult.second.map { Pair(it.first.toString(), it.second.toString()) }
                 .shouldBe(listOf(
-                        Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(TVar(0), TVar(2))),
-                        Pair(TVar(2), TArr(TVar(1), TVar(3))),
-                        Pair(TVar(0), TArr(typeInt, TVar(4)))))
+                        Pair("Int -> Int -> Int", "'0 -> '2"),
+                        Pair("'2", "'1 -> '3"),
+                        Pair("'0", "Int -> '4")))
     }
 
 
@@ -154,7 +154,7 @@ fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<St
     val expression =
             parseExpression(input)
 
-    return Pair(infer(expression, env).right()!!.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { Pair(it.first.toString(), it.second.toString()) })
+    return Pair(infer(expression, env).right()!!.type.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { Pair(it.first.toString(), it.second.toString()) })
 }
 
 fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
