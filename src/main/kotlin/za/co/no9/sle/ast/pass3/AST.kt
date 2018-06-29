@@ -69,4 +69,4 @@ data class CallExpression(
         override val location: Location,
         override val type: Type,
         val operator: Expression,
-        val operands: Expression) : Expression(location, type)
+        val operand: Expression) : Expression(location, type)

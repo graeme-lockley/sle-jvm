@@ -58,5 +58,5 @@ fun asString(expression: Expression, indent: Int = 0): String =
             is CallExpression ->
                 "${spaces(indent)}CallExpression: ${expression.type}\n" +
                         asString(expression.operator, indent + 2) +
-                        asString(expression.operands, indent + 2)
+                        asString(expression.operand, indent + 2)
         }

@@ -172,7 +172,7 @@ private class InferContext(internal var env: Environment) {
                             infer(expression.operator)
 
                     val t2 =
-                            infer(expression.operands)
+                            infer(expression.operand)
 
                     val tv =
                             varPump.fresh()

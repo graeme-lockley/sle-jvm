@@ -59,4 +59,4 @@ data class LambdaExpression(
 data class CallExpression(
         override val location: Location,
         val operator: Expression,
-        val operands: Expression) : Expression(location)
+        val operand: Expression) : Expression(location)
