@@ -27,6 +27,9 @@ data class TVar(private val variable: Var) : Type() {
 
     override fun ftv() =
             setOf(variable)
+
+    override fun toString(): String =
+            "'$variable"
 }
 
 data class TCon(private val name: String) : Type() {
@@ -35,6 +38,9 @@ data class TCon(private val name: String) : Type() {
 
     override fun ftv() =
             emptySet<Var>()
+
+    override fun toString(): String =
+            name
 }
 
 data class TArr(private val domain: Type, private val range: Type) : Type() {
@@ -43,6 +49,14 @@ data class TArr(private val domain: Type, private val range: Type) : Type() {
 
     override fun ftv() =
             domain.ftv().plus(range.ftv())
+
+    override fun toString(): String =
+            when (domain) {
+                is TArr ->
+                    "($domain) -> $range"
+                else ->
+                    "$domain -> $range"
+            }
 }
 
 
@@ -65,6 +79,12 @@ data class Schema(val variable: List<Var>, val type: Type) {
 
     fun ftv() =
             type.ftv().minus(variable)
+
+    override fun toString(): String =
+            if (variable.isEmpty())
+                type.toString()
+            else
+                "forall ${variable.map { it.toString() }.joinToString(", ")} => $type"
 }
 
 

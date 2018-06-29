@@ -8,31 +8,34 @@ import za.co.no9.sle.ast.pass1.toExpression
 import za.co.no9.sle.ast.pass1.toModule
 import za.co.no9.sle.ast.pass2.Expression
 import za.co.no9.sle.ast.pass2.map
-import za.co.no9.sle.ast.pass3.Constraints
 import za.co.no9.sle.ast.pass3.infer
+
+
+val noConstraints =
+        emptyList<Pair<String, String>>()
 
 
 class Pass3Tests : StringSpec({
     "\"True\" infers to TCon Boolean" {
         inferExpression("True")
                 .shouldBe(Pair(
-                        typeBool,
-                        emptyList<Constraints>()))
+                        "Bool",
+                        noConstraints))
     }
 
     "\"False\" infers to TCon Boolean" {
         inferExpression("False")
                 .shouldBe(Pair(
-                        typeBool,
-                        emptyList<Constraints>()))
+                        "Bool",
+                        noConstraints))
     }
 
     "\"<int>\" infers to TCon Int" {
         assertAll(Gen.positiveIntegers()) { n: Int ->
             inferExpression(n.toString())
                     .shouldBe(Pair(
-                            typeInt,
-                            emptyList<Constraints>()))
+                            "Int",
+                            noConstraints))
         }
     }
 
@@ -40,16 +43,16 @@ class Pass3Tests : StringSpec({
         assertAll { s: String ->
             inferExpression("\"${s.markup()}\"")
                     .shouldBe(Pair(
-                            typeString,
-                            emptyList<Constraints>()))
+                            "String",
+                            noConstraints))
         }
     }
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
         inferExpression("a", mapOf(Pair("a", Schema(listOf(), typeString))))
                 .shouldBe(Pair(
-                        typeString,
-                        emptyList<Constraints>()))
+                        "String",
+                        noConstraints))
     }
 
     "\"if a then b else c\"" {
@@ -61,26 +64,25 @@ class Pass3Tests : StringSpec({
 
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
-                        TVar(2),
+                        "'2",
                         listOf(
-                                Pair(TVar(1), typeBool),
-                                Pair(TVar(2), TVar(3)))))
+                                Pair("'1", "Bool"),
+                                Pair("'2", "'3"))))
     }
 
     "\"\\a -> a\"" {
         inferExpression("\\a -> a")
                 .shouldBe(Pair(
-                        TArr(TVar(0), TVar(0)),
-                        listOf<Constraints>()))
+                        "'0 -> '0",
+                        listOf<Pair<String, String>>()))
     }
 
     "\"\\a -> a 10\"" {
         inferExpression("\\a -> a 10")
                 .shouldBe(Pair(
-                        TArr(TVar(0), TVar(1)),
+                        "'0 -> '1",
                         listOf(
-                                Pair(TVar(0), TArr(typeInt, TVar(1)))
-                        )))
+                                Pair("'0", "Int -> '1"))))
     }
 
 
@@ -92,14 +94,14 @@ class Pass3Tests : StringSpec({
 
         inferExpression("a + 1", environment)
                 .shouldBe(Pair(
-                        TVar(1),
+                        "'1",
                         listOf(
-                                Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(typeInt, TVar(0))),
-                                Pair(TVar(0), TArr(typeInt, TVar(1))))))
+                                Pair("Int -> Int -> Int", "Int -> '0"),
+                                Pair("'0", "Int -> '1"))))
     }
 
 
-    "f:\"let add a b = a + b\nlet inc = add 1\"" {
+    "\"let add a b = a + b\nlet inc = add 1\"" {
         val environment =
                 mapOf(Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
 
@@ -114,14 +116,14 @@ class Pass3Tests : StringSpec({
                 inferResult.first
 
 
-        inferEnv["(+)"]
-                .shouldBe(Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+        inferEnv["(+)"].toString()
+                .shouldBe("Int -> Int -> Int")
 
-        inferEnv["add"]
-                .shouldBe(Schema(listOf(), TVar(0)))
+        inferEnv["add"].toString()
+                .shouldBe("'0")
 
-        inferEnv["inc"]
-                .shouldBe(Schema(listOf(), TVar(0)))
+        inferEnv["inc"].toString()
+                .shouldBe("'0")
 
         inferResult.second
                 .shouldBe(listOf(
@@ -148,11 +150,11 @@ class Pass3Tests : StringSpec({
 })
 
 
-fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Type, Constraints> {
+fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<Pair<String, String>>> {
     val expression =
             parseExpression(input)
 
-    return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
+    return Pair(infer(expression, env).right()!!.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { Pair(it.first.toString(), it.second.toString()) })
 }
 
 fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
