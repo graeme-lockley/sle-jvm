@@ -49,7 +49,7 @@ class Pass3InferTests : StringSpec({
     }
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
-        inferExpression("a", mapOf(Pair("a", Schema(listOf(), typeString))))
+        inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
                 .shouldBe(Pair(
                         "String",
                         noConstraints))
@@ -57,10 +57,10 @@ class Pass3InferTests : StringSpec({
 
     "\"if a then b else c\"" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("a", Schema(listOf(), TVar(1))),
                         Pair("b", Schema(listOf(), TVar(2))),
-                        Pair("c", Schema(listOf(), TVar(3))))
+                        Pair("c", Schema(listOf(), TVar(3)))))
 
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
@@ -88,9 +88,9 @@ class Pass3InferTests : StringSpec({
 
     "\"a + 1\" infers to an Int when (+) is added to the environment" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("a", Schema(listOf(), typeInt)),
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         inferExpression("a + 1", environment)
                 .shouldBe(Pair(
@@ -103,7 +103,8 @@ class Pass3InferTests : StringSpec({
 
     "\"let add a b = a + b\nlet inc = add 1\"" {
         val environment =
-                mapOf(Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                Environment(mapOf(
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val module =
                 map(toModule(parseText("let add a b = a + b\n" +

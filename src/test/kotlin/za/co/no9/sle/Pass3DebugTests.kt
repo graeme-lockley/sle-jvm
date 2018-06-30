@@ -36,9 +36,9 @@ class Pass3DebugTests : StringSpec({
 
     "Dump AST" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val inferExpression =
                 inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
@@ -61,10 +61,10 @@ class Pass3DebugTests : StringSpec({
 
     "Dump Module AST" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
                         Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val inferModule =
                 inferModule("let factorial n =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)

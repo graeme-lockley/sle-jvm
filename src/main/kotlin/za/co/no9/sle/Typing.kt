@@ -6,7 +6,7 @@ typealias Var =
 
 
 data class Substitution(val state: Map<Var, Type> = emptyMap()) {
-    constructor(key: Var, value: Type): this(mapOf(Pair(key, value)))
+    constructor(key: Var, value: Type) : this(mapOf(Pair(key, value)))
 
     operator fun plus(other: Substitution): Substitution =
             Substitution(other.state.mapValues { it.value.apply(this) } + state)
@@ -18,7 +18,7 @@ data class Substitution(val state: Map<Var, Type> = emptyMap()) {
             Substitution(state - keys)
 
     override fun toString(): String =
-        state.entries.map { "'${it.key} ${it.value}" }.sorted().joinToString(", ")
+            state.entries.map { "'${it.key} ${it.value}" }.sorted().joinToString(", ")
 }
 
 
@@ -114,16 +114,17 @@ data class TypeEnv(private val env: Map<Var, Schema>) {
 }
 
 
-typealias Environment =
-        Map<String, Schema>
+data class Environment(val state: Map<String, Schema> = mapOf()) {
+    operator fun get(name: String): Schema? =
+            state[name]
 
+    fun set(name: String, schema: Schema): Environment =
+            Environment(this.state + Pair(name, schema))
 
-fun Environment.lookup(name: String): Schema? =
-        this[name]
-
-fun Environment.bindInScope(name: String, schema: Schema): Environment =
-        this + Pair(name, schema)
+    fun containsKey(name: String): Boolean =
+            state.containsKey(name)
+}
 
 
 val emptyEnvironment =
-        mapOf<String, Schema>()
+        Environment()

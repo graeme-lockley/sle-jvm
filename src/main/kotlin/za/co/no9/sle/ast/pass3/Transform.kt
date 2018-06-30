@@ -96,8 +96,7 @@ private class InferContext(internal var env: Environment) {
                         errors.add(DuplicateLetDeclaration(d.location, name))
                         e
                     } else {
-                        e.bindInScope(name, Schema(listOf(0), TVar(0)))
-                        e.bindInScope(name, Schema(listOf(0), TVar(0)))
+                        e.set(name, Schema(listOf(0), TVar(0)))
                     }
                 }
             }
@@ -130,7 +129,7 @@ private class InferContext(internal var env: Environment) {
 
                 is za.co.no9.sle.ast.pass2.IdReference -> {
                     val schema =
-                            env.lookup(expression.name)
+                            env[expression.name]
 
                     when (schema) {
                         null -> {
@@ -166,7 +165,7 @@ private class InferContext(internal var env: Environment) {
 
                     val currentEnv = env
 
-                    env = env.bindInScope(expression.argument.name, Schema(emptyList(), tv))
+                    env = env.set(expression.argument.name, Schema(emptyList(), tv))
 
                     val t =
                             infer(expression.expression)
