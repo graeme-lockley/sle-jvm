@@ -84,12 +84,12 @@ class Pass3DebugTests : StringSpec({
         println(asString(newAST))
 
         println()
-        println(newAST.declarations.map {
+        println(newAST.declarations.joinToString("\n") {
             when (it) {
                 is LetDeclaration ->
                     "${it.name.name}: ${it.type}"
             }
-        }.joinToString("\n"))
+        })
     }
 })
 
@@ -129,9 +129,11 @@ fun asString(expression: Expression, indent: Int = 0): String =
         }
 
 fun asString(module: Module, indent: Int = 0): String =
-        module.declarations.map {
+        module.declarations.joinToString("\n") {
             when (it) {
                 is LetDeclaration ->
-                    "${spaces(indent)}Let: ${it.type}\n${spaces(indent + 2)}${it.name.name}\n${asString(it.expression, indent + 2)}"
+                    "${spaces(indent)}Let: ${it.type}\n" +
+                            "${spaces(indent + 2)}${it.name.name}\n" +
+                            asString(it.expression, indent + 2)
             }
-        }.joinToString("\n")
+        }
