@@ -4,15 +4,26 @@ package za.co.no9.sle
 typealias Var =
         Int
 
-typealias Subst =
-        Map<Var, Type>
+
+data class Subst(val state: Map<Var, Type> = emptyMap()) {
+    constructor(key: Var, value: Type): this(mapOf(Pair(key, value)))
+
+    operator fun plus(other: Subst): Subst =
+            Subst(other.state.mapValues { it.value.apply(this) } + state)
+
+    operator fun get(key: Var): Type? =
+            state[key]
+
+    operator fun minus(keys: List<Var>): Subst =
+            Subst(state - keys)
+
+    override fun toString(): String =
+        state.entries.map { "'${it.key} ${it.value}" }.sorted().joinToString(", ")
+}
 
 
 val nullSubst: Subst =
-        emptyMap()
-
-fun compose(s1: Subst, s2: Subst): Subst =
-        s2.mapValues { it.value.apply(s1) } + s1
+        Subst()
 
 
 sealed class Type {
@@ -24,7 +35,7 @@ sealed class Type {
 
 data class TVar(val variable: Var) : Type() {
     override fun apply(s: Subst) =
-            s.getOrDefault(variable, this)
+            s[variable] ?: this
 
     override fun ftv() =
             setOf(variable)
@@ -78,7 +89,7 @@ val typeString =
 
 data class Schema(val variable: List<Var>, val type: Type) {
     fun apply(s: Subst): Schema =
-            Schema(variable, type.apply(s.minus(variable)))
+            Schema(variable, type.apply(s - variable))
 
     fun ftv() =
             type.ftv().minus(variable)

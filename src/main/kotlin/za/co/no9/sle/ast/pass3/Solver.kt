@@ -70,7 +70,7 @@ private class Solver(private var constraints: Constraints) {
 
     fun solve(): Subst {
         var subst =
-                nullSubst
+                Subst()
 
         while (constraints.isNotEmpty()) {
             val constraint =
@@ -79,7 +79,7 @@ private class Solver(private var constraints: Constraints) {
             val u =
                     unifies(constraint.first, constraint.second)
 
-            subst = compose(u.first, subst)
+            subst = u.first +  subst
             constraints = u.second + constraints.drop(1).apply(u.first)
         }
 
@@ -93,10 +93,10 @@ private class Solver(private var constraints: Constraints) {
                     Pair(nullSubst, emptyList())
 
                 t1 is TVar ->
-                    Pair(mapOf(Pair(t1.variable, t2)), emptyList())
+                    Pair(Subst(t1.variable, t2), emptyList())
 
                 t2 is TVar ->
-                    Pair(mapOf(Pair(t2.variable, t1)), emptyList())
+                    Pair(Subst(t2.variable, t1), emptyList())
 
                 t1 is TArr && t2 is TArr ->
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
@@ -127,7 +127,7 @@ private class Solver(private var constraints: Constraints) {
                     val um =
                             unifyMany(t1s.drop(1).subst(u1.first), t2s.drop(1).subst(u1.first))
 
-                    Pair(compose(um.first, u1.first), u1.second + um.second)
+                    Pair(um.first + u1.first, u1.second + um.second)
                 }
 
                 else -> {

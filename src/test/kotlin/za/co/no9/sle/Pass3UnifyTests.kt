@@ -12,7 +12,7 @@ class Pass3UnifyTests : StringSpec({
                 listOf()
 
         unifiesAsString(constraints)
-                .shouldBe(listOf())
+                .shouldBe("")
     }
 
 
@@ -24,7 +24,7 @@ class Pass3UnifyTests : StringSpec({
                         Pair(typeBool, typeBool))
 
         unifiesAsString(constraints)
-                .shouldBe(listOf())
+                .shouldBe("")
     }
 
     "type var and constant type result in a single substitution" {
@@ -33,7 +33,7 @@ class Pass3UnifyTests : StringSpec({
                         Pair(TVar(1), typeInt))
 
         unifiesAsString(constraints)
-                .shouldBe(listOf("'1 Int"))
+                .shouldBe("'1 Int")
     }
 
     "constant type and type var result in a single substitution" {
@@ -42,7 +42,7 @@ class Pass3UnifyTests : StringSpec({
                         Pair(typeInt, TVar(1)))
 
         unifiesAsString(constraints)
-                .shouldBe(listOf("'1 Int"))
+                .shouldBe("'1 Int")
     }
 
     "constant function type and type var result in a single substitution" {
@@ -51,14 +51,10 @@ class Pass3UnifyTests : StringSpec({
                         Pair(TArr(typeInt, typeString), TArr(TVar(2), TVar(1))))
 
         unifiesAsString(constraints)
-                .shouldBe(listOf("'1 String", "'2 Int"))
+                .shouldBe("'1 String, '2 Int")
     }
 })
 
 
-fun unifiesAsString(constraints: Constraints): List<String> =
-        unifies(constraints).right()!!.asString()
-
-
-fun Subst.asString(): List<String> =
-        this.entries.map { "'${it.key} ${it.value}" }.sorted()
+fun unifiesAsString(constraints: Constraints): String =
+        unifies(constraints).right()!!.toString()
