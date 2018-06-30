@@ -54,23 +54,6 @@ class Pass3UnifyTests : StringSpec({
         unifiesAsString(constraints)
                 .shouldBe("'1 String, '2 Int")
     }
-
-//    "f:a" {
-//        val constraints =
-//                listOf(
-//                        Pair(TArr(typeInt, TArr(typeInt, typeBool)), TArr(TVar(0), TVar(1))),
-//                        Pair(TVar(1), TArr(typeInt, TVar(2))),
-//                        Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(TVar(0), TVar(3))),
-//                        Pair(TArr(typeInt, TArr(typeInt, typeInt)), TArr(TVar(0), TVar(5))),
-//                        Pair(TVar(5), TArr(typeInt, TVar(6))),
-//                        Pair(TVar(4), TArr(TVar(6), TVar(7))),
-//                        Pair(TVar(3), TArr(TVar(7), TVar(8))),
-//                        Pair(TVar(2), typeBool),
-//                        Pair(typeInt, TVar(8)))
-//
-//        unifiesAsString(constraints)
-//                .shouldBe(listOf("'1 String", "'2 Int"))
-//    }
 })
 
 
