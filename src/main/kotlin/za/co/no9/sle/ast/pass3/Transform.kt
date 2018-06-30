@@ -68,7 +68,7 @@ private fun Schema.instantiate(varPump: VarPump): Type {
             this.variable.map { varPump.fresh() }
 
     val substitution =
-            Subst(this.variable.zip(asP).toMap())
+            Substitution(this.variable.zip(asP).toMap())
 
     return this.type.apply(substitution)
 }
