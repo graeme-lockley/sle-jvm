@@ -15,7 +15,7 @@ val noConstraints =
         emptyList<Pair<String, String>>()
 
 
-class Pass3Tests : StringSpec({
+class Pass3InferTests : StringSpec({
     "\"True\" infers to TCon Boolean" {
         inferExpression("True")
                 .shouldBe(Pair(

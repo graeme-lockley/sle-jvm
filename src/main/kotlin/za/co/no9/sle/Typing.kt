@@ -12,7 +12,7 @@ val nullSubst: Subst =
         emptyMap()
 
 fun compose(s1: Subst, s2: Subst): Subst =
-        s2.plus(s1)
+        s2 + s1
 
 
 sealed class Type {
@@ -21,7 +21,8 @@ sealed class Type {
     abstract fun ftv(): Set<Var>
 }
 
-data class TVar(private val variable: Var) : Type() {
+
+data class TVar(val variable: Var) : Type() {
     override fun apply(s: Subst) =
             s.getOrDefault(variable, this)
 
@@ -31,6 +32,7 @@ data class TVar(private val variable: Var) : Type() {
     override fun toString(): String =
             "'$variable"
 }
+
 
 data class TCon(private val name: String) : Type() {
     override fun apply(s: Subst) =
@@ -43,7 +45,8 @@ data class TCon(private val name: String) : Type() {
             name
 }
 
-data class TArr(private val domain: Type, private val range: Type) : Type() {
+
+data class TArr(val domain: Type, val range: Type) : Type() {
     override fun apply(s: Subst) =
             TArr(domain.apply(s), range.apply(s))
 
