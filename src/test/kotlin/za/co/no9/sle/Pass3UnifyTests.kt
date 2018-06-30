@@ -2,6 +2,7 @@ package za.co.no9.sle
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.ast.pass3.Constraint
 import za.co.no9.sle.ast.pass3.Constraints
 import za.co.no9.sle.ast.pass3.unifies
 
@@ -19,9 +20,9 @@ class Pass3UnifyTests : StringSpec({
     "constant types result in no substitution" {
         val constraints =
                 listOf(
-                        Pair(typeInt, typeInt),
-                        Pair(typeString, typeString),
-                        Pair(typeBool, typeBool))
+                        Constraint(typeInt, typeInt),
+                        Constraint(typeString, typeString),
+                        Constraint(typeBool, typeBool))
 
         unifiesAsString(constraints)
                 .shouldBe("")
@@ -30,7 +31,7 @@ class Pass3UnifyTests : StringSpec({
     "type var and constant type result in a single substitution" {
         val constraints =
                 listOf(
-                        Pair(TVar(1), typeInt))
+                        Constraint(TVar(1), typeInt))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 Int")
@@ -39,7 +40,7 @@ class Pass3UnifyTests : StringSpec({
     "constant type and type var result in a single substitution" {
         val constraints =
                 listOf(
-                        Pair(typeInt, TVar(1)))
+                        Constraint(typeInt, TVar(1)))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 Int")
@@ -48,7 +49,7 @@ class Pass3UnifyTests : StringSpec({
     "constant function type and type var result in a single substitution" {
         val constraints =
                 listOf(
-                        Pair(TArr(typeInt, typeString), TArr(TVar(2), TVar(1))))
+                        Constraint(TArr(typeInt, typeString), TArr(TVar(2), TVar(1))))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 String, '2 Int")

@@ -23,9 +23,9 @@ fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
 
 fun apply(substitution: Substitution, module: Module): Module =
         Module(module.location, module.declarations.map {
-            when(it) {
+            when (it) {
                 is LetDeclaration ->
-                        LetDeclaration(it.location, it.type.apply(substitution), it.name, apply(substitution, it.expression))
+                    LetDeclaration(it.location, it.type.apply(substitution), it.name, apply(substitution, it.expression))
             }
         })
 
@@ -61,7 +61,7 @@ private class Solver(private var constraints: Constraints) {
 
 
     private fun Constraints.apply(substitution: Substitution): Constraints =
-            this.map { Pair(it.first.apply(substitution), it.second.apply(substitution)) }
+            this.map { it.apply(substitution) }
 
 
     private fun List<Type>.subst(substitution: Substitution): List<Type> =
@@ -77,9 +77,9 @@ private class Solver(private var constraints: Constraints) {
                     constraints[0]
 
             val u =
-                    unifies(constraint.first, constraint.second)
+                    unifies(constraint.t1, constraint.t2)
 
-            subst = u.first +  subst
+            subst = u.first + subst
             constraints = u.second + constraints.drop(1).apply(u.first)
         }
 

@@ -24,13 +24,13 @@ class Pass3DebugTests : StringSpec({
     }
 
 
-    fun Pair<Expression, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
-        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
+    fun Pair<Expression, Constraints>.asString(): Pair<String, List<String>> {
+        return Pair(asString(this.first), this.second.map { it.toString() })
     }
 
 
-    fun Pair<Module, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
-        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
+    fun Pair<Module, Constraints>.asString(): Pair<String, List<String>> {
+        return Pair(asString(this.first), this.second.map { it.toString() })
     }
 
 

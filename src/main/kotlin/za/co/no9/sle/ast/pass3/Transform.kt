@@ -3,8 +3,17 @@ package za.co.no9.sle.ast.pass3
 import za.co.no9.sle.*
 
 
+data class Constraint(val t1: Type, val t2: Type) {
+    fun apply(substitution: Substitution): Constraint =
+            Constraint(t1.apply(substitution), t2.apply(substitution))
+
+    override fun toString(): String =
+            "$t1 : $t2"
+}
+
+
 typealias Constraints =
-        List<Pair<Type, Type>>
+        List<Constraint>
 
 
 fun infer(module: za.co.no9.sle.ast.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
@@ -79,7 +88,7 @@ private class InferContext(internal var env: Environment) {
             VarPump()
 
     val constraints =
-            mutableListOf<Pair<Type, Type>>()
+            mutableListOf<Constraint>()
 
     val errors =
             mutableListOf<Error>()
@@ -192,6 +201,6 @@ private class InferContext(internal var env: Environment) {
             }
 
     private fun unify(t1: Type, t2: Type) {
-        constraints.add(Pair(t1, t2))
+        constraints.add(Constraint(t1, t2))
     }
 }
