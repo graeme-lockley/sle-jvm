@@ -2,6 +2,8 @@ package za.co.no9.sle
 
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
+import za.co.no9.sle.ast.pass1.toModule
+import za.co.no9.sle.ast.pass2.map
 import za.co.no9.sle.ast.pass3.*
 
 
@@ -13,17 +15,33 @@ class Pass3DebugTests : StringSpec({
         return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
     }
 
+
+    fun inferModule(input: String, env: Environment = emptyEnvironment): Pair<Module, Constraints> {
+        val module =
+                map(toModule(parseText(input).right()!!.node))
+
+        return infer(module, env).right()!!
+    }
+
+
     fun Pair<Expression, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
+        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
+    }
+
+
+    fun Pair<Module, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
         return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
     }
 
 
     "Dump AST" {
         val environment =
-                mapOf(Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                mapOf(
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
 
         val inferExpression =
-                inferExpression("\\a b -> a + b", environment)
+                inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
 
         val inferExpressionAsString =
                 inferExpression.asString()
@@ -36,6 +54,32 @@ class Pass3DebugTests : StringSpec({
 
         println(inferExpressionAsString.first)
         println(inferExpressionAsString.second.joinToString(",\n"))
+        println()
+        println(asString(newAST))
+    }
+
+
+    "Dump Module AST" {
+        val environment =
+                mapOf(
+                        Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
+                        Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+
+        val inferModule =
+                inferModule("let factorial n =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)
+
+        val inferModuleAsString =
+                inferModule.asString()
+
+        val subst =
+                unifies(inferModule.second)
+
+        val newAST =
+                apply(subst.right()!!, inferModule.first)
+
+        println(inferModuleAsString.first)
+        println(inferModuleAsString.second.joinToString(",\n"))
         println()
         println(asString(newAST))
     }
@@ -75,3 +119,11 @@ fun asString(expression: Expression, indent: Int = 0): String =
                         asString(expression.operator, indent + 2) +
                         asString(expression.operand, indent + 2)
         }
+
+fun asString(module: Module, indent: Int = 0): String =
+        module.declarations.map {
+            when (it) {
+                is LetDeclaration ->
+                    "${spaces(indent)}Let: ${it.type}\n${spaces(indent + 2)}${it.name.name}\n${asString(it.expression, indent + 2)}"
+            }
+        }.joinToString("\n")

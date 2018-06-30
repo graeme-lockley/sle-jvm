@@ -7,14 +7,15 @@ typealias Constraints =
         List<Pair<Type, Type>>
 
 
-fun infer(module: za.co.no9.sle.ast.pass2.Module, env: Environment): Either<Errors, Pair<Environment, Constraints>> {
+fun infer(module: za.co.no9.sle.ast.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
             InferContext(env)
 
-    context.infer(module)
+    val m =
+            context.infer(module)
 
     return if (context.errors.isEmpty())
-        value(Pair(context.env, context.constraints))
+        value(Pair(m, context.constraints))
     else
         error(context.errors)
 }
@@ -84,7 +85,7 @@ private class InferContext(internal var env: Environment) {
             mutableListOf<Error>()
 
 
-    fun infer(module: za.co.no9.sle.ast.pass2.Module) {
+    fun infer(module: za.co.no9.sle.ast.pass2.Module): Module {
         env = module.declarations.fold(env) { e: Environment, d: za.co.no9.sle.ast.pass2.Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.pass2.LetDeclaration -> {
@@ -95,17 +96,25 @@ private class InferContext(internal var env: Environment) {
                         errors.add(DuplicateLetDeclaration(d.location, name))
                         e
                     } else {
-                        e.bindInScope(name, Schema(listOf(), TVar(0)))
+                        e.bindInScope(name, Schema(listOf(0), TVar(0)))
+                        e.bindInScope(name, Schema(listOf(0), TVar(0)))
                     }
                 }
             }
         }
 
-        module.declarations.map { d ->
-            when (d) {
-                is za.co.no9.sle.ast.pass2.LetDeclaration -> infer(d.expression)
-            }
-        }
+        return Module(
+                module.location,
+                module.declarations.map { d ->
+                    when (d) {
+                        is za.co.no9.sle.ast.pass2.LetDeclaration -> {
+                            val e =
+                                    infer(d.expression)
+
+                            LetDeclaration(d.location, e.type, ID(d.name.location, d.name.name), e)
+                        }
+                    }
+                })
     }
 
     fun infer(expression: za.co.no9.sle.ast.pass2.Expression): Expression =

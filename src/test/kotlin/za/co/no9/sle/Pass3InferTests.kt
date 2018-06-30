@@ -112,24 +112,11 @@ class Pass3InferTests : StringSpec({
         val inferResult =
                 infer(module, environment).right()!!
 
-        val inferEnv =
-                inferResult.first
-
-
-        inferEnv["(+)"].toString()
-                .shouldBe("Int -> Int -> Int")
-
-        inferEnv["add"].toString()
-                .shouldBe("'0")
-
-        inferEnv["inc"].toString()
-                .shouldBe("'0")
-
         inferResult.second.map { Pair(it.first.toString(), it.second.toString()) }
                 .shouldBe(listOf(
                         Pair("Int -> Int -> Int", "'0 -> '2"),
                         Pair("'2", "'1 -> '3"),
-                        Pair("'0", "Int -> '4")))
+                        Pair("'4", "Int -> '5")))
     }
 
 

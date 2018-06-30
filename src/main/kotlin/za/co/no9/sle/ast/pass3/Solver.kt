@@ -21,6 +21,15 @@ fun unifies(constraints: Constraints): Either<List<Error>, Subst> {
 }
 
 
+fun apply(subst: Subst, module: Module): Module =
+        Module(module.location, module.declarations.map {
+            when(it) {
+                is LetDeclaration ->
+                        LetDeclaration(it.location, it.type.apply(subst), it.name, apply(subst, it.expression))
+            }
+        })
+
+
 fun apply(subst: Subst, expression: Expression): Expression =
         when (expression) {
             is ConstantBool ->
