@@ -30,8 +30,7 @@ data class ID(
 
 sealed class Expression(
         location: Location,
-        open val type: Type) : Node(location) {
-}
+        open val type: Type) : Node(location)
 
 data class ConstantBool(
         override val location: Location,
