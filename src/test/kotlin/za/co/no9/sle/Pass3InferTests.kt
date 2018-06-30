@@ -49,7 +49,7 @@ class Pass3InferTests : StringSpec({
     }
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
-        inferExpression("a", mapOf(Pair("a", Schema(listOf(), typeString))))
+        inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
                 .shouldBe(Pair(
                         "String",
                         noConstraints))
@@ -57,17 +57,17 @@ class Pass3InferTests : StringSpec({
 
     "\"if a then b else c\"" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("a", Schema(listOf(), TVar(1))),
                         Pair("b", Schema(listOf(), TVar(2))),
-                        Pair("c", Schema(listOf(), TVar(3))))
+                        Pair("c", Schema(listOf(), TVar(3)))))
 
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
                         "'2",
                         listOf(
-                                Pair("'1", "Bool"),
-                                Pair("'2", "'3"))))
+                                "'1 : Bool",
+                                "'2 : '3")))
     }
 
     "\"\\a -> a\"" {
@@ -82,28 +82,29 @@ class Pass3InferTests : StringSpec({
                 .shouldBe(Pair(
                         "'0 -> '1",
                         listOf(
-                                Pair("'0", "Int -> '1"))))
+                                "'0 : Int -> '1")))
     }
 
 
     "\"a + 1\" infers to an Int when (+) is added to the environment" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("a", Schema(listOf(), typeInt)),
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         inferExpression("a + 1", environment)
                 .shouldBe(Pair(
                         "'1",
                         listOf(
-                                Pair("Int -> Int -> Int", "Int -> '0"),
-                                Pair("'0", "Int -> '1"))))
+                                "Int -> Int -> Int : Int -> '0",
+                                "'0 : Int -> '1")))
     }
 
 
     "\"let add a b = a + b\nlet inc = add 1\"" {
         val environment =
-                mapOf(Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                Environment(mapOf(
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val module =
                 map(toModule(parseText("let add a b = a + b\n" +
@@ -112,11 +113,11 @@ class Pass3InferTests : StringSpec({
         val inferResult =
                 infer(module, environment).right()!!
 
-        inferResult.second.map { Pair(it.first.toString(), it.second.toString()) }
+        inferResult.second.map { it.toString() }
                 .shouldBe(listOf(
-                        Pair("Int -> Int -> Int", "'0 -> '2"),
-                        Pair("'2", "'1 -> '3"),
-                        Pair("'4", "Int -> '5")))
+                        "Int -> Int -> Int : '0 -> '2",
+                        "'2 : '1 -> '3",
+                        "'4 : Int -> '5"))
     }
 
 
@@ -137,11 +138,11 @@ class Pass3InferTests : StringSpec({
 })
 
 
-fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<Pair<String, String>>> {
+fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<String>> {
     val expression =
             parseExpression(input)
 
-    return Pair(infer(expression, env).right()!!.type.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { Pair(it.first.toString(), it.second.toString()) })
+    return Pair(infer(expression, env).right()!!.type.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { it.toString() })
 }
 
 fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {

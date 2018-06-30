@@ -4,10 +4,10 @@ import za.co.no9.sle.*
 
 
 typealias Unifier =
-        Pair<Subst, Constraints>
+        Pair<Substitution, Constraints>
 
 
-fun unifies(constraints: Constraints): Either<List<Error>, Subst> {
+fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
     val solver =
             Solver(constraints)
 
@@ -21,16 +21,16 @@ fun unifies(constraints: Constraints): Either<List<Error>, Subst> {
 }
 
 
-fun apply(subst: Subst, module: Module): Module =
+fun apply(substitution: Substitution, module: Module): Module =
         Module(module.location, module.declarations.map {
-            when(it) {
+            when (it) {
                 is LetDeclaration ->
-                        LetDeclaration(it.location, it.type.apply(subst), it.name, apply(subst, it.expression))
+                    LetDeclaration(it.location, it.type.apply(substitution), it.name, apply(substitution, it.expression))
             }
         })
 
 
-fun apply(subst: Subst, expression: Expression): Expression =
+fun apply(substitution: Substitution, expression: Expression): Expression =
         when (expression) {
             is ConstantBool ->
                 expression
@@ -42,16 +42,16 @@ fun apply(subst: Subst, expression: Expression): Expression =
                 expression
 
             is IdReference ->
-                IdReference(expression.location, expression.type.apply(subst), expression.name)
+                IdReference(expression.location, expression.type.apply(substitution), expression.name)
 
             is IfExpression ->
-                IfExpression(expression.location, expression.type.apply(subst), apply(subst, expression.guardExpression), apply(subst, expression.thenExpression), apply(subst, expression.elseExpression))
+                IfExpression(expression.location, expression.type.apply(substitution), apply(substitution, expression.guardExpression), apply(substitution, expression.thenExpression), apply(substitution, expression.elseExpression))
 
             is LambdaExpression ->
-                LambdaExpression(expression.location, expression.type.apply(subst), expression.argument, apply(subst, expression.expression))
+                LambdaExpression(expression.location, expression.type.apply(substitution), expression.argument, apply(substitution, expression.expression))
 
             is CallExpression ->
-                CallExpression(expression.location, expression.type.apply(subst), apply(subst, expression.operand), apply(subst, expression.operator))
+                CallExpression(expression.location, expression.type.apply(substitution), apply(substitution, expression.operand), apply(substitution, expression.operator))
         }
 
 
@@ -60,26 +60,26 @@ private class Solver(private var constraints: Constraints) {
             mutableListOf<Error>()
 
 
-    private fun Constraints.apply(subst: Subst): Constraints =
-            this.map { Pair(it.first.apply(subst), it.second.apply(subst)) }
+    private fun Constraints.apply(substitution: Substitution): Constraints =
+            this.map { it.apply(substitution) }
 
 
-    private fun List<Type>.subst(subst: Subst): List<Type> =
-            this.map { it.apply(subst) }
+    private fun List<Type>.subst(substitution: Substitution): List<Type> =
+            this.map { it.apply(substitution) }
 
 
-    fun solve(): Subst {
+    fun solve(): Substitution {
         var subst =
-                nullSubst
+                Substitution()
 
         while (constraints.isNotEmpty()) {
             val constraint =
                     constraints[0]
 
             val u =
-                    unifies(constraint.first, constraint.second)
+                    unifies(constraint.t1, constraint.t2)
 
-            subst = compose(u.first, subst)
+            subst = u.first + subst
             constraints = u.second + constraints.drop(1).apply(u.first)
         }
 
@@ -90,13 +90,13 @@ private class Solver(private var constraints: Constraints) {
     private fun unifies(t1: Type, t2: Type): Unifier =
             when {
                 t1 == t2 ->
-                    Pair(nullSubst, emptyList())
+                    Pair(nullSubstitution, emptyList())
 
                 t1 is TVar ->
-                    Pair(mapOf(Pair(t1.variable, t2)), emptyList())
+                    Pair(Substitution(t1.variable, t2), emptyList())
 
                 t2 is TVar ->
-                    Pair(mapOf(Pair(t2.variable, t1)), emptyList())
+                    Pair(Substitution(t2.variable, t1), emptyList())
 
                 t1 is TArr && t2 is TArr ->
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
@@ -104,7 +104,7 @@ private class Solver(private var constraints: Constraints) {
                 else -> {
                     errors.add(UnificationFail(t1, t2))
 
-                    Pair(nullSubst, emptyList())
+                    Pair(nullSubstitution, emptyList())
                 }
             }
 
@@ -112,7 +112,7 @@ private class Solver(private var constraints: Constraints) {
     private fun unifyMany(t1s: List<Type>, t2s: List<Type>): Unifier =
             when {
                 t1s.isEmpty() && t2s.isEmpty() ->
-                    Pair(nullSubst, emptyList())
+                    Pair(nullSubstitution, emptyList())
 
                 t1s.isNotEmpty() && t2s.isNotEmpty() -> {
                     val t1 =
@@ -127,13 +127,14 @@ private class Solver(private var constraints: Constraints) {
                     val um =
                             unifyMany(t1s.drop(1).subst(u1.first), t2s.drop(1).subst(u1.first))
 
-                    Pair(compose(um.first, u1.first), u1.second + um.second)
+
+                    Pair(um.first + u1.first, u1.second + um.second)
                 }
 
                 else -> {
                     errors.add(UnificationMismatch(t1s, t2s))
 
-                    Pair(nullSubst, emptyList())
+                    Pair(nullSubstitution, emptyList())
                 }
             }
 }

@@ -24,21 +24,21 @@ class Pass3DebugTests : StringSpec({
     }
 
 
-    fun Pair<Expression, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
-        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
+    fun Pair<Expression, Constraints>.asString(): Pair<String, List<String>> {
+        return Pair(asString(this.first), this.second.map { it.toString() })
     }
 
 
-    fun Pair<Module, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
-        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
+    fun Pair<Module, Constraints>.asString(): Pair<String, List<String>> {
+        return Pair(asString(this.first), this.second.map { it.toString() })
     }
 
 
     "Dump AST" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val inferExpression =
                 inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
@@ -61,10 +61,10 @@ class Pass3DebugTests : StringSpec({
 
     "Dump Module AST" {
         val environment =
-                mapOf(
+                Environment(mapOf(
                         Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
                         Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val inferModule =
                 inferModule("let factorial n =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)
@@ -82,6 +82,14 @@ class Pass3DebugTests : StringSpec({
         println(inferModuleAsString.second.joinToString(",\n"))
         println()
         println(asString(newAST))
+
+        println()
+        println(newAST.declarations.map {
+            when (it) {
+                is LetDeclaration ->
+                    "${it.name.name}: ${it.type}"
+            }
+        }.joinToString("\n"))
     }
 })
 
