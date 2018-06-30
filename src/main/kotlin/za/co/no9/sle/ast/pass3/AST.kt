@@ -1,7 +1,6 @@
 package za.co.no9.sle.ast.pass3
 
 import za.co.no9.sle.Location
-import za.co.no9.sle.Schema
 import za.co.no9.sle.Type
 
 
