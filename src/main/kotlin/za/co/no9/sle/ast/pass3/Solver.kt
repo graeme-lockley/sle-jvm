@@ -21,6 +21,31 @@ fun unifies(constraints: Constraints): Either<List<Error>, Subst> {
 }
 
 
+fun apply(subst: Subst, expression: Expression): Expression =
+        when (expression) {
+            is ConstantBool ->
+                expression
+
+            is ConstantInt ->
+                expression
+
+            is ConstantString ->
+                expression
+
+            is IdReference ->
+                IdReference(expression.location, expression.type.apply(subst), expression.name)
+
+            is IfExpression ->
+                IfExpression(expression.location, expression.type.apply(subst), apply(subst, expression.guardExpression), apply(subst, expression.thenExpression), apply(subst, expression.elseExpression))
+
+            is LambdaExpression ->
+                LambdaExpression(expression.location, expression.type.apply(subst), expression.argument, apply(subst, expression.expression))
+
+            is CallExpression ->
+                CallExpression(expression.location, expression.type.apply(subst), apply(subst, expression.operand), apply(subst, expression.operator))
+        }
+
+
 private class Solver(private var constraints: Constraints) {
     val errors =
             mutableListOf<Error>()

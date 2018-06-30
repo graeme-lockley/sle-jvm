@@ -6,11 +6,15 @@ import za.co.no9.sle.ast.pass3.*
 
 
 class Pass3DebugTests : StringSpec({
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<Pair<String, String>>> {
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Expression, Constraints> {
         val expression =
                 parseExpression(input)
 
-        return Pair(asString(infer(expression, env).right()!!), za.co.no9.sle.ast.pass3.constraints(expression, env).map { Pair(it.first.toString(), it.second.toString()) })
+        return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
+    }
+
+    fun Pair<Expression, Constraints>.asString(): Pair<String, List<Pair<String, String>>> {
+        return Pair(asString(this.first), this.second.map { Pair(it.first.toString(), it.second.toString()) })
     }
 
 
@@ -21,8 +25,19 @@ class Pass3DebugTests : StringSpec({
         val inferExpression =
                 inferExpression("\\a b -> a + b", environment)
 
-        println(inferExpression.first)
-        println(inferExpression.second.joinToString(",\n"))
+        val inferExpressionAsString =
+                inferExpression.asString()
+
+        val subst =
+                unifies(inferExpression.second)
+
+        val newAST =
+                apply(subst.right()!!, inferExpression.first)
+
+        println(inferExpressionAsString.first)
+        println(inferExpressionAsString.second.joinToString(",\n"))
+        println()
+        println(asString(newAST))
     }
 })
 
