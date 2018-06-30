@@ -12,7 +12,7 @@ val nullSubst: Subst =
         emptyMap()
 
 fun compose(s1: Subst, s2: Subst): Subst =
-        s2 + s1
+        s2.mapValues { it.value.apply(s1) } + s1
 
 
 sealed class Type {

@@ -82,6 +82,14 @@ class Pass3DebugTests : StringSpec({
         println(inferModuleAsString.second.joinToString(",\n"))
         println()
         println(asString(newAST))
+
+        println()
+        println(newAST.declarations.map {
+            when (it) {
+                is LetDeclaration ->
+                    "${it.name.name}: ${it.type}"
+            }
+        }.joinToString("\n"))
     }
 })
 
