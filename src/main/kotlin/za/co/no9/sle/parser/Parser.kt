@@ -14,11 +14,11 @@ class Result(private val parser: ParserParser, val node: ParserRuleContext) {
 }
 
 
-fun parseText(text: String): ParseResult =
+fun parseModule(text: String): ParseResult =
         parse({ parser -> parser.module() }, text)
 
 
-fun parseTextAsExpression(text: String): ParseResult =
+fun parseExpression(text: String): ParseResult =
         parse({ parser -> parser.expression() }, text)
 
 

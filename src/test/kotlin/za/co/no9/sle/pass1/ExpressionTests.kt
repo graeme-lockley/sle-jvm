@@ -5,14 +5,14 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.Either
 import za.co.no9.sle.parser.Result
-import za.co.no9.sle.parser.parseTextAsExpression
+import za.co.no9.sle.parser.parseExpression
 import za.co.no9.sle.right
 
 
 class ExpressionTests : StringSpec({
     fun parseExpression(input: String, output: String) {
         val parseResult =
-                parseTextAsExpression(input)
+                parseExpression(input)
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         toExpression(parseResult.right()!!.node).toString().shouldBe(output)

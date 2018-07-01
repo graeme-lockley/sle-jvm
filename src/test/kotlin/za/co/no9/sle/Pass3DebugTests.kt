@@ -2,7 +2,7 @@ package za.co.no9.sle
 
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
-import za.co.no9.sle.parser.parseText
+import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.map
 import za.co.no9.sle.pass3.*
@@ -19,7 +19,7 @@ class Pass3DebugTests : StringSpec({
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Pair<Module, Constraints> {
         val module =
-                map(toModule(parseText(input).right()!!.node))
+                map(toModule(parseModule(input).right()!!.node))
 
         return infer(module, env).right()!!
     }

@@ -4,13 +4,13 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.parser.Result
-import za.co.no9.sle.parser.parseText
+import za.co.no9.sle.parser.parseModule
 
 
 class ParserTests : StringSpec({
     "the sle text \"let identity x = x\" should parse" {
         val parseResult =
-                parseText("let identity x = x")
+                parseModule("let identity x = x")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         parseResult.right()?.stringTree.shouldBe("(module (declaration let identity x = (expression (factor x))))")
@@ -19,7 +19,7 @@ class ParserTests : StringSpec({
 
     "multiplicatives have higher precedence than additives" {
         val parseResult =
-                parseText("let f a b c = a + b * c")
+                parseModule("let f a b c = a + b * c")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         parseResult.right()?.stringTree.shouldBe("(module (declaration let f a b c = (expression (expression (factor a)) + (expression (expression (factor b)) * (expression (factor c))))))")
@@ -28,7 +28,7 @@ class ParserTests : StringSpec({
 
     "a syntax error is reported" {
         val parseResult =
-                parseText("let identity 10 = x")
+                parseModule("let identity 10 = x")
 
         parseResult.shouldBeTypeOf<Either.Error<String>>()
     }

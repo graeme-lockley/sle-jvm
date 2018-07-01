@@ -5,14 +5,14 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.Either
 import za.co.no9.sle.parser.Result
-import za.co.no9.sle.parser.parseText
+import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.right
 
 
 class DeclarationTests : StringSpec({
     fun parse(input: String, output: String) {
         val parseResult =
-                parseText(input)
+                parseModule(input)
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
         toModule(parseResult.right()!!.node).toString().shouldBe(output)
