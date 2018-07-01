@@ -1,4 +1,4 @@
-package za.co.no9.sle.ast.pass3
+package za.co.no9.sle.pass3
 
 import za.co.no9.sle.*
 

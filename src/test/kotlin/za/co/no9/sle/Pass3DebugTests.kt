@@ -2,9 +2,9 @@ package za.co.no9.sle
 
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
-import za.co.no9.sle.ast.pass1.toModule
-import za.co.no9.sle.ast.pass2.map
-import za.co.no9.sle.ast.pass3.*
+import za.co.no9.sle.pass1.toModule
+import za.co.no9.sle.pass2.map
+import za.co.no9.sle.pass3.*
 
 
 class Pass3DebugTests : StringSpec({
@@ -12,7 +12,7 @@ class Pass3DebugTests : StringSpec({
         val expression =
                 parseExpression(input)
 
-        return Pair(infer(expression, env).right()!!, za.co.no9.sle.ast.pass3.constraints(expression, env))
+        return Pair(infer(expression, env).right()!!, constraints(expression, env))
     }
 
 

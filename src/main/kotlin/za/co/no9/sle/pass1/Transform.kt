@@ -1,4 +1,4 @@
-package za.co.no9.sle.ast.pass1
+package za.co.no9.sle.pass1
 
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token

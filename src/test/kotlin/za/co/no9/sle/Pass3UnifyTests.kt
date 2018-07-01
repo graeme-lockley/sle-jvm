@@ -2,9 +2,9 @@ package za.co.no9.sle
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.ast.pass3.Constraint
-import za.co.no9.sle.ast.pass3.Constraints
-import za.co.no9.sle.ast.pass3.unifies
+import za.co.no9.sle.pass3.Constraint
+import za.co.no9.sle.pass3.Constraints
+import za.co.no9.sle.pass3.unifies
 
 
 class Pass3UnifyTests : StringSpec({

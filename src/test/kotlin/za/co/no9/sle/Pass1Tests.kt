@@ -3,8 +3,8 @@ package za.co.no9.sle
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.ast.pass1.toExpression
-import za.co.no9.sle.ast.pass1.toModule
+import za.co.no9.sle.pass1.toExpression
+import za.co.no9.sle.pass1.toModule
 
 
 class Pass1Tests : StringSpec({

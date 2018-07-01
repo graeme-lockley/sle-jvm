@@ -1,4 +1,4 @@
-package za.co.no9.sle.ast.pass2
+package za.co.no9.sle.pass2
 
 import za.co.no9.sle.Location
 

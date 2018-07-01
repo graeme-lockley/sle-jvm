@@ -4,11 +4,12 @@ import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.ast.pass1.toExpression
-import za.co.no9.sle.ast.pass1.toModule
-import za.co.no9.sle.ast.pass2.Expression
-import za.co.no9.sle.ast.pass2.map
-import za.co.no9.sle.ast.pass3.infer
+import za.co.no9.sle.pass1.toExpression
+import za.co.no9.sle.pass1.toModule
+import za.co.no9.sle.pass2.Expression
+import za.co.no9.sle.pass2.map
+import za.co.no9.sle.pass3.constraints
+import za.co.no9.sle.pass3.infer
 
 
 val noConstraints =
@@ -142,7 +143,7 @@ fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<St
     val expression =
             parseExpression(input)
 
-    return Pair(infer(expression, env).right()!!.type.toString(), za.co.no9.sle.ast.pass3.constraints(expression, env).map { it.toString() })
+    return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).map { it.toString() })
 }
 
 fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {

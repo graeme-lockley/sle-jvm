@@ -3,11 +3,20 @@ package za.co.no9.sle
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.ast.pass1.BinaryOpExpression
-import za.co.no9.sle.ast.pass1.False
-import za.co.no9.sle.ast.pass1.NotExpression
-import za.co.no9.sle.ast.pass1.True
-import za.co.no9.sle.ast.pass2.*
+import za.co.no9.sle.pass1.BinaryOpExpression
+import za.co.no9.sle.pass1.False
+import za.co.no9.sle.pass1.NotExpression
+import za.co.no9.sle.pass1.True
+import za.co.no9.sle.pass1.CallExpression
+import za.co.no9.sle.pass1.ConstantInt
+import za.co.no9.sle.pass1.ConstantString
+import za.co.no9.sle.pass1.ID
+import za.co.no9.sle.pass1.IdReference
+import za.co.no9.sle.pass1.IfExpression
+import za.co.no9.sle.pass1.LambdaExpression
+import za.co.no9.sle.pass1.LetDeclaration
+import za.co.no9.sle.pass1.Module
+import za.co.no9.sle.pass2.*
 
 
 class Pass2Tests : StringSpec({
@@ -23,8 +32,8 @@ class Pass2Tests : StringSpec({
 
 
     "map ID" {
-        map(za.co.no9.sle.ast.pass1.ID(arbLocation, "MyName"))
-                .shouldBe(ID(arbLocation, "MyName"))
+        map(ID(arbLocation, "MyName"))
+                .shouldBe(za.co.no9.sle.pass2.ID(arbLocation, "MyName"))
     }
 
 
@@ -42,63 +51,63 @@ class Pass2Tests : StringSpec({
 
     "map ConstantInt expression" {
         assertAll { n: Int ->
-            map(za.co.no9.sle.ast.pass1.ConstantInt(arbLocation, n))
-                    .shouldBe(ConstantInt(arbLocation, n))
+            map(ConstantInt(arbLocation, n))
+                    .shouldBe(za.co.no9.sle.pass2.ConstantInt(arbLocation, n))
         }
     }
 
 
     "map ConstantString expression" {
         assertAll { s: String ->
-            map(za.co.no9.sle.ast.pass1.ConstantString(arbLocation, s))
-                    .shouldBe(ConstantString(arbLocation, s))
+            map(ConstantString(arbLocation, s))
+                    .shouldBe(za.co.no9.sle.pass2.ConstantString(arbLocation, s))
         }
     }
 
 
     "map NotExpression" {
         map(NotExpression(arbLocation, arbPass1Expression))
-                .shouldBe(CallExpression(arbLocation, IdReference(arbLocation, "(!)"), arbPass2Expression))
+                .shouldBe(CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(!)"), arbPass2Expression))
     }
 
 
     "map IdReference expression" {
-        map(za.co.no9.sle.ast.pass1.IdReference(arbLocation, "Hello"))
-                .shouldBe(IdReference(arbLocation, "Hello"))
+        map(IdReference(arbLocation, "Hello"))
+                .shouldBe(za.co.no9.sle.pass2.IdReference(arbLocation, "Hello"))
     }
 
 
     "map IfExpression " {
-        map(za.co.no9.sle.ast.pass1.IfExpression(arbLocation, za.co.no9.sle.ast.pass1.IdReference(arbLocation, "a"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "b"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "c")))
-                .shouldBe(IfExpression(arbLocation, IdReference(arbLocation, "a"), IdReference(arbLocation, "b"), IdReference(arbLocation, "c")))
+        map(IfExpression(arbLocation, IdReference(arbLocation, "a"), IdReference(arbLocation, "b"), IdReference(arbLocation, "c")))
+                .shouldBe(IfExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "a"), za.co.no9.sle.pass2.IdReference(arbLocation, "b"), za.co.no9.sle.pass2.IdReference(arbLocation, "c")))
     }
 
 
     "map LambdaExpression" {
-        map(za.co.no9.sle.ast.pass1.LambdaExpression(arbLocation, listOf(za.co.no9.sle.ast.pass1.ID(arbLocation, "a"), za.co.no9.sle.ast.pass1.ID(arbLocation, "b")), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "a")))
-                .shouldBe(LambdaExpression(arbLocation, ID(arbLocation, "a"), LambdaExpression(arbLocation, ID(arbLocation, "b"), IdReference(arbLocation, "a"))))
+        map(LambdaExpression(arbLocation, listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), IdReference(arbLocation, "a")))
+                .shouldBe(LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "a"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "b"), za.co.no9.sle.pass2.IdReference(arbLocation, "a"))))
     }
 
 
     "map BinaryOpExpression" {
-        map(za.co.no9.sle.ast.pass1.BinaryOpExpression(arbLocation, za.co.no9.sle.ast.pass1.IdReference(arbLocation, "a"), za.co.no9.sle.ast.pass1.ID(arbLocation, "+"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "b")))
-                .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, IdReference(arbLocation, "(+)"), IdReference(arbLocation, "a")), IdReference(arbLocation, "b")))
+        map(BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b")))
+                .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(+)"), za.co.no9.sle.pass2.IdReference(arbLocation, "a")), za.co.no9.sle.pass2.IdReference(arbLocation, "b")))
 
     }
 
     "map CallExpression" {
-        map(za.co.no9.sle.ast.pass1.CallExpression(arbLocation, za.co.no9.sle.ast.pass1.IdReference(arbLocation, "a"), listOf(za.co.no9.sle.ast.pass1.IdReference(arbLocation, "b"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "c"))))
-                .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, IdReference(arbLocation, "a"), IdReference(arbLocation, "b")), IdReference(arbLocation, "c")))
+        map(CallExpression(arbLocation, IdReference(arbLocation, "a"), listOf(IdReference(arbLocation, "b"), IdReference(arbLocation, "c"))))
+                .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "a"), za.co.no9.sle.pass2.IdReference(arbLocation, "b")), za.co.no9.sle.pass2.IdReference(arbLocation, "c")))
     }
 
 
     "map module" {
-        map(za.co.no9.sle.ast.pass1.Module(arbLocation, listOf(
-                za.co.no9.sle.ast.pass1.LetDeclaration(arbLocation, za.co.no9.sle.ast.pass1.ID(arbLocation, "add"), listOf(za.co.no9.sle.ast.pass1.ID(arbLocation, "a"), za.co.no9.sle.ast.pass1.ID(arbLocation, "b")), BinaryOpExpression(arbLocation, za.co.no9.sle.ast.pass1.IdReference(arbLocation, "a"), za.co.no9.sle.ast.pass1.ID(arbLocation, "+"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "b"))),
-                za.co.no9.sle.ast.pass1.LetDeclaration(arbLocation, za.co.no9.sle.ast.pass1.ID(arbLocation, "sub"), listOf(za.co.no9.sle.ast.pass1.ID(arbLocation, "x"), za.co.no9.sle.ast.pass1.ID(arbLocation, "y")), BinaryOpExpression(arbLocation, za.co.no9.sle.ast.pass1.IdReference(arbLocation, "x"), za.co.no9.sle.ast.pass1.ID(arbLocation, "-"), za.co.no9.sle.ast.pass1.IdReference(arbLocation, "y"))))
+        map(Module(arbLocation, listOf(
+                LetDeclaration(arbLocation, ID(arbLocation, "add"), listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b"))),
+                LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
         )).shouldBe(Module(arbLocation, listOf(
-                LetDeclaration(arbLocation, ID(arbLocation, "add"), LambdaExpression(arbLocation, ID(arbLocation, "a"), LambdaExpression(arbLocation, ID(arbLocation, "b"), CallExpression(arbLocation, CallExpression(arbLocation, IdReference(arbLocation, "(+)"), IdReference(arbLocation, "a")), IdReference(arbLocation, "b"))))),
-                LetDeclaration(arbLocation, ID(arbLocation, "sub"), LambdaExpression(arbLocation, ID(arbLocation, "x"), LambdaExpression(arbLocation, ID(arbLocation, "y"), CallExpression(arbLocation, CallExpression(arbLocation, IdReference(arbLocation, "(-)"), IdReference(arbLocation, "x")), IdReference(arbLocation, "y")))))
+                LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "add"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "a"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "b"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(+)"), za.co.no9.sle.pass2.IdReference(arbLocation, "a")), za.co.no9.sle.pass2.IdReference(arbLocation, "b"))))),
+                LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "sub"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "x"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "y"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(-)"), za.co.no9.sle.pass2.IdReference(arbLocation, "x")), za.co.no9.sle.pass2.IdReference(arbLocation, "y")))))
         )))
     }
 })

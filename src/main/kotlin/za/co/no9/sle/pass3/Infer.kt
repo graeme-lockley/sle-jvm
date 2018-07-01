@@ -1,6 +1,7 @@
-package za.co.no9.sle.ast.pass3
+package za.co.no9.sle.pass3
 
 import za.co.no9.sle.*
+import za.co.no9.sle.pass2.Declaration
 
 
 data class Constraint(val t1: Type, val t2: Type) {
@@ -16,7 +17,7 @@ typealias Constraints =
         List<Constraint>
 
 
-fun infer(module: za.co.no9.sle.ast.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
+fun infer(module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
             InferContext(env)
 
@@ -30,7 +31,7 @@ fun infer(module: za.co.no9.sle.ast.pass2.Module, env: Environment): Either<Erro
 }
 
 
-fun infer(expression: za.co.no9.sle.ast.pass2.Expression, env: Environment): Either<Errors, Expression> {
+fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Expression> {
     val context =
             InferContext(env)
 
@@ -47,7 +48,7 @@ fun infer(expression: za.co.no9.sle.ast.pass2.Expression, env: Environment): Eit
 }
 
 
-fun constraints(expression: za.co.no9.sle.ast.pass2.Expression, env: Environment): Constraints {
+fun constraints(expression: za.co.no9.sle.pass2.Expression, env: Environment): Constraints {
     val state =
             InferContext(env)
 
@@ -94,10 +95,10 @@ private class InferContext(internal var env: Environment) {
             mutableListOf<Error>()
 
 
-    fun infer(module: za.co.no9.sle.ast.pass2.Module): Module {
-        env = module.declarations.fold(env) { e: Environment, d: za.co.no9.sle.ast.pass2.Declaration ->
+    fun infer(module: za.co.no9.sle.pass2.Module): Module {
+        env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
-                is za.co.no9.sle.ast.pass2.LetDeclaration -> {
+                is za.co.no9.sle.pass2.LetDeclaration -> {
                     val name =
                             d.name.name
 
@@ -115,7 +116,7 @@ private class InferContext(internal var env: Environment) {
                 module.location,
                 module.declarations.map { d ->
                     when (d) {
-                        is za.co.no9.sle.ast.pass2.LetDeclaration -> {
+                        is za.co.no9.sle.pass2.LetDeclaration -> {
                             val e =
                                     infer(d.expression)
 
@@ -125,18 +126,18 @@ private class InferContext(internal var env: Environment) {
                 })
     }
 
-    fun infer(expression: za.co.no9.sle.ast.pass2.Expression): Expression =
+    fun infer(expression: za.co.no9.sle.pass2.Expression): Expression =
             when (expression) {
-                is za.co.no9.sle.ast.pass2.ConstantBool ->
+                is za.co.no9.sle.pass2.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
 
-                is za.co.no9.sle.ast.pass2.ConstantInt ->
+                is za.co.no9.sle.pass2.ConstantInt ->
                     ConstantInt(expression.location, typeInt, expression.value)
 
-                is za.co.no9.sle.ast.pass2.ConstantString ->
+                is za.co.no9.sle.pass2.ConstantString ->
                     ConstantString(expression.location, typeString, expression.value)
 
-                is za.co.no9.sle.ast.pass2.IdReference -> {
+                is za.co.no9.sle.pass2.IdReference -> {
                     val schema =
                             env[expression.name]
 
@@ -152,7 +153,7 @@ private class InferContext(internal var env: Environment) {
                     }
                 }
 
-                is za.co.no9.sle.ast.pass2.IfExpression -> {
+                is za.co.no9.sle.pass2.IfExpression -> {
                     val t1 =
                             infer(expression.guardExpression)
 
@@ -168,7 +169,7 @@ private class InferContext(internal var env: Environment) {
                     IfExpression(expression.location, t2.type, t1, t2, t3)
                 }
 
-                is za.co.no9.sle.ast.pass2.LambdaExpression -> {
+                is za.co.no9.sle.pass2.LambdaExpression -> {
                     val tv =
                             varPump.fresh()
 
@@ -184,7 +185,7 @@ private class InferContext(internal var env: Environment) {
                     LambdaExpression(expression.location, TArr(tv, t.type), ID(expression.argument.location, expression.argument.name), t)
                 }
 
-                is za.co.no9.sle.ast.pass2.CallExpression -> {
+                is za.co.no9.sle.pass2.CallExpression -> {
                     val t1 =
                             infer(expression.operator)
 
