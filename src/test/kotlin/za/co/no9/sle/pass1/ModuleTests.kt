@@ -9,7 +9,7 @@ import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.right
 
 
-class DeclarationTests : StringSpec({
+class ModuleTests : StringSpec({
     fun parse(input: String, output: String) {
         val parseResult =
                 parseModule(input)
