@@ -20,7 +20,7 @@ import za.co.no9.sle.pass1.LetDeclaration
 import za.co.no9.sle.pass1.Module
 
 
-class Pass2Tests : StringSpec({
+class TransformTests : StringSpec({
     val arbLocation =
             Location(Position(1, 2), Position(3, 4))
 
