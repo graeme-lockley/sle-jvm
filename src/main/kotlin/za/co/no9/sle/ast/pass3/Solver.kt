@@ -8,16 +8,16 @@ typealias Unifier =
 
 
 fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
-    val solver =
-            Solver(constraints)
+    val context =
+            SolverContext(constraints)
 
     val subst =
-            solver.solve()
+            context.solve()
 
-    return if (solver.errors.isEmpty())
+    return if (context.errors.isEmpty())
         value(subst)
     else
-        error(solver.errors)
+        error(context.errors)
 }
 
 
@@ -55,7 +55,7 @@ fun apply(substitution: Substitution, expression: Expression): Expression =
         }
 
 
-private class Solver(private var constraints: Constraints) {
+private class SolverContext(private var constraints: Constraints) {
     val errors =
             mutableListOf<Error>()
 
