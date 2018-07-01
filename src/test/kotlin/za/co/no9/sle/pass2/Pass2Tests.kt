@@ -1,8 +1,10 @@
-package za.co.no9.sle
+package za.co.no9.sle.pass2
 
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.Location
+import za.co.no9.sle.Position
 import za.co.no9.sle.pass1.BinaryOpExpression
 import za.co.no9.sle.pass1.False
 import za.co.no9.sle.pass1.NotExpression
@@ -16,7 +18,6 @@ import za.co.no9.sle.pass1.IfExpression
 import za.co.no9.sle.pass1.LambdaExpression
 import za.co.no9.sle.pass1.LetDeclaration
 import za.co.no9.sle.pass1.Module
-import za.co.no9.sle.pass2.*
 
 
 class Pass2Tests : StringSpec({

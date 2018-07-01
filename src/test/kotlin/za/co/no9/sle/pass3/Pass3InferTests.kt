@@ -1,17 +1,14 @@
-package za.co.no9.sle
+package za.co.no9.sle.pass3
 
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.parser.parseExpression
+import za.co.no9.sle.*
 import za.co.no9.sle.pass1.toExpression
 import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.Expression
 import za.co.no9.sle.pass2.map
-import za.co.no9.sle.pass3.constraints
-import za.co.no9.sle.pass3.infer
 
 
 val noConstraints =
@@ -110,7 +107,7 @@ class Pass3InferTests : StringSpec({
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val module =
-                map(toModule(parseModule("let add a b = a + b\n" +
+                map(toModule(za.co.no9.sle.parser.parseModule("let add a b = a + b\n" +
                         "let inc = add 1").right()!!.node))
 
         val inferResult =
@@ -160,7 +157,7 @@ fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Er
 
 
 fun parseExpression(input: String): Expression =
-        map(toExpression(parseExpression(input).right()!!.node))
+        map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
 
 
 fun String.markup(): String =
