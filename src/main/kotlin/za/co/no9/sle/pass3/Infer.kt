@@ -55,7 +55,7 @@ fun infer(module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, 
 }
 
 
-fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Expression> {
+fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
     val context =
             InferContext(env)
 
@@ -64,21 +64,11 @@ fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<
 
     return when {
         context.errors.isEmpty() ->
-            value(t)
+            value(Pair(t, context.constraints))
 
         else ->
             error(context.errors)
     }
-}
-
-
-fun constraints(expression: za.co.no9.sle.pass2.Expression, env: Environment): Constraints {
-    val state =
-            InferContext(env)
-
-    state.infer(expression)
-
-    return state.constraints
 }
 
 

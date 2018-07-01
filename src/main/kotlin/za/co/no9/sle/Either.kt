@@ -31,6 +31,16 @@ inline infix fun <E, V, V2> Either<E, V>.map(f: (V) -> V2): Either<E, V2> =
         }
 
 
+inline infix fun <E, V, V2> Either<E, V>.andThen(f: (V) -> Either<E, V2>): Either<E, V2> =
+        when (this) {
+            is Either.Error ->
+                this
+
+            is Either.Value ->
+                f(this.value)
+        }
+
+
 infix fun <E, V, V2> Either<E, (V) -> V2>.apply(f: Either<E, V>): Either<E, V2> =
         when (this) {
             is Either.Error ->

@@ -5,33 +5,29 @@ import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.parser.parseExpression
 import za.co.no9.sle.pass1.toExpression
-import za.co.no9.sle.pass2.Expression
 import za.co.no9.sle.pass2.map
 
 
 class InferExpressionTests : StringSpec({
-    fun parseExpression(input: String): Expression =
-            map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
+    fun infer(input: String, env: Environment): Either<Errors, Pair<za.co.no9.sle.pass3.Expression, Constraints>> =
+            parseExpression(input)
+                    .map { toExpression(it.node) }
+                    .map { map(it) }
+                    .mapError { listOf(it) }
+                    .andThen { infer(it, env) }
 
 
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, String> {
-        val expression =
-                parseExpression(input)
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, String>? =
+            infer(input, env)
+                    .map { it.mapFirst { it.type.toString() } }
+                    .map { it.mapSecond { it.toString() } }
+                    .right()
 
-        return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).toString())
-    }
 
-
-    fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
-        val expression =
-                parseExpression(input)
-
-        val infer =
-                infer(expression, env)
-
-        return infer.left()!!
-    }
+    fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors? =
+            infer(input, env).left()
 
 
     fun String.markup(): String =

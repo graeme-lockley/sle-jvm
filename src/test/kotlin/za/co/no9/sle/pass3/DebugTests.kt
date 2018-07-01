@@ -10,16 +10,16 @@ import za.co.no9.sle.pass2.map
 
 
 class Pass3DebugTests : StringSpec({
-    fun parseExpression(input: String): za.co.no9.sle.pass2.Expression =
-            map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
+    fun parseExpression(input: String): Either<Error, za.co.no9.sle.pass2.Expression> =
+            za.co.no9.sle.parser.parseExpression(input)
+                    .map { toExpression(it.node) }
+                    .map { map(it) }
 
 
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Expression, Constraints> {
-        val expression =
-                parseExpression(input)
-
-        return Pair(infer(expression, env).right()!!, constraints(expression, env))
-    }
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
+            parseExpression(input)
+                    .mapError { listOf(it) }
+                    .andThen { infer(it, env) }
 
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Pair<Module, Constraints> {
@@ -48,13 +48,13 @@ class Pass3DebugTests : StringSpec({
                 inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
 
         val inferExpressionAsString =
-                inferExpression.asString()
+                inferExpression.right()!!.asString()
 
         val subst =
-                unifies(inferExpression.second)
+                unifies(inferExpression.right()!!.second)
 
         val newAST =
-                apply(subst.right()!!, inferExpression.first)
+                apply(subst.right()!!, inferExpression.right()!!.first)
 
         println(inferExpressionAsString.first)
         println(inferExpressionAsString.second)
