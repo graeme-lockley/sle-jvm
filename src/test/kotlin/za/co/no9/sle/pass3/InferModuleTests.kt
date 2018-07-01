@@ -20,12 +20,10 @@ class InferModuleTests : StringSpec({
         val inferResult =
                 infer(module, environment).right()!!
 
-        inferResult.second.map { it.toString() }
-                .shouldBe(listOf(
-                        "Int -> Int -> Int : '0 -> '2",
-                        "'2 : '1 -> '3",
-                        "'4 : Int -> '5"))
+        inferResult.second.toString()
+                .shouldBe(
+                        "Int -> Int -> Int : '0 -> '2, " +
+                                "'2 : '1 -> '3, " +
+                                "'4 : Int -> '5")
     }
 })
-
-

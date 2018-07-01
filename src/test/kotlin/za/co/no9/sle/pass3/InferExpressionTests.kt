@@ -11,19 +11,15 @@ import za.co.no9.sle.pass2.map
 
 
 class InferExpressionTests : StringSpec({
-    val noConstraints =
-            emptyList<Constraint>()
-
-
     fun parseExpression(input: String): Expression =
             map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
 
 
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<String>> {
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, String> {
         val expression =
                 parseExpression(input)
 
-        return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).map { it.toString() })
+        return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).toString())
     }
 
 
@@ -44,26 +40,20 @@ class InferExpressionTests : StringSpec({
 
     "\"True\" infers to TCon Boolean" {
         inferExpression("True")
-                .shouldBe(Pair(
-                        "Bool",
-                        noConstraints))
+                .shouldBe(Pair("Bool", ""))
     }
 
 
     "\"False\" infers to TCon Boolean" {
         inferExpression("False")
-                .shouldBe(Pair(
-                        "Bool",
-                        noConstraints))
+                .shouldBe(Pair("Bool", ""))
     }
 
 
     "\"<int>\" infers to TCon Int" {
         assertAll(Gen.positiveIntegers()) { n: Int ->
             inferExpression(n.toString())
-                    .shouldBe(Pair(
-                            "Int",
-                            noConstraints))
+                    .shouldBe(Pair("Int", ""))
         }
     }
 
@@ -71,18 +61,14 @@ class InferExpressionTests : StringSpec({
     "\"<string>\" infers to TCon String" {
         assertAll { s: String ->
             inferExpression("\"${s.markup()}\"")
-                    .shouldBe(Pair(
-                            "String",
-                            noConstraints))
+                    .shouldBe(Pair("String", ""))
         }
     }
 
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
         inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
-                .shouldBe(Pair(
-                        "String",
-                        noConstraints))
+                .shouldBe(Pair("String", ""))
     }
 
 
@@ -96,9 +82,8 @@ class InferExpressionTests : StringSpec({
         inferExpression("if a then b else c", environment)
                 .shouldBe(Pair(
                         "'2",
-                        listOf(
-                                "'1 : Bool",
-                                "'2 : '3")))
+                        "'1 : Bool, " +
+                                "'2 : '3"))
     }
 
 
@@ -106,7 +91,7 @@ class InferExpressionTests : StringSpec({
         inferExpression("\\a -> a")
                 .shouldBe(Pair(
                         "'0 -> '0",
-                        listOf<Pair<String, String>>()))
+                        ""))
     }
 
 
@@ -114,8 +99,7 @@ class InferExpressionTests : StringSpec({
         inferExpression("\\a -> a 10")
                 .shouldBe(Pair(
                         "'0 -> '1",
-                        listOf(
-                                "'0 : Int -> '1")))
+                        "'0 : Int -> '1"))
     }
 
 
@@ -128,9 +112,8 @@ class InferExpressionTests : StringSpec({
         inferExpression("a + 1", environment)
                 .shouldBe(Pair(
                         "'1",
-                        listOf(
-                                "Int -> Int -> Int : Int -> '0",
-                                "'0 : Int -> '1")))
+                        "Int -> Int -> Int : Int -> '0, " +
+                                "'0 : Int -> '1"))
     }
 
 

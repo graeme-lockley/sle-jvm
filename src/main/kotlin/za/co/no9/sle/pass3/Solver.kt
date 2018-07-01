@@ -60,10 +60,6 @@ private class SolverContext(private var constraints: Constraints) {
             mutableListOf<Error>()
 
 
-    private fun Constraints.apply(substitution: Substitution): Constraints =
-            this.map { it.apply(substitution) }
-
-
     private fun List<Type>.subst(substitution: Substitution): List<Type> =
             this.map { it.apply(substitution) }
 
@@ -90,13 +86,13 @@ private class SolverContext(private var constraints: Constraints) {
     private fun unifies(t1: Type, t2: Type): Unifier =
             when {
                 t1 == t2 ->
-                    Pair(nullSubstitution, emptyList())
+                    Pair(nullSubstitution, noConstraints)
 
                 t1 is TVar ->
-                    Pair(Substitution(t1.variable, t2), emptyList())
+                    Pair(Substitution(t1.variable, t2), noConstraints)
 
                 t2 is TVar ->
-                    Pair(Substitution(t2.variable, t1), emptyList())
+                    Pair(Substitution(t2.variable, t1), noConstraints)
 
                 t1 is TArr && t2 is TArr ->
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
@@ -104,7 +100,7 @@ private class SolverContext(private var constraints: Constraints) {
                 else -> {
                     errors.add(UnificationFail(t1, t2))
 
-                    Pair(nullSubstitution, emptyList())
+                    Pair(nullSubstitution, noConstraints)
                 }
             }
 
@@ -112,7 +108,7 @@ private class SolverContext(private var constraints: Constraints) {
     private fun unifyMany(t1s: List<Type>, t2s: List<Type>): Unifier =
             when {
                 t1s.isEmpty() && t2s.isEmpty() ->
-                    Pair(nullSubstitution, emptyList())
+                    Pair(nullSubstitution, noConstraints)
 
                 t1s.isNotEmpty() && t2s.isNotEmpty() -> {
                     val t1 =
@@ -134,7 +130,7 @@ private class SolverContext(private var constraints: Constraints) {
                 else -> {
                     errors.add(UnificationMismatch(t1s, t2s))
 
-                    Pair(nullSubstitution, emptyList())
+                    Pair(nullSubstitution, noConstraints)
                 }
             }
 }

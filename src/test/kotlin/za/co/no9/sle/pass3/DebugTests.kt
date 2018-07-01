@@ -30,14 +30,12 @@ class Pass3DebugTests : StringSpec({
     }
 
 
-    fun Pair<Expression, Constraints>.asString(): Pair<String, List<String>> {
-        return Pair(asString(this.first), this.second.map { it.toString() })
-    }
+    fun Pair<Expression, Constraints>.asString(): Pair<String, String> =
+            Pair(asString(this.first), this.second.toString())
 
 
-    fun Pair<Module, Constraints>.asString(): Pair<String, List<String>> {
-        return Pair(asString(this.first), this.second.map { it.toString() })
-    }
+    fun Pair<Module, Constraints>.asString(): Pair<String, String> =
+            Pair(asString(this.first), this.second.toString())
 
 
     "Dump AST" {
@@ -59,7 +57,7 @@ class Pass3DebugTests : StringSpec({
                 apply(subst.right()!!, inferExpression.first)
 
         println(inferExpressionAsString.first)
-        println(inferExpressionAsString.second.joinToString(",\n"))
+        println(inferExpressionAsString.second)
         println()
         println(asString(newAST))
     }
@@ -85,7 +83,7 @@ class Pass3DebugTests : StringSpec({
                 apply(subst.right()!!, inferModule.first)
 
         println(inferModuleAsString.first)
-        println(inferModuleAsString.second.joinToString(",\n"))
+        println(inferModuleAsString.second)
         println()
         println(asString(newAST))
 
