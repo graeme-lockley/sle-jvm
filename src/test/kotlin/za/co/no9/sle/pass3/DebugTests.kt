@@ -4,11 +4,16 @@ import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.*
 import za.co.no9.sle.parser.parseModule
+import za.co.no9.sle.pass1.toExpression
 import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.map
 
 
 class Pass3DebugTests : StringSpec({
+    fun parseExpression(input: String): za.co.no9.sle.pass2.Expression =
+            map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
+
+
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<Expression, Constraints> {
         val expression =
                 parseExpression(input)

@@ -6,16 +6,42 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.pass1.toExpression
-import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.Expression
 import za.co.no9.sle.pass2.map
 
 
-val noConstraints =
-        emptyList<Pair<String, String>>()
+class InferExpressionTests : StringSpec({
+    val noConstraints =
+            emptyList<Pair<String, String>>()
 
 
-class Pass3InferTests : StringSpec({
+    fun parseExpression(input: String): Expression =
+            map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
+
+
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<String>> {
+        val expression =
+                parseExpression(input)
+
+        return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).map { it.toString() })
+    }
+
+
+    fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
+        val expression =
+                parseExpression(input)
+
+        val infer =
+                infer(expression, env)
+
+        return infer.left()!!
+    }
+
+
+    fun String.markup(): String =
+            this.replace("\\", "\\\\").replace("\"", "\\\"")
+
+
     "\"True\" infers to TCon Boolean" {
         inferExpression("True")
                 .shouldBe(Pair(
@@ -23,12 +49,14 @@ class Pass3InferTests : StringSpec({
                         noConstraints))
     }
 
+
     "\"False\" infers to TCon Boolean" {
         inferExpression("False")
                 .shouldBe(Pair(
                         "Bool",
                         noConstraints))
     }
+
 
     "\"<int>\" infers to TCon Int" {
         assertAll(Gen.positiveIntegers()) { n: Int ->
@@ -39,6 +67,7 @@ class Pass3InferTests : StringSpec({
         }
     }
 
+
     "\"<string>\" infers to TCon String" {
         assertAll { s: String ->
             inferExpression("\"${s.markup()}\"")
@@ -48,12 +77,14 @@ class Pass3InferTests : StringSpec({
         }
     }
 
+
     "\"a\" infers to TCon String where a is bound to Schema [] String" {
         inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
                 .shouldBe(Pair(
                         "String",
                         noConstraints))
     }
+
 
     "\"if a then b else c\"" {
         val environment =
@@ -70,12 +101,14 @@ class Pass3InferTests : StringSpec({
                                 "'2 : '3")))
     }
 
+
     "\"\\a -> a\"" {
         inferExpression("\\a -> a")
                 .shouldBe(Pair(
                         "'0 -> '0",
                         listOf<Pair<String, String>>()))
     }
+
 
     "\"\\a -> a 10\"" {
         inferExpression("\\a -> a 10")
@@ -101,26 +134,6 @@ class Pass3InferTests : StringSpec({
     }
 
 
-    "\"let add a b = a + b\nlet inc = add 1\"" {
-        val environment =
-                Environment(mapOf(
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
-
-        val module =
-                map(toModule(za.co.no9.sle.parser.parseModule("let add a b = a + b\n" +
-                        "let inc = add 1").right()!!.node))
-
-        val inferResult =
-                infer(module, environment).right()!!
-
-        inferResult.second.map { it.toString() }
-                .shouldBe(listOf(
-                        "Int -> Int -> Int : '0 -> '2",
-                        "'2 : '1 -> '3",
-                        "'4 : Int -> '5"))
-    }
-
-
     "\"a\" infers to an UnboundVariable error where a not within the environment" {
         inferExpressionError("a")
                 .shouldBe(listOf(
@@ -134,31 +147,6 @@ class Pass3InferTests : StringSpec({
                         UnboundVariable(Location(Position(1, 2)), "(+)"),
                         UnboundVariable(Location(Position(1, 0)), "a")))
     }
-
 })
 
 
-fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, List<String>> {
-    val expression =
-            parseExpression(input)
-
-    return Pair(infer(expression, env).right()!!.type.toString(), constraints(expression, env).map { it.toString() })
-}
-
-fun inferExpressionError(input: String, env: Environment = emptyEnvironment): Errors {
-    val expression =
-            parseExpression(input)
-
-    val infer =
-            infer(expression, env)
-
-    return infer.left()!!
-}
-
-
-fun parseExpression(input: String): Expression =
-        map(toExpression(za.co.no9.sle.parser.parseExpression(input).right()!!.node))
-
-
-fun String.markup(): String =
-        this.replace("\\", "\\\\").replace("\"", "\\\"")

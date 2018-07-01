@@ -5,7 +5,11 @@ import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
 
 
-class Pass3UnifyTests : StringSpec({
+class UnifyTests : StringSpec({
+    fun unifiesAsString(constraints: Constraints): String =
+            unifies(constraints).right()!!.toString()
+
+
     "no constraints results in no substitution" {
         val constraints: Constraints =
                 listOf()
@@ -26,6 +30,7 @@ class Pass3UnifyTests : StringSpec({
                 .shouldBe("")
     }
 
+
     "type var and constant type result in a single substitution" {
         val constraints =
                 listOf(
@@ -34,6 +39,7 @@ class Pass3UnifyTests : StringSpec({
         unifiesAsString(constraints)
                 .shouldBe("'1 Int")
     }
+
 
     "constant type and type var result in a single substitution" {
         val constraints =
@@ -44,6 +50,7 @@ class Pass3UnifyTests : StringSpec({
                 .shouldBe("'1 Int")
     }
 
+
     "constant function type and type var result in a single substitution" {
         val constraints =
                 listOf(
@@ -53,7 +60,3 @@ class Pass3UnifyTests : StringSpec({
                 .shouldBe("'1 String, '2 Int")
     }
 })
-
-
-fun unifiesAsString(constraints: Constraints): String =
-        unifies(constraints).right()!!.toString()
