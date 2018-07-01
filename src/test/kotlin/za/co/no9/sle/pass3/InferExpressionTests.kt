@@ -12,7 +12,7 @@ import za.co.no9.sle.pass2.map
 
 class InferExpressionTests : StringSpec({
     val noConstraints =
-            emptyList<Pair<String, String>>()
+            emptyList<Constraint>()
 
 
     fun parseExpression(input: String): Expression =
@@ -148,5 +148,3 @@ class InferExpressionTests : StringSpec({
                         UnboundVariable(Location(Position(1, 0)), "a")))
     }
 })
-
-
