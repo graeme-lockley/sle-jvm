@@ -4,8 +4,8 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.Either
-import za.co.no9.sle.Result
-import za.co.no9.sle.parseText
+import za.co.no9.sle.parser.Result
+import za.co.no9.sle.parser.parseText
 import za.co.no9.sle.right
 
 

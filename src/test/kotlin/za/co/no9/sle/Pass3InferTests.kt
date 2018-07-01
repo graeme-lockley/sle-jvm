@@ -4,6 +4,8 @@ import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.parser.parseText
+import za.co.no9.sle.parser.parseTextAsExpression
 import za.co.no9.sle.pass1.toExpression
 import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.Expression

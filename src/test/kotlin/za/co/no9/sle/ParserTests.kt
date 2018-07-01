@@ -3,6 +3,8 @@ package za.co.no9.sle
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.parser.Result
+import za.co.no9.sle.parser.parseText
 
 
 class ParserTests : StringSpec({

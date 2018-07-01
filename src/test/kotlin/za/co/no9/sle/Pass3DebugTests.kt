@@ -2,6 +2,7 @@ package za.co.no9.sle
 
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
+import za.co.no9.sle.parser.parseText
 import za.co.no9.sle.pass1.toModule
 import za.co.no9.sle.pass2.map
 import za.co.no9.sle.pass3.*

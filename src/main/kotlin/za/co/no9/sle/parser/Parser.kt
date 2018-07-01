@@ -1,6 +1,7 @@
-package za.co.no9.sle
+package za.co.no9.sle.parser
 
 import org.antlr.v4.runtime.*
+import za.co.no9.sle.*
 
 
 typealias ParseResult =
@@ -47,7 +48,8 @@ private class ParserErrorListener : BaseErrorListener() {
     var syntaxError: SyntaxError? = null
 
     override fun syntaxError(recognizer: Recognizer<*, *>?, offendingSymbol: Any?, line: Int, charPositionInLine: Int, msg: String?, e: RecognitionException?) {
-        syntaxError = SyntaxError(Location(Position(line, charPositionInLine)), msg ?: "Syntax error")
+        syntaxError = SyntaxError(Location(Position(line, charPositionInLine)), msg
+                ?: "Syntax error")
     }
 }
 
