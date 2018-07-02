@@ -21,37 +21,43 @@ fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
 }
 
 
-fun apply(substitution: Substitution, module: Module): Module =
-        Module(module.location, module.declarations.map {
+fun za.co.no9.sle.pass2.Module.assign(environment: Environment): Either<Errors, Module> =
+        infer(this, environment)
+                .andThen { pair -> unifies(pair.second).map { Pair(pair.first, it) } }
+                .map { it.first.apply(it.second) }
+
+
+fun Module.apply(substitution: Substitution): Module =
+        Module(this.location, this.declarations.map {
             when (it) {
                 is LetDeclaration ->
-                    LetDeclaration(it.location, it.type.apply(substitution), it.name, apply(substitution, it.expression))
+                    LetDeclaration(it.location, it.type.apply(substitution), it.name, it.expression.apply(substitution))
             }
         })
 
 
-fun apply(substitution: Substitution, expression: Expression): Expression =
-        when (expression) {
+fun Expression.apply(substitution: Substitution): Expression =
+        when (this) {
             is ConstantBool ->
-                expression
+                this
 
             is ConstantInt ->
-                expression
+                this
 
             is ConstantString ->
-                expression
+                this
 
             is IdReference ->
-                IdReference(expression.location, expression.type.apply(substitution), expression.name)
+                IdReference(location, type.apply(substitution), name)
 
             is IfExpression ->
-                IfExpression(expression.location, expression.type.apply(substitution), apply(substitution, expression.guardExpression), apply(substitution, expression.thenExpression), apply(substitution, expression.elseExpression))
+                IfExpression(location, type.apply(substitution), guardExpression.apply(substitution), thenExpression.apply(substitution), elseExpression.apply(substitution))
 
             is LambdaExpression ->
-                LambdaExpression(expression.location, expression.type.apply(substitution), expression.argument, apply(substitution, expression.expression))
+                LambdaExpression(expression.location, expression.type.apply(substitution), argument, expression.apply(substitution))
 
             is CallExpression ->
-                CallExpression(expression.location, expression.type.apply(substitution), apply(substitution, expression.operand), apply(substitution, expression.operator))
+                CallExpression(location, type.apply(substitution), operand.apply(substitution), operator.apply(substitution))
         }
 
 
