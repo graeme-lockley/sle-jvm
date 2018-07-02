@@ -41,14 +41,11 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
             is LetDeclaration -> {
                 thingy.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.type}"))
 
-                val fieldType =
-                        javaType(declaration.type)
-
-                val fieldInitialiser =
-                        javaExpression(declaration.expression)
-
-                val field =
-                        thingy.addFieldWithInitializer(fieldType, declaration.name.name, fieldInitialiser, Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                thingy.addFieldWithInitializer(
+                        javaType(declaration.type),
+                        declaration.name.name,
+                        javaExpression(declaration.expression),
+                        Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             }
         }
     }
