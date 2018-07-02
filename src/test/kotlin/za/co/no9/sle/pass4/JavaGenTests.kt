@@ -28,6 +28,8 @@ class JavaGenTests : StringSpec({
                         .map { translateToJava(it, "test", "First") }
                         .map { it.toString() }
 
+//        println(result.mapError { it.toString() })
+
         this.javaClass.getResource("/test/First.java").readText()
                 .shouldBe(result.right())
     }
