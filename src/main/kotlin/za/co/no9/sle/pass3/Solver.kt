@@ -21,7 +21,7 @@ fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
 }
 
 
-fun za.co.no9.sle.pass2.Module.assign(environment: Environment): Either<Errors, Module> =
+fun za.co.no9.sle.pass2.Module.assignTypesToCoreAST(environment: Environment): Either<Errors, Module> =
         infer(this, environment)
                 .andThen { pair -> unifies(pair.second).map { Pair(pair.first, it) } }
                 .map { it.first.apply(it.second) }

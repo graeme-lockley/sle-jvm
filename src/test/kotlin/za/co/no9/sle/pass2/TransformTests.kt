@@ -32,78 +32,78 @@ class TransformTests : StringSpec({
             ConstantBool(arbLocation, true)
 
 
-    "map ID" {
-        map(ID(arbLocation, "MyName"))
+    "astToCoreAST ID" {
+        astToCoreAST(ID(arbLocation, "MyName"))
                 .shouldBe(za.co.no9.sle.pass2.ID(arbLocation, "MyName"))
     }
 
 
-    "map True expression" {
-        map(True(arbLocation))
+    "astToCoreAST True expression" {
+        astToCoreAST(True(arbLocation))
                 .shouldBe(ConstantBool(arbLocation, true))
     }
 
 
-    "map False expression" {
-        map(False(arbLocation))
+    "astToCoreAST False expression" {
+        astToCoreAST(False(arbLocation))
                 .shouldBe(ConstantBool(arbLocation, false))
     }
 
 
-    "map ConstantInt expression" {
+    "astToCoreAST ConstantInt expression" {
         assertAll { n: Int ->
-            map(ConstantInt(arbLocation, n))
+            astToCoreAST(ConstantInt(arbLocation, n))
                     .shouldBe(za.co.no9.sle.pass2.ConstantInt(arbLocation, n))
         }
     }
 
 
-    "map ConstantString expression" {
+    "astToCoreAST ConstantString expression" {
         assertAll { s: String ->
-            map(ConstantString(arbLocation, s))
+            astToCoreAST(ConstantString(arbLocation, s))
                     .shouldBe(za.co.no9.sle.pass2.ConstantString(arbLocation, s))
         }
     }
 
 
-    "map NotExpression" {
-        map(NotExpression(arbLocation, arbPass1Expression))
+    "astToCoreAST NotExpression" {
+        astToCoreAST(NotExpression(arbLocation, arbPass1Expression))
                 .shouldBe(CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(!)"), arbPass2Expression))
     }
 
 
-    "map IdReference expression" {
-        map(IdReference(arbLocation, "Hello"))
+    "astToCoreAST IdReference expression" {
+        astToCoreAST(IdReference(arbLocation, "Hello"))
                 .shouldBe(za.co.no9.sle.pass2.IdReference(arbLocation, "Hello"))
     }
 
 
-    "map IfExpression " {
-        map(IfExpression(arbLocation, IdReference(arbLocation, "a"), IdReference(arbLocation, "b"), IdReference(arbLocation, "c")))
+    "astToCoreAST IfExpression " {
+        astToCoreAST(IfExpression(arbLocation, IdReference(arbLocation, "a"), IdReference(arbLocation, "b"), IdReference(arbLocation, "c")))
                 .shouldBe(IfExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "a"), za.co.no9.sle.pass2.IdReference(arbLocation, "b"), za.co.no9.sle.pass2.IdReference(arbLocation, "c")))
     }
 
 
-    "map LambdaExpression" {
-        map(LambdaExpression(arbLocation, listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), IdReference(arbLocation, "a")))
+    "astToCoreAST LambdaExpression" {
+        astToCoreAST(LambdaExpression(arbLocation, listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), IdReference(arbLocation, "a")))
                 .shouldBe(LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "a"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "b"), za.co.no9.sle.pass2.IdReference(arbLocation, "a"))))
     }
 
 
-    "map BinaryOpExpression" {
-        map(BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b")))
+    "astToCoreAST BinaryOpExpression" {
+        astToCoreAST(BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b")))
                 .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(+)"), za.co.no9.sle.pass2.IdReference(arbLocation, "a")), za.co.no9.sle.pass2.IdReference(arbLocation, "b")))
 
     }
 
-    "map CallExpression" {
-        map(CallExpression(arbLocation, IdReference(arbLocation, "a"), listOf(IdReference(arbLocation, "b"), IdReference(arbLocation, "c"))))
+    "astToCoreAST CallExpression" {
+        astToCoreAST(CallExpression(arbLocation, IdReference(arbLocation, "a"), listOf(IdReference(arbLocation, "b"), IdReference(arbLocation, "c"))))
                 .shouldBe(CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "a"), za.co.no9.sle.pass2.IdReference(arbLocation, "b")), za.co.no9.sle.pass2.IdReference(arbLocation, "c")))
     }
 
 
-    "map module" {
-        map(Module(arbLocation, listOf(
+    "astToCoreAST module" {
+        astToCoreAST(Module(arbLocation, listOf(
                 LetDeclaration(arbLocation, ID(arbLocation, "add"), listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b"))),
                 LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
         )).shouldBe(Module(arbLocation, listOf(

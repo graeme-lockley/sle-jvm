@@ -6,22 +6,22 @@ import za.co.no9.sle.pass1.NotExpression
 import za.co.no9.sle.pass1.True
 
 
-fun map(ast: za.co.no9.sle.pass1.Module): Module =
-        Module(ast.location, ast.declarations.map { map(it) })
+fun astToCoreAST(ast: za.co.no9.sle.pass1.Module): Module =
+        Module(ast.location, ast.declarations.map { astToCoreAST(it) })
 
 
-fun map(ast: za.co.no9.sle.pass1.Declaration): Declaration =
+fun astToCoreAST(ast: za.co.no9.sle.pass1.Declaration): Declaration =
         when (ast) {
             is za.co.no9.sle.pass1.LetDeclaration ->
-                LetDeclaration(ast.location, map(ast.name), ast.arguments.foldRight(map(ast.expression)) { name, expression -> LambdaExpression(ast.location, map(name), expression) })
+                LetDeclaration(ast.location, astToCoreAST(ast.name), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
         }
 
 
-fun map(ast: za.co.no9.sle.pass1.ID): ID =
+fun astToCoreAST(ast: za.co.no9.sle.pass1.ID): ID =
         ID(ast.location, ast.name)
 
 
-fun map(ast: za.co.no9.sle.pass1.Expression): Expression =
+fun astToCoreAST(ast: za.co.no9.sle.pass1.Expression): Expression =
         when (ast) {
             is True ->
                 ConstantBool(ast.location, true)
@@ -36,20 +36,20 @@ fun map(ast: za.co.no9.sle.pass1.Expression): Expression =
                 ConstantString(ast.location, ast.value)
 
             is NotExpression ->
-                CallExpression(ast.location, IdReference(ast.location, "(!)"), map(ast.expression))
+                CallExpression(ast.location, IdReference(ast.location, "(!)"), astToCoreAST(ast.expression))
 
             is za.co.no9.sle.pass1.IdReference ->
                 IdReference(ast.location, ast.name)
 
             is za.co.no9.sle.pass1.IfExpression ->
-                IfExpression(ast.location, map(ast.guardExpression), map(ast.thenExpression), map(ast.elseExpression))
+                IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
 
             is za.co.no9.sle.pass1.LambdaExpression ->
-                ast.arguments.foldRight(map(ast.expression)) { name, expression -> LambdaExpression(ast.location, map(name), expression) }
+                ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) }
 
             is BinaryOpExpression ->
-                CallExpression(ast.location, CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), map(ast.left)), map(ast.right))
+                CallExpression(ast.location, CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), astToCoreAST(ast.left)), astToCoreAST(ast.right))
 
             is za.co.no9.sle.pass1.CallExpression ->
-                ast.operands.fold(map(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, map(operand)) }
+                ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
         }

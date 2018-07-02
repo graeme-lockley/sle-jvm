@@ -10,11 +10,11 @@ import za.co.no9.sle.ParserParser
 import za.co.no9.sle.Position
 
 
-fun toModule(node: ParserRuleContext): Module =
+fun parseTreeToAST(node: ParserRuleContext): Module =
         walkParseTree(node).module!!
 
 
-fun toExpression(node: ParserRuleContext): Expression =
+fun expressionParseTreeToAST(node: ParserRuleContext): Expression =
         walkParseTree(node).popExpression()
 
 

@@ -15,7 +15,7 @@ class ModuleTests : StringSpec({
                 parseModule(input)
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        toModule(parseResult.right()!!.node).toString().shouldBe(output)
+        parseTreeToAST(parseResult.right()!!.node).toString().shouldBe(output)
     }
 
 

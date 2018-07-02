@@ -15,7 +15,7 @@ class ExpressionTests : StringSpec({
                 parseExpression(input)
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        toExpression(parseResult.right()!!.node).toString().shouldBe(output)
+        expressionParseTreeToAST(parseResult.right()!!.node).toString().shouldBe(output)
     }
 
 

@@ -4,23 +4,23 @@ import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.*
 import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.pass1.toExpression
-import za.co.no9.sle.pass1.toModule
-import za.co.no9.sle.pass2.map
+import za.co.no9.sle.pass1.expressionParseTreeToAST
+import za.co.no9.sle.pass1.parseTreeToAST
+import za.co.no9.sle.pass2.astToCoreAST
 
 
 class Pass3DebugTests : StringSpec({
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
             za.co.no9.sle.parser.parseExpression(input)
-                    .map { toExpression(it.node) }
-                    .map { map(it) }
+                    .map { expressionParseTreeToAST(it.node) }
+                    .map { astToCoreAST(it) }
                     .andThen { infer(it, env) }
 
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
             parseModule(input)
-                    .map { toModule(it.node) }
-                    .map { map(it) }
+                    .map { parseTreeToAST(it.node) }
+                    .map { astToCoreAST(it) }
                     .andThen { infer(it, env) }
 
 

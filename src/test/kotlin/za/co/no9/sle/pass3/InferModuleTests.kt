@@ -3,8 +3,8 @@ package za.co.no9.sle.pass3
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
-import za.co.no9.sle.pass1.toModule
-import za.co.no9.sle.pass2.map
+import za.co.no9.sle.pass1.parseTreeToAST
+import za.co.no9.sle.pass2.astToCoreAST
 
 
 class InferModuleTests : StringSpec({
@@ -14,7 +14,7 @@ class InferModuleTests : StringSpec({
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val module =
-                map(toModule(za.co.no9.sle.parser.parseModule("let add a b = a + b\n" +
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = a + b\n" +
                         "let inc = add 1").right()!!.node))
 
         val inferResult =
