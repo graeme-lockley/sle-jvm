@@ -49,7 +49,7 @@ class Pass3DebugTests : StringSpec({
         val newAST =
                 substitution
                         .andThen { ss ->
-                            inferExpression.map { apply(ss, it.first) }
+                            inferExpression.map { it.first.apply(ss) }
                         }
                         .map { asString(it) }
                         .right()
@@ -82,7 +82,7 @@ class Pass3DebugTests : StringSpec({
                         .andThen { unifies(it.second) }
 
         val newAST =
-                apply(substitution.right()!!, inferModule.right()!!.first)
+                inferModule.right()!!.first.apply(substitution.right()!!)
 
         println(inferModuleAsString.first)
         println(inferModuleAsString.second)
