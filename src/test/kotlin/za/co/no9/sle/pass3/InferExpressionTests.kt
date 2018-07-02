@@ -15,7 +15,6 @@ class InferExpressionTests : StringSpec({
             parseExpression(input)
                     .map { toExpression(it.node) }
                     .map { map(it) }
-                    .mapError { listOf(it) }
                     .andThen { infer(it, env) }
 
 

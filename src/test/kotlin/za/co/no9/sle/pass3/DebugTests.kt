@@ -14,7 +14,6 @@ class Pass3DebugTests : StringSpec({
             za.co.no9.sle.parser.parseExpression(input)
                     .map { toExpression(it.node) }
                     .map { map(it) }
-                    .mapError { listOf(it) }
                     .andThen { infer(it, env) }
 
 
@@ -22,7 +21,6 @@ class Pass3DebugTests : StringSpec({
             parseModule(input)
                     .map { toModule(it.node) }
                     .map { map(it) }
-                    .mapError { listOf(it) }
                     .andThen { infer(it, env) }
 
 

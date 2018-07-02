@@ -5,7 +5,7 @@ import za.co.no9.sle.*
 
 
 typealias ParseResult =
-        Either<SyntaxError, Result>
+        Either<Errors, Result>
 
 
 class Result(private val parser: ParserParser, val node: ParserRuleContext) {
@@ -39,7 +39,7 @@ private fun parse(production: (ParserParser) -> ParserRuleContext, text: String)
         null ->
             value(Result(parser, parseTree))
         else ->
-            error(syntaxError)
+            error(listOf(syntaxError))
     }
 }
 
