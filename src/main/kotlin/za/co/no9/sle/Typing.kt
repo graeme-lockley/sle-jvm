@@ -45,7 +45,7 @@ data class TVar(val variable: Var) : Type() {
 }
 
 
-data class TCon(private val name: String) : Type() {
+data class TCon(val name: String) : Type() {
     override fun apply(s: Substitution) =
             this
 
