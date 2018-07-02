@@ -10,32 +10,20 @@ import za.co.no9.sle.pass2.map
 
 
 class Pass3DebugTests : StringSpec({
-    fun parseExpression(input: String): Either<Error, za.co.no9.sle.pass2.Expression> =
+    fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
             za.co.no9.sle.parser.parseExpression(input)
                     .map { toExpression(it.node) }
                     .map { map(it) }
-
-
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
-            parseExpression(input)
                     .mapError { listOf(it) }
                     .andThen { infer(it, env) }
 
 
-    fun inferModule(input: String, env: Environment = emptyEnvironment): Pair<Module, Constraints> {
-        val module =
-                map(toModule(parseModule(input).right()!!.node))
-
-        return infer(module, env).right()!!
-    }
-
-
-    fun Pair<Expression, Constraints>.asString(): Pair<String, String> =
-            Pair(asString(this.first), this.second.toString())
-
-
-    fun Pair<Module, Constraints>.asString(): Pair<String, String> =
-            Pair(asString(this.first), this.second.toString())
+    fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
+            parseModule(input)
+                    .map { toModule(it.node) }
+                    .map { map(it) }
+                    .mapError { listOf(it) }
+                    .andThen { infer(it, env) }
 
 
     "Dump AST" {
@@ -48,18 +36,28 @@ class Pass3DebugTests : StringSpec({
                 inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
 
         val inferExpressionAsString =
-                inferExpression.right()!!.asString()
+                inferExpression
+                        .map { it.mapFirst { asString(it) } }
+                        .map { it.mapSecond { it.toString() } }
+                        .right() ?: Pair("", "")
 
-        val subst =
-                unifies(inferExpression.right()!!.second)
+        val substitution =
+                inferExpression
+                        .map { unifies(it.second) }
+                        .right()!!
 
         val newAST =
-                apply(subst.right()!!, inferExpression.right()!!.first)
+                substitution
+                        .andThen { ss ->
+                            inferExpression.map { apply(ss, it.first) }
+                        }
+                        .map { asString(it) }
+                        .right()
 
         println(inferExpressionAsString.first)
         println(inferExpressionAsString.second)
         println()
-        println(asString(newAST))
+        println(newAST)
     }
 
 
@@ -74,13 +72,17 @@ class Pass3DebugTests : StringSpec({
                 inferModule("let factorial n =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)
 
         val inferModuleAsString =
-                inferModule.asString()
+                inferModule
+                        .right()!!
+                        .mapFirst { asString(it) }
+                        .mapSecond { it.toString() }
 
-        val subst =
-                unifies(inferModule.second)
+        val substitution =
+                inferModule
+                        .andThen { unifies(it.second) }
 
         val newAST =
-                apply(subst.right()!!, inferModule.first)
+                apply(substitution.right()!!, inferModule.right()!!.first)
 
         println(inferModuleAsString.first)
         println(inferModuleAsString.second)
