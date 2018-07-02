@@ -54,7 +54,7 @@ fun Expression.apply(substitution: Substitution): Expression =
                 IfExpression(location, type.apply(substitution), guardExpression.apply(substitution), thenExpression.apply(substitution), elseExpression.apply(substitution))
 
             is LambdaExpression ->
-                LambdaExpression(expression.location, expression.type.apply(substitution), argument, expression.apply(substitution))
+                LambdaExpression(location, type.apply(substitution), argument, expression.apply(substitution))
 
             is CallExpression ->
                 CallExpression(location, type.apply(substitution), operand.apply(substitution), operator.apply(substitution))
