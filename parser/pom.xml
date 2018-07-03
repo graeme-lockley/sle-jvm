@@ -13,16 +13,6 @@
     <artifactId>parser</artifactId>
     <packaging>jar</packaging>
 
-    <properties>
-        <kotlin.version>1.2.50</kotlin.version>
-        <antlr.version>4.7.1</antlr.version>
-        <junit.version>5.2.0</junit.version>
-        <javaparser.version>3.6.11</javaparser.version>
-        <kotlin.test.version>3.1.6</kotlin.test.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -33,11 +23,6 @@
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>${antlr.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.javaparser</groupId>
-            <artifactId>javaparser-symbol-solver-core</artifactId>
-            <version>${javaparser.version}</version>
         </dependency>
 
         <dependency>
