@@ -5,11 +5,11 @@ import java.util.function.Function;
 
 public class Operators {
     public static final Function<Integer, Function<Integer, Boolean>> EQUAL_EQUAL =
-            a -> (Function<Integer, Boolean>) a::equals;
+            a -> a::equals;
 
     public static final Function<Integer, Function<Integer, Integer>> STAR =
-            a -> (Function<Integer, Integer>) b -> a * b;
+            a -> b -> a * b;
 
     public static final Function<Integer, Function<Integer, Integer>> MINUS =
-            a -> (Function<Integer, Integer>) b -> a - b;
+            a -> b -> a - b;
 }
