@@ -137,6 +137,3 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
                         NodeList.nodeList(javaExpression(expression.operator)))
         }
 
-private fun isEqualsCallExpression(expression: CallExpression): Boolean =
-        expression.operand is CallExpression && expression.operand.operand is IdReference && expression.operand.operand.name == "(==)"
-
