@@ -1,6 +1,7 @@
 package test;
 
 import java.util.function.Function;
+import static za.co.no9.sle.runtime.Builtin.*;
 
 public class First {
 
