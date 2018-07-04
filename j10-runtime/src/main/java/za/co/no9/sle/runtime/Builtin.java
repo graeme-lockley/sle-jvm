@@ -3,7 +3,7 @@ package za.co.no9.sle.runtime;
 import java.util.function.Function;
 
 
-public class Operators {
+public class Builtin {
     public static final Function<Integer, Function<Integer, Boolean>> EQUAL_EQUAL =
             a -> a::equals;
 
