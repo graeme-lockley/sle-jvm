@@ -24,6 +24,7 @@
         <module>j10-runtime</module>
         <module>parser</module>
         <module>j10-translator</module>
+        <module>j8-maven-plugin</module>
     </modules>
 
     <dependencies>
