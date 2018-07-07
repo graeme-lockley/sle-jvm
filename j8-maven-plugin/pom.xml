@@ -15,6 +15,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>3.0</version>
@@ -27,13 +33,41 @@
         </dependency>
     </dependencies>
 
-    <!--<build>-->
-        <!--<plugins>-->
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+
+                <configuration>
+                    <experimentalCoroutines>enable</experimentalCoroutines>
+                    <sourceDirs>
+                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                    </sourceDirs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!--<plugin>-->
                 <!--<groupId>za.co.no9</groupId>-->
                 <!--<artifactId>j8-sle</artifactId>-->
                 <!--<version>1.0-SNAPSHOT</version>-->
-
 
                 <!--<executions>-->
                     <!--<execution>-->
@@ -49,6 +83,6 @@
                     <!--<outputDirectory>${project.basedir}/target/generated-sources/sle/java</outputDirectory>-->
                 <!--</configuration>-->
             <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
+        </plugins>
+    </build>
 </project>
