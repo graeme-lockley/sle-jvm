@@ -12,7 +12,7 @@ public class SLEMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.basedir}/src/main/sle", alias = "sourceDirectory")
     private String sourceDirectory;
 
-    @Parameter(defaultValue = "${project.basedir}/target/generated-sources/sle/java<", alias = "outputDirectory")
+    @Parameter(defaultValue = "${project.basedir}/target/generated-sources/sle/java", alias = "outputDirectory")
     private String outputDirectory;
 
     @Override
