@@ -1,1 +1,5 @@
 language: java
+
+script:
+- mvn install
+- ( cd j8-maven-plugin-test ; mvn install )
