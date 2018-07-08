@@ -5,10 +5,14 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 
 @Mojo(name = "j8-sle")
 public class SLEMojo extends AbstractMojo {
+    @Parameter(defaultValue = "${project}")
+    private MavenProject project;
+
     @Parameter(defaultValue = "${project.basedir}/src/main/sle", alias = "sourceDirectory")
     private String sourceDirectory;
 
@@ -18,6 +22,7 @@ public class SLEMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         BuildKt.build(getLog(), new java.io.File(sourceDirectory), new java.io.File(outputDirectory));
+        project.addCompileSourceRoot(outputDirectory);
     }
 }
 
