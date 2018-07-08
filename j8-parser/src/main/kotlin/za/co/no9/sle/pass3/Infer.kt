@@ -73,21 +73,6 @@ fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<
 }
 
 
-private class VarPump {
-    private var counter =
-            0
-
-    fun fresh(): TVar {
-        val result =
-                counter
-
-        counter += 1
-
-        return TVar(result)
-    }
-}
-
-
 private fun Schema.instantiate(varPump: VarPump): Type {
     val asP =
             this.variable.map { varPump.fresh() }
