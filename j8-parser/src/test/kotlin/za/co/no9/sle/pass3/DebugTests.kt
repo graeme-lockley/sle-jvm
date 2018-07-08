@@ -3,6 +3,7 @@ package za.co.no9.sle.pass3
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.*
 import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.pass1.expressionParseTreeToAST
 import za.co.no9.sle.pass1.parseTreeToAST

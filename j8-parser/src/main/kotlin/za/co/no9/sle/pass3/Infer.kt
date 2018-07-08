@@ -1,6 +1,7 @@
 package za.co.no9.sle.pass3
 
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.*
 import za.co.no9.sle.pass2.Declaration
 
 

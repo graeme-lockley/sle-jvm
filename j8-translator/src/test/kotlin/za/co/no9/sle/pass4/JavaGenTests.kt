@@ -3,6 +3,7 @@ package za.co.no9.sle.pass4
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.*
 import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.pass1.parseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST

@@ -3,6 +3,10 @@ package za.co.no9.sle.pass3
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.Environment
+import za.co.no9.sle.typing.Schema
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.typeInt
 import za.co.no9.sle.pass1.parseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST
 

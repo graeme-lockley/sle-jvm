@@ -5,6 +5,7 @@ import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.*
 import za.co.no9.sle.parser.parseExpression
 import za.co.no9.sle.pass1.expressionParseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST

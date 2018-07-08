@@ -1,7 +1,7 @@
 package za.co.no9.sle.pass3
 
 import za.co.no9.sle.Location
-import za.co.no9.sle.Type
+import za.co.no9.sle.typing.Type
 
 
 sealed class Node(

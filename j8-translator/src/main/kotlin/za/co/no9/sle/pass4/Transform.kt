@@ -10,10 +10,10 @@ import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
-import za.co.no9.sle.TArr
-import za.co.no9.sle.TCon
-import za.co.no9.sle.TVar
-import za.co.no9.sle.Type
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.TVar
+import za.co.no9.sle.typing.Type
 import za.co.no9.sle.pass3.*
 import za.co.no9.sle.pass3.Expression
 

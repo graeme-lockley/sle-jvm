@@ -1,5 +1,7 @@
 package za.co.no9.sle
 
+import za.co.no9.sle.typing.Type
+
 
 data class Position(
         private val line: Int,
