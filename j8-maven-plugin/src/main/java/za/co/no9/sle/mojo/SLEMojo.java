@@ -17,9 +17,7 @@ public class SLEMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().error("SLEMojo start");
-        BuildKt.build(getLog(), sourceDirectory, outputDirectory);
-        getLog().error("SLEMojo end");
+        BuildKt.build(getLog(), new java.io.File(sourceDirectory), new java.io.File(outputDirectory));
     }
 }
 

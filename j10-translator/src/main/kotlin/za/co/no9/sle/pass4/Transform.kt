@@ -29,7 +29,9 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     val compilationUnit =
             CompilationUnit()
 
-    compilationUnit.setPackageDeclaration(packageDeclaration)
+    if (packageDeclaration.isNotEmpty()) {
+        compilationUnit.setPackageDeclaration(packageDeclaration)
+    }
     compilationUnit.addImport("java.util.function.Function", false, false)
     compilationUnit.addImport("za.co.no9.sle.runtime.Builtin", true, true)
 

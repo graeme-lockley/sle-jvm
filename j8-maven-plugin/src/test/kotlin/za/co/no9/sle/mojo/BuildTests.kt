@@ -17,9 +17,16 @@ class BuildTests : StringSpec({
         val log =
                 TestLog()
 
-        build(log, File(testsResourcesDir, "unknown").absolutePath, ".")
+        build(log, File(testsResourcesDir, "unknown"), File("."))
 
         log.items.any { it.contains(Regex("^E: Source.*is not a valid directory$")) }.shouldBeTrue()
+    }
+
+    "A valid source let's walk it and compile" {
+        val log =
+                TestLog()
+
+        build(log, File(testsResourcesDir, "input"), File(testsResourcesDir, "output"))
     }
 })
 
