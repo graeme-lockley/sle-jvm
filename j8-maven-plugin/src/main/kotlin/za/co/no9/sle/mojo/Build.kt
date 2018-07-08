@@ -23,64 +23,88 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
         return
     }
 
+    val sources: Sequence<File> =
+            sourceFile.walk().filter { it.isFile }.filter { it.absolutePath.endsWith(".sle") }
 
+    if (sources.count() == 0) {
+        log.warn("No sources to compile")
+    } else {
+        val toTranslate =
+                sources.map {
+                    Pair(it, File(targetFile, it.absolutePath.drop(sourceFile.absolutePath.length).dropLast(4) + ".java"))
+                }.filter { !it.second.exists() || it.second.isFile && it.second.lastModified() < it.first.lastModified() }
 
-    sourceFile.walk().filter { it.isFile }.filter { it.absolutePath.endsWith(".sle") }.forEach {
-        val targetFileName =
-                File(targetFile, it.absolutePath.drop(sourceFile.absolutePath.length).dropLast(4) + ".java")
+        if (toTranslate.count() == 0) {
+            log.info("Sources up to date")
+        } else {
+            val translateCount =
+                    toTranslate.count()
 
-        if (!targetFileName.exists() || targetFileName.isFile && targetFileName.lastModified() < it.lastModified()) {
-            val sourceName =
-                    it.name
-
-            val environment =
-                    Environment(mapOf(
-                            Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
-                            Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                            Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                            Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
-
-            val packageName =
-                    it.parentFile.absolutePath.drop(sourceFile.absolutePath.length + 1).replace(File.separatorChar, '.', true)
-
-            val className =
-                    it.nameWithoutExtension
-
-            val output =
-                    parseModule(it.readText())
-                            .map { parseTreeToAST(it.node) }
-                            .map { astToCoreAST(it) }
-                            .andThen { it.assignTypesToCoreAST(environment) }
-                            .map { translateToJava(it, packageName, className) }
-                            .map { it.toString() }
-
-            val errors =
-                    output.left()
-
-            if (errors == null) {
-                targetFileName.parentFile.mkdirs()
-                targetFileName.writeText(output.right() ?: "")
+            if (translateCount == 1) {
+                log.info("Compiling $translateCount source file")
             } else {
-                errors.forEach {
-                    when (it) {
-                        is SyntaxError ->
-                            log.error("Syntax Error: $sourceName: ${it.location}: ${it.msg}")
+                log.info("Compiling $translateCount source files")
+            }
 
-                        is UnboundVariable ->
-                            log.error("Unbound Variable: $sourceName: ${it.location}: ${it.name}")
+            toTranslate.forEach {
+                val targetFileName =
+                        it.second
 
-                        is DuplicateLetDeclaration ->
-                            log.error("Duplicate Let Declaration: $sourceName: ${it.location}: ${it.name}")
+                val sourceFileName =
+                        it.first
 
-                        is UnificationFail ->
-                            log.error("Unification Fail: $sourceName: ${it.t1} ${it.t2}")
+                val sourceName =
+                        sourceFileName.name
 
-                        is UnificationMismatch ->
-                            log.error("Unification Mismatch: $sourceName: ${it.t1s}: ${it.t2s}")
+                val environment =
+                        Environment(mapOf(
+                                Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
+                                Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                                Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                                Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
+
+                val packageName =
+                        sourceFileName.parentFile.absolutePath.drop(sourceFile.absolutePath.length + 1).replace(File.separatorChar, '.', true)
+
+                val className =
+                        sourceFileName.nameWithoutExtension
+
+                val output =
+                        parseModule(sourceFileName.readText())
+                                .map { parseTreeToAST(it.node) }
+                                .map { astToCoreAST(it) }
+                                .andThen { it.assignTypesToCoreAST(environment) }
+                                .map { translateToJava(it, packageName, className) }
+                                .map { it.toString() }
+
+                val errors =
+                        output.left()
+
+                if (errors == null) {
+                    targetFileName.parentFile.mkdirs()
+                    targetFileName.writeText(output.right() ?: "")
+                } else {
+                    errors.forEach {
+                        when (it) {
+                            is SyntaxError ->
+                                log.error("Syntax Error: $sourceName: ${it.location}: ${it.msg}")
+
+                            is UnboundVariable ->
+                                log.error("Unbound Variable: $sourceName: ${it.location}: ${it.name}")
+
+                            is DuplicateLetDeclaration ->
+                                log.error("Duplicate Let Declaration: $sourceName: ${it.location}: ${it.name}")
+
+                            is UnificationFail ->
+                                log.error("Unification Fail: $sourceName: ${it.t1} ${it.t2}")
+
+                            is UnificationMismatch ->
+                                log.error("Unification Mismatch: $sourceName: ${it.t1s}: ${it.t2s}")
+                        }
                     }
-                }
 
-                throw MojoFailureException(sourceFile, "Translation Error", "${errors.size} errors")
+                    throw MojoFailureException(sourceFile, "Translation Error", "${errors.size} errors")
+                }
             }
         }
     }
