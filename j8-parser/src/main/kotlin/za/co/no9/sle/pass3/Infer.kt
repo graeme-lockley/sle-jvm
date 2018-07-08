@@ -73,17 +73,6 @@ fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<
 }
 
 
-private fun Schema.instantiate(varPump: VarPump): Type {
-    val asP =
-            this.variable.map { varPump.fresh() }
-
-    val substitution =
-            Substitution(this.variable.zip(asP).toMap())
-
-    return this.type.apply(substitution)
-}
-
-
 private class InferContext(internal var env: Environment) {
     private val varPump =
             VarPump()
