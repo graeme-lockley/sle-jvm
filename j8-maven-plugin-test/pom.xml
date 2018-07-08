@@ -10,7 +10,7 @@
         <artifactId>sle-jvm</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>j8-maven-pojo-test</artifactId>
+    <artifactId>j8-maven-plugin-test</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
