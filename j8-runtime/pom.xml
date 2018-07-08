@@ -10,7 +10,7 @@
         <artifactId>sle-jvm</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>j10-runtime</artifactId>
+    <artifactId>j8-runtime</artifactId>
     <packaging>jar</packaging>
 
     <build>

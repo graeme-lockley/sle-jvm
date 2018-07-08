@@ -21,12 +21,12 @@
         </dependency>
         <dependency>
             <groupId>za.co.no9</groupId>
-            <artifactId>parser</artifactId>
+            <artifactId>j8-parser</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>za.co.no9</groupId>
-            <artifactId>j10-translator</artifactId>
+            <artifactId>j8-translator</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

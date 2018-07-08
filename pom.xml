@@ -21,10 +21,11 @@
     </properties>
 
     <modules>
-        <module>j10-runtime</module>
-        <module>parser</module>
-        <module>j10-translator</module>
+        <module>j8-runtime</module>
+        <module>j8-parser</module>
+        <module>j8-translator</module>
         <module>j8-maven-plugin</module>
+        <!--<module>j8-maven-plugin-test</module>-->
     </modules>
 
     <dependencies>

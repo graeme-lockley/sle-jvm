@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>za.co.no9</groupId>
-            <artifactId>parser</artifactId>
+            <artifactId>j8-parser</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>za.co.no9</groupId>
-            <artifactId>j10-runtime</artifactId>
+            <artifactId>j8-runtime</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
