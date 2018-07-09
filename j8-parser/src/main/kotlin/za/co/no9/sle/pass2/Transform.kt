@@ -13,9 +13,8 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Module): Module =
 fun astToCoreAST(ast: za.co.no9.sle.pass1.Declaration): Declaration =
         when (ast) {
             is za.co.no9.sle.pass1.LetDeclaration ->
-                LetDeclaration(ast.location, astToCoreAST(ast.name), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
         }
-
 
 fun astToCoreAST(ast: za.co.no9.sle.pass1.ID): ID =
         ID(ast.location, ast.name)
@@ -53,3 +52,19 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Expression): Expression =
             is za.co.no9.sle.pass1.CallExpression ->
                 ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
         }
+
+
+fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema?): TSchema? =
+        when (ast) {
+            null ->
+                null
+
+            is za.co.no9.sle.pass1.TIdReference ->
+                TIdReference(ast.location, ast.name)
+
+            is za.co.no9.sle.pass1.TArrow ->
+                TArrow(ast.location, astToCoreAST(ast.domain)!!, astToCoreAST(ast.range)!!)
+        }
+
+
+
