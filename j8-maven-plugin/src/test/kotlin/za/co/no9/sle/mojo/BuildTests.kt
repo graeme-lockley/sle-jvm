@@ -26,7 +26,7 @@ class BuildTests : StringSpec({
         val log =
                 TestLog()
 
-        build(log, File(testsResourcesDir, "input"), File(testsResourcesDir, "output"))
+        build(log, File(testsResourcesDir, "input"), File(homeDir, "target/output"))
     }
 })
 
