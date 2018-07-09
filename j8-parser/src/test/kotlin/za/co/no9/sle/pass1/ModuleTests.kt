@@ -19,7 +19,7 @@ class ModuleTests : StringSpec({
     }
 
 
-    "\"let add x y = x + y\" should product AST LetDeclaration" {
+    "\"let add x y = x + y\" should produce AST LetDeclaration" {
         parse(
                 "let add x y = x + y",
                 "Module(location=[(1, 0) (1, 18)], declarations=[LetDeclaration(location=[(1, 0) (1, 18)], name=ID(location=[(1, 4) (1, 6)], name=add), arguments=[ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=ID(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y)))])"
@@ -27,7 +27,7 @@ class ModuleTests : StringSpec({
     }
 
 
-    "\"let add x y = x + y\nlet sub a b = a - b\" should product AST Module" {
+    "\"let add x y = x + y\nlet sub a b = a - b\" should produce AST Module" {
         parse(
                 "let add x y = x + y\n" +
                         "let sub a b = a - b",
