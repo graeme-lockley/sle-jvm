@@ -32,4 +32,12 @@ class ParserTests : StringSpec({
 
         parseResult.shouldBeTypeOf<Either.Error<String>>()
     }
+
+
+    "a declaration with a type schema" {
+        val parseResult =
+                parseModule("let f a b c : Int -> Int -> String -> Bool = a + b * c")
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+    }
 })

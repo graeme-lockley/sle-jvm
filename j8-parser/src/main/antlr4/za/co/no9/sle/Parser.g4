@@ -6,7 +6,7 @@ module
     ;
 
 declaration
-    : 'let' LowerID+ '=' expression
+    : 'let' LowerID+ (':' schema)? '=' expression
         # LetDeclaration
     ;
 
@@ -46,8 +46,20 @@ factor
         # LowerIDExpression
     ;
 
+
+schema
+    : UpperID
+    | '(' UpperID ')'
+    | schema '->' schema
+    ;
+
+
 LowerID
-    : [a-z][a-zA-Z0-0_']*
+    : [a-z][a-zA-Z0-9_]*[']*
+    ;
+
+UpperID
+    : [A-Z][a-zA-Z0-9_]*[']*
     ;
 
 ConstantInt
