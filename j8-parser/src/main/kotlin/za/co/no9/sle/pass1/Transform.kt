@@ -169,7 +169,7 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
+        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), null, expression))
     }
 
 

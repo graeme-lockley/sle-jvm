@@ -104,8 +104,8 @@ class TransformTests : StringSpec({
 
     "astToCoreAST module" {
         astToCoreAST(Module(arbLocation, listOf(
-                LetDeclaration(arbLocation, ID(arbLocation, "add"), listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b"))),
-                LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
+                LetDeclaration(arbLocation, ID(arbLocation, "add"), listOf(ID(arbLocation, "a"), ID(arbLocation, "b")), null, BinaryOpExpression(arbLocation, IdReference(arbLocation, "a"), ID(arbLocation, "+"), IdReference(arbLocation, "b"))),
+                LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), null, BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
         )).shouldBe(Module(arbLocation, listOf(
                 LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "add"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "a"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "b"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(+)"), za.co.no9.sle.pass2.IdReference(arbLocation, "a")), za.co.no9.sle.pass2.IdReference(arbLocation, "b"))))),
                 LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "sub"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "x"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "y"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(-)"), za.co.no9.sle.pass2.IdReference(arbLocation, "x")), za.co.no9.sle.pass2.IdReference(arbLocation, "y")))))
