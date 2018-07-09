@@ -19,6 +19,7 @@ data class LetDeclaration(
         override val location: Location,
         val name: ID,
         val arguments: List<ID>,
+        val schema: TSchema?,
         val expression: Expression) : Declaration(location)
 
 
@@ -73,3 +74,16 @@ data class CallExpression(
         override val location: Location,
         val operator: Expression,
         val operands: List<Expression>) : Expression(location)
+
+
+sealed class TSchema(
+        open val location: Location)
+
+data class TIdReference (
+        override val location: Location,
+        val name: String): TSchema(location)
+
+data class TArrow (
+        override val location: Location,
+        val domain: TSchema,
+        val range: TSchema): TSchema(location)

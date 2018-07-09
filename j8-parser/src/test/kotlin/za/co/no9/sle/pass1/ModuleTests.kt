@@ -21,8 +21,8 @@ class ModuleTests : StringSpec({
 
     "\"let add x y = x + y\" should produce AST LetDeclaration" {
         parse(
-                "let add x y = x + y",
-                "Module(location=[(1, 0) (1, 18)], declarations=[LetDeclaration(location=[(1, 0) (1, 18)], name=ID(location=[(1, 4) (1, 6)], name=add), arguments=[ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 14) (1, 18)], left=IdReference(location=[(1, 14) (1, 14)], name=x), operator=ID(location=[(1, 16) (1, 16)], name=+), right=IdReference(location=[(1, 18) (1, 18)], name=y)))])"
+                "let add x y : Int -> Int -> Int = x + y",
+                "Module(location=[(1, 0) (1, 38)], declarations=[LetDeclaration(location=[(1, 0) (1, 38)], name=ID(location=[(1, 4) (1, 6)], name=add), arguments=[ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)], expression=BinaryOpExpression(location=[(1, 34) (1, 38)], left=IdReference(location=[(1, 34) (1, 34)], name=x), operator=ID(location=[(1, 36) (1, 36)], name=+), right=IdReference(location=[(1, 38) (1, 38)], name=y)))])"
         )
     }
 
