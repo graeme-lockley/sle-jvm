@@ -1,8 +1,8 @@
 package za.co.no9.sle.pass3
 
 import za.co.no9.sle.*
-import za.co.no9.sle.typing.*
 import za.co.no9.sle.pass2.Declaration
+import za.co.no9.sle.typing.*
 
 
 data class Constraint(val t1: Type, val t2: Type) {
@@ -85,6 +85,22 @@ private class InferContext(internal var env: Environment) {
 
 
     fun infer(module: za.co.no9.sle.pass2.Module): Module {
+        module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
+            when (d) {
+                is za.co.no9.sle.pass2.LetDeclaration -> {
+                    val name =
+                            d.name.name
+
+                    if (e.contains(name)) {
+                        errors.add(DuplicateLetDeclaration(d.location, name))
+                        e
+                    } else {
+                        e + name
+                    }
+                }
+            }
+        }
+
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
                 is za.co.no9.sle.pass2.LetDeclaration -> {

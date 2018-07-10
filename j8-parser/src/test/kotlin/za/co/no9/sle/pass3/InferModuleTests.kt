@@ -2,9 +2,9 @@ package za.co.no9.sle.pass3
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.*
 import za.co.no9.sle.pass1.parseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST
-import za.co.no9.sle.right
 import za.co.no9.sle.typing.*
 
 
@@ -24,6 +24,19 @@ class InferModuleTests : StringSpec({
                 .shouldBe(
                         "Int -> Int -> Int : '0 -> '2, " +
                                 "'2 : '1 -> '3")
+    }
+
+
+    "\"let add a b = a + b\nlet add x y = x + y\"" {
+        val environment =
+                Environment(mapOf(
+                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
+
+        val module =
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = a + b\nlet add x y = x + y").right()!!.node))
+
+        infer(module, environment)
+                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 18)), "add"))))
     }
 
 
