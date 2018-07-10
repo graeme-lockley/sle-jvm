@@ -107,11 +107,13 @@ private class InferContext(internal var env: Environment) {
                     val name =
                             d.name.name
 
-                    if (env.containsKey(name)) {
-                        errors.add(DuplicateLetDeclaration(d.location, name))
+                    val schema =
+                            d.schema
+
+                    if (schema == null) {
                         e
                     } else {
-                        e.set(name, Schema(listOf(0), TVar(0)))
+                        e.set(name, schema)
                     }
                 }
             }

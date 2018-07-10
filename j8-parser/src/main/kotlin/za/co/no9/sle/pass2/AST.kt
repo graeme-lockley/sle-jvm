@@ -1,6 +1,7 @@
 package za.co.no9.sle.pass2
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.typing.Schema
 
 
 sealed class Node(
@@ -18,7 +19,7 @@ sealed class Declaration(
 data class LetDeclaration(
         override val location: Location,
         val name: ID,
-        val schema: TSchema?,
+        val schema: Schema?,
         val expression: Expression) : Declaration(location)
 
 
@@ -61,16 +62,3 @@ data class CallExpression(
         override val location: Location,
         val operator: Expression,
         val operand: Expression) : Expression(location)
-
-
-sealed class TSchema(
-        open val location: Location)
-
-data class TIdReference (
-        override val location: Location,
-        val name: String): TSchema(location)
-
-data class TArrow (
-        override val location: Location,
-        val domain: TSchema,
-        val range: TSchema): TSchema(location)

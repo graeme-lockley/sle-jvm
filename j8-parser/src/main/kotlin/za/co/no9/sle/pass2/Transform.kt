@@ -4,6 +4,10 @@ import za.co.no9.sle.pass1.BinaryOpExpression
 import za.co.no9.sle.pass1.False
 import za.co.no9.sle.pass1.NotExpression
 import za.co.no9.sle.pass1.True
+import za.co.no9.sle.typing.Schema
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.Type
 
 
 fun astToCoreAST(ast: za.co.no9.sle.pass1.Module): Module =
@@ -54,17 +58,24 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Expression): Expression =
         }
 
 
-fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema?): TSchema? =
-        when (ast) {
-            null ->
-                null
+fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema?): Schema? {
+    fun astToType(type: za.co.no9.sle.pass1.TSchema): Type =
+            when (type) {
+                is za.co.no9.sle.pass1.TIdReference ->
+                    TCon(type.name)
 
-            is za.co.no9.sle.pass1.TIdReference ->
-                TIdReference(ast.location, ast.name)
+                is za.co.no9.sle.pass1.TArrow ->
+                    TArr(astToType(type.domain), astToType(type.range))
+            }
 
-            is za.co.no9.sle.pass1.TArrow ->
-                TArrow(ast.location, astToCoreAST(ast.domain)!!, astToCoreAST(ast.range)!!)
-        }
+    return when (ast) {
+        null ->
+            null
+
+        else ->
+            Schema(emptyList(), astToType(ast))
+    }
+}
 
 
 
