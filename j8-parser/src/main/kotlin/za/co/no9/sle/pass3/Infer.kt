@@ -5,43 +5,6 @@ import za.co.no9.sle.pass2.Declaration
 import za.co.no9.sle.typing.*
 
 
-data class Constraint(val t1: Type, val t2: Type) {
-    fun apply(substitution: Substitution): Constraint =
-            Constraint(t1.apply(substitution), t2.apply(substitution))
-
-    override fun toString(): String =
-            "$t1 : $t2"
-}
-
-
-data class Constraints(private val state: List<Constraint> = emptyList()) {
-    operator fun plus(constraint: Constraint): Constraints =
-            Constraints(state + constraint)
-
-    operator fun plus(constraints: Constraints): Constraints =
-            Constraints(state + constraints.state)
-
-    fun apply(substitution: Substitution): Constraints =
-            Constraints(state.map { it.apply(substitution) })
-
-    fun isNotEmpty(): Boolean =
-            state.isNotEmpty()
-
-    operator fun get(index: Int): Constraint =
-            state[index]
-
-    fun drop(count: Int): Constraints =
-            Constraints(state.drop(count))
-
-    override fun toString(): String =
-            state.joinToString(", ") { it.toString() }
-}
-
-
-val noConstraints =
-        Constraints()
-
-
 fun infer(module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
             InferContext(env)
