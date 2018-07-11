@@ -68,7 +68,7 @@ class Pass3DebugTests : StringSpec({
                         Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val inferModule =
-                inferModule("let factorial n =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)
+                inferModule("let factorial n : Int -> Int =\n  if n == 0 then 1 else n * factorial (n - 1)", environment)
 
         val inferModuleAsString =
                 inferModule
@@ -76,15 +76,18 @@ class Pass3DebugTests : StringSpec({
                         .mapFirst { asString(it) }
                         .mapSecond { it.toString() }
 
+        println(inferModuleAsString.first)
+        println(inferModuleAsString.second)
+
         val substitution =
                 inferModule
                         .andThen { unifies(it.second) }
 
+        println(substitution)
+
         val newAST =
                 inferModule.right()!!.first.apply(substitution.right()!!)
 
-        println(inferModuleAsString.first)
-        println(inferModuleAsString.second)
         println()
         println(asString(newAST))
 

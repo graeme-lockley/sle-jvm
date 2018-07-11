@@ -6,7 +6,7 @@ module
     ;
 
 declaration
-    : 'let' LowerID+ (':' schema)? '=' expression
+    : 'let' LowerID+ (':' type)? '=' expression
         # LetDeclaration
     ;
 
@@ -47,10 +47,13 @@ factor
     ;
 
 
-schema
+type
     : UpperID
+        # UpperIDType
     | '(' UpperID ')'
-    | schema '->' schema
+        # NestedType
+    | type '->' type
+        # ArrowType
     ;
 
 

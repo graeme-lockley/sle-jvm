@@ -35,6 +35,10 @@ private class ParserToAST : ParserBaseListener() {
     private var expressionStack =
             emptyList<Expression>()
 
+    private var typeStack =
+            emptyList<TSchema>()
+
+
     var module: Module? =
             null
         private set
@@ -56,6 +60,27 @@ private class ParserToAST : ParserBaseListener() {
 
     private fun pushExpression(expression: Expression) {
         expressionStack += expression
+    }
+
+
+    fun popType(): TSchema? =
+            when {
+                typeStack.isEmpty() ->
+                    null
+
+                else -> {
+                    val result =
+                            typeStack.last()
+
+                    typeStack = typeStack.dropLast(1)
+
+                    result
+                }
+            }
+
+
+    private fun pushType(schema: TSchema) {
+        typeStack += schema
     }
 
 
@@ -169,12 +194,26 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), null, expression))
+        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), popType(), expression))
     }
 
 
     override fun exitModule(ctx: ParserParser.ModuleContext?) {
         module = Module(ctx!!.location(), popDeclarations())
+    }
+
+    override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
+        pushType(TIdReference(ctx!!.location(), ctx.text))
+    }
+
+    override fun exitArrowType(ctx: ParserParser.ArrowTypeContext?) {
+        val domain =
+                popType()!!
+
+        val range =
+                popType()!!
+
+        pushType(TArrow(ctx!!.location(), domain, range))
     }
 }
 

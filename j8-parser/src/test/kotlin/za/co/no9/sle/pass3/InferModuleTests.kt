@@ -40,10 +40,10 @@ class InferModuleTests : StringSpec({
     }
 
 
-    "!\"let add a b : Int -> Int -> Int = something a b\"" {
+    "\"let add a b : Int -> Int -> Int = something a b\"" {
         val environment =
                 Environment(mapOf(
-                        Pair("something", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), TVar(1)))))))
+                        Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
         val module =
                 astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b : Int -> Int -> Int = something a b").right()!!.node))
@@ -53,8 +53,7 @@ class InferModuleTests : StringSpec({
 
         inferResult.second.toString()
                 .shouldBe(
-                        "Int -> Int -> Int : '0 -> '2, " +
-                                "'2 : '1 -> '3, " +
-                                "'4 : Int -> '5")
+                        "'0 : '1 -> '3, " +
+                                "'2 -> '2 -> '2 : '3 -> '4")
     }
 })
