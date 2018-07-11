@@ -119,8 +119,6 @@ private class InferContext(internal var env: Environment) {
             }
         }
 
-        println(env)
-
         return Module(
                 module.location,
                 module.declarations.map { d ->
