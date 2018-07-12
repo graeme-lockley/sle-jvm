@@ -1,8 +1,3 @@
-#### Add type signatures on let declarations
-
-Allow let declarations to be qualified
-
-
 #### Add the keyword "typealias"
 
 This will allow schemas to be referenced
