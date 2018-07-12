@@ -6,7 +6,9 @@ module
     ;
 
 declaration
-    : 'let' LowerID+ (':' type)? '=' expression
+    : 'typealias' UpperID '=' type
+        # TypeAliasDeclaration
+    | 'let' LowerID+ (':' type)? '=' expression
         # LetDeclaration
     ;
 

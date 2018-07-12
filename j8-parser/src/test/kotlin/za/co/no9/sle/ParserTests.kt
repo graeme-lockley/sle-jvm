@@ -34,9 +34,17 @@ class ParserTests : StringSpec({
     }
 
 
-    "a declaration with a type schema" {
+    "a let declaration with a type schema" {
         val parseResult =
                 parseModule("let f a b c : Int -> Int -> String -> Bool = a + b * c")
+
+        parseResult.shouldBeTypeOf<Either.Value<Result>>()
+    }
+
+
+    "a rudimentary type alias" {
+        val parseResult =
+                parseModule("typealias IntToInt = Int -> Int\nlet negate a : IntToInt = 0 - a")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
     }
