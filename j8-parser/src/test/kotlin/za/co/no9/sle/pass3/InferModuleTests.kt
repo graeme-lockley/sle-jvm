@@ -56,4 +56,60 @@ class InferModuleTests : StringSpec({
                         "'0 : '1 -> '3, " +
                                 "'2 -> '2 -> '2 : '3 -> '4")
     }
+
+
+    "\"let add a b = something a b\nlet add a b = something a b\" should return a DuplicateLetDeclaration" {
+        val environment =
+                Environment(mapOf(
+                        Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
+
+        val module =
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = something a b\n" +
+                        "let add a b = something a b").right()!!.node))
+
+        infer(module, environment)
+                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 26)), "add"))))
+    }
+
+
+    "\"let add a b : Int -> Int = something a b\nlet add a b = something a b\" should return a DuplicateLetDeclaration" {
+        val environment =
+                Environment(mapOf(
+                        Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
+
+        val module =
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b  : Int -> Int = something a b\n" +
+                        "let add a b = something a b").right()!!.node))
+
+        infer(module, environment)
+                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 26)), "add"))))
+    }
+
+
+    "\"let add a b = something a b\nlet add a b : Int -> Int = something a b\" should return a DuplicateLetDeclaration" {
+        val environment =
+                Environment(mapOf(
+                        Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
+
+        val module =
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = something a b\n" +
+                        "let add a b : Int -> Int = something a b").right()!!.node))
+
+        infer(module, environment)
+                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 39)), "add"))))
+    }
+
+
+    "\"let add a b : Int -> Int = something a b\nlet add a b : Int -> Int = something a b\" should return a DuplicateLetDeclaration" {
+        val environment =
+                Environment(mapOf(
+                        Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
+
+        val module =
+                astToCoreAST(parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b : Int -> Int = something a b\n" +
+                        "let add a b : Int -> Int = something a b").right()!!.node))
+
+        infer(module, environment)
+                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 39)), "add"))))
+    }
 })
