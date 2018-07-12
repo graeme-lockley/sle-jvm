@@ -1,9 +1,6 @@
 package za.co.no9.sle.pass2
 
-import za.co.no9.sle.pass1.BinaryOpExpression
-import za.co.no9.sle.pass1.False
-import za.co.no9.sle.pass1.NotExpression
-import za.co.no9.sle.pass1.True
+import za.co.no9.sle.pass1.*
 import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
@@ -18,6 +15,9 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Declaration): Declaration =
         when (ast) {
             is za.co.no9.sle.pass1.LetDeclaration ->
                 LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+
+            is TypeAliasDeclaration ->
+                TODO()
         }
 
 fun astToCoreAST(ast: za.co.no9.sle.pass1.ID): ID =
