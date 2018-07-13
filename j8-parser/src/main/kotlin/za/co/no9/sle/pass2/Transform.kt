@@ -1,6 +1,9 @@
 package za.co.no9.sle.pass2
 
-import za.co.no9.sle.pass1.*
+import za.co.no9.sle.pass1.BinaryOpExpression
+import za.co.no9.sle.pass1.False
+import za.co.no9.sle.pass1.NotExpression
+import za.co.no9.sle.pass1.True
 import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
@@ -14,10 +17,10 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Module): Module =
 fun astToCoreAST(ast: za.co.no9.sle.pass1.Declaration): Declaration =
         when (ast) {
             is za.co.no9.sle.pass1.LetDeclaration ->
-                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
-            is TypeAliasDeclaration ->
-                TODO()
+            is za.co.no9.sle.pass1.TypeAliasDeclaration ->
+                TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
         }
 
 fun astToCoreAST(ast: za.co.no9.sle.pass1.ID): ID =
@@ -58,7 +61,18 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.Expression): Expression =
         }
 
 
-fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema?): Schema? {
+fun astToCoreASTOptional(ast: za.co.no9.sle.pass1.TSchema?): Schema? {
+    return when (ast) {
+        null ->
+            null
+
+        else ->
+            astToCoreAST(ast)
+    }
+}
+
+
+fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema): Schema {
     fun astToType(type: za.co.no9.sle.pass1.TSchema): Type =
             when (type) {
                 is za.co.no9.sle.pass1.TIdReference ->
@@ -68,13 +82,7 @@ fun astToCoreAST(ast: za.co.no9.sle.pass1.TSchema?): Schema? {
                     TArr(astToType(type.domain), astToType(type.range))
             }
 
-    return when (ast) {
-        null ->
-            null
-
-        else ->
-            Schema(emptyList(), astToType(ast))
-    }
+    return Schema(emptyList(), astToType(ast))
 }
 
 

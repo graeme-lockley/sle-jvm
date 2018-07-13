@@ -26,7 +26,7 @@ data class LetDeclaration(
 data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
-        val schema: TSchema?) : Declaration(location)
+        val schema: TSchema) : Declaration(location)
 
 
 data class ID(

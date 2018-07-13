@@ -96,6 +96,9 @@ class Pass3DebugTests : StringSpec({
             when (it) {
                 is LetDeclaration ->
                     "${it.name.name}: ${it.type}"
+
+                is TypeAliasDeclaration ->
+                    "${it.name.name}: ${it.schema}"
             }
         })
     }
@@ -143,5 +146,9 @@ fun asString(module: Module, indent: Int = 0): String =
                     "${spaces(indent)}Let: ${it.type}\n" +
                             "${spaces(indent + 2)}${it.name.name}\n" +
                             asString(it.expression, indent + 2)
+
+                is TypeAliasDeclaration ->
+                    "${spaces(indent)}Let: ${it.schema}\n" +
+                            "${spaces(indent + 2)}${it.name.name}\n"
             }
         }

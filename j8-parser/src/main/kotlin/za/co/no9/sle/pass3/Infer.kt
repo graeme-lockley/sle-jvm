@@ -61,6 +61,9 @@ private class InferContext(internal var env: Environment) {
                         e + name
                     }
                 }
+
+                is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                    e
             }
         }
 
@@ -79,6 +82,9 @@ private class InferContext(internal var env: Environment) {
                         e.set(name, schema)
                     }
                 }
+
+                is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                    e
             }
         }
 
@@ -92,6 +98,9 @@ private class InferContext(internal var env: Environment) {
 
                             LetDeclaration(d.location, e.type, ID(d.name.location, d.name.name), e)
                         }
+
+                        is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                            TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema)
                     }
                 })
     }

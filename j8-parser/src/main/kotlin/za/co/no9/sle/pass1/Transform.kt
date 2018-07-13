@@ -199,7 +199,7 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
-        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), popType()))
+        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), popType()!!))
     }
 
 

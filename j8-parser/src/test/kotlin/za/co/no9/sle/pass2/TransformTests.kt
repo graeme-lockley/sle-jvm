@@ -15,9 +15,11 @@ import za.co.no9.sle.pass1.IfExpression
 import za.co.no9.sle.pass1.LambdaExpression
 import za.co.no9.sle.pass1.LetDeclaration
 import za.co.no9.sle.pass1.Module
+import za.co.no9.sle.pass1.TypeAliasDeclaration
 import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.typeInt
 
 
 class TransformTests : StringSpec({
@@ -119,6 +121,17 @@ class TransformTests : StringSpec({
                 LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), za.co.no9.sle.pass1.TIdReference(arbLocation, "String"), BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
         )).shouldBe(Module(arbLocation, listOf(
                 LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "add"), Schema(emptyList(), TArr(TCon("S"), TCon("Int"))), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "a"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "b"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(+)"), za.co.no9.sle.pass2.IdReference(arbLocation, "a")), za.co.no9.sle.pass2.IdReference(arbLocation, "b"))))),
+                LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "sub"), Schema(emptyList(), TCon("String")), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "x"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "y"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(-)"), za.co.no9.sle.pass2.IdReference(arbLocation, "x")), za.co.no9.sle.pass2.IdReference(arbLocation, "y")))))
+        )))
+    }
+
+
+    "astToCoreAST module with type alias and let declaration" {
+        astToCoreAST(Module(arbLocation, listOf(
+                TypeAliasDeclaration(arbLocation, ID(arbLocation, "IntMap"), TArrow(arbLocation, TIdReference(arbLocation, "Int"), TIdReference(arbLocation, "Int"))),
+                LetDeclaration(arbLocation, ID(arbLocation, "sub"), listOf(ID(arbLocation, "x"), ID(arbLocation, "y")), za.co.no9.sle.pass1.TIdReference(arbLocation, "String"), BinaryOpExpression(arbLocation, IdReference(arbLocation, "x"), ID(arbLocation, "-"), IdReference(arbLocation, "y"))))
+        )).shouldBe(Module(arbLocation, listOf(
+                za.co.no9.sle.pass2.TypeAliasDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "IntMap"), Schema(listOf(), TArr(typeInt, typeInt))),
                 LetDeclaration(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "sub"), Schema(emptyList(), TCon("String")), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "x"), LambdaExpression(arbLocation, za.co.no9.sle.pass2.ID(arbLocation, "y"), CallExpression(arbLocation, CallExpression(arbLocation, za.co.no9.sle.pass2.IdReference(arbLocation, "(-)"), za.co.no9.sle.pass2.IdReference(arbLocation, "x")), za.co.no9.sle.pass2.IdReference(arbLocation, "y")))))
         )))
     }

@@ -33,6 +33,9 @@ fun Module.apply(substitution: Substitution): Module =
             when (it) {
                 is LetDeclaration ->
                     LetDeclaration(it.location, it.type.apply(substitution), it.name, it.expression.apply(substitution))
+
+                is TypeAliasDeclaration ->
+                        it
             }
         })
 

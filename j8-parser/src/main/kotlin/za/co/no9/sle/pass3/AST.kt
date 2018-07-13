@@ -1,6 +1,7 @@
 package za.co.no9.sle.pass3
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.Type
 
 
@@ -21,6 +22,11 @@ data class LetDeclaration(
         val type: Type,
         val name: ID,
         val expression: Expression) : Declaration(location)
+
+data class TypeAliasDeclaration(
+        override val location: Location,
+        val name: ID,
+        val schema: Schema) : Declaration(location)
 
 
 data class ID(
