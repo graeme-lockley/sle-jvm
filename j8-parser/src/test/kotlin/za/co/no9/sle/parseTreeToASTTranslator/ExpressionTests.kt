@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass1
+package za.co.no9.sle.parseTreeToASTTranslator
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
@@ -15,7 +15,7 @@ class ExpressionTests : StringSpec({
                 parseExpression(input)
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        expressionParseTreeToAST(parseResult.right()!!.node).toString().shouldBe(output)
+        za.co.no9.sle.parseTreeToASTTranslator.expressionParseTreeToAST(parseResult.right()!!.node).toString().shouldBe(output)
     }
 
 

@@ -5,7 +5,7 @@ import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.typing.*
 import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.pass1.parseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST
 import za.co.no9.sle.pass3.assignTypesToCoreAST
 
@@ -23,7 +23,7 @@ class JavaGenTests : StringSpec({
 
         val result =
                 parseModule(input)
-                        .map { parseTreeToAST(it.node) }
+                        .map { za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(it.node) }
                         .map { astToCoreAST(it) }
                         .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
                         .map { translateToJava(it, "test", "First") }

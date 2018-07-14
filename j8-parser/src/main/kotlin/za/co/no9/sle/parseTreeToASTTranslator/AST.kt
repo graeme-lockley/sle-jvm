@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass1
+package za.co.no9.sle.parseTreeToASTTranslator
 
 import za.co.no9.sle.Location
 

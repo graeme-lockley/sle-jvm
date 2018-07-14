@@ -5,22 +5,22 @@ import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.*
 import za.co.no9.sle.typing.*
 import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.pass1.expressionParseTreeToAST
-import za.co.no9.sle.pass1.parseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.expressionParseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST
 import za.co.no9.sle.pass2.astToCoreAST
 
 
 class Pass3DebugTests : StringSpec({
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
             za.co.no9.sle.parser.parseExpression(input)
-                    .map { expressionParseTreeToAST(it.node) }
+                    .map { za.co.no9.sle.parseTreeToASTTranslator.expressionParseTreeToAST(it.node) }
                     .map { astToCoreAST(it) }
                     .andThen { infer(VarPump(), it, env) }
 
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
             parseModule(input)
-                    .map { parseTreeToAST(it.node) }
+                    .map { za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(it.node) }
                     .map { astToCoreAST(it) }
                     .andThen { infer(VarPump(), it, env) }
 
