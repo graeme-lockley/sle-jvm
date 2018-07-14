@@ -5,9 +5,9 @@ import za.co.no9.sle.pass2.Declaration
 import za.co.no9.sle.typing.*
 
 
-fun infer(module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
+fun infer(varPump: VarPump, module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
-            InferContext(env)
+            InferContext(varPump, env)
 
     val m =
             context.infer(module)
@@ -19,9 +19,9 @@ fun infer(module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, 
 }
 
 
-fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
+fun infer(varPump: VarPump, expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
     val context =
-            InferContext(env)
+            InferContext(varPump, env)
 
     val t =
             context.infer(expression)
@@ -36,10 +36,7 @@ fun infer(expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<
 }
 
 
-private class InferContext(internal var env: Environment) {
-    private val varPump =
-            VarPump()
-
+private class InferContext(private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -95,6 +92,13 @@ private class InferContext(internal var env: Environment) {
                         is za.co.no9.sle.pass2.LetDeclaration -> {
                             val e =
                                     infer(d.expression)
+
+                            val dSchema =
+                                    d.schema
+
+                            if (dSchema != null) {
+                                unify(dSchema.instantiate(varPump), e.type)
+                            }
 
                             LetDeclaration(d.location, e.type, ID(d.name.location, d.name.name), e)
                         }

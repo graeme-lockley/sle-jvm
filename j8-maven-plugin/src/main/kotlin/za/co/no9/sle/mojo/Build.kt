@@ -74,7 +74,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         parseModule(sourceFileName.readText())
                                 .map { parseTreeToAST(it.node) }
                                 .map { astToCoreAST(it) }
-                                .andThen { it.assignTypesToCoreAST(environment) }
+                                .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
                                 .map { translateToJava(it, packageName, className) }
                                 .map { it.toString() }
 

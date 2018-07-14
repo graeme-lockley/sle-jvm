@@ -212,10 +212,10 @@ private class ParserToAST : ParserBaseListener() {
     }
 
     override fun exitArrowType(ctx: ParserParser.ArrowTypeContext?) {
-        val domain =
+        val range =
                 popType()!!
 
-        val range =
+        val domain =
                 popType()!!
 
         pushType(TArrow(ctx!!.location(), domain, range))

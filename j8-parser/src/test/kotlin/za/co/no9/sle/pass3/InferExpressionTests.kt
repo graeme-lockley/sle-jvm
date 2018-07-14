@@ -16,7 +16,7 @@ class InferExpressionTests : StringSpec({
             parseExpression(input)
                     .map { expressionParseTreeToAST(it.node) }
                     .map { astToCoreAST(it) }
-                    .andThen { infer(it, env) }
+                    .andThen { infer(VarPump(), it, env) }
 
 
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, String>? =

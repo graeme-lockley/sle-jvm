@@ -4,13 +4,18 @@ import za.co.no9.sle.*
 import za.co.no9.sle.typing.*
 
 
+// TODO see whether or not this can be made private
 typealias Unifier =
         Pair<Substitution, Constraints>
 
 
-fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
+typealias Aliases =
+        Map<String, Schema>
+
+
+fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Either<List<Error>, Substitution> {
     val context =
-            SolverContext(constraints)
+            SolverContext(varPump, aliases, constraints)
 
     val subst =
             context.solve()
@@ -22,9 +27,16 @@ fun unifies(constraints: Constraints): Either<List<Error>, Substitution> {
 }
 
 
-fun za.co.no9.sle.pass2.Module.assignTypesToCoreAST(environment: Environment): Either<Errors, Module> =
-        infer(this, environment)
-                .andThen { pair -> unifies(pair.second).map { Pair(pair.first, it) } }
+fun za.co.no9.sle.pass2.Module.aliases(): Aliases =
+        this.declarations
+                .filter { it is za.co.no9.sle.pass2.TypeAliasDeclaration }
+                .map { it as za.co.no9.sle.pass2.TypeAliasDeclaration }
+                .fold(emptyMap()) { aliases, alias -> aliases + Pair(alias.name.name, alias.schema) }
+
+
+fun za.co.no9.sle.pass2.Module.assignTypesToCoreAST(varPump: VarPump, environment: Environment): Either<Errors, Module> =
+        infer(varPump, this, environment)
+                .andThen { pair -> unifies(varPump, this.aliases(), pair.second).map { Pair(pair.first, it) } }
                 .map { it.first.apply(it.second) }
 
 
@@ -35,7 +47,7 @@ fun Module.apply(substitution: Substitution): Module =
                     LetDeclaration(it.location, it.type.apply(substitution), it.name, it.expression.apply(substitution))
 
                 is TypeAliasDeclaration ->
-                        it
+                    it
             }
         })
 
@@ -65,7 +77,7 @@ fun Expression.apply(substitution: Substitution): Expression =
         }
 
 
-private class SolverContext(private var constraints: Constraints) {
+private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints) {
     val errors =
             mutableListOf<Error>()
 
@@ -108,9 +120,15 @@ private class SolverContext(private var constraints: Constraints) {
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
 
                 else -> {
-                    errors.add(UnificationFail(t1, t2))
+                    if (t1 is TCon && aliases.containsKey(t1.name)) {
+                        unifies(aliases[t1.name]!!.instantiate(varPump), t2)
+                    } else if (t2 is TCon && aliases.containsKey(t2.name)) {
+                        unifies(t1, aliases[t2.name]!!.instantiate(varPump))
+                    } else {
+                        errors.add(UnificationFail(t1, t2))
 
-                    Pair(nullSubstitution, noConstraints)
+                        Pair(nullSubstitution, noConstraints)
+                    }
                 }
             }
 

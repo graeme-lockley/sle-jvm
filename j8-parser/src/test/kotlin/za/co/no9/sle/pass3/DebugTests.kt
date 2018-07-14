@@ -15,14 +15,14 @@ class Pass3DebugTests : StringSpec({
             za.co.no9.sle.parser.parseExpression(input)
                     .map { expressionParseTreeToAST(it.node) }
                     .map { astToCoreAST(it) }
-                    .andThen { infer(it, env) }
+                    .andThen { infer(VarPump(), it, env) }
 
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
             parseModule(input)
                     .map { parseTreeToAST(it.node) }
                     .map { astToCoreAST(it) }
-                    .andThen { infer(it, env) }
+                    .andThen { infer(VarPump(), it, env) }
 
 
     "Dump AST" {
@@ -42,7 +42,7 @@ class Pass3DebugTests : StringSpec({
 
         val substitution =
                 inferExpression
-                        .map { unifies(it.second) }
+                        .map { unifies(VarPump(), emptyMap(), it.second) }
                         .right()!!
 
         val newAST =
@@ -81,7 +81,7 @@ class Pass3DebugTests : StringSpec({
 
         val substitution =
                 inferModule
-                        .andThen { unifies(it.second) }
+                        .andThen { unifies(VarPump(), emptyMap(), it.second) }
 
         println(substitution)
 

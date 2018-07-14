@@ -8,7 +8,7 @@ import za.co.no9.sle.typing.*
 
 class UnifyTests : StringSpec({
     fun unifiesAsString(constraints: Constraints): String =
-            unifies(constraints).right()!!.toString()
+            unifies(VarPump(), emptyMap(), constraints).right()!!.toString()
 
 
     "no constraints results in no substitution" {

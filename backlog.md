@@ -1,6 +1,8 @@
 #### Add the keyword "typealias"
 
 This will allow schemas to be referenced
+
+* ensure that aliases only refer to aliases that have already been defined
  
 
 #### Add builtin '*'

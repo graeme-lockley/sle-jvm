@@ -52,9 +52,9 @@ factor
 type
     : UpperID
         # UpperIDType
-    | '(' UpperID ')'
+    | '(' type ')'
         # NestedType
-    | type '->' type
+    | <assoc=right> type '->' type
         # ArrowType
     ;
 

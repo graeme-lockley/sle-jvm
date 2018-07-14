@@ -25,7 +25,7 @@ class JavaGenTests : StringSpec({
                 parseModule(input)
                         .map { parseTreeToAST(it.node) }
                         .map { astToCoreAST(it) }
-                        .andThen { it.assignTypesToCoreAST(environment) }
+                        .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
                         .map { translateToJava(it, "test", "First") }
                         .map { it.toString() }
 

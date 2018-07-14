@@ -19,10 +19,10 @@ class ModuleTests : StringSpec({
     }
 
 
-    "\"let add x y = x + y\" should produce AST LetDeclaration" {
+    "\"let add x y : Int -> Int -> Int = x + y\" should produce AST LetDeclaration" {
         parse(
                 "let add x y : Int -> Int -> Int = x + y",
-                "Module(location=[(1, 0) (1, 38)], declarations=[LetDeclaration(location=[(1, 0) (1, 38)], name=ID(location=[(1, 4) (1, 6)], name=add), arguments=[ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)], schema=TArrow(location=[(1, 14) (1, 30)], domain=TIdReference(location=[(1, 28) (1, 30)], name=Int), range=TArrow(location=[(1, 14) (1, 23)], domain=TIdReference(location=[(1, 21) (1, 23)], name=Int), range=TIdReference(location=[(1, 14) (1, 16)], name=Int))), expression=BinaryOpExpression(location=[(1, 34) (1, 38)], left=IdReference(location=[(1, 34) (1, 34)], name=x), operator=ID(location=[(1, 36) (1, 36)], name=+), right=IdReference(location=[(1, 38) (1, 38)], name=y)))])"
+                "Module(location=[(1, 0) (1, 38)], declarations=[LetDeclaration(location=[(1, 0) (1, 38)], name=ID(location=[(1, 4) (1, 6)], name=add), arguments=[ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)], schema=TArrow(location=[(1, 14) (1, 30)], domain=TIdReference(location=[(1, 14) (1, 16)], name=Int), range=TArrow(location=[(1, 21) (1, 30)], domain=TIdReference(location=[(1, 21) (1, 23)], name=Int), range=TIdReference(location=[(1, 28) (1, 30)], name=Int))), expression=BinaryOpExpression(location=[(1, 34) (1, 38)], left=IdReference(location=[(1, 34) (1, 34)], name=x), operator=ID(location=[(1, 36) (1, 36)], name=+), right=IdReference(location=[(1, 38) (1, 38)], name=y)))])"
         )
     }
 
@@ -40,7 +40,7 @@ class ModuleTests : StringSpec({
         parse(
                 "typealias IntToInt = Int -> Int\n" +
                         "let negate a : IntToInt = 0 - a",
-                "Module(location=[(1, 0) (2, 30)], declarations=[TypeAliasDeclaration(location=[(1, 0) (1, 30)], name=ID(location=[(1, 10) (1, 17)], name=IntToInt), schema=TArrow(location=[(1, 21) (1, 30)], domain=TIdReference(location=[(1, 28) (1, 30)], name=Int), range=TIdReference(location=[(1, 21) (1, 23)], name=Int))), LetDeclaration(location=[(2, 0) (2, 30)], name=ID(location=[(2, 4) (2, 9)], name=negate), arguments=[ID(location=[(2, 11) (2, 11)], name=a)], schema=TIdReference(location=[(2, 15) (2, 22)], name=IntToInt), expression=BinaryOpExpression(location=[(2, 26) (2, 30)], left=ConstantInt(location=[(2, 26) (2, 26)], value=0), operator=ID(location=[(2, 28) (2, 28)], name=-), right=IdReference(location=[(2, 30) (2, 30)], name=a)))])"
+                "Module(location=[(1, 0) (2, 30)], declarations=[TypeAliasDeclaration(location=[(1, 0) (1, 30)], name=ID(location=[(1, 10) (1, 17)], name=IntToInt), schema=TArrow(location=[(1, 21) (1, 30)], domain=TIdReference(location=[(1, 21) (1, 23)], name=Int), range=TIdReference(location=[(1, 28) (1, 30)], name=Int))), LetDeclaration(location=[(2, 0) (2, 30)], name=ID(location=[(2, 4) (2, 9)], name=negate), arguments=[ID(location=[(2, 11) (2, 11)], name=a)], schema=TIdReference(location=[(2, 15) (2, 22)], name=IntToInt), expression=BinaryOpExpression(location=[(2, 26) (2, 30)], left=ConstantInt(location=[(2, 26) (2, 26)], value=0), operator=ID(location=[(2, 28) (2, 28)], name=-), right=IdReference(location=[(2, 30) (2, 30)], name=a)))])"
         )
     }
 })
