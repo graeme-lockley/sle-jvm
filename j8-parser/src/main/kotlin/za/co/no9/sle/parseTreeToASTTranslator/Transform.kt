@@ -5,38 +5,23 @@ import org.antlr.v4.runtime.Token
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.antlr.v4.runtime.tree.TerminalNode
 import za.co.no9.sle.*
-import za.co.no9.sle.parser.Result
 import za.co.no9.sle.parser.parseModule
 
 
-data class ParseExplain(
-        val parseResult: Result,
-        val module: Module)
+fun parse(text: String): Either<Errors, Module> {
+    fun parseTreeToAST(node: ParserRuleContext): Module =
+            walkParseTree(node).module!!
 
-
-fun parse(text: String): Either<Errors, Module> =
-        parseModule(text).map { parseTreeToAST(it.node) }
-
-
-fun parseWithExplain(text: String): Either<Errors, ParseExplain> {
-    val parseResult =
-            parseModule(text)
-
-
-    return parseResult.map { ParseExplain(it, parseTreeToAST(it.node)) }
+    return parseModule(text).map { parseTreeToAST(it.node) }
 }
 
 
-fun parseExpression(text: String): Either<Errors, Expression> =
-        za.co.no9.sle.parser.parseExpression(text).map { expressionParseTreeToAST(it.node) }
+fun parseExpression(text: String): Either<Errors, Expression> {
+    fun expressionParseTreeToAST(node: ParserRuleContext): Expression =
+            walkParseTree(node).popExpression()
 
-
-private fun parseTreeToAST(node: ParserRuleContext): Module =
-        walkParseTree(node).module!!
-
-
-private fun expressionParseTreeToAST(node: ParserRuleContext): Expression =
-        walkParseTree(node).popExpression()
+    return za.co.no9.sle.parser.parseExpression(text).map { expressionParseTreeToAST(it.node) }
+}
 
 
 private fun walkParseTree(node: ParserRuleContext): ParserToAST {

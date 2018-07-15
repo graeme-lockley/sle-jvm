@@ -11,10 +11,10 @@ import za.co.no9.sle.right
 class ModuleTests : StringSpec({
     fun parse(input: String, output: String) {
         val result =
-                parseWithExplain(input)
+                parse(input)
 
         result.shouldBeTypeOf<Either.Value<Result>>()
-        result.right()!!.module.toString().shouldBe(output)
+        result.right()!!.toString().shouldBe(output)
     }
 
 
