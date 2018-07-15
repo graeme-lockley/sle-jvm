@@ -3,12 +3,11 @@ package za.co.no9.sle.mojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
-import za.co.no9.sle.typing.*
-import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.parse
 import za.co.no9.sle.pass2.astToCoreAST
 import za.co.no9.sle.pass3.assignTypesToCoreAST
 import za.co.no9.sle.pass4.translateToJava
+import za.co.no9.sle.typing.*
 import java.io.File
 
 fun build(log: Log, sourceFile: File, targetFile: File) {
@@ -71,8 +70,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         sourceFileName.nameWithoutExtension
 
                 val output =
-                        parseModule(sourceFileName.readText())
-                                .map { za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(it.node) }
+                        parse(sourceFileName.readText())
                                 .map { astToCoreAST(it) }
                                 .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
                                 .map { translateToJava(it, packageName, className) }

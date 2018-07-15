@@ -3,24 +3,20 @@ package za.co.no9.sle.pass3
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.*
-import za.co.no9.sle.typing.*
-import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.parseTreeToASTTranslator.expressionParseTreeToAST
-import za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.parse
 import za.co.no9.sle.pass2.astToCoreAST
+import za.co.no9.sle.typing.*
 
 
 class Pass3DebugTests : StringSpec({
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
-            za.co.no9.sle.parser.parseExpression(input)
-                    .map { za.co.no9.sle.parseTreeToASTTranslator.expressionParseTreeToAST(it.node) }
+            za.co.no9.sle.parseTreeToASTTranslator.parseExpression(input)
                     .map { astToCoreAST(it) }
                     .andThen { infer(VarPump(), it, env) }
 
 
     fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
-            parseModule(input)
-                    .map { za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(it.node) }
+            parse(input)
                     .map { astToCoreAST(it) }
                     .andThen { infer(VarPump(), it, env) }
 

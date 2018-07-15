@@ -3,24 +3,23 @@ package za.co.no9.sle.pass3
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
-import za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST
+import za.co.no9.sle.parseTreeToASTTranslator.parse
 import za.co.no9.sle.pass2.astToCoreAST
 import za.co.no9.sle.typing.*
 
 
 class InferModuleTests : StringSpec({
+
+    fun inferModuleFromText(input: String, environment: Environment) =
+            infer(VarPump(), astToCoreAST(parse(input).right()!!), environment)
+
+
     "\"let add a b = a + b\"" {
         val environment =
                 Environment(mapOf(
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = a + b").right()!!.node))
-
-        val inferResult =
-                infer(VarPump(), module, environment).right()!!
-
-        inferResult.second.toString()
+        inferModuleFromText("let add a b = a + b", environment).right()!!.second.toString()
                 .shouldBe(
                         "Int -> Int -> Int : '0 -> '2, " +
                                 "'2 : '1 -> '3")
@@ -32,10 +31,7 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = a + b\nlet add x y = x + y").right()!!.node))
-
-        infer(VarPump(), module, environment)
+        inferModuleFromText("let add a b = a + b\nlet add x y = x + y", environment)
                 .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 18)), "add"))))
     }
 
@@ -45,13 +41,7 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b : Int -> Int -> Int = something a b").right()!!.node))
-
-        val inferResult =
-                infer(VarPump(), module, environment).right()!!
-
-        inferResult.second.toString()
+        inferModuleFromText("let add a b : Int -> Int -> Int = something a b", environment).right()!!.second.toString()
                 .shouldBe(
                         "'0 : '1 -> '3, " +
                                 "'2 -> '2 -> '2 : '3 -> '4, " +
@@ -64,11 +54,8 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("typealias IntMap = Int -> Int \n" +
-                        "let add a b : IntMap = something a b").right()!!.node))
-
-        infer(VarPump(), module, environment).right()!!.second.toString()
+        inferModuleFromText("typealias IntMap = Int -> Int \n" +
+                "let add a b : IntMap = something a b", environment).right()!!.second.toString()
                 .shouldBe("'0 : '1 -> '3, " +
                         "'2 -> '2 -> '2 : '3 -> '4, " +
                         "IntMap : '0 -> '1 -> '4")
@@ -80,11 +67,8 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = something a b\n" +
-                        "let add a b = something a b").right()!!.node))
-
-        infer(VarPump(), module, environment)
+        inferModuleFromText("let add a b = something a b\n" +
+                "let add a b = something a b", environment)
                 .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 26)), "add"))))
     }
 
@@ -94,11 +78,8 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b  : Int -> Int = something a b\n" +
-                        "let add a b = something a b").right()!!.node))
-
-        infer(VarPump(), module, environment)
+        inferModuleFromText("let add a b  : Int -> Int = something a b\n" +
+                "let add a b = something a b", environment)
                 .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 26)), "add"))))
     }
 
@@ -108,11 +89,8 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b = something a b\n" +
-                        "let add a b : Int -> Int = something a b").right()!!.node))
-
-        infer(VarPump(), module, environment)
+        inferModuleFromText("let add a b = something a b\n" +
+                "let add a b : Int -> Int = something a b", environment)
                 .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 39)), "add"))))
     }
 
@@ -122,11 +100,8 @@ class InferModuleTests : StringSpec({
                 Environment(mapOf(
                         Pair("something", Schema(listOf(0), TArr(TVar(0), TArr(TVar(0), TVar(0)))))))
 
-        val module =
-                astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(za.co.no9.sle.parser.parseModule("let add a b : Int -> Int = something a b\n" +
-                        "let add a b : Int -> Int = something a b").right()!!.node))
-
-        infer(VarPump(), module, environment)
+        inferModuleFromText("let add a b : Int -> Int = something a b\n" +
+                "let add a b : Int -> Int = something a b", environment)
                 .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 39)), "add"))))
     }
 })

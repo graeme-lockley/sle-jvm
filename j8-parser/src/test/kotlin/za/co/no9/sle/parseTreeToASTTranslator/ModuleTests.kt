@@ -5,17 +5,16 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.Either
 import za.co.no9.sle.parser.Result
-import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.right
 
 
 class ModuleTests : StringSpec({
     fun parse(input: String, output: String) {
-        val parseResult =
-                parseModule(input)
+        val result =
+                parseWithExplain(input)
 
-        parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        za.co.no9.sle.parseTreeToASTTranslator.parseTreeToAST(parseResult.right()!!.node).toString().shouldBe(output)
+        result.shouldBeTypeOf<Either.Value<Result>>()
+        result.right()!!.module.toString().shouldBe(output)
     }
 
 
