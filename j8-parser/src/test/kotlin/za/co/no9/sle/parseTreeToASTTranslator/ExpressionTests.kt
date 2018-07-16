@@ -19,27 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"True\" should produce corresponding AST" {
-        assertParseExpression(
-                "True",
-                "True(location=[(1, 0) (1, 3)])")
-    }
-
-
-    "\"False\" should produce corresponding AST" {
-        assertParseExpression(
-                "False",
-                "False(location=[(1, 0) (1, 4)])")
-    }
-
-
-    "\"234\" should produce corresponding AST" {
-        assertParseExpression(
-                "234",
-                "ConstantInt(location=[(1, 0) (1, 2)], value=234)")
-    }
-
-
     "\"Hello World\" should produce AST ConstantString with value \"Hello World\"" {
         assertParseExpression(
                 "\"Hello World\"",

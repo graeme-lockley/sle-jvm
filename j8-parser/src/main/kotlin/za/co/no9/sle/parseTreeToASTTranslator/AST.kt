@@ -134,6 +134,7 @@ fun toString(expression: Expression, indent: Int): String =
 
             is ConstantInt ->
                 "${spaces(indent)}ConstantInt:\n" +
+                        "${spaces(indent + 2)}Location: ${expression.location}\n" +
                         "${spaces(indent + 2)}Value: ${expression.value}\n"
 
             is ConstantString -> TODO()
