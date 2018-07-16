@@ -1,0 +1,22 @@
+-- Single declaration with a type signature
+let add x y : Int -> Int -> Int =
+    x + y
+-- ast
+Module:
+    Location: [(1, 0) (2, 8)]
+    LetDeclaration:
+        Location: [(1, 0) (2, 8)]
+        Name: add
+        Arguments: ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)
+        Schema: Int -> Int -> Int
+        Expression:
+            BinaryOpExpression:
+                Left:
+                    IdReference:
+                        Location: [(2, 4) (2, 4)]
+                        Name: x
+                Operator: ID(location=[(2, 6) (2, 6)], name=+)
+                Right:
+                    IdReference:
+                        Location: [(2, 8) (2, 8)]
+                        Name: y
