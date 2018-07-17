@@ -19,13 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"if True then 1 else 2\" should produce AST IfExpression" {
-        assertParseExpression(
-                "if True then 1 else 2",
-                "IfExpression(location=[(1, 0) (1, 20)], guardExpression=True(location=[(1, 3) (1, 6)]), thenExpression=ConstantInt(location=[(1, 13) (1, 13)], value=1), elseExpression=ConstantInt(location=[(1, 20) (1, 20)], value=2))")
-    }
-
-
     "\"\\x y -> x\" should produce AST LambdaExpression" {
         assertParseExpression(
                 "\\x y -> x",

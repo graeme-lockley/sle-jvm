@@ -1,0 +1,34 @@
+-- If expression
+let value a b c =
+    if a then
+        b
+    else
+        c
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: [
+        ID:
+          name: a
+        ID:
+          name: b
+        ID:
+          name: c
+      ]
+      expression:
+        IfExpression:
+          elseExpression:
+            IdReference:
+              name: c
+          guardExpression:
+            IdReference:
+              name: a
+          thenExpression:
+            IdReference:
+              name: b
+      name:
+        ID:
+          name: value
+      schema: null
+  ]
