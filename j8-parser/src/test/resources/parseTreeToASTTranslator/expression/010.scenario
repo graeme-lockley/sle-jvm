@@ -1,0 +1,24 @@
+-- Lambda expression
+let value =
+    \x y -> x
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            IdReference:
+              name: x
+      name:
+        ID:
+          name: value
+      schema: null
+  ]

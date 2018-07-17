@@ -19,13 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"\\x y -> x\" should produce AST LambdaExpression" {
-        assertParseExpression(
-                "\\x y -> x",
-                "LambdaExpression(location=[(1, 0) (1, 8)], arguments=[ID(location=[(1, 1) (1, 1)], name=x), ID(location=[(1, 3) (1, 3)], name=y)], expression=IdReference(location=[(1, 8) (1, 8)], name=x))")
-    }
-
-
     "\"x || y\" should produce AST LambdaExpression" {
         assertParseExpression(
                 "x || y",
