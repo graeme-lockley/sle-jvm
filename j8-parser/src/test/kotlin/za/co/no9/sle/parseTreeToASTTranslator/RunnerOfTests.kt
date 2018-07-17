@@ -16,8 +16,6 @@ class RunnerOfTests : FunSpec({
     val testRoot =
             File(rootDirectory, "parseTreeToASTTranslator")
 
-    println("[[$testRoot]]")
-
     testRoot.walk().filter { it.absolutePath.endsWith(".scenario") && it.isFile }.forEach {
         val fileContent =
                 readFile(it)
