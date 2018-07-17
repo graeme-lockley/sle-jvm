@@ -1,0 +1,27 @@
+-- Call expressions
+let value x y =
+    x y
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: [
+        ID:
+          name: x
+        ID:
+          name: y
+      ]
+      expression:
+        CallExpression:
+          operands: [
+            IdReference:
+              name: y
+          ]
+          operator:
+            IdReference:
+              name: x
+      name:
+        ID:
+          name: value
+      schema: null
+  ]
