@@ -3,20 +3,39 @@ let add x y : Int -> Int -> Int =
     x + y
 -- ast
 Module:
-    Location: [(1, 0) (2, 8)]
+  declarations: [
     LetDeclaration:
-        Location: [(1, 0) (2, 8)]
-        Name: add
-        Arguments: ID(location=[(1, 8) (1, 8)], name=x), ID(location=[(1, 10) (1, 10)], name=y)
-        Schema: Int -> Int -> Int
-        Expression:
-            BinaryOpExpression:
-                Left:
-                    IdReference:
-                        Location: [(2, 4) (2, 4)]
-                        Name: x
-                Operator: ID(location=[(2, 6) (2, 6)], name=+)
-                Right:
-                    IdReference:
-                        Location: [(2, 8) (2, 8)]
-                        Name: y
+      arguments: [
+        ID:
+          name: x
+        ID:
+          name: y
+      ]
+      expression:
+        BinaryOpExpression:
+          left:
+            IdReference:
+              name: x
+          operator:
+            ID:
+              name: +
+          right:
+            IdReference:
+              name: y
+      name:
+        ID:
+          name: add
+      schema:
+        TArrow:
+          domain:
+            TIdReference:
+              name: Int
+          range:
+            TArrow:
+              domain:
+                TIdReference:
+                  name: Int
+              range:
+                TIdReference:
+                  name: Int
+  ]

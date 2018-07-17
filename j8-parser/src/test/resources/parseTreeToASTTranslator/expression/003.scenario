@@ -3,12 +3,14 @@ let value =
     234
 -- ast
 Module:
-  Location: [(1, 0) (2, 6)]
-  LetDeclaration:
-    Location: [(1, 0) (2, 6)]
-    Name: value
-    Arguments:
-    Expression:
-      ConstantInt:
-        Location: [(2, 4) (2, 6)]
-        Value: 234
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        ConstantInt:
+          value: 234
+      name:
+        ID:
+          name: value
+      schema: null
+  ]

@@ -6,24 +6,39 @@ let negate a : IntToInt =
     0 - a
 -- ast
 Module:
-  Location: [(1, 0) (5, 8)]
-  TypeAliasDeclaration:
-    Location: [(1, 0) (2, 13)]
-    Name: IntToInt
-    Schema: Int -> Int
-  LetDeclaration:
-    Location: [(4, 0) (5, 8)]
-    Name: negate
-    Arguments: ID(location=[(4, 11) (4, 11)], name=a)
-    Schema: IntToInt
-    Expression:
-      BinaryOpExpression:
-        Left:
-          ConstantInt:
-            Location: [(5, 4) (5, 4)]
-            Value: 0
-        Operator: ID(location=[(5, 6) (5, 6)], name=-)
-        Right:
-          IdReference:
-            Location: [(5, 8) (5, 8)]
-            Name: a
+  declarations: [
+    TypeAliasDeclaration:
+      name:
+        ID:
+          name: IntToInt
+      schema:
+        TArrow:
+          domain:
+            TIdReference:
+              name: Int
+          range:
+            TIdReference:
+              name: Int
+    LetDeclaration:
+      arguments: [
+        ID:
+          name: a
+      ]
+      expression:
+        BinaryOpExpression:
+          left:
+            ConstantInt:
+              value: 0
+          operator:
+            ID:
+              name: -
+          right:
+            IdReference:
+              name: a
+      name:
+        ID:
+          name: negate
+      schema:
+        TIdReference:
+          name: IntToInt
+  ]

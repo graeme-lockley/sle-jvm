@@ -3,10 +3,13 @@ let value =
     True
 -- ast
 Module:
-  Location: [(1, 0) (2, 7)]
-  LetDeclaration:
-    Location: [(1, 0) (2, 7)]
-    Name: value
-    Arguments:
-    Expression:
-      True
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        True:
+      name:
+        ID:
+          name: value
+      schema: null
+  ]
