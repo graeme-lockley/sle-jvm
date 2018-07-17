@@ -1,0 +1,16 @@
+-- Constant string "Hello\\ \\\"World"
+let value =
+    "Hello\\ \"World"
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        ConstantString:
+          value: Hello\ "World
+      name:
+        ID:
+          name: value
+      schema: null
+  ]

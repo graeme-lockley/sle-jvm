@@ -19,20 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"Hello World\" should produce AST ConstantString with value \"Hello World\"" {
-        assertParseExpression(
-                "\"Hello World\"",
-                "ConstantString(location=[(1, 0) (1, 12)], value=Hello World)")
-    }
-
-
-    "\"Hello\\\\ \\\"World\" should produce AST ConstantString with value \"Hello\\ \"World\"" {
-        assertParseExpression(
-                "\"Hello\\\\ \\\" World\"",
-                "ConstantString(location=[(1, 0) (1, 17)], value=Hello\\ \" World)")
-    }
-
-
     "\"!True\" should produce AST NotExpression" {
         assertParseExpression(
                 "!True",
