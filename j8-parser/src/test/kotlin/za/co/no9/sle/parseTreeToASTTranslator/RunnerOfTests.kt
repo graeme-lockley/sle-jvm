@@ -101,45 +101,54 @@ private fun readFile(file: File): Map<String, List<String>> {
 
 private fun dumpString(o: Any?, indent: Int = 0): String {
     fun dd(label: String, value: Any?, indent: Int): String =
-            if (value == null) {
-                "${spaces(indent)}$label: null\n"
-            } else if (value is Int) {
-                "${spaces(indent)}$label: $value\n"
-            } else if (value is Boolean) {
-                "${spaces(indent)}$label: $value\n"
-            } else if (value is String) {
-                "${spaces(indent)}$label: $value\n"
-            } else if (value is List<*>) {
-                if (value.isEmpty()) {
-                    "${spaces(indent)}$label: []\n"
-                } else {
-                    "${spaces(indent)}$label: [\n" +
-                            value.joinToString("") { dumpString(it, indent + 2) } +
-                            "${spaces(indent)}]\n"
-                }
-            } else {
-                "${spaces(indent)}$label:\n" +
+            when (value) {
+                null ->
+                    "${spaces(indent)}$label: null\n"
+
+                is Int ->
+                    "${spaces(indent)}$label: $value\n"
+
+                is Boolean ->
+                    "${spaces(indent)}$label: $value\n"
+
+                is String ->
+                    "${spaces(indent)}$label: $value\n"
+
+                is List<*> ->
+                    when {
+                        value.isEmpty() ->
+                            "${spaces(indent)}$label: []\n"
+
+                        else ->
+                            "${spaces(indent)}$label: [\n" +
+                                    value.joinToString("") { dumpString(it, indent + 2) } +
+                                    "${spaces(indent)}]\n"
+                    }
+
+                else -> "${spaces(indent)}$label:\n" +
                         dumpString(value, indent + 2)
             }
 
-    if (o == null) {
-        return ""
-    } else {
-        return "${spaces(indent)}${o.javaClass.kotlin.simpleName}:\n" +
-                o.javaClass.kotlin.memberProperties.map {
-                    try {
-                        val value =
-                                it.call(o)
+    return when (o) {
+        null ->
+            ""
 
-                        if (it.name == "location") {
+        else ->
+            "${spaces(indent)}${o.javaClass.kotlin.simpleName}:\n" +
+                    o.javaClass.kotlin.memberProperties.map {
+                        try {
+                            val value =
+                                    it.call(o)
+
+                            if (it.name == "location") {
+                                ""
+                            } else {
+                                dd(it.name, value, indent + 2)
+                            }
+                        } catch (e: Exception) {
                             ""
-                        } else {
-                            dd(it.name, value, indent + 2)
                         }
-                    } catch (e: Exception) {
-                        ""
-                    }
-                }.filter { it.isNotEmpty() }.joinToString("")
+                    }.filter { it.isNotEmpty() }.joinToString("")
     }
 }
 
