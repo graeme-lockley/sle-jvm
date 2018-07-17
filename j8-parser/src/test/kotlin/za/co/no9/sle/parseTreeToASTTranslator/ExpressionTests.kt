@@ -19,13 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"a\" should produce AST IdReference" {
-        assertParseExpression(
-                "a",
-                "IdReference(location=[(1, 0) (1, 0)], name=a)")
-    }
-
-
     "\"(a)\" should produce AST IdReference" {
         assertParseExpression(
                 "(a)",

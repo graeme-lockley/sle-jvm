@@ -1,0 +1,19 @@
+-- ID reference
+let value x =
+    x
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: [
+        ID:
+          name: x
+      ]
+      expression:
+        IdReference:
+          name: x
+      name:
+        ID:
+          name: value
+      schema: null
+  ]
