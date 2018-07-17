@@ -16,6 +16,8 @@ class RunnerOfTests : FunSpec({
     val testRoot =
             File(rootDirectory, "parseTreeToASTTranslator")
 
+    println("[[$testRoot]]")
+
     testRoot.walk().filter { it.absolutePath.endsWith(".scenario") && it.isFile }.forEach {
         val fileContent =
                 readFile(it)
@@ -58,8 +60,20 @@ class RunnerOfTests : FunSpec({
 })
 
 
+private fun calculateRootDirectory(): File {
+    val userDir =
+            System.getProperty("user.dir")
+
+    return File(if (userDir.endsWith("j8-parser")) {
+        File(userDir)
+    } else {
+        File(userDir, "j8-parser")
+    }, listOf("src", "test", "resources").joinToString(File.separator))
+}
+
+
 private val rootDirectory =
-        File(File(System.getProperty("user.dir")), listOf("src", "test", "resources").joinToString(File.separator))
+        calculateRootDirectory()
 
 
 private fun readFile(file: File): Map<String, List<String>> {
