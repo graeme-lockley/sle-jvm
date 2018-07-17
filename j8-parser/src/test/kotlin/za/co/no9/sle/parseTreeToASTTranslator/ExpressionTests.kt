@@ -19,13 +19,6 @@ class ExpressionTests : StringSpec({
     }
 
 
-    "\"!True\" should produce AST NotExpression" {
-        assertParseExpression(
-                "!True",
-                "NotExpression(location=[(1, 0) (1, 4)], expression=True(location=[(1, 1) (1, 4)]))")
-    }
-
-
     "\"a\" should produce AST IdReference" {
         assertParseExpression(
                 "a",
