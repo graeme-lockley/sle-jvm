@@ -1,0 +1,340 @@
+-- Binary operator expressions
+let barBar =
+    \x y -> x || y
+
+let ampersandAmpersand =
+    \x y -> x && y
+
+let equalEqual =
+    \x y -> x == y
+
+let bangEqual =
+    \x y -> x != y
+
+let lessEqual =
+    \x y -> x <= y
+
+let lessThan =
+    \x y -> x < y
+
+let greaterEqual =
+    \x y -> x >= y
+
+let greaterThan =
+    \x y -> x > y
+
+let plus =
+    \x y -> x + y
+
+let minus =
+    \x y -> x - y
+
+let star =
+    \x y -> x * y
+
+let slash =
+    \x y -> x / y
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: ||
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: barBar
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: &&
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: ampersandAmpersand
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: ==
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: equalEqual
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: !=
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: bangEqual
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: <=
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: lessEqual
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: <
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: lessThan
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: >=
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: greaterEqual
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: >
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: greaterThan
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: +
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: plus
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: -
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: minus
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: *
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: star
+      schema: null
+    LetDeclaration:
+      arguments: []
+      expression:
+        LambdaExpression:
+          arguments: [
+            ID:
+              name: x
+            ID:
+              name: y
+          ]
+          expression:
+            BinaryOpExpression:
+              left:
+                IdReference:
+                  name: x
+              operator:
+                ID:
+                  name: /
+              right:
+                IdReference:
+                  name: y
+      name:
+        ID:
+          name: slash
+      schema: null
+  ]
