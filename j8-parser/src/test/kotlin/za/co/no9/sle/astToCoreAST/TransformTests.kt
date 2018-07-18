@@ -24,12 +24,6 @@ class TransformTests : StringSpec({
             ConstantBool(arbLocation, true)
 
 
-    "astToCoreAST NotExpression" {
-        astToCoreAST(NotExpression(arbLocation, arbPass1Expression))
-                .shouldBe(za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "(!)"), arbPass2Expression))
-    }
-
-
     "astToCoreAST IdReference expression" {
         astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "Hello"))
                 .shouldBe(za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "Hello"))

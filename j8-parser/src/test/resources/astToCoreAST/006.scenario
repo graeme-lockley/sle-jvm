@@ -1,0 +1,25 @@
+-- Not expression
+let negate x =
+    !x
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        LambdaExpression:
+          argument:
+            ID:
+              name: x
+          expression:
+            CallExpression:
+              operand:
+                IdReference:
+                  name: x
+              operator:
+                IdReference:
+                  name: (!)
+      name:
+        ID:
+          name: negate
+      schema: null
+  ]
