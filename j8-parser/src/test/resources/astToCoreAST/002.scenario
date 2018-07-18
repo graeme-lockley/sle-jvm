@@ -1,0 +1,15 @@
+-- True
+let true =
+    True
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        ConstantBool:
+          value: true
+      name:
+        ID:
+          name: true
+      schema: null
+  ]

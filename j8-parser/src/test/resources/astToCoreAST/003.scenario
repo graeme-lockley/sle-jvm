@@ -1,0 +1,15 @@
+-- False
+let false =
+    False
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        ConstantBool:
+          value: false
+      name:
+        ID:
+          name: false
+      schema: null
+  ]
