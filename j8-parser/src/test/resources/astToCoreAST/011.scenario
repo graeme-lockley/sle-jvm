@@ -1,0 +1,58 @@
+-- Module with type alias and let declaration
+typealias IntMap =
+    Int -> Int
+
+let add : IntMap =
+    \a b -> a + b
+-- ast
+Module:
+  declarations: [
+    TypeAliasDeclaration:
+      name:
+        ID:
+          name: IntMap
+      schema:
+        Schema:
+          type:
+            TArr:
+              domain:
+                TCon:
+                  name: Int
+              range:
+                TCon:
+                  name: Int
+          variable: []
+    LetDeclaration:
+      expression:
+        LambdaExpression:
+          argument:
+            ID:
+              name: a
+          expression:
+            LambdaExpression:
+              argument:
+                ID:
+                  name: b
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: b
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: a
+                      operator:
+                        IdReference:
+                          name: (+)
+      name:
+        ID:
+          name: add
+      schema:
+        Schema:
+          type:
+            TCon:
+              name: IntMap
+          variable: []
+  ]
