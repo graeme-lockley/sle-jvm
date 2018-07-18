@@ -1,5 +1,8 @@
 package za.co.no9.sle.astToCoreAST
 
+import za.co.no9.sle.Either
+import za.co.no9.sle.Errors
+import za.co.no9.sle.map
 import za.co.no9.sle.parseTreeToASTTranslator.*
 import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.TArr
@@ -7,11 +10,16 @@ import za.co.no9.sle.typing.TCon
 import za.co.no9.sle.typing.Type
 
 
+fun parse(text: String): Either<Errors, Module> =
+        za.co.no9.sle.parseTreeToASTTranslator
+                .parse(text)
+                .map { astToCoreAST(it) }
+
 fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Module): Module =
         Module(ast.location, ast.declarations.map { astToCoreAST(it) })
 
 
-fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Declaration): Declaration =
+private fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Declaration): Declaration =
         when (ast) {
             is za.co.no9.sle.parseTreeToASTTranslator.LetDeclaration ->
                 LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
@@ -58,7 +66,7 @@ fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Expression): Expres
         }
 
 
-fun astToCoreASTOptional(ast: TSchema?): Schema? {
+private fun astToCoreASTOptional(ast: TSchema?): Schema? {
     return when (ast) {
         null ->
             null
@@ -69,7 +77,7 @@ fun astToCoreASTOptional(ast: TSchema?): Schema? {
 }
 
 
-fun astToCoreAST(ast: TSchema): Schema {
+private fun astToCoreAST(ast: TSchema): Schema {
     fun astToType(type: TSchema): Type =
             when (type) {
                 is TIdReference ->
@@ -81,6 +89,3 @@ fun astToCoreAST(ast: TSchema): Schema {
 
     return Schema(emptyList(), astToType(ast))
 }
-
-
-
