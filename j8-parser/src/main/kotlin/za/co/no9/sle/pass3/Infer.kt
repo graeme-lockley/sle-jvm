@@ -1,11 +1,11 @@
 package za.co.no9.sle.pass3
 
 import za.co.no9.sle.*
-import za.co.no9.sle.pass2.Declaration
+import za.co.no9.sle.astToCoreAST.Declaration
 import za.co.no9.sle.typing.*
 
 
-fun infer(varPump: VarPump, module: za.co.no9.sle.pass2.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
+fun infer(varPump: VarPump, module: za.co.no9.sle.astToCoreAST.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
             InferContext(varPump, env)
 
@@ -19,7 +19,7 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.pass2.Module, env: Environment
 }
 
 
-fun infer(varPump: VarPump, expression: za.co.no9.sle.pass2.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
+fun infer(varPump: VarPump, expression: za.co.no9.sle.astToCoreAST.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
     val context =
             InferContext(varPump, env)
 
@@ -44,10 +44,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
             mutableListOf<Error>()
 
 
-    fun infer(module: za.co.no9.sle.pass2.Module): Module {
+    fun infer(module: za.co.no9.sle.astToCoreAST.Module): Module {
         module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
             when (d) {
-                is za.co.no9.sle.pass2.LetDeclaration -> {
+                is za.co.no9.sle.astToCoreAST.LetDeclaration -> {
                     val name =
                             d.name.name
 
@@ -59,14 +59,14 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                is za.co.no9.sle.astToCoreAST.TypeAliasDeclaration ->
                     e
             }
         }
 
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
-                is za.co.no9.sle.pass2.LetDeclaration -> {
+                is za.co.no9.sle.astToCoreAST.LetDeclaration -> {
                     val name =
                             d.name.name
 
@@ -80,7 +80,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                is za.co.no9.sle.astToCoreAST.TypeAliasDeclaration ->
                     e
             }
         }
@@ -89,7 +89,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 module.location,
                 module.declarations.map { d ->
                     when (d) {
-                        is za.co.no9.sle.pass2.LetDeclaration -> {
+                        is za.co.no9.sle.astToCoreAST.LetDeclaration -> {
                             val e =
                                     infer(d.expression)
 
@@ -103,24 +103,24 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             LetDeclaration(d.location, e.type, ID(d.name.location, d.name.name), e)
                         }
 
-                        is za.co.no9.sle.pass2.TypeAliasDeclaration ->
+                        is za.co.no9.sle.astToCoreAST.TypeAliasDeclaration ->
                             TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema)
                     }
                 })
     }
 
-    fun infer(expression: za.co.no9.sle.pass2.Expression): Expression =
+    fun infer(expression: za.co.no9.sle.astToCoreAST.Expression): Expression =
             when (expression) {
-                is za.co.no9.sle.pass2.ConstantBool ->
+                is za.co.no9.sle.astToCoreAST.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
 
-                is za.co.no9.sle.pass2.ConstantInt ->
+                is za.co.no9.sle.astToCoreAST.ConstantInt ->
                     ConstantInt(expression.location, typeInt, expression.value)
 
-                is za.co.no9.sle.pass2.ConstantString ->
+                is za.co.no9.sle.astToCoreAST.ConstantString ->
                     ConstantString(expression.location, typeString, expression.value)
 
-                is za.co.no9.sle.pass2.IdReference -> {
+                is za.co.no9.sle.astToCoreAST.IdReference -> {
                     val schema =
                             env[expression.name]
 
@@ -136,7 +136,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.pass2.IfExpression -> {
+                is za.co.no9.sle.astToCoreAST.IfExpression -> {
                     val t1 =
                             infer(expression.guardExpression)
 
@@ -152,7 +152,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     IfExpression(expression.location, t2.type, t1, t2, t3)
                 }
 
-                is za.co.no9.sle.pass2.LambdaExpression -> {
+                is za.co.no9.sle.astToCoreAST.LambdaExpression -> {
                     val tv =
                             varPump.fresh()
 
@@ -168,7 +168,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     LambdaExpression(expression.location, TArr(tv, t.type), ID(expression.argument.location, expression.argument.name), t)
                 }
 
-                is za.co.no9.sle.pass2.CallExpression -> {
+                is za.co.no9.sle.astToCoreAST.CallExpression -> {
                     val t1 =
                             infer(expression.operator)
 

@@ -4,7 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.parseTreeToASTTranslator.parse
-import za.co.no9.sle.pass2.astToCoreAST
+import za.co.no9.sle.astToCoreAST.astToCoreAST
 import za.co.no9.sle.typing.*
 
 

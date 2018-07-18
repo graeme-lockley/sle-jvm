@@ -4,7 +4,7 @@ import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
 import za.co.no9.sle.parseTreeToASTTranslator.parse
-import za.co.no9.sle.pass2.astToCoreAST
+import za.co.no9.sle.astToCoreAST.astToCoreAST
 import za.co.no9.sle.pass3.assignTypesToCoreAST
 import za.co.no9.sle.pass4.translateToJava
 import za.co.no9.sle.typing.*

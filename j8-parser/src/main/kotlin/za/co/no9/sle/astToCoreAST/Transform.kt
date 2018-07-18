@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass2
+package za.co.no9.sle.astToCoreAST
 
 import za.co.no9.sle.parseTreeToASTTranslator.*
 import za.co.no9.sle.typing.Schema

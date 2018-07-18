@@ -7,7 +7,7 @@ import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.parseTreeToASTTranslator.parseExpression
 import za.co.no9.sle.typing.*
-import za.co.no9.sle.pass2.astToCoreAST
+import za.co.no9.sle.astToCoreAST.astToCoreAST
 
 
 class InferExpressionTests : StringSpec({
