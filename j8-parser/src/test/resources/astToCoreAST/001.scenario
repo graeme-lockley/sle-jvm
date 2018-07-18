@@ -1,0 +1,50 @@
+-- Single declaration with a type signature
+let add x y : Int -> Int -> Int =
+    x + y
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        LambdaExpression:
+          argument:
+            ID:
+              name: x
+          expression:
+            LambdaExpression:
+              argument:
+                ID:
+                  name: y
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: y
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: x
+                      operator:
+                        IdReference:
+                          name: (+)
+      name:
+        ID:
+          name: add
+      schema:
+        Schema:
+          type:
+            TArr:
+              domain:
+                TCon:
+                  name: Int
+              range:
+                TArr:
+                  domain:
+                    TCon:
+                      name: Int
+                  range:
+                    TCon:
+                      name: Int
+          variable: []
+  ]
