@@ -1,0 +1,42 @@
+-- Lambda expression
+let lambdaExpression =
+    \x y z ->
+        if x then
+            y
+        else
+            z
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        LambdaExpression:
+          argument:
+            ID:
+              name: x
+          expression:
+            LambdaExpression:
+              argument:
+                ID:
+                  name: y
+              expression:
+                LambdaExpression:
+                  argument:
+                    ID:
+                      name: z
+                  expression:
+                    IfExpression:
+                      elseExpression:
+                        IdReference:
+                          name: z
+                      guardExpression:
+                        IdReference:
+                          name: x
+                      thenExpression:
+                        IdReference:
+                          name: y
+      name:
+        ID:
+          name: lambdaExpression
+      schema: null
+  ]
