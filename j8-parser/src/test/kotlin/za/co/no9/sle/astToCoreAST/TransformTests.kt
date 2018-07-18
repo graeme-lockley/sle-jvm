@@ -1,11 +1,13 @@
 package za.co.no9.sle.astToCoreAST
 
-import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.Location
 import za.co.no9.sle.Position
 import za.co.no9.sle.parseTreeToASTTranslator.*
+import za.co.no9.sle.parseTreeToASTTranslator.LetDeclaration
+import za.co.no9.sle.parseTreeToASTTranslator.Module
+import za.co.no9.sle.parseTreeToASTTranslator.TypeAliasDeclaration
 import za.co.no9.sle.typing.Schema
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
@@ -15,25 +17,6 @@ import za.co.no9.sle.typing.typeInt
 class TransformTests : StringSpec({
     val arbLocation =
             Location(Position(1, 2), Position(3, 4))
-
-
-    val arbPass1Expression =
-            za.co.no9.sle.parseTreeToASTTranslator.True(arbLocation)
-
-    val arbPass2Expression =
-            ConstantBool(arbLocation, true)
-
-
-    "astToCoreAST IdReference expression" {
-        astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "Hello"))
-                .shouldBe(za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "Hello"))
-    }
-
-
-    "astToCoreAST IfExpression " {
-        astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.IfExpression(arbLocation, za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "a"), za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "b"), za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "c")))
-                .shouldBe(za.co.no9.sle.astToCoreAST.IfExpression(arbLocation, za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "a"), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "b"), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "c")))
-    }
 
 
     "astToCoreAST LambdaExpression" {
