@@ -19,12 +19,6 @@ class TransformTests : StringSpec({
             Location(Position(1, 2), Position(3, 4))
 
 
-    "astToCoreAST BinaryOpExpression" {
-        astToCoreAST(BinaryOpExpression(arbLocation, za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "a"), za.co.no9.sle.parseTreeToASTTranslator.ID(arbLocation, "+"), za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "b")))
-                .shouldBe(za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "(+)"), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "a")), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "b")))
-
-    }
-
     "astToCoreAST CallExpression" {
         astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.CallExpression(arbLocation, za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "a"), listOf(za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "b"), za.co.no9.sle.parseTreeToASTTranslator.IdReference(arbLocation, "c"))))
                 .shouldBe(za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "a"), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "b")), za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "c")))

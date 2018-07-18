@@ -1,0 +1,35 @@
+-- Binary op expression
+let binaryOpExpression a b =
+    a + b
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        LambdaExpression:
+          argument:
+            ID:
+              name: a
+          expression:
+            LambdaExpression:
+              argument:
+                ID:
+                  name: b
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: b
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: a
+                      operator:
+                        IdReference:
+                          name: (+)
+      name:
+        ID:
+          name: binaryOpExpression
+      schema: null
+  ]
