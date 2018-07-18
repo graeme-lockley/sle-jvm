@@ -24,22 +24,6 @@ class TransformTests : StringSpec({
             ConstantBool(arbLocation, true)
 
 
-    "astToCoreAST ConstantInt expression" {
-        assertAll { n: Int ->
-            astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.ConstantInt(arbLocation, n))
-                    .shouldBe(za.co.no9.sle.astToCoreAST.ConstantInt(arbLocation, n))
-        }
-    }
-
-
-    "astToCoreAST ConstantString expression" {
-        assertAll { s: String ->
-            astToCoreAST(za.co.no9.sle.parseTreeToASTTranslator.ConstantString(arbLocation, s))
-                    .shouldBe(za.co.no9.sle.astToCoreAST.ConstantString(arbLocation, s))
-        }
-    }
-
-
     "astToCoreAST NotExpression" {
         astToCoreAST(NotExpression(arbLocation, arbPass1Expression))
                 .shouldBe(za.co.no9.sle.astToCoreAST.CallExpression(arbLocation, za.co.no9.sle.astToCoreAST.IdReference(arbLocation, "(!)"), arbPass2Expression))

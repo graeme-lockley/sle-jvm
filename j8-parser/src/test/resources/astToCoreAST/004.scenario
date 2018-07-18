@@ -1,0 +1,15 @@
+-- Constant integer
+let value =
+    123
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      expression:
+        ConstantInt:
+          value: 123
+      name:
+        ID:
+          name: value
+      schema: null
+  ]
