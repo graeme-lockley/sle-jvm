@@ -9,51 +9,10 @@ import za.co.no9.sle.typing.*
 
 
 class Pass3DebugTests : StringSpec({
-    fun inferExpression(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Expression, Constraints>> =
-            za.co.no9.sle.parseTreeToASTTranslator.parseExpression(input)
-                    .map { astToCoreAST(it) }
-                    .andThen { infer(VarPump(), it, env) }
-
-
     fun inferModule(input: String, env: Environment = emptyEnvironment): Either<Errors, Pair<Module, Constraints>> =
             parse(input)
                     .map { astToCoreAST(it) }
                     .andThen { infer(VarPump(), it, env) }
-
-
-    "Dump AST" {
-        val environment =
-                Environment(mapOf(
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                        Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
-
-        val inferExpression =
-                inferExpression("\\a b -> if False then a + b * 100 else a * b", environment)
-
-        val inferExpressionAsString =
-                inferExpression
-                        .map { it.mapFirst { asString(it) } }
-                        .map { it.mapSecond { it.toString() } }
-                        .right() ?: Pair("", "")
-
-        val substitution =
-                inferExpression
-                        .map { unifies(VarPump(), emptyMap(), it.second) }
-                        .right()!!
-
-        val newAST =
-                substitution
-                        .andThen { ss ->
-                            inferExpression.map { it.first.apply(ss) }
-                        }
-                        .map { asString(it) }
-                        .right()
-
-        println(inferExpressionAsString.first)
-        println(inferExpressionAsString.second)
-        println()
-        println(newAST)
-    }
 
 
     "Dump Module AST" {
