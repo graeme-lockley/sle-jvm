@@ -1,61 +1,30 @@
-package za.co.no9.sle.parseTreeToASTTranslator
+package za.co.no9.sle
 
 import io.kotlintest.matchers.boolean.shouldBeTrue
-import io.kotlintest.matchers.types.shouldBeTypeOf
-import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
-import io.kotlintest.specs.FunSpec
+import io.kotlintest.specs.AbstractFunSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
-import za.co.no9.sle.Either
-import za.co.no9.sle.parser.Result
-import za.co.no9.sle.right
 import java.io.File
+import java.util.function.Consumer
 import kotlin.reflect.full.memberProperties
 
-class RunnerOfTests : FunSpec({
+
+fun runner(test: AbstractFunSpec, directory: String, process: Consumer<Map<String, List<String>>>) {
     val testRoot =
-            File(rootDirectory, "parseTreeToASTTranslator")
+            File(za.co.no9.sle.rootDirectory, directory)
 
     testRoot.walk().filter { it.absolutePath.endsWith(".scenario") && it.isFile }.forEach {
         val fileContent =
-                readFile(it)
+                za.co.no9.sle.readFile(it)
 
         val namePrefix =
                 it.parent.drop(testRoot.absolutePath.length + 1).split("/")
 
-        test((namePrefix + (fileContent["title"] ?: listOf())).joinToString(": ")) {
-            val result =
-                    parse(fileContent["src"]?.joinToString("\n") ?: "")
-
-            val astTest =
-                    fileContent["ast"]
-
-            if (astTest != null) {
-                result.shouldBeTypeOf<Either.Value<Result>>()
-
-                val actual =
-                        dumpString(result.right()!!)
-                                .split("\n")
-                                .map { it.trim() }
-                                .filter { it.isNotEmpty() }
-                                .joinToString("\n")
-
-                val expected =
-                        astTest
-                                .map { it.trim() }
-                                .filter { it.isNotEmpty() }
-                                .joinToString("\n")
-
-                if (actual == expected) {
-                    actual.shouldBe(expected)
-                } else {
-                    dumpString(result.right()!!)
-                            .shouldBe(astTest.joinToString("\n"))
-                }
-            }
+        test.test((namePrefix + (fileContent["title"] ?: listOf())).joinToString(": ")) {
+            process.accept(fileContent)
         }
     }
-})
+}
 
 
 private fun calculateRootDirectory(): File {
@@ -111,7 +80,7 @@ private fun readFile(file: File): Map<String, List<String>> {
 }
 
 
-private fun dumpString(o: Any?, indent: Int = 0): String {
+fun dumpString(o: Any?, indent: Int = 0): String {
     fun dd(label: String, value: Any?, indent: Int): String =
             when (value) {
                 null ->
