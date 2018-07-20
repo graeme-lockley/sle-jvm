@@ -111,6 +111,34 @@ private fun readFile(file: File): Map<String, List<String>> {
 
 
 fun dumpString(o: Any?, indent: Int = 0): String {
+    fun value(value: Any?, indent: Int = 0): String =
+            when (value) {
+                null ->
+                    "null"
+
+                is Int ->
+                    "$value"
+
+                is Boolean ->
+                    "$value"
+
+                is String ->
+                    "$value"
+
+                is List<*> ->
+                    when {
+                        value.isEmpty() ->
+                            "[]"
+
+                        else ->
+                            "[\n" +
+                                    value.joinToString("") { dumpString(it, indent + 2) } +
+                                    "${spaces(indent)}]"
+                    }
+
+                else -> dumpString(value, indent)
+            }
+
     fun dd(label: String, value: Any?, indent: Int): String =
             when (value) {
                 null ->
@@ -143,6 +171,18 @@ fun dumpString(o: Any?, indent: Int = 0): String {
     return when (o) {
         null ->
             ""
+
+        is Int ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is String ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is Boolean ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is List<*> ->
+            "${spaces(indent)}${value(o, indent)}\n"
 
         else ->
             "${spaces(indent)}${o.javaClass.kotlin.simpleName}:\n" +

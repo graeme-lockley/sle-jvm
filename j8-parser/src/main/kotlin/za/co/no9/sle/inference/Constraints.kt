@@ -2,7 +2,7 @@ package za.co.no9.sle.inference
 
 import za.co.no9.sle.typing.Substitution
 
-data class Constraints(private val state: List<Constraint> = emptyList()) {
+data class Constraints(val state: List<Constraint> = emptyList()) {
     operator fun plus(constraint: Constraint): Constraints =
             Constraints(state + constraint)
 
