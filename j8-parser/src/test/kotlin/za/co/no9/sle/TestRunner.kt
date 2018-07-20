@@ -145,24 +145,16 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                     "${spaces(indent)}$label: null\n"
 
                 is Int ->
-                    "${spaces(indent)}$label: $value\n"
+                    "${spaces(indent)}$label: ${value(value)}\n"
 
                 is Boolean ->
-                    "${spaces(indent)}$label: $value\n"
+                    "${spaces(indent)}$label: ${value(value)}\n"
 
                 is String ->
-                    "${spaces(indent)}$label: $value\n"
+                    "${spaces(indent)}$label: ${value(value)}\n"
 
                 is List<*> ->
-                    when {
-                        value.isEmpty() ->
-                            "${spaces(indent)}$label: []\n"
-
-                        else ->
-                            "${spaces(indent)}$label: [\n" +
-                                    value.joinToString("") { dumpString(it, indent + 2) } +
-                                    "${spaces(indent)}]\n"
-                    }
+                    "${spaces(indent)}$label: ${value(value)}\n"
 
                 else -> "${spaces(indent)}$label:\n" +
                         dumpString(value, indent + 2)
