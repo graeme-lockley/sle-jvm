@@ -18,8 +18,14 @@ fun runner(test: AbstractFunSpec, directory: String, process: Consumer<Map<Strin
         val fileContent =
                 za.co.no9.sle.readFile(it)
 
+        val namePrefixString =
+                it.parent.drop(testRoot.absolutePath.length + 1)
+
         val namePrefix =
-                it.parent.drop(testRoot.absolutePath.length + 1).split("/")
+                if (namePrefixString.isEmpty())
+                    listOf()
+                else
+                    namePrefixString.split("/")
 
         test.test((namePrefix + (fileContent["title"] ?: listOf())).joinToString(": ")) {
             process.accept(fileContent)
@@ -49,7 +55,6 @@ fun Any.shouldBeEqual(content: List<String>) {
                 .shouldBe(content.joinToString("\n"))
     }
 }
-
 
 
 private fun calculateRootDirectory(): File {
