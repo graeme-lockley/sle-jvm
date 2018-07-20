@@ -14,28 +14,6 @@ class InferModuleTests : StringSpec({
             infer(VarPump(), astToCoreAST(parse(input).right()!!), environment)
 
 
-    "\"let add a b = a + b\"" {
-        val environment =
-                Environment(mapOf(
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
-
-        inferModuleFromText("let add a b = a + b", environment).right()!!.second.toString()
-                .shouldBe(
-                        "Int -> Int -> Int : '0 -> '2, " +
-                                "'2 : '1 -> '3")
-    }
-
-
-    "\"let add a b = a + b\nlet add x y = x + y\"" {
-        val environment =
-                Environment(mapOf(
-                        Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
-
-        inferModuleFromText("let add a b = a + b\nlet add x y = x + y", environment)
-                .shouldBe(error(listOf(DuplicateLetDeclaration(Location(Position(2, 0), Position(2, 18)), "add"))))
-    }
-
-
     "\"let add a b : Int -> Int -> Int = something a b\"" {
         val environment =
                 Environment(mapOf(

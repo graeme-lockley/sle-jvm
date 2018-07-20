@@ -2,13 +2,10 @@ package za.co.no9.sle.inference
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
-import za.co.no9.sle.Either
+import za.co.no9.sle.*
 import za.co.no9.sle.astToCoreAST.astToCoreAST
 import za.co.no9.sle.parseTreeToASTTranslator.parse
 import za.co.no9.sle.parser.Result
-import za.co.no9.sle.right
-import za.co.no9.sle.runner
-import za.co.no9.sle.shouldBeEqual
 import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
@@ -37,9 +34,15 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 
         if (constraints != null) {
             result.shouldBeTypeOf<Either.Value<Result>>()
-            val thingy = result.right()!!.second.state.map { it.toString() }
+            result.right()!!.second.state.map { it.toString() }.shouldBeEqual(constraints)
+        }
 
-            thingy.shouldBeEqual(constraints)
+        val errors =
+                fileContent["errors"]
+
+        if (errors != null) {
+            result.shouldBeTypeOf<Either.Error<Result>>()
+            result.left()!!.map { it.toString() }.shouldBeEqual(errors)
         }
     }
 }
