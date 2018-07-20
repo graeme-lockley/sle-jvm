@@ -1,0 +1,12 @@
+-- A type alias and a let declaration
+typealias IntMap =
+    Int -> Int
+
+let add a b : IntMap =
+    a + b
+-- constraints
+[
+    Int -> Int -> Int : '0 -> '2
+    '2 : '1 -> '3
+    IntMap : '0 -> '1 -> '3
+]

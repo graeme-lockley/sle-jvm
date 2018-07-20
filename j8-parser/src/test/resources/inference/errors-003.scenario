@@ -1,0 +1,10 @@
+-- Duplicate let declarations error where second has a type signature
+let add =
+    \a b -> a + b
+
+let add : Int -> Int -> Int =
+    \x y -> x + y
+-- errors
+[
+    DuplicateLetDeclaration(location=[(4, 0) (5, 16)], name=add)
+]
