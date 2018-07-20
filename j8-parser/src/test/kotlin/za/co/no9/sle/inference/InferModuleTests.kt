@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass3
+package za.co.no9.sle.inference
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

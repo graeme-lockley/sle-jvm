@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass3
+package za.co.no9.sle.inference
 
 import io.kotlintest.specs.StringSpec
 import org.antlr.v4.runtime.misc.Utils.spaces

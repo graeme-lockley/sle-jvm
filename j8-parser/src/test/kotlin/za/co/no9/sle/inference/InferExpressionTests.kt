@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass3
+package za.co.no9.sle.inference
 
 import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
@@ -11,10 +11,10 @@ import za.co.no9.sle.astToCoreAST.astToCoreAST
 
 
 class InferExpressionTests : StringSpec({
-    fun infer(input: String, env: Environment): Either<Errors, Pair<za.co.no9.sle.pass3.Expression, Constraints>> =
+    fun infer(input: String, env: Environment): Either<Errors, Pair<Expression, Constraints>> =
             parseExpression(input)
                     .map { astToCoreAST(it) }
-                    .andThen { infer(VarPump(), it, env) }
+                    .andThen { za.co.no9.sle.inference.infer(VarPump(), it, env) }
 
 
     fun inferExpression(input: String, env: Environment = emptyEnvironment): Pair<String, String>? =

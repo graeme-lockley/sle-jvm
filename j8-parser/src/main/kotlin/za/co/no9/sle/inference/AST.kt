@@ -1,4 +1,4 @@
-package za.co.no9.sle.pass3
+package za.co.no9.sle.inference
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.typing.Schema
