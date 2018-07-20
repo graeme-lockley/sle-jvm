@@ -1,6 +1,7 @@
 package za.co.no9.sle
 
 import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.AbstractFunSpec
 import org.antlr.v4.runtime.misc.Utils.spaces
@@ -25,6 +26,30 @@ fun runner(test: AbstractFunSpec, directory: String, process: Consumer<Map<Strin
         }
     }
 }
+
+
+fun Any.shouldBeEqual(content: List<String>) {
+    val actual =
+            za.co.no9.sle.dumpString(this)
+                    .split("\n")
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+                    .joinToString("\n")
+
+    val expected =
+            content
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() }
+                    .joinToString("\n")
+
+    if (actual == expected) {
+        actual.shouldBe(expected)
+    } else {
+        za.co.no9.sle.dumpString(this)
+                .shouldBe(content.joinToString("\n"))
+    }
+}
+
 
 
 private fun calculateRootDirectory(): File {
