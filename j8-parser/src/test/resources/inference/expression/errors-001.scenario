@@ -1,0 +1,7 @@
+-- Unbound Variable error
+let value : Int =
+    1 + somethingOrElse
+-- errors
+[
+    UnboundVariable(location=[(2, 8) (2, 22)], name=somethingOrElse)
+]
