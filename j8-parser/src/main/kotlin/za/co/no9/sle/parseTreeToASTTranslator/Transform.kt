@@ -16,14 +16,6 @@ fun parse(text: String): Either<Errors, Module> {
 }
 
 
-fun parseExpression(text: String): Either<Errors, Expression> {
-    fun expressionParseTreeToAST(node: ParserRuleContext): Expression =
-            walkParseTree(node).popExpression()
-
-    return za.co.no9.sle.parser.parseExpression(text).map { expressionParseTreeToAST(it.node) }
-}
-
-
 private fun walkParseTree(node: ParserRuleContext): ParserToAST {
     val walker =
             ParseTreeWalker()
