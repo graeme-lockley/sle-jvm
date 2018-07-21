@@ -1,10 +1,3 @@
-#### Add the keyword "typealias"
-
-This will allow schemas to be referenced
-
-* ensure that aliases only refer to aliases that have already been defined
- 
-
 #### Add builtin '*'
 
 This will only operate over integers
@@ -23,7 +16,7 @@ This will operate over integers and strings.  The schema for this will need to b
 > forall T : Int | String . T -> T -> T
 
 
-As a result this the type system will need to be expanded to include an or operator over types.
+As a result of this the type system will need to be expanded to include an or operator over types.
 
 
 #### Add builtin '==', '!=', '<', '<=', '>', '>='
