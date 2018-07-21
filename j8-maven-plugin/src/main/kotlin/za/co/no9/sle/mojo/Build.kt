@@ -59,7 +59,8 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                                 Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
                                 Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
                                 Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                                Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
+                                Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                                Pair("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
                 val packageName =
                         sourceFileName.parentFile.absolutePath.drop(sourceFile.absolutePath.length + 1).replace(File.separatorChar, '.', true)

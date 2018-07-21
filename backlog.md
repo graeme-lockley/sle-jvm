@@ -1,14 +1,3 @@
-#### Add builtin '*'
-
-This will only operate over integers
-
-
-#### Add builtin '/'
-
-This will need to be a traditional division and therefore is able to throw an exception if an attempt is made to divide
-by 0.  At a later point this will need to replaced with something that'll return a result of something similar.
-
-
 #### Add builtin '+'
 
 This will operate over integers and strings.  The schema for this will need to be

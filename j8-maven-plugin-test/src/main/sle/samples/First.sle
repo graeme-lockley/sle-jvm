@@ -3,3 +3,8 @@ let factorial n : Int -> Int =
         1
     else
         n * factorial (n - 1)
+
+
+
+let divide a b =
+    a / b

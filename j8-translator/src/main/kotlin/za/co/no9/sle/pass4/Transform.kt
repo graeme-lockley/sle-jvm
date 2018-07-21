@@ -21,7 +21,8 @@ import za.co.no9.sle.typing.Type
 private val RefMapping = mapOf(
         Pair("(==)", "EQUAL_EQUAL"),
         Pair("(-)", "MINUS"),
-        Pair("(*)", "STAR")
+        Pair("(*)", "STAR"),
+        Pair("(/)", "SLASH")
 )
 
 
