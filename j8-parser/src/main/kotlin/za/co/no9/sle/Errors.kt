@@ -21,7 +21,7 @@ data class Location(
 
 
 typealias Errors =
-        List<Error>
+        Set<Error>
 
 
 sealed class Error
@@ -48,3 +48,7 @@ data class UnificationFail(
 data class UnificationMismatch(
         val t1s: List<Type>,
         val t2s: List<Type>) : Error()
+
+data class UnknownType(
+        val name: String) : Error()
+

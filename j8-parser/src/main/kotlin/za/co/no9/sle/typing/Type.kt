@@ -60,3 +60,9 @@ val typeBool =
 
 val typeString =
         TCon("String")
+
+
+val builtInTypes =
+        setOf(typeBool.name, typeError.name, typeInt.name, typeString.name)
+
+

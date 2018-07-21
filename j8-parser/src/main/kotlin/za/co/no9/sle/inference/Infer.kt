@@ -24,7 +24,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
             Constraints()
 
     val errors =
-            mutableListOf<Error>()
+            mutableSetOf<Error>()
 
 
     fun infer(module: za.co.no9.sle.astToCoreAST.Module): Module {

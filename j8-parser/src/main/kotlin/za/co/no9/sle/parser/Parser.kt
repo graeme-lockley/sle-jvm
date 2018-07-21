@@ -18,10 +18,6 @@ fun parseModule(text: String): ParseResult =
         parse({ parser -> parser.module() }, text)
 
 
-fun parseExpression(text: String): ParseResult =
-        parse({ parser -> parser.expression() }, text)
-
-
 private fun parse(production: (ParserParser) -> ParserRuleContext, text: String): ParseResult {
     val lexer = ParserLexer(CharStreams.fromString(text))
     val tokens = CommonTokenStream(lexer)
@@ -39,7 +35,7 @@ private fun parse(production: (ParserParser) -> ParserRuleContext, text: String)
         null ->
             value(Result(parser, parseTree))
         else ->
-            error(listOf(syntaxError))
+            error(setOf(syntaxError))
     }
 }
 

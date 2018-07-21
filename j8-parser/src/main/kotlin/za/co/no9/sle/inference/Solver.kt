@@ -4,8 +4,7 @@ import za.co.no9.sle.*
 import za.co.no9.sle.typing.*
 
 
-// TODO see whether or not this can be made private
-typealias Unifier =
+private typealias Unifier =
         Pair<Substitution, Constraints>
 
 
@@ -13,7 +12,7 @@ typealias Aliases =
         Map<String, Schema>
 
 
-fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Either<List<Error>, Substitution> {
+fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Either<Errors, Substitution> {
     val context =
             SolverContext(varPump, aliases, constraints)
 
@@ -66,7 +65,7 @@ private fun Expression.apply(substitution: Substitution): Expression =
 
 private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints) {
     val errors =
-            mutableListOf<Error>()
+            mutableSetOf<Error>()
 
 
     private fun List<Type>.subst(substitution: Substitution): List<Type> =
@@ -112,9 +111,18 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
                     } else if (t2 is TCon && aliases.containsKey(t2.name)) {
                         unifies(t1, aliases[t2.name]!!.instantiate(varPump))
                     } else {
-                        errors.add(UnificationFail(t1, t2))
+                        if (t1 is TCon && !builtInTypes.contains(t1.name)) {
+                            errors.add(UnknownType(t1.name))
+                            Pair(nullSubstitution, noConstraints)
+                        } else if (t2 is TCon  && !builtInTypes.contains(t2.name)) {
+                            errors.add(UnknownType(t2.name))
+                            Pair(nullSubstitution, noConstraints)
 
-                        Pair(nullSubstitution, noConstraints)
+                        } else {
+                            errors.add(UnificationFail(t1, t2))
+
+                            Pair(nullSubstitution, noConstraints)
+                        }
                     }
                 }
             }
