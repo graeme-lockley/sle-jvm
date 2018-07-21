@@ -31,14 +31,6 @@ class InferExpressionTests : StringSpec({
             this.replace("\\", "\\\\").replace("\"", "\\\"")
 
 
-    "\"\\a -> a\"" {
-        inferExpression("\\a -> a")
-                .shouldBe(Pair(
-                        "'0 -> '0",
-                        ""))
-    }
-
-
     "\"\\a -> a 10\"" {
         inferExpression("\\a -> a 10")
                 .shouldBe(Pair(
