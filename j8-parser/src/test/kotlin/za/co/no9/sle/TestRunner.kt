@@ -111,6 +111,24 @@ private fun readFile(file: File): Map<String, List<String>> {
 
 
 fun dumpString(o: Any?, indent: Int = 0): String {
+    fun isSimple(value: Any?): Boolean =
+            when (value) {
+                null ->
+                    true
+
+                is Int ->
+                    true
+
+                is Boolean ->
+                    true
+
+                is String ->
+                    true
+
+                else ->
+                    false
+            }
+
     fun value(value: Any?, indent: Int = 0): String =
             when (value) {
                 null ->
@@ -136,10 +154,24 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                                     "${spaces(indent)}]"
                     }
 
+                is Map<*, *> ->
+                    when {
+                        value.isEmpty() ->
+                            "{}"
+
+                        else ->
+                            "{\n" +
+                                    value.toList().joinToString("") { "${spaces(indent + 2)}${value(it.first, indent + 2)} -> ${if (isSimple(it.second)) value(it.second, indent + 2) else ("\n${spaces(indent)}${value(it.second, indent + 4)}")}" } +
+                                    "${spaces(indent)}}"
+                    }
+
                 else -> dumpString(value, indent)
             }
 
-    fun dd(label: String, value: Any?, indent: Int): String =
+    fun dd(label: String, value: Any?
+           , indent: Int
+    )
+            : String =
             when (value) {
                 null ->
                     "${spaces(indent)}$label: null\n"
@@ -154,6 +186,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                     "${spaces(indent)}$label: ${value(value)}\n"
 
                 is List<*> ->
+                    "${spaces(indent)}$label: ${value(value)}\n"
+
+                is Map<*, *> ->
                     "${spaces(indent)}$label: ${value(value)}\n"
 
                 else -> "${spaces(indent)}$label:\n" +
@@ -174,6 +209,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
             "${spaces(indent)}${value(o, indent)}\n"
 
         is List<*> ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is Map<*, *> ->
             "${spaces(indent)}${value(o, indent)}\n"
 
         else ->
