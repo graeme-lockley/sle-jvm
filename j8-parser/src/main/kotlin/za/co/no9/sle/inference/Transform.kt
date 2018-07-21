@@ -14,8 +14,7 @@ data class InferenceDetail(
         val constraints: Constraints,
         val substitution: Substitution,
         val unresolvedModule: Module,
-        val resolvedModule: Module
-)
+        val resolvedModule: Module)
 
 
 fun parseWithDetail(text: String, environment: Environment): Either<Errors, InferenceDetail> {
