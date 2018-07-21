@@ -27,19 +27,6 @@ fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Eithe
 }
 
 
-fun za.co.no9.sle.astToCoreAST.Module.aliases(): Aliases =
-        this.declarations
-                .filter { it is za.co.no9.sle.astToCoreAST.TypeAliasDeclaration }
-                .map { it as za.co.no9.sle.astToCoreAST.TypeAliasDeclaration }
-                .fold(emptyMap()) { aliases, alias -> aliases + Pair(alias.name.name, alias.schema) }
-
-
-fun za.co.no9.sle.astToCoreAST.Module.assignTypesToCoreAST(varPump: VarPump, environment: Environment): Either<Errors, Module> =
-        infer(varPump, this, environment)
-                .andThen { pair -> unifies(varPump, this.aliases(), pair.second).map { Pair(pair.first, it) } }
-                .map { it.first.apply(it.second) }
-
-
 fun Module.apply(substitution: Substitution): Module =
         Module(this.location, this.declarations.map {
             when (it) {
@@ -52,7 +39,7 @@ fun Module.apply(substitution: Substitution): Module =
         })
 
 
-fun Expression.apply(substitution: Substitution): Expression =
+private fun Expression.apply(substitution: Substitution): Expression =
         when (this) {
             is ConstantBool ->
                 this

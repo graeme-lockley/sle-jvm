@@ -2,11 +2,10 @@ package za.co.no9.sle.pass4
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.*
-import za.co.no9.sle.parseTreeToASTTranslator.parse
+import za.co.no9.sle.inference.parseWithDetail
+import za.co.no9.sle.map
+import za.co.no9.sle.right
 import za.co.no9.sle.typing.*
-import za.co.no9.sle.astToCoreAST.astToCoreAST
-import za.co.no9.sle.inference.assignTypesToCoreAST
 
 
 class JavaGenTests : StringSpec({
@@ -21,10 +20,8 @@ class JavaGenTests : StringSpec({
                         Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
 
         val result =
-                parse(input)
-                        .map { astToCoreAST(it) }
-                        .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
-                        .map { translateToJava(it, "test", "First") }
+                parseWithDetail(input, environment)
+                        .map { translateToJava(it.resolvedModule, "test", "First") }
                         .map { it.toString() }
 
 //        println(result.mapError { it.toString() })

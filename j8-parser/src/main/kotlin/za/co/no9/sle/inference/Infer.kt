@@ -19,23 +19,6 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.astToCoreAST.Module, env: Envi
 }
 
 
-fun infer(varPump: VarPump, expression: za.co.no9.sle.astToCoreAST.Expression, env: Environment): Either<Errors, Pair<Expression, Constraints>> {
-    val context =
-            InferContext(varPump, env)
-
-    val t =
-            context.infer(expression)
-
-    return when {
-        context.errors.isEmpty() ->
-            value(Pair(t, context.constraints))
-
-        else ->
-            error(context.errors)
-    }
-}
-
-
 private class InferContext(private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()

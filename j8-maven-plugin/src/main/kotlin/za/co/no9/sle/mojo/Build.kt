@@ -3,9 +3,7 @@ package za.co.no9.sle.mojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
-import za.co.no9.sle.parseTreeToASTTranslator.parse
-import za.co.no9.sle.astToCoreAST.astToCoreAST
-import za.co.no9.sle.inference.assignTypesToCoreAST
+import za.co.no9.sle.inference.parseWithDetail
 import za.co.no9.sle.pass4.translateToJava
 import za.co.no9.sle.typing.*
 import java.io.File
@@ -70,10 +68,8 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         sourceFileName.nameWithoutExtension
 
                 val output =
-                        parse(sourceFileName.readText())
-                                .map { astToCoreAST(it) }
-                                .andThen { it.assignTypesToCoreAST(VarPump(), environment) }
-                                .map { translateToJava(it, packageName, className) }
+                        parseWithDetail(sourceFileName.readText(), environment)
+                                .map { translateToJava(it.resolvedModule, packageName, className) }
                                 .map { it.toString() }
 
                 val errors =
