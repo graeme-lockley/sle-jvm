@@ -10,6 +10,9 @@ public class Builtin {
     public static final Function<Integer, Function<Integer, Integer>> STAR =
             a -> b -> a * b;
 
+    public static final Function<Integer, Function<Integer, Integer>> SLASH =
+            a -> b -> a / b;
+
     public static final Function<Integer, Function<Integer, Integer>> MINUS =
             a -> b -> a - b;
 }
