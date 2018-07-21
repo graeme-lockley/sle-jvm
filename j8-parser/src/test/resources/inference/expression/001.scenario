@@ -1,0 +1,7 @@
+-- True
+let value : Bool =
+    True
+-- constraints
+[
+    Bool : Bool
+]

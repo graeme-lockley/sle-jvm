@@ -1,13 +1,12 @@
 package za.co.no9.sle.inference
 
-import io.kotlintest.properties.Gen
 import io.kotlintest.properties.assertAll
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.astToCoreAST.astToCoreAST
 import za.co.no9.sle.parseTreeToASTTranslator.parseExpression
 import za.co.no9.sle.typing.*
-import za.co.no9.sle.astToCoreAST.astToCoreAST
 
 
 class InferExpressionTests : StringSpec({
@@ -30,34 +29,6 @@ class InferExpressionTests : StringSpec({
 
     fun String.markup(): String =
             this.replace("\\", "\\\\").replace("\"", "\\\"")
-
-
-    "\"True\" infers to TCon Boolean" {
-        inferExpression("True")
-                .shouldBe(Pair("Bool", ""))
-    }
-
-
-    "\"False\" infers to TCon Boolean" {
-        inferExpression("False")
-                .shouldBe(Pair("Bool", ""))
-    }
-
-
-    "\"<int>\" infers to TCon Int" {
-        assertAll(Gen.positiveIntegers()) { n: Int ->
-            inferExpression(n.toString())
-                    .shouldBe(Pair("Int", ""))
-        }
-    }
-
-
-    "\"<string>\" infers to TCon String" {
-        assertAll { s: String ->
-            inferExpression("\"${s.markup()}\"")
-                    .shouldBe(Pair("String", ""))
-        }
-    }
 
 
     "\"a\" infers to TCon String where a is bound to Schema [] String" {

@@ -18,7 +18,8 @@ class InferenceTests : FunSpec({
 private class RunnerConsumer : Consumer<Map<String, List<String>>> {
     private val environment =
             Environment(mapOf(
-                    Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
+                    Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
+                    Pair("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))))
 
 
     private fun inferModuleFromText(input: String) =

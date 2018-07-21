@@ -1,0 +1,7 @@
+-- Constant Int
+let value : Int =
+    123
+-- constraints
+[
+    Int : Int
+]

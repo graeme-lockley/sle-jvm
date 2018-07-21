@@ -1,0 +1,7 @@
+-- Constant String
+let value : String =
+    "Hello World"
+-- constraints
+[
+    String : String
+]
