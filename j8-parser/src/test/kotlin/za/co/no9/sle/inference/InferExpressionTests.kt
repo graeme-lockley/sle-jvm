@@ -31,21 +31,6 @@ class InferExpressionTests : StringSpec({
             this.replace("\\", "\\\\").replace("\"", "\\\"")
 
 
-    "\"if a then b else c\"" {
-        val environment =
-                Environment(mapOf(
-                        Pair("a", Schema(listOf(), TVar(1))),
-                        Pair("b", Schema(listOf(), TVar(2))),
-                        Pair("c", Schema(listOf(), TVar(3)))))
-
-        inferExpression("if a then b else c", environment)
-                .shouldBe(Pair(
-                        "'2",
-                        "'1 : Bool, " +
-                                "'2 : '3"))
-    }
-
-
     "\"\\a -> a\"" {
         inferExpression("\\a -> a")
                 .shouldBe(Pair(
