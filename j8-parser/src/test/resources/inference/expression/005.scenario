@@ -1,0 +1,7 @@
+-- Identifier of type string
+let value : String =
+    aString
+-- constraints
+[
+    String : String
+]

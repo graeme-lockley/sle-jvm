@@ -31,12 +31,6 @@ class InferExpressionTests : StringSpec({
             this.replace("\\", "\\\\").replace("\"", "\\\"")
 
 
-    "\"a\" infers to TCon String where a is bound to Schema [] String" {
-        inferExpression("a", Environment(mapOf(Pair("a", Schema(listOf(), typeString)))))
-                .shouldBe(Pair("String", ""))
-    }
-
-
     "\"if a then b else c\"" {
         val environment =
                 Environment(mapOf(
