@@ -1,6 +1,6 @@
 -- A type alias and a let declaration
 typealias IntMap =
-    Int -> Int
+    Int -> Int -> Int
 
 let add a b : IntMap =
     a + b

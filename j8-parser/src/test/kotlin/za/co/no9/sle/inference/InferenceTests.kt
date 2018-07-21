@@ -27,49 +27,44 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
             ))
 
 
-    private fun inferModuleFromText(varPump: VarPump, input: String) =
-            infer(varPump, astToCoreAST(parse(input).right()!!), environment)
-
     override fun accept(fileContent: Map<String, List<String>>) {
-        val varPump =
-                VarPump()
+        val parseWithDetail =
+                parseWithDetail(fileContent["src"]?.joinToString("\n") ?: "", environment)
 
-        val result =
-                inferModuleFromText(varPump, fileContent["src"]?.joinToString("\n") ?: "")
 
         val constraints =
                 fileContent["constraints"]
 
         if (constraints != null) {
-            result.shouldBeTypeOf<Either.Value<Result>>()
-            result.right()!!.second.state.map { it.toString() }.shouldBeEqual(constraints)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.right()!!.constraints.state.map { it.toString() }.shouldBeEqual(constraints)
         }
+
 
         val expectedSubstitution =
                 fileContent["substitution"]
 
+        if (expectedSubstitution != null) {
+            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.right()!!.substitution.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
+        }
+
+
         val typeAST =
                 fileContent["typeAST"]
-        if (expectedSubstitution != null || typeAST != null) {
-            result.shouldBeTypeOf<Either.Value<Result>>()
-            val substitution =
-                    result.andThen { unifies(varPump, emptyMap(), it.second) }
 
-            if (expectedSubstitution != null) {
-                substitution.right()!!.state.shouldBeEqual(expectedSubstitution)
-            }
-            if (typeAST != null) {
-                result.right()!!.first.apply(substitution.right()!!)
-                        .shouldBeEqual(typeAST)
-            }
+        if (typeAST != null) {
+            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.right()!!.resolvedModule.shouldBeEqual(typeAST)
         }
+
 
         val errors =
                 fileContent["errors"]
 
         if (errors != null) {
-            result.shouldBeTypeOf<Either.Error<Result>>()
-            result.left()!!.map { it.toString() }.shouldBeEqual(errors)
+            parseWithDetail.shouldBeTypeOf<Either.Error<Result>>()
+            parseWithDetail.left()!!.map { it.toString() }.shouldBeEqual(errors)
         }
     }
 }
