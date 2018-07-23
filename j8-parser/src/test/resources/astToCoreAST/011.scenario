@@ -21,7 +21,7 @@ Module:
               range:
                 TCon:
                   name: Int
-          variable: []
+          variables: []
     LetDeclaration:
       expression:
         LambdaExpression:
@@ -54,5 +54,5 @@ Module:
           type:
             TCon:
               name: IntMap
-          variable: []
+          variables: []
   ]
