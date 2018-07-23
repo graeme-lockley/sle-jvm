@@ -26,16 +26,19 @@ Module:
         ID:
           name: add
       schema:
-        TArrow:
-          domain:
-            TIdReference:
-              name: Int
-          range:
-            TArrow:
-              domain:
-                TIdReference:
-                  name: Int
-              range:
-                TIdReference:
-                  name: Int
+          TSchema:
+            parameters: []
+            type:
+                TArrow:
+                    domain:
+                        TIdReference:
+                            name: Int
+                    range:
+                        TArrow:
+                            domain:
+                                TIdReference:
+                                    name: Int
+                            range:
+                                TIdReference:
+                                    name: Int
   ]

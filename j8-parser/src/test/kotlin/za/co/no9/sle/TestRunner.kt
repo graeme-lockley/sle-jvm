@@ -168,28 +168,25 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 else -> dumpString(value, indent)
             }
 
-    fun dd(label: String, value: Any?
-           , indent: Int
-    )
-            : String =
+    fun dd(label: String, value: Any?, indent: Int): String =
             when (value) {
                 null ->
                     "${spaces(indent)}$label: null\n"
 
                 is Int ->
-                    "${spaces(indent)}$label: ${value(value)}\n"
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
                 is Boolean ->
-                    "${spaces(indent)}$label: ${value(value)}\n"
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
                 is String ->
-                    "${spaces(indent)}$label: ${value(value)}\n"
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
                 is List<*> ->
-                    "${spaces(indent)}$label: ${value(value)}\n"
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
                 is Map<*, *> ->
-                    "${spaces(indent)}$label: ${value(value)}\n"
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
                 else -> "${spaces(indent)}$label:\n" +
                         dumpString(value, indent + 2)

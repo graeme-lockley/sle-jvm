@@ -12,13 +12,16 @@ Module:
         ID:
           name: IntToInt
       schema:
-        TArrow:
-          domain:
-            TIdReference:
-              name: Int
-          range:
-            TIdReference:
-              name: Int
+          TSchema:
+            parameters: []
+            type:
+                TArrow:
+                  domain:
+                    TIdReference:
+                      name: Int
+                  range:
+                    TIdReference:
+                      name: Int
     LetDeclaration:
       arguments: [
         ID:
@@ -39,6 +42,9 @@ Module:
         ID:
           name: negate
       schema:
-        TIdReference:
-          name: IntToInt
+          TSchema:
+            parameters: []
+            type:
+                TIdReference:
+                  name: IntToInt
   ]

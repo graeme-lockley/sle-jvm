@@ -78,14 +78,17 @@ private fun astToCoreASTOptional(ast: TSchema?): Schema? {
 
 
 private fun astToCoreAST(ast: TSchema): Schema {
-    fun astToType(type: TSchema): Type =
+    fun astToType(type: TType): Type =
             when (type) {
                 is TIdReference ->
                     TCon(type.name)
 
                 is TArrow ->
                     TArr(astToType(type.domain), astToType(type.range))
+
+                is TBar ->
+                    TODO()
             }
 
-    return Schema(emptyList(), astToType(ast))
+    return Schema(emptyList(), astToType(ast.type))
 }

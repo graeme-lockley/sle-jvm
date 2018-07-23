@@ -34,7 +34,7 @@ private class ParserToAST : ParserBaseListener() {
             emptyList<Expression>()
 
     private var typeStack =
-            emptyList<TSchema>()
+            emptyList<TType>()
 
 
     var module: Module? =
@@ -44,6 +44,14 @@ private class ParserToAST : ParserBaseListener() {
 
     private var declarations =
             emptyList<Declaration>()
+
+
+    private var schema: TSchema? =
+            null
+
+
+    private var typeParameters =
+            emptyList<TypeParameter>()
 
 
     fun popExpression(): Expression {
@@ -61,7 +69,7 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
-    fun popType(): TSchema? =
+    fun popType(): TType? =
             when {
                 typeStack.isEmpty() ->
                     null
@@ -76,9 +84,8 @@ private class ParserToAST : ParserBaseListener() {
                 }
             }
 
-
-    private fun pushType(schema: TSchema) {
-        typeStack += schema
+    private fun pushType(type: TType) {
+        typeStack += type
     }
 
 
@@ -192,12 +199,12 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), popType(), expression))
+        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), schema, expression))
     }
 
 
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
-        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), popType()!!))
+        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), schema!!))
     }
 
 
@@ -205,9 +212,29 @@ private class ParserToAST : ParserBaseListener() {
         module = Module(ctx!!.location(), popDeclarations())
     }
 
+
+    override fun exitSchema(ctx: ParserParser.SchemaContext?) {
+        schema = TSchema(ctx!!.location(), typeParameters.toList(), popType()!!)
+        typeParameters = emptyList()
+    }
+
+
+    override fun exitTypeParameter(ctx: ParserParser.TypeParameterContext?) {
+        val type =
+                if (ctx!!.type() == null) {
+                    null
+                } else {
+                    popType()
+                }
+
+        typeParameters += TypeParameter(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), type)
+    }
+
+
     override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
         pushType(TIdReference(ctx!!.location(), ctx.text))
     }
+
 
     override fun exitArrowType(ctx: ParserParser.ArrowTypeContext?) {
         val range =
@@ -217,6 +244,17 @@ private class ParserToAST : ParserBaseListener() {
                 popType()!!
 
         pushType(TArrow(ctx!!.location(), domain, range))
+    }
+
+
+    override fun exitBarType(ctx: ParserParser.BarTypeContext?) {
+        val op2 =
+                popType()!!
+
+        val op1 =
+                popType()!!
+
+        pushType(TBar(ctx!!.location(), op1, op2))
     }
 }
 

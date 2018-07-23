@@ -6,9 +6,9 @@ module
     ;
 
 declaration
-    : 'typealias' UpperID '=' type
+    : 'typealias' UpperID '=' schema
         # TypeAliasDeclaration
-    | 'let' LowerID+ (':' type)? '=' expression
+    | 'let' LowerID+ (':' schema)? '=' expression
         # LetDeclaration
     ;
 
@@ -49,11 +49,28 @@ factor
     ;
 
 
+schema
+    : typeParameters? type
+    ;
+
+
+typeParameters
+    : '<' typeParameter (',' typeParameter)* '>'
+    ;
+
+
+typeParameter
+    : UpperID (':' type)?
+    ;
+
+
 type
     : UpperID
         # UpperIDType
     | '(' type ')'
         # NestedType
+    | type '|' type
+        # BarType
     | <assoc=right> type '->' type
         # ArrowType
     ;

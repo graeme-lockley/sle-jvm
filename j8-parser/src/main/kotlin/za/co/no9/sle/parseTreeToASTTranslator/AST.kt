@@ -1,6 +1,5 @@
 package za.co.no9.sle.parseTreeToASTTranslator
 
-import org.antlr.v4.runtime.misc.Utils.spaces
 import za.co.no9.sle.Location
 
 
@@ -83,14 +82,29 @@ data class CallExpression(
         val operands: List<Expression>) : Expression(location)
 
 
-sealed class TSchema(
+data class TSchema(
+        val location: Location,
+        val parameters: List<TypeParameter>,
+        val type: TType)
+
+data class TypeParameter(
+        val location: Location,
+        val name: ID,
+        val type: TType?)
+
+sealed class TType(
         open val location: Location)
 
 data class TIdReference(
         override val location: Location,
-        val name: String) : TSchema(location)
+        val name: String) : TType(location)
 
 data class TArrow(
         override val location: Location,
-        val domain: TSchema,
-        val range: TSchema) : TSchema(location)
+        val domain: TType,
+        val range: TType) : TType(location)
+
+data class TBar(
+        override val location: Location,
+        val op1: TType,
+        val op2: TType) : TType(location)
