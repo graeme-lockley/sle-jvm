@@ -27,3 +27,6 @@ data class Schema(val variables: List<Variable>, val type: Type) {
         return type.apply(substitution)
     }
 }
+
+
+data class Variable(val name: Var, val constraint: Type?)

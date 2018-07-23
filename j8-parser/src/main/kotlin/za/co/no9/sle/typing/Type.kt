@@ -8,9 +8,6 @@ sealed class Type {
 }
 
 
-data class Variable(val name: Var, val constraint: Type?)
-
-
 data class TVar(val variable: Var) : Type() {
     override fun apply(s: Substitution) =
             s[variable] ?: this
