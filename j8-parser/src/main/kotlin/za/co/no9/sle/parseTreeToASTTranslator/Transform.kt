@@ -200,11 +200,13 @@ private class ParserToAST : ParserBaseListener() {
                 popExpression()
 
         addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), schema, expression))
+        schema = null
     }
 
 
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
         addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), schema!!))
+        schema = null
     }
 
 

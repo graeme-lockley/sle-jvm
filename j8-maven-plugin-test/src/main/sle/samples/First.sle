@@ -5,5 +5,5 @@ let factorial n : Int -> Int =
         n * factorial (n - 1)
 
 
-let divide a b : Int -> Int -> Int =
+let divide a b =
     a / b
