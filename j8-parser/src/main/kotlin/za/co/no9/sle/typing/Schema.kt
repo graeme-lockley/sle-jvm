@@ -1,9 +1,9 @@
 package za.co.no9.sle.typing
 
 
-data class Schema(val variables: List<Var>, val type: Type) {
+data class Schema(val variables: List<Variable>, val type: Type) {
     fun apply(s: Substitution): Schema =
-            Schema(variables, type.apply(s - variables))
+            Schema(variables, type.apply(s - variables.map { it.name }))
 
 
     fun ftv() =
@@ -22,7 +22,7 @@ data class Schema(val variables: List<Var>, val type: Type) {
                 variables.map { varPump.fresh() }
 
         val substitution =
-                Substitution(variables.zip(asP).toMap())
+                Substitution(variables.map { it.name }.zip(asP).toMap())
 
         return type.apply(substitution)
     }
