@@ -33,6 +33,7 @@ Module:
           name: add
       schema:
         Schema:
+          parameters: []
           type:
             TArr:
               domain:
@@ -46,5 +47,4 @@ Module:
                   range:
                     TCon:
                       name: Int
-          variables: []
   ]

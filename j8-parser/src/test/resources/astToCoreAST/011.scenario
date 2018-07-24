@@ -13,6 +13,7 @@ Module:
           name: IntMap
       schema:
         Schema:
+          parameters: []
           type:
             TArr:
               domain:
@@ -21,7 +22,6 @@ Module:
               range:
                 TCon:
                   name: Int
-          variables: []
     LetDeclaration:
       expression:
         LambdaExpression:
@@ -51,8 +51,8 @@ Module:
           name: add
       schema:
         Schema:
+          parameters: []
           type:
             TCon:
               name: IntMap
-          variables: []
   ]

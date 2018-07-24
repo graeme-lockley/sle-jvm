@@ -3,8 +3,6 @@ package za.co.no9.sle.inference
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.*
-import za.co.no9.sle.astToCoreAST.astToCoreAST
-import za.co.no9.sle.parseTreeToASTTranslator.parse
 import za.co.no9.sle.parser.Result
 import za.co.no9.sle.typing.*
 import java.util.function.Consumer
@@ -23,7 +21,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                     Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
                     Pair("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
                     Pair("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))),
-                    Pair("(==)", Schema(listOf(Variable(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool)))),
+                    Pair("(==)", Schema(listOf(Parameter(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool)))),
                     Pair("aString", Schema(listOf(), typeString))
             ))
 

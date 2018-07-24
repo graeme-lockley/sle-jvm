@@ -1,32 +1,32 @@
 package za.co.no9.sle.typing
 
 
-data class Schema(val variables: List<Variable>, val type: Type) {
+data class Schema(val parameters: List<Parameter>, val type: Type) {
     fun apply(s: Substitution): Schema =
-            Schema(variables, type.apply(s - variables.map { it.name }))
+            Schema(parameters, type.apply(s - parameters.map { it.name }))
 
 
     fun ftv() =
-            type.ftv().minus(variables)
+            type.ftv().minus(parameters)
 
 
     override fun toString(): String =
-            if (variables.isEmpty())
+            if (parameters.isEmpty())
                 type.toString()
             else
-                "forall ${variables.joinToString(", ") { it.toString() }} => $type"
+                "forall ${parameters.joinToString(", ") { it.toString() }} => $type"
 
 
     fun instantiate(varPump: VarPump): Type {
         val asP =
-                variables.map { varPump.fresh() }
+                parameters.map { varPump.fresh() }
 
         val substitution =
-                Substitution(variables.map { it.name }.zip(asP).toMap())
+                Substitution(parameters.map { it.name }.zip(asP).toMap())
 
         return type.apply(substitution)
     }
 }
 
 
-data class Variable(val name: Var, val constraint: Type?)
+data class Parameter(val name: Var, val constraint: Type?)

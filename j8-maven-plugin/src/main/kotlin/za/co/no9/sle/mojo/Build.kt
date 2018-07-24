@@ -86,7 +86,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                                 log.error("Syntax Error: $sourceName: ${it.location}: ${it.msg}")
 
                             is UnboundVariable ->
-                                log.error("Unbound Variable: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Unbound Parameter: $sourceName: ${it.location}: ${it.name}")
 
                             is DuplicateLetDeclaration ->
                                 log.error("Duplicate Let Declaration: $sourceName: ${it.location}: ${it.name}")
