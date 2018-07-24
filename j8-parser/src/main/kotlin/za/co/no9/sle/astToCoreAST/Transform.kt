@@ -4,10 +4,7 @@ import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.map
 import za.co.no9.sle.parseTreeToASTTranslator.*
-import za.co.no9.sle.typing.Schema
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.TCon
-import za.co.no9.sle.typing.Type
+import za.co.no9.sle.typing.*
 
 
 fun parse(text: String): Either<Errors, Module> =
@@ -78,17 +75,41 @@ private fun astToCoreASTOptional(ast: TSchema?): Schema? {
 
 
 private fun astToCoreAST(ast: TSchema): Schema {
+    val substitution =
+            ast.parameters.map { it.name.name }.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
+
+
     fun astToType(type: TType): Type =
             when (type) {
                 is TIdReference ->
-                    TCon(type.name)
+                    substitution[type.name] ?: TCon(type.name)
 
                 is TArrow ->
                     TArr(astToType(type.domain), astToType(type.range))
 
-                is TBar ->
-                    TODO()
+                is TBar -> {
+                    val op1 =
+                            astToType(type.op1)
+
+                    val op2 =
+                            astToType(type.op2)
+
+                    TOr(listOf(op1, op2))
+                }
             }
 
-    return Schema(emptyList(), astToType(ast.type))
+
+    fun astToType(index: Int, parameter: TypeParameter): Parameter {
+        val type =
+                parameter.type
+
+        return if (type == null) {
+            Parameter(index, null)
+        } else {
+            Parameter(index, astToType(type))
+        }
+    }
+
+
+    return Schema(ast.parameters.mapIndexed { index, parameter -> astToType(index, parameter) }, astToType(ast.type))
 }

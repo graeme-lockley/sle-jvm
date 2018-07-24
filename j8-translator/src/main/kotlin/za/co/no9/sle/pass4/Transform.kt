@@ -12,10 +12,7 @@ import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
 import za.co.no9.sle.inference.*
 import za.co.no9.sle.inference.Expression
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.TCon
-import za.co.no9.sle.typing.TVar
-import za.co.no9.sle.typing.Type
+import za.co.no9.sle.typing.*
 
 
 private val RefMapping = mapOf(
@@ -77,6 +74,9 @@ private fun javaType(type: Type): String =
 
             is TArr ->
                 "Function<${javaType(type.domain)}, ${javaType(type.range)}>"
+
+            is TOr ->
+                TODO()
         }
 
 
