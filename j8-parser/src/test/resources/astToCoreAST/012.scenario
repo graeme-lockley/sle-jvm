@@ -52,12 +52,12 @@ Module:
                 Parameter:
                   constraint:
                     TOr:
-                      types: [
+                      types: {
                           TCon:
                             name: Int
                           TCon:
                             name: String
-                        ]
+                        }
                   name: 0
               ]
             type:

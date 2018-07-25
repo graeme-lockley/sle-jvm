@@ -94,7 +94,7 @@ private fun astToCoreAST(ast: TSchema): Schema {
                     val op2 =
                             astToType(type.op2)
 
-                    TOr(listOf(op1, op2))
+                    TOr(setOf(op1, op2))
                 }
             }
 

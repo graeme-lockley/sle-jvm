@@ -154,6 +154,17 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                                     "${spaces(indent)}]"
                     }
 
+                is Set<*> ->
+                    when {
+                        value.isEmpty() ->
+                            "{}"
+
+                        else ->
+                            "{\n" +
+                                    value.joinToString("") { dumpString(it, indent + 2) } +
+                                    "${spaces(indent)}}"
+                    }
+
                 is Map<*, *> ->
                     when {
                         value.isEmpty() ->
@@ -185,6 +196,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is List<*> ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
+                is Set<*> ->
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
+
                 is Map<*, *> ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
@@ -206,6 +220,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
             "${spaces(indent)}${value(o, indent)}\n"
 
         is List<*> ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is Set<*> ->
             "${spaces(indent)}${value(o, indent)}\n"
 
         is Map<*, *> ->
