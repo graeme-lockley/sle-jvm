@@ -92,7 +92,8 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 })
     }
 
-    fun infer(expression: za.co.no9.sle.astToCoreAST.Expression): Expression =
+
+    private fun infer(expression: za.co.no9.sle.astToCoreAST.Expression): Expression =
             when (expression) {
                 is za.co.no9.sle.astToCoreAST.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
@@ -166,6 +167,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     CallExpression(expression.location, tv, t1, t2)
                 }
             }
+
 
     private fun unify(t1: Type, t2: Type) {
         constraints += Constraint(t1, t2)
