@@ -13,9 +13,7 @@ declaration
     ;
 
 expression
-    : factor expression*
-        # CallExpression
-    | expression op=('*' | '/') expression
+    : expression op=('*' | '/') expression
         # MultiplicativeExpression
     | expression op=('+' | '-') expression
         # AdditiveExpression
@@ -29,9 +27,11 @@ expression
         # LambdaExpression
     | 'if' expression 'then' expression 'else' expression
         # IfExpression
+    | term expression*
+        # CallExpression
     ;
 
-factor
+term
     : '(' expression ')'
         # ParenExpression
     | ConstantInt
