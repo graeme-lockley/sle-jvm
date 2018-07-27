@@ -27,7 +27,7 @@ expression
         # LambdaExpression
     | 'if' expression 'then' expression 'else' expression
         # IfExpression
-    | term expression*
+    | term+
         # CallExpression
     ;
 
