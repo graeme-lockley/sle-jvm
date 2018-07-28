@@ -29,4 +29,10 @@ data class Schema(val parameters: List<Parameter>, val type: Type) {
 }
 
 
-data class Parameter(val name: Var, val constraint: Type?)
+data class Parameter(val name: Var, val constraint: Type?) {
+    override fun toString(): String =
+            if (constraint == null)
+                "$name"
+            else
+                "$name: $constraint"
+}
