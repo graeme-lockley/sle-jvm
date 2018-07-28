@@ -80,7 +80,11 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                     d.schema
 
                             if (dSchema != null) {
-                                unify(dSchema.instantiate(varPump), e.type)
+                                val (type, typeConstraints) =
+                                        dSchema.instantiate(varPump)
+
+                                unify(type, e.type)
+                                constraints += typeConstraints
                             }
 
                             LetDeclaration(d.location, e.type, ID(d.name.location, d.name.name), e)
@@ -115,8 +119,13 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             IdReference(expression.location, typeError, expression.name)
                         }
 
-                        else ->
-                            IdReference(expression.location, schema.instantiate(varPump), expression.name)
+                        else -> {
+                            val (type, typeConstraints) =
+                                    schema.instantiate(varPump)
+
+                            constraints += typeConstraints
+                            IdReference(expression.location, type, expression.name)
+                        }
                     }
                 }
 

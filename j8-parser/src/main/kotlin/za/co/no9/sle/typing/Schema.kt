@@ -1,5 +1,8 @@
 package za.co.no9.sle.typing
 
+import za.co.no9.sle.inference.Constraints
+import za.co.no9.sle.inference.noConstraints
+
 
 data class Schema(val parameters: List<Parameter>, val type: Type) {
     fun apply(s: Substitution): Schema =
@@ -17,14 +20,14 @@ data class Schema(val parameters: List<Parameter>, val type: Type) {
                 "forall ${parameters.joinToString(", ") { it.toString() }} => $type"
 
 
-    fun instantiate(varPump: VarPump): Type {
+    fun instantiate(varPump: VarPump): Pair<Type, Constraints> {
         val asP =
                 parameters.map { varPump.fresh() }
 
         val substitution =
                 Substitution(parameters.map { it.name }.zip(asP).toMap())
 
-        return type.apply(substitution)
+        return Pair(type.apply(substitution), noConstraints)
     }
 }
 
