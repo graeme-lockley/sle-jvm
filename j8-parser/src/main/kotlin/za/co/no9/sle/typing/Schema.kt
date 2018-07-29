@@ -53,16 +53,31 @@ data class Parameter(val name: Var, val constraint: Type?) {
 }
 
 
-fun generalise(type: Type): Schema {
-    val varPump =
-            VarPump()
+private fun isConstraint(type: Type): Boolean =
+        when (type) {
+            is TVar ->
+                true
 
+            is TCon ->
+                false
+
+            is TArr ->
+                isConstraint(type.domain) || isConstraint(type.range)
+
+            is TOr ->
+                true
+        }
+
+
+fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schema {
     val typeFtv =
             type.ftv().toList()
 
-    val vars =
-            typeFtv.map { varPump.fresh() }
+    val subParameters =
+            typeFtv.map { TVar(it).apply(substitution) }
 
+    val substitutionMap =
+            typeFtv.zip(subParameters).filter { !isConstraint(it.second) }.fold(nullSubstitution) { s, m -> s + Substitution(m.first, m.second) }
 
-    return Schema(vars.map { Parameter(it.variable, null) }, type.apply(Substitution(typeFtv.zip(vars).toMap())))
+    return Schema(typeFtv.zip(subParameters).filter { isConstraint(it.second) }.map { Parameter(it.first, if (it.second == TVar(it.first)) null else it.second) }, type.apply(substitutionMap))
 }

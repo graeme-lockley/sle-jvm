@@ -4,7 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 
-class SchemaTests: StringSpec({
+class SchemaTests : StringSpec({
     "given Int should generalist to <> Int" {
         generalise(typeInt).shouldBe(Schema(listOf(), typeInt))
     }
@@ -13,11 +13,20 @@ class SchemaTests: StringSpec({
         generalise(TArr(typeInt, typeInt)).shouldBe(Schema(listOf(), TArr(typeInt, typeInt)))
     }
 
-    "given '1 should generalist to <0> '0" {
-        generalise(TVar(1)).shouldBe(Schema(listOf(Parameter(0, null)), TVar(0)))
+    "given '1 should generalist to <1> '1" {
+        generalise(TVar(1)).shouldBe(Schema(listOf(Parameter(1, null)), TVar(1)))
     }
 
-    "given Int -> '1 should generalist to <0> Int -> '0" {
-        generalise(TArr(typeInt, TVar(1))).shouldBe(Schema(listOf(Parameter(0, null)), TArr(typeInt, TVar(0))))
+    "given Int -> '1 should generalist to <1> Int -> '1" {
+        generalise(TArr(typeInt, TVar(1))).shouldBe(Schema(listOf(Parameter(1, null)), TArr(typeInt, TVar(1))))
+    }
+
+    "given '1 and {'1 -> Int} should generalist to <> Int" {
+        generalise(TVar(1), Substitution(mapOf(Pair(1, typeInt)))).shouldBe(Schema(listOf(), typeInt))
+    }
+
+    "given '1 and {'1 -> Int | String} should generalist to <1: Int | String> '1" {
+        generalise(TVar(1), Substitution(mapOf(Pair(1, TOr(setOf(typeInt, typeString))))))
+                .shouldBe(Schema(listOf(Parameter(1, TOr(setOf(typeInt, typeString)))), TVar(1)))
     }
 })
