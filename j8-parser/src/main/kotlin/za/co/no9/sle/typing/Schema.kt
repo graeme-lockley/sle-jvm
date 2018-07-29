@@ -73,11 +73,11 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
     val typeFtv =
             type.ftv().toList()
 
-    val subParameters =
+    val substitutionParameters =
             typeFtv.map { TVar(it).apply(substitution) }
 
-    val substitutionMap =
-            typeFtv.zip(subParameters).filter { !isConstraint(it.second) }.map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
+    val typeSubstitution =
+            typeFtv.zip(substitutionParameters).filter { !isConstraint(it.second) }.map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
 
-    return Schema(typeFtv.zip(subParameters).filter { isConstraint(it.second) }.map { Parameter(it.first, if (it.second == TVar(it.first)) null else it.second) }, type.apply(substitutionMap))
+    return Schema(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { Parameter(it.first, if (it.second == TVar(it.first)) null else it.second) }, type.apply(typeSubstitution))
 }
