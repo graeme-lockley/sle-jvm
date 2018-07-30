@@ -15,10 +15,7 @@ data class Schema(val parameters: List<Parameter>, val type: Type) {
 
 
     override fun toString(): String =
-            if (parameters.isEmpty())
-                type.toString()
-            else
-                "forall ${parameters.joinToString(", ") { it.toString() }} => $type"
+            "<${parameters.joinToString(", ") { it.toString() }}> $type"
 
 
     fun instantiate(varPump: VarPump): Pair<Type, Constraints> {
