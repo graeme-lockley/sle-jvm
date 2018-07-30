@@ -49,6 +49,15 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
         }
 
 
+        val astTest =
+                fileContent["ast"]
+
+        if (astTest != null) {
+            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.right()!!.unresolvedModule.shouldBeEqual(astTest)
+        }
+
+
         val typeAST =
                 fileContent["typeAST"]
 
