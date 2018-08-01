@@ -30,12 +30,16 @@ fun Module.apply(substitution: Substitution): Module =
         Module(this.location, this.declarations.map {
             when (it) {
                 is LetDeclaration ->
-                    LetDeclaration(it.location, it.type.apply(substitution), it.name, it.expression.apply(substitution))
+                    it.apply(substitution)
 
                 is TypeAliasDeclaration ->
                     it
             }
         })
+
+
+fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
+        LetDeclaration(this.location, generalise(this.schema.type.apply(substitution), substitution), this.name, this.expression.apply(substitution))
 
 
 private fun Expression.apply(substitution: Substitution): Expression =

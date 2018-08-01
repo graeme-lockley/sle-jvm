@@ -35,3 +35,13 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Infe
                 InferenceDetail(constraints, substitution, unresolvedModule, unresolvedModule.apply(substitution))
             }
 }
+
+
+fun parse(text: String, environment: Environment): Either<Errors, Module> {
+    val varPump =
+            VarPump()
+
+
+    return parse(text)
+            .andThen { infer2(varPump, it, environment) }
+}

@@ -6,7 +6,7 @@ import static za.co.no9.sle.runtime.Builtin.*;
 public class First {
 
     /**
-     * factorial: Int -> Int
+     * factorial: <> Int -> Int
      */
     public static final Function<Integer, Integer> factorial = new Function<Integer, Integer>() {
 

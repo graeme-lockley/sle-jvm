@@ -19,7 +19,7 @@ sealed class Declaration(
 
 data class LetDeclaration(
         override val location: Location,
-        val type: Type,
+        val schema: Schema,
         val name: ID,
         val expression: Expression) : Declaration(location)
 
