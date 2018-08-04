@@ -26,7 +26,8 @@ public class Builtin {
             a -> (Function<Object, Boolean>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) <= ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) <= 0
-                            : (a instanceof Boolean && b instanceof Boolean) && ((Boolean) a).compareTo((Boolean) b) <= 0;
+                            : a instanceof Boolean && b instanceof Boolean ? ((Boolean) a).compareTo((Boolean) b) <= 0
+                            : a instanceof Unit && b instanceof Unit;
 
     public static final Function<Object, Function<Object, Boolean>> GREATER =
             a -> (Function<Object, Boolean>) b ->
@@ -38,7 +39,8 @@ public class Builtin {
             a -> (Function<Object, Boolean>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) >= ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) >= 0
-                            : (a instanceof Boolean && b instanceof Boolean) && ((Boolean) a).compareTo((Boolean) b) >= 0;
+                            : a instanceof Boolean && b instanceof Boolean ? ((Boolean) a).compareTo((Boolean) b) >= 0
+                            : a instanceof Unit && b instanceof Unit;
 
     public static final Function<Integer, Function<Integer, Integer>> STAR =
             a -> b -> a * b;

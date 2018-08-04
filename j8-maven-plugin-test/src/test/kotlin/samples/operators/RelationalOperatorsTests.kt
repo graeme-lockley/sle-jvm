@@ -3,8 +3,41 @@ package samples.operators
 import io.kotlintest.matchers.boolean.shouldBeFalse
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.runtime.Unit
 
 class RelationalOperatorsTests : StringSpec({
+    "equal () () returns true" {
+        RelationalOperators.equal.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeTrue()
+    }
+
+    "notEqual () () returns false" {
+        RelationalOperators.notEqual.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeFalse()
+    }
+
+    "less () () returns false" {
+        RelationalOperators.less.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeFalse()
+    }
+
+    "lessEqual () () returns true" {
+        RelationalOperators.lessEqual.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeTrue()
+    }
+
+    "greater () () returns false" {
+        RelationalOperators.greater.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeFalse()
+    }
+
+    "greaterEqual () () returns true" {
+        RelationalOperators.greaterEqual.apply(Unit.INSTANCE).apply(Unit.INSTANCE)
+                .shouldBeTrue()
+    }
+
+
+
     "equal 5 5 returns true" {
         RelationalOperators.equal.apply(5).apply(5)
                 .shouldBeTrue()
