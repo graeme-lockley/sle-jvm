@@ -24,9 +24,25 @@ class JavaGenTests : StringSpec({
                         .map { translateToJava(it.resolvedModule, "test", "First") }
                         .map { it.toString() }
 
-//        println(result.mapError { it.toString() })
-
         this.javaClass.getResource("/test/First.java").readText()
+                .shouldBe(result.right())
+    }
+
+    "Compile test/TypeReference.sle" {
+        val input =
+                this.javaClass.getResource("/test/TypeReference.sle").readText()
+
+        val environment =
+                Environment(mapOf(
+                        Pair("(==)", Schema(listOf(Parameter(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                ))
+
+        val result =
+                parseWithDetail(input, environment)
+                        .map { translateToJava(it.resolvedModule, "test", "TypeReference") }
+                        .map { it.toString() }
+
+        this.javaClass.getResource("/test/TypeReference.java").readText()
                 .shouldBe(result.right())
     }
 })
