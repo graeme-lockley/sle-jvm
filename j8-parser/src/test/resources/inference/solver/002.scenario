@@ -1,0 +1,85 @@
+-- A thunk let declaration
+let calculate : () -> Int =
+    \n -> 100
+
+let value =
+    calculate ()
+-- constraints
+[
+  () -> Int : '0 -> Int
+  () -> Int : () -> '1
+]
+-- substitution
+[
+  0=()
+  1=Int
+]
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: n
+            expression:
+              ConstantInt:
+                type:
+                  TCon:
+                    name: Int
+                value: 100
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    name: ()
+                range:
+                  TCon:
+                    name: Int
+        name:
+          ID:
+            name: calculate
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    name: ()
+                range:
+                  TCon:
+                    name: Int
+      LetDeclaration:
+        expression:
+          CallExpression:
+            operand:
+              IdReference:
+                name: calculate
+                type:
+                  TArr:
+                    domain:
+                      TCon:
+                        name: ()
+                    range:
+                      TCon:
+                        name: Int
+            operator:
+              Unit:
+                type:
+                  TCon:
+                    name: ()
+            type:
+              TCon:
+                name: Int
+        name:
+          ID:
+            name: value
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TCon:
+                name: Int
+    ]
