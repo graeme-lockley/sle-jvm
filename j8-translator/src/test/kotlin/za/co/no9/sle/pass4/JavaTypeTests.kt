@@ -22,7 +22,7 @@ class JavaTypeTests : StringSpec({
         javaType(TArr(typeBool, typeString)).shouldBe("Function<Boolean, String>")
     }
 
-    "!'10" {
-        javaType(TVar(10)).shouldBe("Function<Boolean, String>")
+    "Bool -> '10" {
+        javaType(TArr(typeBool, TVar(10))).shouldBe("Function<Boolean, Object>")
     }
 })

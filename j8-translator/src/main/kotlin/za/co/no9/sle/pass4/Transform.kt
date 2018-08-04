@@ -70,7 +70,7 @@ fun javaType(type: Type): String =
                 }
 
             is TVar ->
-                type.variable.toString()
+                "Object"
 
             is TArr ->
                 "Function<${javaType(type.domain)}, ${javaType(type.range)}>"
