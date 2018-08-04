@@ -1,4 +1,4 @@
--- A think let declaration
+-- A thunk let declaration
 let calculate : () -> Int =
     100
 
