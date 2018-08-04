@@ -28,7 +28,7 @@ public class Unit {
 
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone() {
         return this;
     }
 }
