@@ -86,16 +86,6 @@ private fun astToCoreAST(ast: TSchema): Schema {
 
                 is TArrow ->
                     TArr(astToType(type.domain), astToType(type.range))
-
-                is TBar -> {
-                    val op1 =
-                            astToType(type.op1)
-
-                    val op2 =
-                            astToType(type.op2)
-
-                    TOr(setOf(op1, op2))
-                }
             }
 
 

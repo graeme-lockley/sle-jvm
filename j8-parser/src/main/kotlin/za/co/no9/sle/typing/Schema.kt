@@ -60,9 +60,6 @@ private fun isConstraint(type: Type): Boolean =
 
             is TArr ->
                 isConstraint(type.domain) || isConstraint(type.range)
-
-            is TOr ->
-                true
         }
 
 

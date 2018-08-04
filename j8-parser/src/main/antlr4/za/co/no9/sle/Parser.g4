@@ -69,8 +69,6 @@ type
         # UpperIDType
     | '(' type ')'
         # NestedType
-    | type '|' type
-        # BarType
     | <assoc=right> type '->' type
         # ArrowType
     ;

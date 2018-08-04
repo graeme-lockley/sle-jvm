@@ -49,18 +49,6 @@ data class TArr(val domain: Type, val range: Type) : Type() {
 }
 
 
-data class TOr(val types: Set<Type>) : Type() {
-    override fun apply(s: Substitution) =
-            TOr(types.map { it.apply(s) }.toSet())
-
-    override fun ftv() =
-            types.fold(emptySet<Var>()) { acc, type -> acc.plus(type.ftv()) }
-
-    override fun toString(): String =
-            types.joinToString(" | ") { it.toString() }
-}
-
-
 val typeError =
         TCon(":Error:")
 

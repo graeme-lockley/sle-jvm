@@ -103,8 +103,3 @@ data class TArrow(
         override val location: Location,
         val domain: TType,
         val range: TType) : TType(location)
-
-data class TBar(
-        override val location: Location,
-        val op1: TType,
-        val op2: TType) : TType(location)

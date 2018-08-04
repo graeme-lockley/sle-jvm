@@ -74,9 +74,6 @@ private fun javaType(type: Type): String =
 
             is TArr ->
                 "Function<${javaType(type.domain)}, ${javaType(type.range)}>"
-
-            is TOr ->
-                TODO()
         }
 
 

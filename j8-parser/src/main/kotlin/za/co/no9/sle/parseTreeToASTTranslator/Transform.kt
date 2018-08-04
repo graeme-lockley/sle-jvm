@@ -247,17 +247,6 @@ private class ParserToAST : ParserBaseListener() {
 
         pushType(TArrow(ctx!!.location(), domain, range))
     }
-
-
-    override fun exitBarType(ctx: ParserParser.BarTypeContext?) {
-        val op2 =
-                popType()!!
-
-        val op1 =
-                popType()!!
-
-        pushType(TBar(ctx!!.location(), op1, op2))
-    }
 }
 
 

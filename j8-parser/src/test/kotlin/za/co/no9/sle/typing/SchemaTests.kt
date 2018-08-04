@@ -24,9 +24,4 @@ class SchemaTests : StringSpec({
     "given '1 and {'1 -> Int} should generalist to <> Int" {
         generalise(TVar(1), Substitution(mapOf(Pair(1, typeInt)))).shouldBe(Schema(listOf(), typeInt))
     }
-
-    "given '1 and {'1 -> Int | String} should generalist to <1: Int | String> '1" {
-        generalise(TVar(1), Substitution(mapOf(Pair(1, TOr(setOf(typeInt, typeString))))))
-                .shouldBe(Schema(listOf(Parameter(1, TOr(setOf(typeInt, typeString)))), TVar(1)))
-    }
 })
