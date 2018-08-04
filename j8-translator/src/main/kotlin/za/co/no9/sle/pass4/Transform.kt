@@ -55,7 +55,7 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
 }
 
 
-private fun javaType(type: Type): String =
+fun javaType(type: Type): String =
         when (type) {
             is TCon ->
                 when {
