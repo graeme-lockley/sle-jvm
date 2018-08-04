@@ -4,6 +4,12 @@ import java.util.function.Function;
 
 
 public class Builtin {
+    public static final Function<Boolean, Function<Boolean, Boolean>> AMPERSAND_AMPERSAND =
+            a -> b -> a && b;
+
+    public static final Function<Boolean, Function<Boolean, Boolean>> BAR_BAR =
+            a -> b -> a || b;
+
     public static final Function<Object, Function<Object, Boolean>> EQUAL_EQUAL =
             a -> (Function<Object, Boolean>) a::equals;
 
