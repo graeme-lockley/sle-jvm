@@ -237,6 +237,11 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
+    override fun exitUnitType(ctx: ParserParser.UnitTypeContext?) {
+        pushType(TUnit(ctx!!.location()))
+    }
+
+
     override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
         pushType(TIdReference(ctx!!.location(), ctx.text))
     }

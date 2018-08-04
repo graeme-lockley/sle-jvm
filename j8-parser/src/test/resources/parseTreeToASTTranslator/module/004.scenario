@@ -1,0 +1,42 @@
+-- A think let declaration
+let calculate : () -> Int =
+    100
+
+let value =
+    calculate ()
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: []
+        expression:
+          ConstantInt:
+            value: 100
+        name:
+          ID:
+            name: calculate
+        schema:
+          TSchema:
+            parameters: []
+            type:
+              TArrow:
+                domain:
+                  TUnit:
+                range:
+                  TIdReference:
+                    name: Int
+      LetDeclaration:
+        arguments: []
+        expression:
+          CallExpression:
+            operands: [
+                Unit:
+              ]
+            operator:
+              IdReference:
+                name: calculate
+        name:
+          ID:
+            name: value
+        schema: null
+    ]
