@@ -1,2 +1,5 @@
 let equal =
     \a b -> a == b
+
+let notEqual =
+    \a b -> a != b
