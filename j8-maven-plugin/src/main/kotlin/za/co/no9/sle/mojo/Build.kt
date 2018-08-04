@@ -56,7 +56,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                 val environment =
                         Environment(mapOf(
-                                Pair("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))),
+                                Pair("(==)", Schema(listOf(Parameter(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool)))),
                                 Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
                                 Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
                                 Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
