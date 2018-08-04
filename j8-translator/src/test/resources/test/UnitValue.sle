@@ -1,0 +1,5 @@
+let calculate : () -> Int =
+    \n -> 100
+
+let value =
+    calculate ()

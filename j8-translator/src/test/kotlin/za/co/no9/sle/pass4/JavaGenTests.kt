@@ -45,4 +45,22 @@ class JavaGenTests : StringSpec({
         this.javaClass.getResource("/test/TypeReference.java").readText()
                 .shouldBe(result.right())
     }
+
+    "Compile test/UnitValue.sle" {
+        val input =
+                this.javaClass.getResource("/test/UnitValue.sle").readText()
+
+        val environment =
+                Environment(mapOf(
+                        Pair("(==)", Schema(listOf(Parameter(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                ))
+
+        val result =
+                parseWithDetail(input, environment)
+                        .map { translateToJava(it.resolvedModule, "test", "UnitValue") }
+                        .map { it.toString() }
+
+        this.javaClass.getResource("/test/UnitValue.java").readText()
+                .shouldBe(result.right())
+    }
 })

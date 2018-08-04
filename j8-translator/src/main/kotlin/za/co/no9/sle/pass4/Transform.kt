@@ -12,7 +12,10 @@ import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
 import za.co.no9.sle.inference.*
 import za.co.no9.sle.inference.Expression
-import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.TVar
+import za.co.no9.sle.typing.Type
 
 
 private val RefMapping = mapOf(
@@ -72,6 +75,9 @@ fun javaType(type: Type): String =
                     type.name == "Bool" ->
                         "Boolean"
 
+                    type.name == "()" ->
+                        "za.co.no9.sle.runtime.Unit"
+
                     else ->
                         type.name
                 }
@@ -96,6 +102,9 @@ private fun javaPairType(type: Type): Pair<String, String> =
 
 private fun javaExpression(expression: Expression): com.github.javaparser.ast.expr.Expression =
         when (expression) {
+            is za.co.no9.sle.inference.Unit ->
+                NameExpr("za.co.no9.sle.runtime.Unit.INSTANCE")
+
             is ConstantBool ->
                 BooleanLiteralExpr(expression.value)
 
