@@ -52,6 +52,9 @@ data class TArr(val domain: Type, val range: Type) : Type() {
 val typeError =
         TCon(":Error:")
 
+val typeUnit =
+        TCon("()")
+
 val typeInt =
         TCon("Int")
 
@@ -63,6 +66,6 @@ val typeString =
 
 
 val builtInTypes =
-        setOf(typeBool.name, typeError.name, typeInt.name, typeString.name)
+        setOf(typeUnit.name, typeBool.name, typeError.name, typeInt.name, typeString.name)
 
 

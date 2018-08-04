@@ -44,6 +44,9 @@ fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
 
 private fun Expression.apply(substitution: Substitution): Expression =
         when (this) {
+            is Unit ->
+                this
+
             is ConstantBool ->
                 this
 

@@ -37,6 +37,9 @@ data class ID(
 sealed class Expression(
         location: Location) : Node(location)
 
+data class Unit(
+        override val location: Location) : Expression(location)
+
 data class True(
         override val location: Location) : Expression(location)
 
@@ -94,6 +97,9 @@ data class TypeParameter(
 
 sealed class TType(
         open val location: Location)
+
+data class TUnit(
+        override val location: Location) : TType(location)
 
 data class TIdReference(
         override val location: Location,

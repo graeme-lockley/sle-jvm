@@ -99,6 +99,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
     private fun infer(expression: za.co.no9.sle.astToCoreAST.Expression): Expression =
             when (expression) {
+                is za.co.no9.sle.astToCoreAST.Unit ->
+                    Unit(expression.location, typeUnit)
+
                 is za.co.no9.sle.astToCoreAST.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
 
@@ -320,6 +323,9 @@ private class InferContext2(private val varPump: VarPump, internal var env: Envi
 
     private fun infer(expression: za.co.no9.sle.astToCoreAST.Expression): Expression =
             when (expression) {
+                is za.co.no9.sle.astToCoreAST.Unit ->
+                    Unit(expression.location, typeUnit)
+
                 is za.co.no9.sle.astToCoreAST.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
 

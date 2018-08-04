@@ -38,6 +38,10 @@ sealed class Expression(
         location: Location,
         open val type: Type) : Node(location)
 
+data class Unit(
+        override val location: Location,
+        override val type: Type) : Expression(location, type)
+
 data class ConstantBool(
         override val location: Location,
         override val type: Type,

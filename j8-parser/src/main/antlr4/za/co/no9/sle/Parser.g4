@@ -46,6 +46,8 @@ term
         # NotExpression
     | LowerID
         # LowerIDExpression
+    | '(' ')'
+        # UnitValueExpression
     ;
 
 
@@ -71,6 +73,8 @@ type
         # NestedType
     | <assoc=right> type '->' type
         # ArrowType
+    | '(' ')'
+        # UnitType
     ;
 
 

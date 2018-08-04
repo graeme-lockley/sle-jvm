@@ -150,6 +150,10 @@ private class ParserToAST : ParserBaseListener() {
         pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { ID(it.location(), it.text) }, expression))
     }
 
+    override fun exitUnitValueExpression(ctx: ParserParser.UnitValueExpressionContext?) {
+        pushExpression(Unit(ctx!!.location()))
+    }
+
     override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) =
             translateBinaryOperatorExpression(ctx!!, ctx.op)
 

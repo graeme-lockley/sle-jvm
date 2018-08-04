@@ -31,6 +31,9 @@ fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.ID): ID =
 
 fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Expression): Expression =
         when (ast) {
+            is za.co.no9.sle.parseTreeToASTTranslator.Unit ->
+                Unit(ast.location)
+
             is True ->
                 ConstantBool(ast.location, true)
 
@@ -81,6 +84,9 @@ private fun astToCoreAST(ast: TSchema): Schema {
 
     fun astToType(type: TType): Type =
             when (type) {
+                is TUnit ->
+                    typeUnit
+
                 is TIdReference ->
                     substitution[type.name] ?: TCon(type.name)
 

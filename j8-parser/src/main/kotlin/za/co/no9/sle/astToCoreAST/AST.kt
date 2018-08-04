@@ -36,6 +36,9 @@ data class ID(
 sealed class Expression(
         location: Location) : Node(location)
 
+data class Unit(
+        override val location: Location) : Expression(location)
+
 data class ConstantBool(
         override val location: Location,
         val value: Boolean) : Expression(location)

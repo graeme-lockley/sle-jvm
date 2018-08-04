@@ -1,0 +1,18 @@
+-- Unit value
+let value x =
+    ()
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            ID:
+              name: x
+          ]
+        expression:
+          Unit:
+        name:
+          ID:
+            name: value
+        schema: null
+    ]
