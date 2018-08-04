@@ -1,0 +1,40 @@
+-- A thunk let declaration
+let calculate : () -> Int =
+    100
+
+let value =
+    calculate ()
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          ConstantInt:
+            value: 100
+        name:
+          ID:
+            name: calculate
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    name: ()
+                range:
+                  TCon:
+                    name: Int
+      LetDeclaration:
+        expression:
+          CallExpression:
+            operand:
+              Unit:
+            operator:
+              IdReference:
+                name: calculate
+        name:
+          ID:
+            name: value
+        schema: null
+    ]
