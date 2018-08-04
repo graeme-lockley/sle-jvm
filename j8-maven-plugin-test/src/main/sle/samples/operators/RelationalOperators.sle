@@ -3,3 +3,15 @@ let equal =
 
 let notEqual =
     \a b -> a != b
+
+let less =
+    \a b -> a < b
+
+let lessEqual =
+    \a b -> a <= b
+
+let greater =
+    \a b -> a > b
+
+let greaterEqual =
+    \a b -> a >= b

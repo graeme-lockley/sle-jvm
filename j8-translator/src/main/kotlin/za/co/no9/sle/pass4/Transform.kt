@@ -18,6 +18,10 @@ import za.co.no9.sle.typing.*
 private val RefMapping = mapOf(
         Pair("(==)", "EQUAL_EQUAL"),
         Pair("(!=)", "BANG_EQUAL"),
+        Pair("(<)", "LESS"),
+        Pair("(<=)", "LESS_EQUAL"),
+        Pair("(>)", "GREATER"),
+        Pair("(>=)", "GREATER_EQUAL"),
         Pair("(-)", "MINUS"),
         Pair("(*)", "STAR"),
         Pair("(/)", "SLASH")

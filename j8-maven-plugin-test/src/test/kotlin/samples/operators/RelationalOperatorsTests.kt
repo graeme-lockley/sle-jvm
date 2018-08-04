@@ -25,6 +25,48 @@ class RelationalOperatorsTests : StringSpec({
                 .shouldBeTrue()
     }
 
+    "less 5 5 returns false" {
+        RelationalOperators.less.apply(5).apply(5)
+                .shouldBeFalse()
+    }
+
+    "less 5 6 returns true" {
+        RelationalOperators.less.apply(5).apply(6)
+                .shouldBeTrue()
+    }
+
+    "lessEqual 5 5 returns true" {
+        RelationalOperators.lessEqual.apply(5).apply(5)
+                .shouldBeTrue()
+    }
+
+    "lessEqual 5 6 returns true" {
+        RelationalOperators.lessEqual.apply(5).apply(6)
+                .shouldBeTrue()
+    }
+
+    "greater 5 5 returns false" {
+        RelationalOperators.greater.apply(5).apply(5)
+                .shouldBeFalse()
+    }
+
+    "greater 5 6 returns false" {
+        RelationalOperators.greater.apply(5).apply(6)
+                .shouldBeFalse()
+    }
+
+    "greaterEqual 5 5 returns true" {
+        RelationalOperators.greaterEqual.apply(5).apply(5)
+                .shouldBeTrue()
+    }
+
+    "greaterEqual 5 6 returns false" {
+        RelationalOperators.greaterEqual.apply(5).apply(6)
+                .shouldBeFalse()
+    }
+
+
+
     "equal \"Hello\" \"Hello\" returns true" {
         RelationalOperators.equal.apply("Hello").apply("Hello")
                 .shouldBeTrue()
@@ -45,6 +87,49 @@ class RelationalOperatorsTests : StringSpec({
                 .shouldBeTrue()
     }
 
+    "less \"Hello\" \"Hello\" returns false" {
+        RelationalOperators.less.apply("Hello").apply("Hello")
+                .shouldBeFalse()
+    }
+
+    "less \"Hello\" \"World\" returns true" {
+        RelationalOperators.less.apply("Hello").apply("World")
+                .shouldBeTrue()
+    }
+
+    "lessEqual \"Hello\" \"Hello\" returns true" {
+        RelationalOperators.lessEqual.apply("Hello").apply("Hello")
+                .shouldBeTrue()
+    }
+
+    "lessEqual \"Hello\" \"World\" returns true" {
+        RelationalOperators.lessEqual.apply("Hello").apply("World")
+                .shouldBeTrue()
+    }
+
+
+    "greater \"Hello\" \"Hello\" returns false" {
+        RelationalOperators.greater.apply("Hello").apply("Hello")
+                .shouldBeFalse()
+    }
+
+    "greater \"Hello\" \"World\" returns false" {
+        RelationalOperators.greater.apply("Hello").apply("World")
+                .shouldBeFalse()
+    }
+
+    "greaterEqual \"Hello\" \"Hello\" returns true" {
+        RelationalOperators.greaterEqual.apply("Hello").apply("Hello")
+                .shouldBeTrue()
+    }
+
+    "greaterEqual \"Hello\" \"World\" returns false" {
+        RelationalOperators.greaterEqual.apply("Hello").apply("World")
+                .shouldBeFalse()
+    }
+
+
+
     "equal True True returns true" {
         RelationalOperators.equal.apply(true).apply(true)
                 .shouldBeTrue()
@@ -62,6 +147,46 @@ class RelationalOperatorsTests : StringSpec({
 
     "notEqual True False returns true" {
         RelationalOperators.notEqual.apply(true).apply(false)
+                .shouldBeTrue()
+    }
+
+    "less True True returns false" {
+        RelationalOperators.less.apply(true).apply(true)
+                .shouldBeFalse()
+    }
+
+    "less True False returns false" {
+        RelationalOperators.less.apply(true).apply(false)
+                .shouldBeFalse()
+    }
+
+    "lessEqual True True returns true" {
+        RelationalOperators.lessEqual.apply(true).apply(true)
+                .shouldBeTrue()
+    }
+
+    "lessEqual True False returns false" {
+        RelationalOperators.lessEqual.apply(true).apply(false)
+                .shouldBeFalse()
+    }
+
+    "greater True True returns false" {
+        RelationalOperators.greater.apply(true).apply(true)
+                .shouldBeFalse()
+    }
+
+    "greater True False returns true" {
+        RelationalOperators.greater.apply(true).apply(false)
+                .shouldBeTrue()
+    }
+
+    "greaterEqual True True returns true" {
+        RelationalOperators.greaterEqual.apply(true).apply(true)
+                .shouldBeTrue()
+    }
+
+    "greaterEqual True False returns true" {
+        RelationalOperators.greaterEqual.apply(true).apply(false)
                 .shouldBeTrue()
     }
 })
