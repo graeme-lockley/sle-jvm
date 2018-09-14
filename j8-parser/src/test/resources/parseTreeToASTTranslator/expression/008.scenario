@@ -1,5 +1,5 @@
 -- Parenthesis expression
-let value x =
+value x =
     (x)
 -- ast
 Module:

@@ -1,2 +1,2 @@
-let inc n =
+inc n =
     n + 1

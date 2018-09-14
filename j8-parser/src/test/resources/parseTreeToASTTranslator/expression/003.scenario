@@ -1,5 +1,5 @@
 -- Constant integer
-let value =
+value =
     234
 -- ast
 Module:

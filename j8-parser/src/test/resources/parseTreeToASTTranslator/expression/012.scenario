@@ -1,5 +1,5 @@
 -- Call expressions
-let value x y =
+value x y =
     x y
 -- ast
 Module:

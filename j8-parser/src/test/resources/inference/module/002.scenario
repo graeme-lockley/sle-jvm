@@ -2,7 +2,7 @@
 typealias IntMap =
     Int -> Int -> Int
 
-let add a b : IntMap =
+add a b : IntMap =
     a + b
 -- constraints
 [

@@ -1,5 +1,5 @@
 -- Constant String
-let value : String =
+value : String =
     "Hello World"
 -- constraints
 [

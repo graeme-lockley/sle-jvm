@@ -1,5 +1,5 @@
 -- Unit value
-let value x =
+value x =
     ()
 -- ast
 Module:

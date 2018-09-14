@@ -1,5 +1,5 @@
 -- Lambda expression
-let lambdaExpression =
+lambdaExpression =
     \x y z ->
         if x then
             y

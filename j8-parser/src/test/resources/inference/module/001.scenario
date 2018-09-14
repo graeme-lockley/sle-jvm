@@ -1,5 +1,5 @@
 -- Constraints of simple addition function
-let add a b =
+add a b =
     a + b
 -- constraints
 [

@@ -1,5 +1,5 @@
 -- Identifier of type string
-let value : String =
+value : String =
     aString
 -- constraints
 [

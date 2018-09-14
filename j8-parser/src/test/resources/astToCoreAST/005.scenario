@@ -1,5 +1,5 @@
 -- Constant string
-let value =
+value =
     "Hello World"
 -- ast
 Module:

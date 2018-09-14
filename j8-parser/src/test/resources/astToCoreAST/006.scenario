@@ -1,5 +1,5 @@
 -- Not expression
-let negate x =
+negate x =
     !x
 -- ast
 Module:

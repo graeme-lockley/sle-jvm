@@ -1,5 +1,5 @@
 -- False
-let value : Bool =
+value : Bool =
     False
 -- constraints
 [

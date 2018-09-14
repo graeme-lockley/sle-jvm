@@ -1,8 +1,8 @@
 -- A thunk let declaration
-let calculate : () -> Int =
+calculate : () -> Int =
     100
 
-let value =
+value =
     calculate ()
 -- ast
 Module:

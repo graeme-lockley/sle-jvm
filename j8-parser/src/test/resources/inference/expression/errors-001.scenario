@@ -1,5 +1,5 @@
 -- Unbound Variable error
-let value : Int =
+value : Int =
     1 + somethingOrElse
 -- errors
 [

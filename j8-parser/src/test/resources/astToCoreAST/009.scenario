@@ -1,5 +1,5 @@
 -- Binary op expression
-let binaryOpExpression a b =
+binaryOpExpression a b =
     a + b
 -- ast
 Module:

@@ -2,7 +2,7 @@
 typealias IntToInt =
     Int -> Int
 
-let negate a : IntToInt =
+negate a : IntToInt =
     0 - a
 -- ast
 Module:

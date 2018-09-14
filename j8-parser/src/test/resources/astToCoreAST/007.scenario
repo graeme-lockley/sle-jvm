@@ -1,5 +1,5 @@
 -- If expression
-let ifExpression x y z=
+ifExpression x y z=
     if x then
         y
     else

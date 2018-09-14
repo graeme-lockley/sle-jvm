@@ -1,8 +1,8 @@
 -- Multiple non-recursive declarations without a type signature
-let add x y =
+add x y =
     x + y
 
-let sub a b =
+sub a b =
     a - b
 -- ast
 Module:

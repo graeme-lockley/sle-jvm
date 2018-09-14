@@ -1,5 +1,5 @@
 -- Constant Int
-let value : Int =
+value : Int =
     123
 -- constraints
 [

@@ -1,8 +1,8 @@
 -- Duplicate let declarations error where second has a type signature
-let add =
+add =
     \a b -> a + b
 
-let add : Int -> Int -> Int =
+add : Int -> Int -> Int =
     \x y -> x + y
 -- errors
 [

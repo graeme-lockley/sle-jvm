@@ -1,17 +1,17 @@
-let equal =
+equal =
     \a b -> a == b
 
-let notEqual =
+notEqual =
     \a b -> a != b
 
-let less =
+less =
     \a b -> a < b
 
-let lessEqual =
+lessEqual =
     \a b -> a <= b
 
-let greater =
+greater =
     \a b -> a > b
 
-let greaterEqual =
+greaterEqual =
     \a b -> a >= b

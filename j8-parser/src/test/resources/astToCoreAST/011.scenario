@@ -2,7 +2,7 @@
 typealias IntMap =
     Int -> Int
 
-let add : IntMap =
+add : IntMap =
     \a b -> a + b
 -- ast
 Module:

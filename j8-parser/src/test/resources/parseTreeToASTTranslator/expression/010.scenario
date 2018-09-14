@@ -1,5 +1,5 @@
 -- Lambda expression
-let value =
+value =
     \x y -> x
 -- ast
 Module:

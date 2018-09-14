@@ -1,5 +1,5 @@
 -- If expression
-let value a b c =
+value a b c =
     if a then
         b
     else

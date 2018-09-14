@@ -1,5 +1,5 @@
-let and =
+and =
     \a b -> a && b
 
-let or =
+or =
     \a b -> a || b

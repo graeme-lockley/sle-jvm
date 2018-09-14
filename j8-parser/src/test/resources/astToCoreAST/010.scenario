@@ -1,5 +1,5 @@
 -- Call expression
-let call a b =
+call a b =
     a b
 -- ast
 Module:

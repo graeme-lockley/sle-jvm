@@ -1,8 +1,8 @@
 -- Duplicate let declarations error where neither have a type signature
-let add a b =
+add a b =
     a + b
 
-let add x y =
+add x y =
     x + y
 -- errors
 [

@@ -1,6 +1,13 @@
 grammar Parser;
 
 
+@parser::members {
+    public boolean notStartOfLine() {
+        return getCurrentToken().getCharPositionInLine() > 0;
+    }
+}
+
+
 module
     : declaration*
     ;
@@ -8,7 +15,7 @@ module
 declaration
     : 'typealias' UpperID '=' schema
         # TypeAliasDeclaration
-    | 'let' LowerID+ (':' schema)? '=' expression
+    | LowerID+ (':' schema)? '=' expression
         # LetDeclaration
     ;
 
@@ -27,7 +34,7 @@ expression
         # LambdaExpression
     | 'if' expression 'then' expression 'else' expression
         # IfExpression
-    | term+
+    | term ( {notStartOfLine()}? term )*
         # CallExpression
     ;
 

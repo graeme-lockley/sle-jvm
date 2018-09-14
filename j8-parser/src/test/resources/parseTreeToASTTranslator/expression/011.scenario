@@ -1,38 +1,38 @@
 -- Binary operator expressions
-let barBar =
+barBar =
     \x y -> x || y
 
-let ampersandAmpersand =
+ampersandAmpersand =
     \x y -> x && y
 
-let equalEqual =
+equalEqual =
     \x y -> x == y
 
-let bangEqual =
+bangEqual =
     \x y -> x != y
 
-let lessEqual =
+lessEqual =
     \x y -> x <= y
 
-let lessThan =
+lessThan =
     \x y -> x < y
 
-let greaterEqual =
+greaterEqual =
     \x y -> x >= y
 
-let greaterThan =
+greaterThan =
     \x y -> x > y
 
-let plus =
+plus =
     \x y -> x + y
 
-let minus =
+minus =
     \x y -> x - y
 
-let star =
+star =
     \x y -> x * y
 
-let slash =
+slash =
     \x y -> x / y
 -- ast
 Module:

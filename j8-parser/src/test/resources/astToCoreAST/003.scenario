@@ -1,5 +1,5 @@
 -- False
-let false =
+false =
     False
 -- ast
 Module:
