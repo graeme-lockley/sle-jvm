@@ -2,8 +2,8 @@ package za.co.no9.sle.astToCoreAST
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
+import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.map
-import za.co.no9.sle.parseTreeToASTTranslator.*
 import za.co.no9.sle.typing.*
 
 
@@ -12,26 +12,26 @@ fun parse(text: String): Either<Errors, Module> =
                 .parse(text)
                 .map { astToCoreAST(it) }
 
-fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Module): Module =
+fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Module =
         Module(ast.location, ast.declarations.map { astToCoreAST(it) })
 
 
-private fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Declaration): Declaration =
+private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Declaration): Declaration =
         when (ast) {
-            is za.co.no9.sle.parseTreeToASTTranslator.LetDeclaration ->
+            is za.co.no9.sle.ast.typeless.LetDeclaration ->
                 LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
-            is za.co.no9.sle.parseTreeToASTTranslator.TypeAliasDeclaration ->
+            is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
                 TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
         }
 
-fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.ID): ID =
+fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)
 
 
-fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Expression): Expression =
+fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         when (ast) {
-            is za.co.no9.sle.parseTreeToASTTranslator.Unit ->
+            is za.co.no9.sle.ast.typeless.Unit ->
                 Unit(ast.location)
 
             is True ->
@@ -40,28 +40,28 @@ fun astToCoreAST(ast: za.co.no9.sle.parseTreeToASTTranslator.Expression): Expres
             is False ->
                 ConstantBool(ast.location, false)
 
-            is za.co.no9.sle.parseTreeToASTTranslator.ConstantInt ->
+            is za.co.no9.sle.ast.typeless.ConstantInt ->
                 ConstantInt(ast.location, ast.value)
 
-            is za.co.no9.sle.parseTreeToASTTranslator.ConstantString ->
+            is za.co.no9.sle.ast.typeless.ConstantString ->
                 ConstantString(ast.location, ast.value)
 
             is NotExpression ->
                 CallExpression(ast.location, IdReference(ast.location, "(!)"), astToCoreAST(ast.expression))
 
-            is za.co.no9.sle.parseTreeToASTTranslator.IdReference ->
+            is za.co.no9.sle.ast.typeless.IdReference ->
                 IdReference(ast.location, ast.name)
 
-            is za.co.no9.sle.parseTreeToASTTranslator.IfExpression ->
+            is za.co.no9.sle.ast.typeless.IfExpression ->
                 IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
 
-            is za.co.no9.sle.parseTreeToASTTranslator.LambdaExpression ->
+            is za.co.no9.sle.ast.typeless.LambdaExpression ->
                 ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) }
 
             is BinaryOpExpression ->
                 CallExpression(ast.location, CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), astToCoreAST(ast.left)), astToCoreAST(ast.right))
 
-            is za.co.no9.sle.parseTreeToASTTranslator.CallExpression ->
+            is za.co.no9.sle.ast.typeless.CallExpression ->
                 ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
         }
 
