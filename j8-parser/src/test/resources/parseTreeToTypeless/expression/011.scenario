@@ -61,7 +61,6 @@ Module:
       name:
         ID:
           name: barBar
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -86,7 +85,6 @@ Module:
       name:
         ID:
           name: ampersandAmpersand
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -111,7 +109,6 @@ Module:
       name:
         ID:
           name: equalEqual
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -136,7 +133,6 @@ Module:
       name:
         ID:
           name: bangEqual
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -161,7 +157,6 @@ Module:
       name:
         ID:
           name: lessEqual
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -186,7 +181,6 @@ Module:
       name:
         ID:
           name: lessThan
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -211,7 +205,6 @@ Module:
       name:
         ID:
           name: greaterEqual
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -236,7 +229,6 @@ Module:
       name:
         ID:
           name: greaterThan
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -261,7 +253,6 @@ Module:
       name:
         ID:
           name: plus
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -286,7 +277,6 @@ Module:
       name:
         ID:
           name: minus
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -311,7 +301,6 @@ Module:
       name:
         ID:
           name: star
-      schema: null
     LetDeclaration:
       arguments: []
       expression:
@@ -336,5 +325,4 @@ Module:
       name:
         ID:
           name: slash
-      schema: null
   ]

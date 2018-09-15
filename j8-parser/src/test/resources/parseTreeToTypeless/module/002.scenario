@@ -28,7 +28,6 @@ Module:
       name:
         ID:
           name: add
-      schema: null
     LetDeclaration:
       arguments: [
         ID:
@@ -50,5 +49,4 @@ Module:
       name:
         ID:
           name: sub
-      schema: null
   ]

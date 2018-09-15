@@ -1,5 +1,6 @@
 -- Single declaration with a type signature
-add x y : Int -> Int -> Int =
+add : Int -> Int -> Int
+add x y =
     x + y
 -- ast
 Module:

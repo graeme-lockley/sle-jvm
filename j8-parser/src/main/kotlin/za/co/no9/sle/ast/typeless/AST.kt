@@ -15,11 +15,15 @@ data class Module(
 sealed class Declaration(
         location: Location) : Node(location)
 
+data class LetSignature(
+        override val location: Location,
+        val name: ID,
+        val schema: TSchema): Declaration(location)
+
 data class LetDeclaration(
         override val location: Location,
         val name: ID,
         val arguments: List<ID>,
-        val schema: TSchema?,
         val expression: Expression) : Declaration(location)
 
 

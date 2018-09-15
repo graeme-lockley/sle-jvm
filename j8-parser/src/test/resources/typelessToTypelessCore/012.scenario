@@ -1,5 +1,6 @@
 -- A thunk let declaration
-calculate : () -> Int =
+calculate : () -> Int
+calculate =
     100
 
 value =

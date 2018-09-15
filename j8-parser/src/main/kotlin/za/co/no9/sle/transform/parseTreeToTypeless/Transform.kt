@@ -198,6 +198,13 @@ private class ParserToAST : ParserBaseListener() {
         }
     }
 
+
+    override fun exitLetSignature(ctx: ParserParser.LetSignatureContext?) {
+        addDeclaration(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), schema!!))
+        schema = null
+    }
+
+
     override fun exitLetDeclaration(ctx: ParserParser.LetDeclarationContext?) {
         val names =
                 ctx!!.LowerID().toList().map { ID(it.location(), it.text) }
@@ -205,7 +212,7 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 popExpression()
 
-        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), schema, expression))
+        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
         schema = null
     }
 

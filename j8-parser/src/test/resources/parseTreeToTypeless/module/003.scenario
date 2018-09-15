@@ -2,7 +2,8 @@
 typealias IntToInt =
     Int -> Int
 
-negate a : IntToInt =
+negate : IntToInt
+negate a =
     0 - a
 -- ast
 Module:
@@ -22,7 +23,17 @@ Module:
                   range:
                     TIdReference:
                       name: Int
-    LetDeclaration:
+      LetSignature:
+        name:
+          ID:
+            name: negate
+        schema:
+          TSchema:
+            parameters: []
+            type:
+              TIdReference:
+                name: IntToInt
+     LetDeclaration:
       arguments: [
         ID:
           name: a
@@ -41,10 +52,4 @@ Module:
       name:
         ID:
           name: negate
-      schema:
-          TSchema:
-            parameters: []
-            type:
-                TIdReference:
-                  name: IntToInt
   ]

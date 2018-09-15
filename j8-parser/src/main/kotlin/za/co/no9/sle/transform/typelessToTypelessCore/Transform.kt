@@ -1,13 +1,11 @@
 package za.co.no9.sle.transform.typelessToTypelessCore
 
-import za.co.no9.sle.Either
-import za.co.no9.sle.Errors
+import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typelessCore.*
 import za.co.no9.sle.ast.typelessCore.CallExpression
 import za.co.no9.sle.ast.typelessCore.ConstantInt
 import za.co.no9.sle.ast.typelessCore.ConstantString
-import za.co.no9.sle.ast.typelessCore.Declaration
 import za.co.no9.sle.ast.typelessCore.Expression
 import za.co.no9.sle.ast.typelessCore.ID
 import za.co.no9.sle.ast.typelessCore.IdReference
@@ -17,26 +15,68 @@ import za.co.no9.sle.ast.typelessCore.LetDeclaration
 import za.co.no9.sle.ast.typelessCore.Module
 import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessCore.Unit
-import za.co.no9.sle.map
 import za.co.no9.sle.typing.*
 
 
 fun parse(text: String): Either<Errors, Module> =
         za.co.no9.sle.transform.parseTreeToTypeless.parse(text)
-                .map { astToCoreAST(it) }
-
-fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Module =
-        Module(ast.location, ast.declarations.map { astToCoreAST(it) })
+                .andThen { astToCoreAST(it) }
 
 
-private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Declaration): Declaration =
-        when (ast) {
+fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
+    val letDeclarations : Either<Errors, Map<String, LetSignature>> =
+            ast.declarations.fold(value(emptyMap())) { a, b ->
+                when (b) {
+                    is LetSignature ->
+                        a.andThen {
+                            val nameOfLetSignature =
+                                    b.name.name
+
+                            val other =
+                                    it[nameOfLetSignature]
+
+                            if (other == null)
+                                value(it + Pair(nameOfLetSignature, b))
+                            else
+                                za.co.no9.sle.error(setOf(DuplicateLetSignature(b.location, other.location, nameOfLetSignature)))
+
+                        }
+
+                    else ->
+                        a
+                }
+            }
+
+    return letDeclarations.map {
+        Module(ast.location, ast.declarations.fold(emptyList()) { a, ast ->
+            when (ast) {
+                is LetSignature ->
+                    a
+
             is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                a + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
             is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
-        }
+                a + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
+
+            }
+
+        })
+    }
+}
+
+
+//private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Declaration): Declaration =
+//        when (ast) {
+//            is za.co.no9.sle.ast.typeless.LetSignature ->
+//                TODO()
+//
+//            is za.co.no9.sle.ast.typeless.LetDeclaration ->
+//                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+//
+//            is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
+//                TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
+//        }
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)

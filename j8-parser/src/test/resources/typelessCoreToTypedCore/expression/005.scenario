@@ -1,5 +1,6 @@
 -- Identifier of type string
-value : String =
+value : String
+value =
     aString
 -- constraints
 [

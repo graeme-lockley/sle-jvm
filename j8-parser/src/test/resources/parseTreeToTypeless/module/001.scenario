@@ -1,9 +1,30 @@
 -- Single declaration with a type signature
-add x y : Int -> Int -> Int =
+add : Int -> Int -> Int
+add x y =
     x + y
 -- ast
 Module:
   declarations: [
+      LetSignature:
+        name:
+          ID:
+            name: add
+        schema:
+          TSchema:
+            parameters: []
+            type:
+              TArrow:
+                domain:
+                  TIdReference:
+                    name: Int
+                range:
+                  TArrow:
+                    domain:
+                      TIdReference:
+                        name: Int
+                    range:
+                      TIdReference:
+                        name: Int
     LetDeclaration:
       arguments: [
         ID:
@@ -25,20 +46,4 @@ Module:
       name:
         ID:
           name: add
-      schema:
-          TSchema:
-            parameters: []
-            type:
-                TArrow:
-                    domain:
-                        TIdReference:
-                            name: Int
-                    range:
-                        TArrow:
-                            domain:
-                                TIdReference:
-                                    name: Int
-                            range:
-                                TIdReference:
-                                    name: Int
   ]

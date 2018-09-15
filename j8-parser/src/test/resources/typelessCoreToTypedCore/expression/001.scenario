@@ -1,5 +1,6 @@
 -- True
-value : Bool =
+value : Bool
+value =
     True
 -- constraints
 [

@@ -1,5 +1,6 @@
 -- apply
-test : (String -> Bool) -> String -> Bool =
+test : (String -> Bool) -> String -> Bool
+test =
     \predicate testValue ->
         predicate testValue
 -- constraints

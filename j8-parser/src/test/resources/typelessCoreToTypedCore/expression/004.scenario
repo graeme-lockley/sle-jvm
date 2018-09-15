@@ -1,5 +1,6 @@
 -- Constant String
-value : String =
+value : String
+value =
     "Hello World"
 -- constraints
 [

@@ -1,5 +1,6 @@
 -- if-then-else
-value : Bool-> String -> String -> String =
+value : Bool-> String -> String -> String
+value =
     \a b c -> if a then b else c
 -- constraints
 [

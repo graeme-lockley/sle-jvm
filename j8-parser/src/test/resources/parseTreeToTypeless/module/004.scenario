@@ -1,5 +1,6 @@
 -- A thunk let declaration
-calculate : () -> Int =
+calculate : () -> Int
+calculate =
     100
 
 value =
@@ -7,11 +8,7 @@ value =
 -- ast
 Module:
   declarations: [
-      LetDeclaration:
-        arguments: []
-        expression:
-          ConstantInt:
-            value: 100
+      LetSignature:
         name:
           ID:
             name: calculate
@@ -28,6 +25,14 @@ Module:
       LetDeclaration:
         arguments: []
         expression:
+          ConstantInt:
+            value: 100
+        name:
+          ID:
+            name: calculate
+      LetDeclaration:
+        arguments: []
+        expression:
           CallExpression:
             operands: [
                 Unit:
@@ -38,5 +43,4 @@ Module:
         name:
           ID:
             name: value
-        schema: null
     ]

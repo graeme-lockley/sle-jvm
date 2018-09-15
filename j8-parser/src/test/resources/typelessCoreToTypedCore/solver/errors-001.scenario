@@ -2,7 +2,8 @@
 typealias BinaryIntMap =
     SomeInt -> Int
 
-factorial n : BinaryIntMap =
+factorial : BinaryIntMap
+factorial n =
     if n == 0 then
         1
     else

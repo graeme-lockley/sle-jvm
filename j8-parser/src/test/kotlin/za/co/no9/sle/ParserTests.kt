@@ -8,21 +8,21 @@ import za.co.no9.sle.parser.parseModule
 
 
 class ParserTests : StringSpec({
-    "the sle text \"let identity x = x\" should parse" {
+    "the sle text \"identity x = x\" should parse" {
         val parseResult =
-                parseModule("let identity x = x")
+                parseModule("identity x = x")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        parseResult.right()?.stringTree.shouldBe("(module (declaration let identity x = (expression (term x))))")
+        parseResult.right()?.stringTree.shouldBe("(module (declaration identity x = (expression (term x))))")
     }
 
 
     "multiplicatives have higher precedence than additives" {
         val parseResult =
-                parseModule("let f a b c = a + b * c")
+                parseModule("f a b c = a + b * c")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
-        parseResult.right()?.stringTree.shouldBe("(module (declaration let f a b c = (expression (expression (term a)) + (expression (expression (term b)) * (expression (term c))))))")
+        parseResult.right()?.stringTree.shouldBe("(module (declaration f a b c = (expression (expression (term a)) + (expression (expression (term b)) * (expression (term c))))))")
     }
 
 
@@ -34,17 +34,9 @@ class ParserTests : StringSpec({
     }
 
 
-    "a let declaration with a type schema" {
-        val parseResult =
-                parseModule("let f a b c : Int -> Int -> String -> Bool = a + b * c")
-
-        parseResult.shouldBeTypeOf<Either.Value<Result>>()
-    }
-
-
     "a rudimentary type alias" {
         val parseResult =
-                parseModule("typealias IntToInt = Int -> Int\nlet negate a : IntToInt = 0 - a")
+                parseModule("typealias IntToInt = Int -> Int\nnegate a = 0 - a")
 
         parseResult.shouldBeTypeOf<Either.Value<Result>>()
     }

@@ -2,9 +2,10 @@
 add =
     \a b -> a + b
 
-add : Int -> Int -> Int =
+add : Int -> Int -> Int
+add =
     \x y -> x + y
 -- errors
 [
-    DuplicateLetDeclaration(location=[(4, 0) (5, 16)], name=add)
+    DuplicateLetDeclaration(location=[(5, 0) (6, 16)], name=add)
 ]

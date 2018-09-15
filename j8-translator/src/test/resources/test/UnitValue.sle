@@ -1,4 +1,5 @@
-calculate : () -> Int =
+calculate : () -> Int
+calculate =
     \n -> 100
 
 value =

@@ -15,7 +15,9 @@ module
 declaration
     : 'typealias' UpperID '=' schema
         # TypeAliasDeclaration
-    | LowerID+ (':' schema)? '=' expression
+    | LowerID ':' schema
+        # LetSignature
+    | LowerID+ '=' expression
         # LetDeclaration
     ;
 

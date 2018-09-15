@@ -1,5 +1,6 @@
 -- Inference and substitution of factorial
-factorial n : Int -> Int =
+factorial : Int -> Int
+factorial n =
     if n == 0 then
         1
     else
