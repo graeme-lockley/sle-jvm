@@ -98,6 +98,9 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                             is DuplicateLetDeclaration ->
                                 log.error("Duplicate Let Declaration: $sourceName: ${it.location}: ${it.name}")
 
+                            is DuplicateLetSignature ->
+                                log.error("Duplicate Let Signature: $sourceName: ${it.location}: ${it.otherLocation}: ${it.name}")
+
                             is UnificationFail ->
                                 log.error("Unification Fail: $sourceName: ${it.t1} ${it.t2}")
 
