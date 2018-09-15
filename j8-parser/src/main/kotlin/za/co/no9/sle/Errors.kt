@@ -46,6 +46,10 @@ data class DuplicateLetSignature(
         val otherLocation: Location,
         val name: String) : LocationError(location)
 
+data class LetSignatureWithoutDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
 data class UnificationFail(
         val t1: Type,
         val t2: Type) : Error()

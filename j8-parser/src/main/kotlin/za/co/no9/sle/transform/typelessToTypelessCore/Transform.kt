@@ -24,59 +24,60 @@ fun parse(text: String): Either<Errors, Module> =
 
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
-    val letDeclarations : Either<Errors, Map<String, LetSignature>> =
-            ast.declarations.fold(value(emptyMap())) { a, b ->
-                when (b) {
+    val letDeclarationNames =
+            ast.declarations.fold(emptySet<String>()) { names, ast ->
+                when (ast) {
+                    is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                        names + ast.name.name
+
+                    else ->
+                        names
+                }
+            }
+    
+    val letSignatureDict: Either<Errors, Map<String, LetSignature>> =
+            ast.declarations.fold(value(emptyMap())) { letSignatureDict, ast ->
+                when (ast) {
                     is LetSignature ->
-                        a.andThen {
+                        letSignatureDict.andThen {
                             val nameOfLetSignature =
-                                    b.name.name
+                                    ast.name.name
 
-                            val other =
-                                    it[nameOfLetSignature]
+                            if (letDeclarationNames.contains(nameOfLetSignature)) {
+                                val other =
+                                        it[nameOfLetSignature]
 
-                            if (other == null)
-                                value(it + Pair(nameOfLetSignature, b))
-                            else
-                                za.co.no9.sle.error(setOf(DuplicateLetSignature(b.location, other.location, nameOfLetSignature)))
-
+                                if (other == null)
+                                    value(it + Pair(nameOfLetSignature, ast))
+                                else
+                                    za.co.no9.sle.error(setOf(DuplicateLetSignature(ast.location, other.location, nameOfLetSignature)))
+                            } else {
+                                za.co.no9.sle.error(setOf(LetSignatureWithoutDeclaration(ast.location, nameOfLetSignature)))
+                            }
                         }
 
                     else ->
-                        a
+                        letSignatureDict
                 }
             }
 
-    return letDeclarations.map {
-        Module(ast.location, ast.declarations.fold(emptyList()) { a, ast ->
+    return letSignatureDict.map {
+        Module(ast.location, ast.declarations.fold(emptyList()) { declarations, ast ->
             when (ast) {
                 is LetSignature ->
-                    a
+                    declarations
 
-            is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                a + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
-            is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                a + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
+                is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
+                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
 
             }
-
         })
     }
 }
 
-
-//private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Declaration): Declaration =
-//        when (ast) {
-//            is za.co.no9.sle.ast.typeless.LetSignature ->
-//                TODO()
-//
-//            is za.co.no9.sle.ast.typeless.LetDeclaration ->
-//                LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(ast.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
-//
-//            is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-//                TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
-//        }
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)
