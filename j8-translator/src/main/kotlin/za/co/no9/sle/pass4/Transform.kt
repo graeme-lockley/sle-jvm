@@ -10,8 +10,9 @@ import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
-import za.co.no9.sle.inference.*
-import za.co.no9.sle.inference.Expression
+import za.co.no9.sle.ast.typedCore.*
+import za.co.no9.sle.ast.typedCore.Expression
+import za.co.no9.sle.ast.typedCore.Unit
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
 import za.co.no9.sle.typing.TVar
@@ -102,7 +103,7 @@ private fun javaPairType(type: Type): Pair<String, String> =
 
 private fun javaExpression(expression: Expression): com.github.javaparser.ast.expr.Expression =
         when (expression) {
-            is za.co.no9.sle.inference.Unit ->
+            is Unit ->
                 NameExpr("za.co.no9.sle.runtime.Unit.INSTANCE")
 
             is ConstantBool ->

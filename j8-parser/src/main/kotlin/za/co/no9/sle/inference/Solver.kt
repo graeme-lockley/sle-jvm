@@ -1,6 +1,8 @@
 package za.co.no9.sle.inference
 
 import za.co.no9.sle.*
+import za.co.no9.sle.ast.typedCore.*
+import za.co.no9.sle.ast.typedCore.Unit
 import za.co.no9.sle.typing.*
 
 

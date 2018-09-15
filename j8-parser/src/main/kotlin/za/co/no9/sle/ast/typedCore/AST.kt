@@ -1,4 +1,4 @@
-package za.co.no9.sle.inference
+package za.co.no9.sle.ast.typedCore
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.typing.Schema

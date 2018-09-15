@@ -1,7 +1,11 @@
 package za.co.no9.sle.inference
 
 import za.co.no9.sle.*
+import za.co.no9.sle.ast.typedCore.*
+import za.co.no9.sle.ast.typedCore.Unit
 import za.co.no9.sle.ast.typelessCore.Declaration
+import za.co.no9.sle.ast.typelessCore.LetDeclaration
+import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
 import za.co.no9.sle.typing.*
 
 
@@ -72,7 +76,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 module.location,
                 module.declarations.map { d ->
                     when (d) {
-                        is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                        is LetDeclaration -> {
                             val e =
                                     infer(d.expression)
 
@@ -90,7 +94,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             LetDeclaration(d.location, generalise(e.type), ID(d.name.location, d.name.name), e)
                         }
 
-                        is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
+                        is TypeAliasDeclaration ->
                             TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema)
                     }
                 })
@@ -258,7 +262,7 @@ private class InferContext2(private val varPump: VarPump, internal var env: Envi
 
 
         val declarations =
-                module.declarations.fold(Pair(emptyList<za.co.no9.sle.inference.Declaration>(), env)) { ds, d ->
+                module.declarations.fold(Pair(emptyList<za.co.no9.sle.ast.typedCore.Declaration>(), env)) { ds, d ->
                     when (d) {
                         is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
                             constraints =
