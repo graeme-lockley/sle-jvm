@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.parseTreeToTypeless
+package za.co.no9.sle.transform.typelessToTypelessCore
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
@@ -10,8 +10,8 @@ import za.co.no9.sle.shouldBeEqual
 import java.util.function.Consumer
 
 
-class ParseTreeToASTTranslatorTests : FunSpec({
-    runner(this, "parseTreeToTypeless", RunnerConsumer())
+class TypelessToTypelessCoreTests : FunSpec({
+    runner(this, "typelessToTypelessCore", RunnerConsumer())
 })
 
 
