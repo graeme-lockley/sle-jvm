@@ -1,4 +1,4 @@
-package za.co.no9.sle.astToCoreAST
+package za.co.no9.sle.transform.typelessToTypelessCore
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
@@ -7,12 +7,11 @@ import za.co.no9.sle.parser.Result
 import za.co.no9.sle.right
 import za.co.no9.sle.runner
 import za.co.no9.sle.shouldBeEqual
-import za.co.no9.sle.transform.typelessToTypelessCore.parse
 import java.util.function.Consumer
 
 
 class ASTToCoreASTTests : FunSpec({
-    runner(this, "astToCoreAST", RunnerConsumer())
+    runner(this, "typelessToTypelessCore", RunnerConsumer())
 })
 
 
