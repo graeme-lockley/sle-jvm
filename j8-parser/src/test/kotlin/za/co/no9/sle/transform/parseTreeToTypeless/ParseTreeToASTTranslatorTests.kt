@@ -11,7 +11,7 @@ import java.util.function.Consumer
 
 
 class ParseTreeToASTTranslatorTests : FunSpec({
-    runner(this, "parseTreeToASTTranslator", RunnerConsumer())
+    runner(this, "parseTreeToTypeless", RunnerConsumer())
 })
 
 
