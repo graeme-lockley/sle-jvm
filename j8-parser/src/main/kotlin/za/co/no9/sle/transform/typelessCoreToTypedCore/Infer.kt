@@ -1,4 +1,4 @@
-package za.co.no9.sle.inference
+package za.co.no9.sle.transform.typelessCoreToTypedCore
 
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedCore.*

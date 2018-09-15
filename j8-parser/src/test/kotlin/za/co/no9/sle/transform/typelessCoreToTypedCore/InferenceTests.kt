@@ -1,4 +1,4 @@
-package za.co.no9.sle.inference
+package za.co.no9.sle.transform.typelessCoreToTypedCore
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
@@ -9,7 +9,7 @@ import java.util.function.Consumer
 
 
 class InferenceTests : FunSpec({
-    runner(this, "inference", RunnerConsumer())
+    runner(this, "typelessCoreToTypedCore", RunnerConsumer())
 })
 
 

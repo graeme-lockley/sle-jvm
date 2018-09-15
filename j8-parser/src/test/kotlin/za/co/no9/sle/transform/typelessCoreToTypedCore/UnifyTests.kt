@@ -1,4 +1,4 @@
-package za.co.no9.sle.inference
+package za.co.no9.sle.transform.typelessCoreToTypedCore
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

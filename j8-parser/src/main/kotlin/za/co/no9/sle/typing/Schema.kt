@@ -1,8 +1,8 @@
 package za.co.no9.sle.typing
 
-import za.co.no9.sle.inference.Constraint
-import za.co.no9.sle.inference.Constraints
-import za.co.no9.sle.inference.noConstraints
+import za.co.no9.sle.transform.typelessCoreToTypedCore.Constraint
+import za.co.no9.sle.transform.typelessCoreToTypedCore.Constraints
+import za.co.no9.sle.transform.typelessCoreToTypedCore.noConstraints
 
 
 data class Schema(val parameters: List<Parameter>, val type: Type) {
