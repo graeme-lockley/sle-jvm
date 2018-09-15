@@ -1,4 +1,4 @@
-package za.co.no9.sle.parseTreeToASTTranslator
+package za.co.no9.sle.transform.parseTreeToTypeless
 
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.Token

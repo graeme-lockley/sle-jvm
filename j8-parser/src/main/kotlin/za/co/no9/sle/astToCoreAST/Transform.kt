@@ -8,8 +8,7 @@ import za.co.no9.sle.typing.*
 
 
 fun parse(text: String): Either<Errors, Module> =
-        za.co.no9.sle.parseTreeToASTTranslator
-                .parse(text)
+        za.co.no9.sle.transform.parseTreeToTypeless.parse(text)
                 .map { astToCoreAST(it) }
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Module =

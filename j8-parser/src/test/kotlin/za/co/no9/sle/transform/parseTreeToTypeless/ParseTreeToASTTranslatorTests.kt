@@ -1,4 +1,4 @@
-package za.co.no9.sle.parseTreeToASTTranslator
+package za.co.no9.sle.transform.parseTreeToTypeless
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
