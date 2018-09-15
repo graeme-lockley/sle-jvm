@@ -3,6 +3,20 @@ package za.co.no9.sle.astToCoreAST
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.ast.typeless.*
+import za.co.no9.sle.ast.typelessCore.*
+import za.co.no9.sle.ast.typelessCore.CallExpression
+import za.co.no9.sle.ast.typelessCore.ConstantInt
+import za.co.no9.sle.ast.typelessCore.ConstantString
+import za.co.no9.sle.ast.typelessCore.Declaration
+import za.co.no9.sle.ast.typelessCore.Expression
+import za.co.no9.sle.ast.typelessCore.ID
+import za.co.no9.sle.ast.typelessCore.IdReference
+import za.co.no9.sle.ast.typelessCore.IfExpression
+import za.co.no9.sle.ast.typelessCore.LambdaExpression
+import za.co.no9.sle.ast.typelessCore.LetDeclaration
+import za.co.no9.sle.ast.typelessCore.Module
+import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
+import za.co.no9.sle.ast.typelessCore.Unit
 import za.co.no9.sle.map
 import za.co.no9.sle.typing.*
 
