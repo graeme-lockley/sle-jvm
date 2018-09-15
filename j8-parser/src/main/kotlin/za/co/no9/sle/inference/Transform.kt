@@ -3,7 +3,7 @@ package za.co.no9.sle.inference
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.andThen
-import za.co.no9.sle.transform.typeLessToTypelessCore.parse
+import za.co.no9.sle.transform.typelessToTypelessCore.parse
 import za.co.no9.sle.map
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution

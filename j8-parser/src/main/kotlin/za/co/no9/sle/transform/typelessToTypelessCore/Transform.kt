@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typeLessToTypelessCore
+package za.co.no9.sle.transform.typelessToTypelessCore
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
