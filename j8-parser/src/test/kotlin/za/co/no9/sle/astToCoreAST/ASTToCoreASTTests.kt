@@ -7,6 +7,7 @@ import za.co.no9.sle.parser.Result
 import za.co.no9.sle.right
 import za.co.no9.sle.runner
 import za.co.no9.sle.shouldBeEqual
+import za.co.no9.sle.transform.typeLessToTypelessCore.parse
 import java.util.function.Consumer
 
 
