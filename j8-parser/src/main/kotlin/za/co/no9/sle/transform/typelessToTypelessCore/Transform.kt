@@ -73,6 +73,8 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
                     declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
 
+                else ->
+                    TODO()
             }
         })
     }

@@ -26,6 +26,11 @@ data class LetDeclaration(
         val arguments: List<ID>,
         val expression: Expression) : Declaration(location)
 
+data class LetGuardDeclaration (
+        override val location: Location,
+        val name: ID,
+        val arguments: List<ID>,
+        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location)
 
 data class TypeAliasDeclaration(
         override val location: Location,

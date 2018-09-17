@@ -1,0 +1,78 @@
+-- A guarded let declaration
+factorial : Int -> Int
+factorial n
+    | n == 0    = 1
+    | otherwise = n * factorial (n - 1)
+-- ast
+Module:
+  declarations: [
+      LetSignature:
+        name:
+          ID:
+            name: factorial
+        schema:
+          TSchema:
+            parameters: []
+            type:
+              TArrow:
+                domain:
+                  TIdReference:
+                    name: Int
+                range:
+                  TIdReference:
+                    name: Int
+      LetGuardDeclaration:
+        arguments: [
+            ID:
+              name: n
+          ]
+        guardedExpressions: [
+            Pair:
+              first:
+                BinaryOpExpression:
+                  left:
+                    IdReference:
+                      name: n
+                  operator:
+                    ID:
+                      name: ==
+                  right:
+                    ConstantInt:
+                      value: 0
+              second:
+                ConstantInt:
+                  value: 1
+            Pair:
+              first:
+                IdReference:
+                  name: otherwise
+              second:
+                BinaryOpExpression:
+                  left:
+                    IdReference:
+                      name: n
+                  operator:
+                    ID:
+                      name: *
+                  right:
+                    CallExpression:
+                      operands: [
+                          BinaryOpExpression:
+                            left:
+                              IdReference:
+                                name: n
+                            operator:
+                              ID:
+                                name: -
+                            right:
+                              ConstantInt:
+                                value: 1
+                        ]
+                      operator:
+                        IdReference:
+                          name: factorial
+          ]
+        name:
+          ID:
+            name: factorial
+    ]

@@ -217,6 +217,31 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
+    override fun exitLetGuardDeclaration(ctx: ParserParser.LetGuardDeclarationContext?) {
+        val names =
+                ctx!!.LowerID().toList().map { ID(it.location(), it.text) }
+
+        val numberOfGuards =
+                ctx.expression().size / 2
+
+        var guardedExpressions =
+                emptyList<Pair<Expression, Expression>>()
+
+        for (lp in 1..numberOfGuards) {
+            val expression =
+                    popExpression()
+
+            val guard =
+                    popExpression()
+
+            guardedExpressions += Pair(guard, expression)
+        }
+
+        addDeclaration(LetGuardDeclaration(ctx.location(), names[0], names.drop(1), guardedExpressions.asReversed()))
+        schema = null
+    }
+
+
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
         addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), schema!!))
         schema = null

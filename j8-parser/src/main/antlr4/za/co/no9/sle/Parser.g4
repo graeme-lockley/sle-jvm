@@ -15,10 +15,14 @@ module
 declaration
     : 'typealias' UpperID '=' schema
         # TypeAliasDeclaration
+    | 'type' UpperID typeParameters '=' UpperID type* ( '|' UpperID type* )*
+        # TypeDeclaration
     | LowerID ':' schema
         # LetSignature
     | LowerID+ '=' expression
         # LetDeclaration
+    | LowerID+ ( '|' expression '=' expression)+
+        # LetGuardDeclaration
     ;
 
 expression
@@ -59,21 +63,28 @@ term
         # UnitValueExpression
     ;
 
+pattern
+    : ConstantInt
+    | 'True'
+    | 'False'
+    | ConstantString
+    | '(' ')'
+    | LowerID
+    | UpperID pattern*
+    | '(' pattern ')'
+    ;
 
 schema
     : typeParameters? type
     ;
 
-
 typeParameters
     : '<' typeParameter (',' typeParameter)* '>'
     ;
 
-
 typeParameter
     : UpperID (':' type)?
     ;
-
 
 type
     : UpperID
@@ -85,7 +96,6 @@ type
     | '(' ')'
         # UnitType
     ;
-
 
 LowerID
     : [a-z][a-zA-Z0-9_]*[']*
