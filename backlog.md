@@ -5,3 +5,5 @@
 * Add case construct
 
 * Add ADT
+
+* Add where
