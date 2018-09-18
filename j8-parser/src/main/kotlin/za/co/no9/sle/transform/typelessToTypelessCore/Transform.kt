@@ -30,11 +30,14 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                     is za.co.no9.sle.ast.typeless.LetDeclaration ->
                         names + ast.name.name
 
+                    is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                        names + ast.name.name
+
                     else ->
                         names
                 }
             }
-    
+
     val letSignatureDict: Either<Errors, Map<String, LetSignature>> =
             ast.declarations.fold(value(emptyMap())) { letSignatureDict, ast ->
                 when (ast) {
@@ -73,8 +76,18 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
                     declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
 
-                else ->
-                    TODO()
+                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                    declarations + LetDeclaration(
+                            ast.location,
+                            astToCoreAST(ast.name),
+                            astToCoreASTOptional(it[ast.name.name]?.schema),
+                            ast.arguments.foldRight(
+                                    ast.guardedExpressions.dropLast(1).foldRight(
+                                            astToCoreAST(ast.guardedExpressions.last().second)
+                                    ) { a, b ->
+                                        IfExpression(ast.location, astToCoreAST(a.first), astToCoreAST(a.second), b)
+                                    }
+                            ) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
             }
         })
     }

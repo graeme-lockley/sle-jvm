@@ -1,0 +1,212 @@
+-- A let guard declaration
+factorial : Int -> Int
+factorial n
+    | n == 0 = 1
+    | otherwise = n * factorial (n - 1)
+-- constraints
+[
+  '1 -> '1 -> Bool : '0 -> '2
+  '2 : Int -> '3
+  Int -> Int -> Int : '0 -> '4
+  Int -> Int -> Int : '0 -> '5
+  '5 : Int -> '6
+  Int -> Int : '6 -> '7
+  '4 : '7 -> '8
+  '3 : Bool
+  Int : '8
+  Int -> Int : '0 -> Int
+]
+-- substitution
+[
+  1=Int
+  2=Int -> Bool
+  0=Int
+  3=Bool
+  4=Int -> Int
+  5=Int -> Int
+  6=Int
+  7=Int
+  8=Int
+]
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: n
+            expression:
+              IfExpression:
+                elseExpression:
+                  CallExpression:
+                    operand:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: (*)
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    name: Int
+                                range:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        name: Int
+                        operator:
+                          IdReference:
+                            name: n
+                            type:
+                              TCon:
+                                name: Int
+                        type:
+                          TArr:
+                            domain:
+                              TCon:
+                                name: Int
+                            range:
+                              TCon:
+                                name: Int
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: factorial
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    name: Int
+                                range:
+                                  TCon:
+                                    name: Int
+                        operator:
+                          CallExpression:
+                            operand:
+                              CallExpression:
+                                operand:
+                                  IdReference:
+                                    name: (-)
+                                    type:
+                                      TArr:
+                                        domain:
+                                          TCon:
+                                            name: Int
+                                        range:
+                                          TArr:
+                                            domain:
+                                              TCon:
+                                                name: Int
+                                            range:
+                                              TCon:
+                                                name: Int
+                                operator:
+                                  IdReference:
+                                    name: n
+                                    type:
+                                      TCon:
+                                        name: Int
+                                type:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        name: Int
+                            operator:
+                              ConstantInt:
+                                type:
+                                  TCon:
+                                    name: Int
+                                value: 1
+                            type:
+                              TCon:
+                                name: Int
+                        type:
+                          TCon:
+                            name: Int
+                    type:
+                      TCon:
+                        name: Int
+                guardExpression:
+                  CallExpression:
+                    operand:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: (==)
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    name: Int
+                                range:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        name: Bool
+                        operator:
+                          IdReference:
+                            name: n
+                            type:
+                              TCon:
+                                name: Int
+                        type:
+                          TArr:
+                            domain:
+                              TCon:
+                                name: Int
+                            range:
+                              TCon:
+                                name: Bool
+                    operator:
+                      ConstantInt:
+                        type:
+                          TCon:
+                            name: Int
+                        value: 0
+                    type:
+                      TCon:
+                        name: Bool
+                thenExpression:
+                  ConstantInt:
+                    type:
+                      TCon:
+                        name: Int
+                    value: 1
+                type:
+                  TCon:
+                    name: Int
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    name: Int
+                range:
+                  TCon:
+                    name: Int
+        name:
+          ID:
+            name: factorial
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    name: Int
+                range:
+                  TCon:
+                    name: Int
+    ]
