@@ -34,7 +34,7 @@ class JavaGenTests : StringSpec({
 
     "Compile test/TypeReference.sle" {
         stuff("TypeReference", Environment(mapOf(
-                Pair("(==)", Schema(listOf(Parameter(1, null)), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                Pair("(==)", Schema(listOf(Parameter(1)), TArr(TVar(1), TArr(TVar(1), typeBool))))
         )))
     }
 
