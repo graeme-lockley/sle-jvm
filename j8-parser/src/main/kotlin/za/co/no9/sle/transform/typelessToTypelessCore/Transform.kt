@@ -165,14 +165,7 @@ private fun astToCoreAST(ast: TSchema): Schema {
 
 
     fun astToType(index: Int, parameter: TypeParameter): Parameter {
-        val type =
-                parameter.type
-
-        return if (type == null) {
-            Parameter(index, null)
-        } else {
-            Parameter(index, astToType(type))
-        }
+        return Parameter(index, null)
     }
 
 

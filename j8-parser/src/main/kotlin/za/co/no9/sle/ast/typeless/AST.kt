@@ -101,8 +101,7 @@ data class TSchema(
 
 data class TypeParameter(
         val location: Location,
-        val name: ID,
-        val type: TType?)
+        val name: ID)
 
 sealed class TType(
         open val location: Location)

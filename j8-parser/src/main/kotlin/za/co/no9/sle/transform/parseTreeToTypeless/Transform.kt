@@ -260,14 +260,7 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTypeParameter(ctx: ParserParser.TypeParameterContext?) {
-        val type =
-                if (ctx!!.type() == null) {
-                    null
-                } else {
-                    popType()
-                }
-
-        typeParameters += TypeParameter(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), type)
+        typeParameters += TypeParameter(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text))
     }
 
 

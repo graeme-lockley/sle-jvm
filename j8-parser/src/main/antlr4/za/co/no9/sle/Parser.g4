@@ -83,7 +83,7 @@ typeParameters
     ;
 
 typeParameter
-    : UpperID (':' type)?
+    : UpperID
     ;
 
 type
