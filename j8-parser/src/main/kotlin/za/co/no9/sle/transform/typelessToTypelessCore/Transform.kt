@@ -164,8 +164,8 @@ private fun astToCoreAST(ast: TSchema): Schema {
             }
 
 
-    fun astToType(index: Int): Parameter {
-        return Parameter(index)
+    fun astToType(index: Int): Int {
+        return index
     }
 
 

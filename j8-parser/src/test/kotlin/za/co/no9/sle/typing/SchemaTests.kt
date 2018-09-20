@@ -14,11 +14,11 @@ class SchemaTests : StringSpec({
     }
 
     "given '1 should generalist to <1> '1" {
-        generalise(TVar(1)).shouldBe(Schema(listOf(Parameter(1)), TVar(1)))
+        generalise(TVar(1)).shouldBe(Schema(listOf(1), TVar(1)))
     }
 
     "given Int -> '1 should generalist to <1> Int -> '1" {
-        generalise(TArr(typeInt, TVar(1))).shouldBe(Schema(listOf(Parameter(1)), TArr(typeInt, TVar(1))))
+        generalise(TArr(typeInt, TVar(1))).shouldBe(Schema(listOf(1), TArr(typeInt, TVar(1))))
     }
 
     "given '1 and {'1 -> Int} should generalist to <> Int" {

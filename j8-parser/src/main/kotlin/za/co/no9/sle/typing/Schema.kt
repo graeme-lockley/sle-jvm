@@ -4,9 +4,9 @@ import za.co.no9.sle.transform.typelessCoreToTypedCore.Constraints
 import za.co.no9.sle.transform.typelessCoreToTypedCore.noConstraints
 
 
-data class Schema(val parameters: List<Parameter>, val type: Type) {
+data class Schema(val parameters: List<Var>, val type: Type) {
     fun apply(s: Substitution): Schema =
-            Schema(parameters, type.apply(s - parameters.map { it.name }))
+            Schema(parameters, type.apply(s - parameters))
 
 
     fun ftv() =
@@ -22,7 +22,7 @@ data class Schema(val parameters: List<Parameter>, val type: Type) {
                 parameters.map { varPump.fresh() }
 
         val substitution =
-                Substitution(parameters.map { it.name }.zip(asP).toMap())
+                Substitution(parameters.zip(asP).toMap())
 
         val constraints =
                 parameters.zip(asP).fold(noConstraints) { constraints, (parameter, varName) ->
@@ -31,12 +31,6 @@ data class Schema(val parameters: List<Parameter>, val type: Type) {
 
         return Pair(type.apply(substitution), constraints)
     }
-}
-
-
-data class Parameter(val name: Var) {
-    override fun toString(): String =
-            "$name"
 }
 
 
@@ -63,5 +57,5 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
     val typeSubstitution =
             typeFtv.zip(substitutionParameters).filter { !isConstraint(it.second) }.map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
 
-    return Schema(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { Parameter(it.first) }, type.apply(typeSubstitution))
+    return Schema(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { it.first }, type.apply(typeSubstitution))
 }
