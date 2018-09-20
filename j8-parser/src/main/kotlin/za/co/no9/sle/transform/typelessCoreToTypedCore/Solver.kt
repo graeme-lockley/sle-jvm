@@ -116,15 +116,15 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
 
                 else -> {
                     if (t1 is TCon && aliases.containsKey(t1.name)) {
-                        val (type, typeConstraints) =
+                        val type =
                                 aliases[t1.name]!!.instantiate(varPump)
 
-                        unifies(type, t2).mapSecond { it.plus(typeConstraints) }
+                        unifies(type, t2)
                     } else if (t2 is TCon && aliases.containsKey(t2.name)) {
-                        val (type, typeConstraints) =
+                        val type =
                                 aliases[t2.name]!!.instantiate(varPump)
 
-                        unifies(t1, type).mapSecond { it.plus(typeConstraints) }
+                        unifies(t1, type)
                     } else {
                         if (t1 is TCon && !builtInTypes.contains(t1.name)) {
                             errors.add(UnknownType(t1.name))

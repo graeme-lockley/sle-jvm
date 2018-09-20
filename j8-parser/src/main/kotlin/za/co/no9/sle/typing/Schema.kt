@@ -17,14 +17,14 @@ data class Schema(val parameters: List<Var>, val type: Type) {
             "<${parameters.joinToString(", ") { it.toString() }}> $type"
 
 
-    fun instantiate(varPump: VarPump): Pair<Type, Constraints> {
+    fun instantiate(varPump: VarPump): Type {
         val asP =
                 parameters.map { varPump.fresh() }
 
         val substitution =
                 Substitution(parameters.zip(asP).toMap())
 
-        return Pair(type.apply(substitution), noConstraints)
+        return type.apply(substitution)
     }
 }
 

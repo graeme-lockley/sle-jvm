@@ -84,11 +84,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                     d.schema
 
                             if (dSchema != null) {
-                                val (type, typeConstraints) =
+                                val type =
                                         dSchema.instantiate(varPump)
 
                                 unify(type, e.type)
-                                constraints += typeConstraints
                             }
 
                             LetDeclaration(d.location, generalise(e.type), ID(d.name.location, d.name.name), e)
@@ -127,10 +126,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         }
 
                         else -> {
-                            val (type, typeConstraints) =
+                            val type =
                                     schema.instantiate(varPump)
 
-                            constraints += typeConstraints
                             IdReference(expression.location, type, expression.name)
                         }
                     }
@@ -304,11 +302,10 @@ private class InferContext2(private val varPump: VarPump, internal var env: Envi
 
                                 Pair(ds.first + declaration, env.set(d.name.name, schema))
                             } else {
-                                val (type, typeConstraints) =
+                                val type =
                                         dSchema.instantiate(varPump)
 
                                 unify(type, e.type)
-                                constraints += typeConstraints
 
                                 Pair(ds.first + LetDeclaration(d.location, dSchema, ID(d.name.location, d.name.name), e), ds.second)
                             }
@@ -351,10 +348,9 @@ private class InferContext2(private val varPump: VarPump, internal var env: Envi
                         }
 
                         else -> {
-                            val (type, typeConstraints) =
+                            val type =
                                     schema.instantiate(varPump)
 
-                            constraints += typeConstraints
                             IdReference(expression.location, type, expression.name)
                         }
                     }
