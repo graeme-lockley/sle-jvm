@@ -1,8 +1,5 @@
 package za.co.no9.sle.typing
 
-import za.co.no9.sle.transform.typelessCoreToTypedCore.Constraints
-import za.co.no9.sle.transform.typelessCoreToTypedCore.noConstraints
-
 
 data class Schema(val parameters: List<Var>, val type: Type) {
     fun apply(s: Substitution): Schema =
