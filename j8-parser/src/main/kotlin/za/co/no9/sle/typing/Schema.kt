@@ -24,12 +24,7 @@ data class Schema(val parameters: List<Var>, val type: Type) {
         val substitution =
                 Substitution(parameters.zip(asP).toMap())
 
-        val constraints =
-                parameters.zip(asP).fold(noConstraints) { constraints, (parameter, varName) ->
-                    constraints
-                }
-
-        return Pair(type.apply(substitution), constraints)
+        return Pair(type.apply(substitution), noConstraints)
     }
 }
 

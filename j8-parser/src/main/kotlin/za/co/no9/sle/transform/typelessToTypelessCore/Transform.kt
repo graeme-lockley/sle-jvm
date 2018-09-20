@@ -164,10 +164,5 @@ private fun astToCoreAST(ast: TSchema): Schema {
             }
 
 
-    fun astToType(index: Int): Int {
-        return index
-    }
-
-
-    return Schema(ast.parameters.mapIndexed { index, parameter -> astToType(index) }, astToType(ast.type))
+    return Schema(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type))
 }
