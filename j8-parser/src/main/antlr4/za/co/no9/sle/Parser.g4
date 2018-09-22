@@ -83,11 +83,13 @@ typeParameters
     ;
 
 typeParameter
-    : UpperID
+    : LowerID
     ;
 
 type
-    : UpperID
+    : LowerID
+        # LowerIDType
+    | UpperID
         # UpperIDType
     | '(' type ')'
         # NestedType

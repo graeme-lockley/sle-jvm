@@ -260,12 +260,17 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTypeParameter(ctx: ParserParser.TypeParameterContext?) {
-        typeParameters += TypeParameter(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text))
+        typeParameters += TypeParameter(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text))
     }
 
 
     override fun exitUnitType(ctx: ParserParser.UnitTypeContext?) {
         pushType(TUnit(ctx!!.location()))
+    }
+
+
+    override fun exitLowerIDType(ctx: ParserParser.LowerIDTypeContext?) {
+        pushType(TIdReference(ctx!!.location(), ctx.text))
     }
 
 
