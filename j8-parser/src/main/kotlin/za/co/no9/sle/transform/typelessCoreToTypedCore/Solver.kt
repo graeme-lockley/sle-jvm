@@ -68,7 +68,7 @@ private fun Expression.apply(substitution: Substitution): Expression =
                 LambdaExpression(location, type.apply(substitution), argument, expression.apply(substitution))
 
             is CallExpression ->
-                CallExpression(location, type.apply(substitution), operand.apply(substitution), operator.apply(substitution))
+                CallExpression(location, type.apply(substitution), operator.apply(substitution), operand.apply(substitution))
         }
 
 

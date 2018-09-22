@@ -150,8 +150,8 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
 
             is CallExpression ->
                 MethodCallExpr(
-                        javaExpression(expression.operand),
+                        javaExpression(expression.operator),
                         "apply",
-                        NodeList.nodeList(javaExpression(expression.operator)))
+                        NodeList.nodeList(javaExpression(expression.operand)))
         }
 

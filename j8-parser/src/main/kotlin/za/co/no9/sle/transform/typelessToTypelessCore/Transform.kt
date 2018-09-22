@@ -25,13 +25,13 @@ fun parse(text: String): Either<Errors, Module> =
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
     val letDeclarationNames =
-            ast.declarations.fold(emptySet<String>()) { names, ast ->
-                when (ast) {
+            ast.declarations.fold(emptySet<String>()) { names, declaration ->
+                when (declaration) {
                     is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                        names + ast.name.name
+                        names + declaration.name.name
 
                     is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                        names + ast.name.name
+                        names + declaration.name.name
 
                     else ->
                         names
@@ -39,23 +39,23 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
             }
 
     val letSignatureDict: Either<Errors, Map<String, LetSignature>> =
-            ast.declarations.fold(value(emptyMap())) { letSignatureDict, ast ->
-                when (ast) {
+            ast.declarations.fold(value(emptyMap())) { letSignatureDict, declaration ->
+                when (declaration) {
                     is LetSignature ->
                         letSignatureDict.andThen {
                             val nameOfLetSignature =
-                                    ast.name.name
+                                    declaration.name.name
 
                             if (letDeclarationNames.contains(nameOfLetSignature)) {
                                 val other =
                                         it[nameOfLetSignature]
 
                                 if (other == null)
-                                    value(it + Pair(nameOfLetSignature, ast))
+                                    value(it + Pair(nameOfLetSignature, declaration))
                                 else
-                                    za.co.no9.sle.error(setOf(DuplicateLetSignature(ast.location, other.location, nameOfLetSignature)))
+                                    za.co.no9.sle.error(setOf(DuplicateLetSignature(declaration.location, other.location, nameOfLetSignature)))
                             } else {
-                                za.co.no9.sle.error(setOf(LetSignatureWithoutDeclaration(ast.location, nameOfLetSignature)))
+                                za.co.no9.sle.error(setOf(LetSignatureWithoutDeclaration(declaration.location, nameOfLetSignature)))
                             }
                         }
 
@@ -127,8 +127,15 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.LambdaExpression ->
                 ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) }
 
-            is BinaryOpExpression ->
-                CallExpression(ast.location, CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), astToCoreAST(ast.left)), astToCoreAST(ast.right))
+            is BinaryOpExpression -> {
+                val operator =
+                        CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), astToCoreAST(ast.left))
+
+                val operand =
+                        astToCoreAST(ast.right)
+
+                CallExpression(ast.location, operator, operand)
+            }
 
             is za.co.no9.sle.ast.typeless.CallExpression ->
                 ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
@@ -157,10 +164,10 @@ private fun astToCoreAST(ast: TSchema): Schema {
                     typeUnit
 
                 is TVarReference ->
-                    typeUnit
+                    substitution[type.name] ?: TCon(type.name)
 
                 is TConstReference ->
-                    substitution[type.name] ?: TCon(type.name)
+                    TCon(type.name)
 
                 is TArrow ->
                     TArr(astToType(type.domain), astToType(type.range))

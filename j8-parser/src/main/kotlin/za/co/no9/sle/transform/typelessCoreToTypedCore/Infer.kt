@@ -4,8 +4,6 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedCore.*
 import za.co.no9.sle.ast.typedCore.Unit
 import za.co.no9.sle.ast.typelessCore.Declaration
-import za.co.no9.sle.ast.typelessCore.LetDeclaration
-import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
 import za.co.no9.sle.typing.*
 
 
@@ -23,175 +21,9 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env: 
 }
 
 
-private class InferContext(private val varPump: VarPump, internal var env: Environment) {
-    var constraints =
-            Constraints()
-
-    val errors =
-            mutableSetOf<Error>()
-
-
-    fun infer(module: za.co.no9.sle.ast.typelessCore.Module): Module {
-        module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
-            when (d) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
-                    val name =
-                            d.name.name
-
-                    if (e.contains(name)) {
-                        errors.add(DuplicateLetDeclaration(d.location, name))
-                        e
-                    } else {
-                        e + name
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                    e
-            }
-        }
-
-        env = module.declarations.fold(env) { e: Environment, d: Declaration ->
-            when (d) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
-                    val name =
-                            d.name.name
-
-                    val schema =
-                            d.schema
-
-                    if (schema == null) {
-                        e
-                    } else {
-                        e.set(name, schema)
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                    e
-            }
-        }
-
-        return Module(
-                module.location,
-                module.declarations.map { d ->
-                    when (d) {
-                        is LetDeclaration -> {
-                            val e =
-                                    infer(d.expression)
-
-                            val dSchema =
-                                    d.schema
-
-                            if (dSchema != null) {
-                                val type =
-                                        dSchema.instantiate(varPump)
-
-                                unify(type, e.type)
-                            }
-
-                            LetDeclaration(d.location, generalise(e.type), ID(d.name.location, d.name.name), e)
-                        }
-
-                        is TypeAliasDeclaration ->
-                            TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema)
-                    }
-                })
-    }
-
-
-    private fun infer(expression: za.co.no9.sle.ast.typelessCore.Expression): Expression =
-            when (expression) {
-                is za.co.no9.sle.ast.typelessCore.Unit ->
-                    Unit(expression.location, typeUnit)
-
-                is za.co.no9.sle.ast.typelessCore.ConstantBool ->
-                    ConstantBool(expression.location, typeBool, expression.value)
-
-                is za.co.no9.sle.ast.typelessCore.ConstantInt ->
-                    ConstantInt(expression.location, typeInt, expression.value)
-
-                is za.co.no9.sle.ast.typelessCore.ConstantString ->
-                    ConstantString(expression.location, typeString, expression.value)
-
-                is za.co.no9.sle.ast.typelessCore.IdReference -> {
-                    val schema =
-                            env[expression.name]
-
-                    when (schema) {
-                        null -> {
-                            errors.add(UnboundVariable(expression.location, expression.name))
-
-                            IdReference(expression.location, typeError, expression.name)
-                        }
-
-                        else -> {
-                            val type =
-                                    schema.instantiate(varPump)
-
-                            IdReference(expression.location, type, expression.name)
-                        }
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessCore.IfExpression -> {
-                    val t1 =
-                            infer(expression.guardExpression)
-
-                    val t2 =
-                            infer(expression.thenExpression)
-
-                    val t3 =
-                            infer(expression.elseExpression)
-
-                    unify(t1.type, typeBool)
-                    unify(t2.type, t3.type)
-
-                    IfExpression(expression.location, t2.type, t1, t2, t3)
-                }
-
-                is za.co.no9.sle.ast.typelessCore.LambdaExpression -> {
-                    val tv =
-                            varPump.fresh()
-
-                    val currentEnv = env
-
-                    env = env.set(expression.argument.name, Schema(emptyList(), tv))
-
-                    val t =
-                            infer(expression.expression)
-
-                    env = currentEnv
-
-                    LambdaExpression(expression.location, TArr(tv, t.type), ID(expression.argument.location, expression.argument.name), t)
-                }
-
-                is za.co.no9.sle.ast.typelessCore.CallExpression -> {
-                    val t1 =
-                            infer(expression.operator)
-
-                    val t2 =
-                            infer(expression.operand)
-
-                    val tv =
-                            varPump.fresh()
-
-                    unify(t1.type, TArr(t2.type, tv))
-
-                    CallExpression(expression.location, tv, t1, t2)
-                }
-            }
-
-
-    private fun unify(t1: Type, t2: Type) {
-        constraints += Constraint(t1, t2)
-    }
-}
-
-
 fun infer2(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env: Environment): Either<Errors, Module> {
     val context =
-            InferContext2(varPump, env)
+            InferContext(varPump, env)
 
     val m =
             context.infer(module)
@@ -203,7 +35,7 @@ fun infer2(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env:
 }
 
 
-private class InferContext2(private val varPump: VarPump, internal var env: Environment) {
+private class InferContext(private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -263,9 +95,6 @@ private class InferContext2(private val varPump: VarPump, internal var env: Envi
                 module.declarations.fold(Pair(emptyList<za.co.no9.sle.ast.typedCore.Declaration>(), env)) { ds, d ->
                     when (d) {
                         is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
-                            constraints =
-                                    Constraints()
-
                             val e =
                                     infer(d.expression)
 

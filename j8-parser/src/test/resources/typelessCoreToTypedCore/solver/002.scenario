@@ -56,6 +56,11 @@ Module:
         expression:
           CallExpression:
             operand:
+              Unit:
+                type:
+                  TCon:
+                    name: ()
+            operator:
               IdReference:
                 name: calculate
                 type:
@@ -66,11 +71,6 @@ Module:
                     range:
                       TCon:
                         name: Int
-            operator:
-              Unit:
-                type:
-                  TCon:
-                    name: ()
             type:
               TCon:
                 name: Int
