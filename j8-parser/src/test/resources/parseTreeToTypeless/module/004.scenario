@@ -20,7 +20,7 @@ Module:
                 domain:
                   TUnit:
                 range:
-                  TIdReference:
+                  TConstReference:
                     name: Int
       LetDeclaration:
         arguments: []

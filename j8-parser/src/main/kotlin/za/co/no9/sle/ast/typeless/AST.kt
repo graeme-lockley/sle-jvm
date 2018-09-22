@@ -95,21 +95,21 @@ data class CallExpression(
 
 
 data class TSchema(
-        val location: Location,
-        val parameters: List<TypeParameter>,
-        val type: TType)
-
-data class TypeParameter(
-        val location: Location,
-        val name: ID)
+        override val location: Location,
+        val parameters: List<String>,
+        val type: TType): Node(location)
 
 sealed class TType(
-        open val location: Location)
+        override val location: Location): Node (location)
 
 data class TUnit(
         override val location: Location) : TType(location)
 
-data class TIdReference(
+data class TVarReference(
+        override val location: Location,
+        val name: String) : TType(location)
+
+data class TConstReference(
         override val location: Location,
         val name: String) : TType(location)
 

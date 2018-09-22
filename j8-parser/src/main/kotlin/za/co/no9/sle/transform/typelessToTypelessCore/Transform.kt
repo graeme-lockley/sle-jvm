@@ -148,7 +148,7 @@ private fun astToCoreASTOptional(ast: TSchema?): Schema? {
 
 private fun astToCoreAST(ast: TSchema): Schema {
     val substitution =
-            ast.parameters.map { it.name.name }.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
+            ast.parameters.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
 
 
     fun astToType(type: TType): Type =
@@ -156,7 +156,10 @@ private fun astToCoreAST(ast: TSchema): Schema {
                 is TUnit ->
                     typeUnit
 
-                is TIdReference ->
+                is TVarReference ->
+                    typeUnit
+
+                is TConstReference ->
                     substitution[type.name] ?: TCon(type.name)
 
                 is TArrow ->

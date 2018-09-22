@@ -48,14 +48,6 @@ private class ParserToAST : ParserBaseListener() {
             emptyList<Declaration>()
 
 
-    private var schema: TSchema? =
-            null
-
-
-    private var typeParameters =
-            emptyList<TypeParameter>()
-
-
     fun popExpression(): Expression {
         val result =
                 expressionStack.last()
@@ -199,9 +191,34 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
+    private fun fv(type: TType): Set<String> =
+            when (type) {
+                is TUnit ->
+                    emptySet()
+
+                is TVarReference ->
+                    setOf(type.name)
+
+                is TConstReference ->
+                    emptySet()
+
+                is TArrow ->
+                    fv(type.domain) + fv(type.range)
+            }
+
+
+    private fun generaliseType(type: TType?): TSchema? =
+            if (type == null)
+                null
+            else
+                TSchema(type.location, fv(type).toList(), type)
+
+
     override fun exitLetSignature(ctx: ParserParser.LetSignatureContext?) {
-        addDeclaration(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), schema!!))
-        schema = null
+        val type =
+                popType()
+
+        addDeclaration(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), generaliseType(type)!!))
     }
 
 
@@ -213,7 +230,6 @@ private class ParserToAST : ParserBaseListener() {
                 popExpression()
 
         addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
-        schema = null
     }
 
 
@@ -238,29 +254,19 @@ private class ParserToAST : ParserBaseListener() {
         }
 
         addDeclaration(LetGuardDeclaration(ctx.location(), names[0], names.drop(1), guardedExpressions.asReversed()))
-        schema = null
     }
 
 
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
-        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), schema!!))
-        schema = null
+        val type =
+                popType()
+
+        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), generaliseType(type)!!))
     }
 
 
     override fun exitModule(ctx: ParserParser.ModuleContext?) {
         module = Module(ctx!!.location(), popDeclarations())
-    }
-
-
-    override fun exitSchema(ctx: ParserParser.SchemaContext?) {
-        schema = TSchema(ctx!!.location(), typeParameters.toList(), popType()!!)
-        typeParameters = emptyList()
-    }
-
-
-    override fun exitTypeParameter(ctx: ParserParser.TypeParameterContext?) {
-        typeParameters += TypeParameter(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text))
     }
 
 
@@ -270,12 +276,12 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitLowerIDType(ctx: ParserParser.LowerIDTypeContext?) {
-        pushType(TIdReference(ctx!!.location(), ctx.text))
+        pushType(TVarReference(ctx!!.location(), ctx.text))
     }
 
 
     override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
-        pushType(TIdReference(ctx!!.location(), ctx.text))
+        pushType(TConstReference(ctx!!.location(), ctx.text))
     }
 
 

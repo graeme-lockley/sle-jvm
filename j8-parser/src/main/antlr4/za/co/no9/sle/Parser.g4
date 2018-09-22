@@ -13,11 +13,11 @@ module
     ;
 
 declaration
-    : 'typealias' UpperID '=' schema
+    : 'typealias' UpperID '=' type
         # TypeAliasDeclaration
-    | 'type' UpperID typeParameters '=' UpperID type* ( '|' UpperID type* )*
+    | 'type' UpperID LowerID* '=' UpperID type* ( '|' UpperID type* )*
         # TypeDeclaration
-    | LowerID ':' schema
+    | LowerID ':' type
         # LetSignature
     | LowerID+ '=' expression
         # LetDeclaration
@@ -72,18 +72,6 @@ pattern
     | LowerID
     | UpperID pattern*
     | '(' pattern ')'
-    ;
-
-schema
-    : typeParameters? type
-    ;
-
-typeParameters
-    : '<' typeParameter (',' typeParameter)* '>'
-    ;
-
-typeParameter
-    : LowerID
     ;
 
 type

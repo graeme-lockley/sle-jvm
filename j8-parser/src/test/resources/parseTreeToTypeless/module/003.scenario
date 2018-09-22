@@ -18,10 +18,10 @@ Module:
             type:
                 TArrow:
                   domain:
-                    TIdReference:
+                    TConstReference:
                       name: Int
                   range:
-                    TIdReference:
+                    TConstReference:
                       name: Int
       LetSignature:
         name:
@@ -31,7 +31,7 @@ Module:
           TSchema:
             parameters: []
             type:
-              TIdReference:
+              TConstReference:
                 name: IntToInt
      LetDeclaration:
       arguments: [

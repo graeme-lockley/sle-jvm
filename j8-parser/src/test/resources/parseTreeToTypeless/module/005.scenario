@@ -16,10 +16,10 @@ Module:
             type:
               TArrow:
                 domain:
-                  TIdReference:
+                  TConstReference:
                     name: Int
                 range:
-                  TIdReference:
+                  TConstReference:
                     name: Int
       LetGuardDeclaration:
         arguments: [

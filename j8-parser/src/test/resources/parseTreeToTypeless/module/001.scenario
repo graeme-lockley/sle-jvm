@@ -15,15 +15,15 @@ Module:
             type:
               TArrow:
                 domain:
-                  TIdReference:
+                  TConstReference:
                     name: Int
                 range:
                   TArrow:
                     domain:
-                      TIdReference:
+                      TConstReference:
                         name: Int
                     range:
-                      TIdReference:
+                      TConstReference:
                         name: Int
     LetDeclaration:
       arguments: [
