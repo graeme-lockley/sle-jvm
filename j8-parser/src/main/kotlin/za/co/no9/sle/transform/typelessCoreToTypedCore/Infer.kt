@@ -60,6 +60,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
                     e
+
+                is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
+                    e
             }
         }
 
@@ -80,6 +83,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 }
 
                 is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
+                    e
+
+                is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
                     e
             }
         }
@@ -142,6 +148,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                         is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
                             Pair(ds.first + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema), ds.second)
+
+                        is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
+                            ds
                     }
                 }
 
@@ -166,6 +175,26 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     ConstantString(expression.location, typeString, expression.value)
 
                 is za.co.no9.sle.ast.typelessCore.IdReference -> {
+                    val schema =
+                            env[expression.name]
+
+                    when (schema) {
+                        null -> {
+                            errors.add(UnboundVariable(expression.location, expression.name))
+
+                            IdReference(expression.location, typeError, expression.name)
+                        }
+
+                        else -> {
+                            val type =
+                                    schema.instantiate(varPump)
+
+                            IdReference(expression.location, type, expression.name)
+                        }
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessCore.ConstructorReference -> {
                     val schema =
                             env[expression.name]
 

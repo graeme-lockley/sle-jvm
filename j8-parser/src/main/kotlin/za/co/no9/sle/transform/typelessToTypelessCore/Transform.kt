@@ -6,6 +6,7 @@ import za.co.no9.sle.ast.typelessCore.*
 import za.co.no9.sle.ast.typelessCore.CallExpression
 import za.co.no9.sle.ast.typelessCore.ConstantInt
 import za.co.no9.sle.ast.typelessCore.ConstantString
+import za.co.no9.sle.ast.typelessCore.ConstructorReference
 import za.co.no9.sle.ast.typelessCore.Expression
 import za.co.no9.sle.ast.typelessCore.ID
 import za.co.no9.sle.ast.typelessCore.IdReference
@@ -14,6 +15,7 @@ import za.co.no9.sle.ast.typelessCore.LambdaExpression
 import za.co.no9.sle.ast.typelessCore.LetDeclaration
 import za.co.no9.sle.ast.typelessCore.Module
 import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
+import za.co.no9.sle.ast.typelessCore.TypeDeclaration
 import za.co.no9.sle.ast.typelessCore.Unit
 import za.co.no9.sle.typing.*
 
@@ -67,8 +69,13 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
     return letSignatureDict.map {
         Module(ast.location, ast.declarations.fold(emptyList()) { declarations, ast ->
             when (ast) {
-                is TypeDeclaration ->
-                    declarations
+                is za.co.no9.sle.ast.typeless.TypeDeclaration ->
+                    declarations + TypeDeclaration(
+                            ast.location,
+                            astToCoreAST(ast.name),
+                            ast.arguments.map { id -> astToCoreAST(id) },
+                            ast.constructors.map { Constructor(it.location, astToCoreAST(it.name), it.arguments.map { ttype -> astToType(ttype) }) }
+                    )
 
                 is LetSignature ->
                     declarations
@@ -125,7 +132,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 IdReference(ast.location, ast.name)
 
             is za.co.no9.sle.ast.typeless.ConstructorReference ->
-                IdReference(ast.location, ast.name)
+                ConstructorReference(ast.location, ast.name)
 
             is za.co.no9.sle.ast.typeless.IfExpression ->
                 IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
@@ -158,27 +165,24 @@ private fun astToCoreASTOptional(ast: TScheme?): Schema? {
     }
 }
 
+private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+        when (type) {
+            is TUnit ->
+                typeUnit
+
+            is TVarReference ->
+                substitution[type.name] ?: TCon(type.name)
+
+            is TConstReference ->
+                TCon(type.name.name)
+
+            is TArrow ->
+                TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
+        }
 
 private fun astToCoreAST(ast: TScheme): Schema {
     val substitution =
             ast.parameters.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
 
-
-    fun astToType(type: TType): Type =
-            when (type) {
-                is TUnit ->
-                    typeUnit
-
-                is TVarReference ->
-                    substitution[type.name] ?: TCon(type.name)
-
-                is TConstReference ->
-                    TCon(type.name.name)
-
-                is TArrow ->
-                    TArr(astToType(type.domain), astToType(type.range))
-            }
-
-
-    return Schema(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type))
+    return Schema(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type, substitution))
 }

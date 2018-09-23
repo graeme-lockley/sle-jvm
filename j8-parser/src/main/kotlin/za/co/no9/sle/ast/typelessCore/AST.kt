@@ -2,6 +2,7 @@ package za.co.no9.sle.ast.typelessCore
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.typing.Schema
+import za.co.no9.sle.typing.Type
 
 
 sealed class Node(
@@ -26,6 +27,17 @@ data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
         val schema: Schema) : Declaration(location)
+
+data class TypeDeclaration(
+        override val location: Location,
+        val name: ID,
+        val arguments: List<ID>,
+        val constructors: List<Constructor>) : Declaration(location)
+
+data class Constructor(
+        override val location: Location,
+        val name: ID,
+        val arguments: List<Type>) : Node(location)
 
 
 data class ID(
@@ -52,6 +64,10 @@ data class ConstantString(
         val value: String) : Expression(location)
 
 data class IdReference(
+        override val location: Location,
+        val name: String) : Expression(location)
+
+data class ConstructorReference(
         override val location: Location,
         val name: String) : Expression(location)
 
