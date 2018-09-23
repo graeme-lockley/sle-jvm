@@ -8,21 +8,27 @@ negate a =
 -- ast
 Module:
   declarations: [
-    TypeAliasDeclaration:
-      name:
-        ID:
-          name: IntToInt
-      schema:
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: IntToInt
+        schema:
           TSchema:
             parameters: []
             type:
-                TArrow:
-                  domain:
-                    TConstReference:
-                      name: Int
-                  range:
-                    TConstReference:
-                      name: Int
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: []
+                    name:
+                      ID:
+                        name: Int
+                range:
+                  TConstReference:
+                    arguments: []
+                    name:
+                      ID:
+                        name: Int
       LetSignature:
         name:
           ID:
@@ -32,24 +38,27 @@ Module:
             parameters: []
             type:
               TConstReference:
-                name: IntToInt
-     LetDeclaration:
-      arguments: [
-        ID:
-          name: a
-      ]
-      expression:
-        BinaryOpExpression:
-          left:
-            ConstantInt:
-              value: 0
-          operator:
+                arguments: []
+                name:
+                  ID:
+                    name: IntToInt
+      LetDeclaration:
+        arguments: [
             ID:
-              name: -
-          right:
-            IdReference:
               name: a
-      name:
-        ID:
-          name: negate
-  ]
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              ConstantInt:
+                value: 0
+            operator:
+              ID:
+                name: -
+            right:
+              IdReference:
+                name: a
+        name:
+          ID:
+            name: negate
+    ]

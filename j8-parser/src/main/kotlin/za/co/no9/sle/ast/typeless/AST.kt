@@ -18,7 +18,7 @@ sealed class Declaration(
 data class LetSignature(
         override val location: Location,
         val name: ID,
-        val schema: TSchema): Declaration(location)
+        val schema: TSchema) : Declaration(location)
 
 data class LetDeclaration(
         override val location: Location,
@@ -26,7 +26,7 @@ data class LetDeclaration(
         val arguments: List<ID>,
         val expression: Expression) : Declaration(location)
 
-data class LetGuardDeclaration (
+data class LetGuardDeclaration(
         override val location: Location,
         val name: ID,
         val arguments: List<ID>,
@@ -36,6 +36,17 @@ data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
         val schema: TSchema) : Declaration(location)
+
+data class TypeDeclaration(
+        override val location: Location,
+        val name: ID,
+        val arguments: List<ID>,
+        val constructors: List<TypeConstructor>) : Declaration(location)
+
+data class TypeConstructor(
+        override val location: Location,
+        val name: ID,
+        val arguments: List<TType>) : Node(location)
 
 
 data class ID(
@@ -97,10 +108,10 @@ data class CallExpression(
 data class TSchema(
         override val location: Location,
         val parameters: List<String>,
-        val type: TType): Node(location)
+        val type: TType) : Node(location)
 
 sealed class TType(
-        override val location: Location): Node (location)
+        override val location: Location) : Node(location)
 
 data class TUnit(
         override val location: Location) : TType(location)
@@ -111,7 +122,8 @@ data class TVarReference(
 
 data class TConstReference(
         override val location: Location,
-        val name: String) : TType(location)
+        val name: ID,
+        val arguments: List<TType>) : TType(location)
 
 data class TArrow(
         override val location: Location,

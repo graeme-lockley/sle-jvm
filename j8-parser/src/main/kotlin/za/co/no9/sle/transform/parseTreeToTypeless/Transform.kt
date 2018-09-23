@@ -38,6 +38,9 @@ private class ParserToAST : ParserBaseListener() {
     private var typeStack =
             emptyList<TType>()
 
+    private var typeConstructors =
+            emptyList<TypeConstructor>()
+
 
     var module: Module? =
             null
@@ -265,6 +268,28 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
+    override fun exitTypeDeclaration(ctx: ParserParser.TypeDeclarationContext?) {
+        addDeclaration(TypeDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), ctx.LowerID().map { ID(it.location(), it.text) }, typeConstructors))
+
+        typeConstructors = emptyList()
+    }
+
+
+    override fun exitTypeConstructor(ctx: ParserParser.TypeConstructorContext?) {
+        val numberOfTypes =
+                ctx!!.type().size
+
+        var types =
+                emptyList<TType>()
+
+        for (lp in 1..numberOfTypes) {
+            types += popType()!!
+        }
+
+        typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed())
+    }
+
+
     override fun exitModule(ctx: ParserParser.ModuleContext?) {
         module = Module(ctx!!.location(), popDeclarations())
     }
@@ -281,7 +306,22 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
-        pushType(TConstReference(ctx!!.location(), ctx.text))
+        pushType(TConstReference(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), emptyList()))
+    }
+
+
+    override fun exitParameterTypeArgument(ctx: ParserParser.ParameterTypeArgumentContext?) {
+        val numberOfTypes =
+                ctx!!.type().size
+
+        var types =
+                emptyList<TType>()
+
+        for (lp in 1..numberOfTypes) {
+            types += popType()!!
+        }
+
+        pushType(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed()))
     }
 
 

@@ -21,7 +21,10 @@ Module:
                   TUnit:
                 range:
                   TConstReference:
-                    name: Int
+                    arguments: []
+                    name:
+                      ID:
+                        name: Int
       LetDeclaration:
         arguments: []
         expression:

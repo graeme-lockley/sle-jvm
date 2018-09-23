@@ -12,10 +12,11 @@ module
     : declaration*
     ;
 
+
 declaration
     : 'typealias' UpperID '=' type
         # TypeAliasDeclaration
-    | 'type' UpperID LowerID* '=' UpperID type* ( '|' UpperID type* )*
+    | 'type' UpperID LowerID* '=' typeConstructor ( '|' typeConstructor )*
         # TypeDeclaration
     | LowerID ':' type
         # LetSignature
@@ -24,6 +25,12 @@ declaration
     | LowerID+ ( '|' expression '=' expression)+
         # LetGuardDeclaration
     ;
+
+
+typeConstructor
+    : UpperID type*
+    ;
+
 
 expression
     : expression op=('*' | '/') expression
@@ -79,13 +86,22 @@ type
         # LowerIDType
     | UpperID
         # UpperIDType
-    | '(' type ')'
-        # NestedType
+    | '(' typeArgument ')'
+        # TypeArgumentType
     | <assoc=right> type '->' type
         # ArrowType
     | '(' ')'
         # UnitType
     ;
+
+
+typeArgument
+    : UpperID ( {notStartOfLine()}? type )*
+        # ParameterTypeArgument
+    | type
+        # RecursiveTypeArgument
+    ;
+
 
 LowerID
     : [a-z][a-zA-Z0-9_]*[']*

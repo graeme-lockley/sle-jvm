@@ -16,34 +16,43 @@ Module:
               TArrow:
                 domain:
                   TConstReference:
-                    name: Int
+                    arguments: []
+                    name:
+                      ID:
+                        name: Int
                 range:
                   TArrow:
                     domain:
                       TConstReference:
-                        name: Int
+                        arguments: []
+                        name:
+                          ID:
+                            name: Int
                     range:
                       TConstReference:
-                        name: Int
-    LetDeclaration:
-      arguments: [
-        ID:
-          name: x
-        ID:
-          name: y
-      ]
-      expression:
-        BinaryOpExpression:
-          left:
-            IdReference:
-              name: x
-          operator:
+                        arguments: []
+                        name:
+                          ID:
+                            name: Int
+      LetDeclaration:
+        arguments: [
             ID:
-              name: +
-          right:
-            IdReference:
+              name: x
+            ID:
               name: y
-      name:
-        ID:
-          name: add
-  ]
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              IdReference:
+                name: x
+            operator:
+              ID:
+                name: +
+            right:
+              IdReference:
+                name: y
+        name:
+          ID:
+            name: add
+    ]

@@ -1,0 +1,39 @@
+-- A list ADT type declaration
+type List a =
+    Nil
+  | Cons a (List a)
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      ID:
+                        name: List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+    ]

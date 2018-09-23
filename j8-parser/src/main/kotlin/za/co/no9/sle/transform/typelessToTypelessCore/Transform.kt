@@ -67,6 +67,9 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
     return letSignatureDict.map {
         Module(ast.location, ast.declarations.fold(emptyList()) { declarations, ast ->
             when (ast) {
+                is TypeDeclaration ->
+                    declarations
+
                 is LetSignature ->
                     declarations
 
@@ -167,7 +170,7 @@ private fun astToCoreAST(ast: TSchema): Schema {
                     substitution[type.name] ?: TCon(type.name)
 
                 is TConstReference ->
-                    TCon(type.name)
+                    TCon(type.name.name)
 
                 is TArrow ->
                     TArr(astToType(type.domain), astToType(type.range))
