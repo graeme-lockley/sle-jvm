@@ -82,6 +82,10 @@ data class IdReference(
         override val location: Location,
         val name: String) : Expression(location)
 
+data class ConstructorReference(
+        override val location: Location,
+        val name: String) : Expression(location)
+
 data class IfExpression(
         override val location: Location,
         val guardExpression: Expression,

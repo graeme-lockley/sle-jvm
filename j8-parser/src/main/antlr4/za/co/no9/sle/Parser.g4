@@ -28,7 +28,7 @@ declaration
 
 
 typeConstructor
-    : UpperID type*
+    : UpperID ( {notStartOfLine()}? type) *
     ;
 
 
@@ -66,6 +66,8 @@ term
         # NotExpression
     | LowerID
         # LowerIDExpression
+    | UpperID
+        # UpperIDExpression
     | '(' ')'
         # UnitValueExpression
     ;

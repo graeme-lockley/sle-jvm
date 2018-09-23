@@ -124,6 +124,9 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.IdReference ->
                 IdReference(ast.location, ast.name)
 
+            is za.co.no9.sle.ast.typeless.ConstructorReference ->
+                IdReference(ast.location, ast.name)
+
             is za.co.no9.sle.ast.typeless.IfExpression ->
                 IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
 

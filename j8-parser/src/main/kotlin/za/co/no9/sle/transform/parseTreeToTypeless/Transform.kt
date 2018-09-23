@@ -127,6 +127,10 @@ private class ParserToAST : ParserBaseListener() {
     override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) =
             pushExpression(IdReference(ctx!!.location(), ctx.text))
 
+    override fun exitUpperIDExpression(ctx: ParserParser.UpperIDExpressionContext?) =
+            pushExpression(ConstructorReference(ctx!!.location(), ctx.text))
+
+
     override fun exitIfExpression(ctx: ParserParser.IfExpressionContext?) {
         val elseExpression =
                 popExpression()
