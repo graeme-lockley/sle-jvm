@@ -210,11 +210,11 @@ private class ParserToAST : ParserBaseListener() {
             }
 
 
-    private fun generaliseType(type: TType?): TSchema? =
+    private fun generaliseType(type: TType?): TScheme? =
             if (type == null)
                 null
             else
-                TSchema(type.location, fv(type).toList(), type)
+                TScheme(type.location, fv(type).toList(), type)
 
 
     override fun exitLetSignature(ctx: ParserParser.LetSignatureContext?) {

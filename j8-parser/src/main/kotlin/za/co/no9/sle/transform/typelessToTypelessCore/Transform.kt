@@ -74,16 +74,16 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                     declarations
 
                 is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.schema), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.scheme), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.schema))
+                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.scheme))
 
                 is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
                     declarations + LetDeclaration(
                             ast.location,
                             astToCoreAST(ast.name),
-                            astToCoreASTOptional(it[ast.name.name]?.schema),
+                            astToCoreASTOptional(it[ast.name.name]?.scheme),
                             ast.arguments.foldRight(
                                     ast.guardedExpressions.dropLast(1).foldRight(
                                             astToCoreAST(ast.guardedExpressions.last().second)
@@ -145,7 +145,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         }
 
 
-private fun astToCoreASTOptional(ast: TSchema?): Schema? {
+private fun astToCoreASTOptional(ast: TScheme?): Schema? {
     return when (ast) {
         null ->
             null
@@ -156,7 +156,7 @@ private fun astToCoreASTOptional(ast: TSchema?): Schema? {
 }
 
 
-private fun astToCoreAST(ast: TSchema): Schema {
+private fun astToCoreAST(ast: TScheme): Schema {
     val substitution =
             ast.parameters.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
 
