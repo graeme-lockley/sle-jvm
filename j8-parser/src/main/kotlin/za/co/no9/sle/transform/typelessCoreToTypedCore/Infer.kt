@@ -4,6 +4,7 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedCore.*
 import za.co.no9.sle.ast.typedCore.Unit
 import za.co.no9.sle.ast.typelessCore.Declaration
+import za.co.no9.sle.ast.typelessCore.TypeDeclaration
 import za.co.no9.sle.typing.*
 
 
@@ -44,27 +45,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
 
     fun infer(module: za.co.no9.sle.ast.typelessCore.Module): Module {
-        module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
-            when (d) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
-                    val name =
-                            d.name.name
-
-                    if (e.contains(name)) {
-                        errors.add(DuplicateLetDeclaration(d.location, name))
-                        e
-                    } else {
-                        e + name
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                    e
-
-                is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
-                    e
-            }
-        }
+        reportDuplicateLetDeclarationNames(module)
 
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
@@ -157,6 +138,31 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         return Module(
                 module.location,
                 declarations.first)
+    }
+
+
+    private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessCore.Module) {
+        module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
+            when (d) {
+                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                    val name =
+                            d.name.name
+
+                    if (e.contains(name)) {
+                        errors.add(DuplicateLetDeclaration(d.location, name))
+                        e
+                    } else {
+                        e + name
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
+                    e
+
+                is TypeDeclaration ->
+                    e
+            }
+        }
     }
 
 
