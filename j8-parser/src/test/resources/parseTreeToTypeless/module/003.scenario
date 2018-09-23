@@ -12,8 +12,8 @@ Module:
         name:
           ID:
             name: IntToInt
-        schema:
-          TSchema:
+        scheme:
+          TScheme:
             parameters: []
             type:
               TArrow:
@@ -33,8 +33,8 @@ Module:
         name:
           ID:
             name: negate
-        schema:
-          TSchema:
+        scheme:
+          TScheme:
             parameters: []
             type:
               TConstReference:

@@ -9,8 +9,8 @@ Module:
         name:
           ID:
             name: add
-        schema:
-          TSchema:
+        scheme:
+          TScheme:
             parameters: []
             type:
               TArrow:

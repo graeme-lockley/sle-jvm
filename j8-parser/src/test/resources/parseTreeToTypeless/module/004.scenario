@@ -12,8 +12,8 @@ Module:
         name:
           ID:
             name: calculate
-        schema:
-          TSchema:
+        scheme:
+          TScheme:
             parameters: []
             type:
               TArrow:

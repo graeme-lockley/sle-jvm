@@ -10,8 +10,8 @@ Module:
         name:
           ID:
             name: factorial
-        schema:
-          TSchema:
+        scheme:
+          TScheme:
             parameters: []
             type:
               TArrow:

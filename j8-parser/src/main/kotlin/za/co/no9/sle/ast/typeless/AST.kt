@@ -18,7 +18,7 @@ sealed class Declaration(
 data class LetSignature(
         override val location: Location,
         val name: ID,
-        val schema: TSchema) : Declaration(location)
+        val scheme: TScheme) : Declaration(location)
 
 data class LetDeclaration(
         override val location: Location,
@@ -35,7 +35,7 @@ data class LetGuardDeclaration(
 data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
-        val schema: TSchema) : Declaration(location)
+        val scheme: TScheme) : Declaration(location)
 
 data class TypeDeclaration(
         override val location: Location,
@@ -105,7 +105,7 @@ data class CallExpression(
         val operands: List<Expression>) : Expression(location)
 
 
-data class TSchema(
+data class TScheme(
         override val location: Location,
         val parameters: List<String>,
         val type: TType) : Node(location)
