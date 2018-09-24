@@ -55,19 +55,20 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         sourceFileName.name
 
                 val environment =
-                        Environment(mapOf(
-                                Pair("(==)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(!=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(<)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(<=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(>)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(>=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))),
-                                Pair("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))),
-                                Pair("(||)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))),
-                                Pair("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                                Pair("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                                Pair("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))),
-                                Pair("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))))
+                        emptyEnvironment
+                                .set("(==)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(!=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(<)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(<=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(>)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(>=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
+                                .set("(||)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
+                                .set("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+
 
                 val packageName =
                         sourceFileName.parentFile.absolutePath.drop(sourceFile.absolutePath.length + 1).replace(File.separatorChar, '.', true)
