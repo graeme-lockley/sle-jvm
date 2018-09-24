@@ -1,9 +1,9 @@
 package za.co.no9.sle.typing
 
 
-data class Schema(val parameters: List<Var>, val type: Type) {
-    fun apply(s: Substitution): Schema =
-            Schema(parameters, type.apply(s - parameters))
+data class Scheme(val parameters: List<Var>, val type: Type) {
+    fun apply(s: Substitution): Scheme =
+            Scheme(parameters, type.apply(s - parameters))
 
 
     fun ftv() =
@@ -39,7 +39,7 @@ private fun isConstraint(type: Type): Boolean =
         }
 
 
-fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schema {
+fun generalise(type: Type, substitution: Substitution = nullSubstitution): Scheme {
     val typeFtv =
             type.ftv().toList()
 
@@ -49,5 +49,5 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
     val typeSubstitution =
             typeFtv.zip(substitutionParameters).filter { !isConstraint(it.second) }.map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
 
-    return Schema(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { it.first }, type.apply(typeSubstitution))
+    return Scheme(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { it.first }, type.apply(typeSubstitution))
 }

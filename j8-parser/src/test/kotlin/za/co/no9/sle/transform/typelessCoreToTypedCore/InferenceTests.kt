@@ -16,13 +16,13 @@ class InferenceTests : FunSpec({
 private class RunnerConsumer : Consumer<Map<String, List<String>>> {
     private val environment =
             emptyEnvironment
-                    .set("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                    .set("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                    .set("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                    .set("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                    .set("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
-                    .set("(==)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                    .set("aString", Schema(listOf(), typeString))
+                    .set("(+)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                    .set("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                    .set("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                    .set("(/)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                    .set("(&&)", Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
+                    .set("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                    .set("aString", Scheme(listOf(), typeString))
 
 
     override fun accept(fileContent: Map<String, List<String>>) {

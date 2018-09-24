@@ -27,7 +27,7 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Infe
             module.declarations
                     .filter { it is TypeAliasDeclaration }
                     .map { it as TypeAliasDeclaration }
-                    .fold(emptyMap()) { aliases, alias -> aliases + Pair(alias.name.name, alias.schema) }
+                    .fold(emptyMap()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
 
     return parse(text)
             .andThen { infer(varPump, it, environment) }

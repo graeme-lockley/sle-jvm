@@ -38,5 +38,5 @@ Module:
       name:
         ID:
           name: lambdaExpression
-      schema: null
+      scheme: null
   ]

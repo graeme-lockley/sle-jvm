@@ -11,7 +11,7 @@ private typealias Unifier =
 
 
 typealias Aliases =
-        Map<String, Schema>
+        Map<String, Scheme>
 
 
 fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Either<Errors, Substitution> {
@@ -41,7 +41,7 @@ fun Module.apply(substitution: Substitution): Module =
 
 
 fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
-        LetDeclaration(this.location, generalise(this.schema.type.apply(substitution), substitution), this.name, this.expression.apply(substitution))
+        LetDeclaration(this.location, generalise(this.scheme.type.apply(substitution), substitution), this.name, this.expression.apply(substitution))
 
 
 private fun Expression.apply(substitution: Substitution): Expression =

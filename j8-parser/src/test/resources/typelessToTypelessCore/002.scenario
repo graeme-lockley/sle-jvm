@@ -11,5 +11,5 @@ Module:
       name:
         ID:
           name: true
-      schema: null
+      scheme: null
   ]

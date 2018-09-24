@@ -4,14 +4,14 @@ package za.co.no9.sle.typing
 sealed class Binding
 
 data class SchemeBinding(
-        val scheme: Schema): Binding()
+        val scheme: Scheme): Binding()
 
 data class TypeBinding(
         val type: Type): Binding()
 
 
 data class Environment(val state: Map<String, Binding> = mapOf()) {
-    operator fun get(name: String): Schema? {
+    operator fun get(name: String): Scheme? {
         val binding =
         state[name]
 
@@ -28,8 +28,8 @@ data class Environment(val state: Map<String, Binding> = mapOf()) {
         }
     }
 
-    fun set(name: String, schema: Schema): Environment =
-            Environment(this.state + Pair(name, SchemeBinding(schema)))
+    fun set(name: String, scheme: Scheme): Environment =
+            Environment(this.state + Pair(name, SchemeBinding(scheme)))
 
     fun set(name: String, type: Type): Environment =
             Environment(this.state + Pair(name, TypeBinding(type)))

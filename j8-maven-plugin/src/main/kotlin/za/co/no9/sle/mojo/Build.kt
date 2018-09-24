@@ -56,18 +56,18 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                 val environment =
                         emptyEnvironment
-                                .set("(==)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(!=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(<)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(<=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(>)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(>=)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
-                                .set("(&&)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
-                                .set("(||)", Schema(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
-                                .set("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .set("(+)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .set("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .set("(/)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(!=)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(<)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(<=)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(>)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(>=)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                                .set("(&&)", Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
+                                .set("(||)", Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
+                                .set("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(+)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                                .set("(/)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
 
 
                 val packageName =

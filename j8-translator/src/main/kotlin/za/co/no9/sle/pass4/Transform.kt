@@ -51,10 +51,10 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     for (declaration in module.declarations) {
         when (declaration) {
             is LetDeclaration -> {
-                thingy.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.schema}"))
+                thingy.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme}"))
 
                 thingy.addFieldWithInitializer(
-                        javaType(declaration.schema.type),
+                        javaType(declaration.scheme.type),
                         declaration.name.name,
                         javaExpression(declaration.expression),
                         Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)

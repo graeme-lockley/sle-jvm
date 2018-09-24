@@ -37,5 +37,5 @@ Module:
       name:
         ID:
           name: ifExpression
-      schema: null
+      scheme: null
   ]

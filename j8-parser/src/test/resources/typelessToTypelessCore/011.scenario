@@ -12,8 +12,8 @@ Module:
         name:
           ID:
             name: IntMap
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TArr:
@@ -52,8 +52,8 @@ Module:
         name:
           ID:
             name: add
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TCon:

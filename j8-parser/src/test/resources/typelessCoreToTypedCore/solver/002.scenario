@@ -44,8 +44,8 @@ Module:
         name:
           ID:
             name: calculate
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TArr:
@@ -86,8 +86,8 @@ Module:
         name:
           ID:
             name: value
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TCon:

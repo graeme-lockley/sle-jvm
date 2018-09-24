@@ -32,8 +32,8 @@ Module:
         name:
           ID:
             name: add
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TArr:

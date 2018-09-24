@@ -27,16 +27,16 @@ class JavaGenTests : StringSpec({
     "Compile test/First.sle" {
         stuff("First",
                 za.co.no9.sle.typing.emptyEnvironment
-                        .set("(==)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
-                        .set("(-)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                        .set("(*)", Schema(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        .set("(==)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
+                        .set("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                        .set("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
     }
 
 
     "Compile test/TypeReference.sle" {
         stuff("TypeReference",
                 za.co.no9.sle.typing.emptyEnvironment
-                        .set("(==)", Schema(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))))
+                        .set("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))))
     }
 
 

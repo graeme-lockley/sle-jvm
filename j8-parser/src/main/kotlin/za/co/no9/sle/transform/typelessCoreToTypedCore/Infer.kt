@@ -53,13 +53,13 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     val name =
                             d.name.name
 
-                    val schema =
-                            d.schema
+                    val scheme =
+                            d.scheme
 
-                    if (schema == null) {
+                    if (scheme == null) {
                         e
                     } else {
-                        e.set(name, schema)
+                        e.set(name, scheme)
                     }
                 }
 
@@ -75,7 +75,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 module.declarations
                         .filter { it is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
                         .map { it as za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
-                        .fold(emptyMap<String, Schema>()) { aliases, alias -> aliases + Pair(alias.name.name, alias.schema) }
+                        .fold(emptyMap<String, Scheme>()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
 
 
         val declarations =
@@ -85,10 +85,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             val e =
                                     infer(d.expression)
 
-                            val dSchema =
-                                    d.schema
+                            val dScheme =
+                                    d.scheme
 
-                            if (dSchema == null) {
+                            if (dScheme == null) {
                                 val unifiesResult =
                                         unifies(varPump, aliases, constraints)
 
@@ -102,7 +102,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                     errors.addAll(unifyErrors)
                                 }
 
-                                val schema =
+                                val scheme =
                                         if (substitution != null) {
                                             generalise(e.type, substitution)
                                         } else {
@@ -111,24 +111,24 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                                 val declaration =
                                         if (substitution != null) {
-                                            LetDeclaration(d.location, schema, ID(d.name.location, d.name.name), e).apply(substitution)
+                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e).apply(substitution)
                                         } else {
-                                            LetDeclaration(d.location, schema, ID(d.name.location, d.name.name), e)
+                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e)
                                         }
 
-                                Pair(ds.first + declaration, env.set(d.name.name, schema))
+                                Pair(ds.first + declaration, env.set(d.name.name, scheme))
                             } else {
                                 val type =
-                                        dSchema.instantiate(varPump)
+                                        dScheme.instantiate(varPump)
 
                                 unify(type, e.type)
 
-                                Pair(ds.first + LetDeclaration(d.location, dSchema, ID(d.name.location, d.name.name), e), ds.second)
+                                Pair(ds.first + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), e), ds.second)
                             }
                         }
 
                         is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                            Pair(ds.first + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.schema), ds.second)
+                            Pair(ds.first + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme), ds.second)
 
                         is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
                             ds
@@ -181,10 +181,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     ConstantString(expression.location, typeString, expression.value)
 
                 is za.co.no9.sle.ast.typelessCore.IdReference -> {
-                    val schema =
+                    val scheme =
                             env[expression.name]
 
-                    when (schema) {
+                    when (scheme) {
                         null -> {
                             errors.add(UnboundVariable(expression.location, expression.name))
 
@@ -193,7 +193,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                         else -> {
                             val type =
-                                    schema.instantiate(varPump)
+                                    scheme.instantiate(varPump)
 
                             IdReference(expression.location, type, expression.name)
                         }
@@ -201,10 +201,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 }
 
                 is za.co.no9.sle.ast.typelessCore.ConstructorReference -> {
-                    val schema =
+                    val scheme =
                             env[expression.name]
 
-                    when (schema) {
+                    when (scheme) {
                         null -> {
                             errors.add(UnboundVariable(expression.location, expression.name))
 
@@ -213,7 +213,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                         else -> {
                             val type =
-                                    schema.instantiate(varPump)
+                                    scheme.instantiate(varPump)
 
                             IdReference(expression.location, type, expression.name)
                         }
@@ -242,7 +242,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                     val currentEnv = env
 
-                    env = env.set(expression.argument.name, Schema(emptyList(), tv))
+                    env = env.set(expression.argument.name, Scheme(emptyList(), tv))
 
                     val t =
                             infer(expression.expression)

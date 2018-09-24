@@ -155,7 +155,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         }
 
 
-private fun astToCoreASTOptional(ast: TScheme?): Schema? {
+private fun astToCoreASTOptional(ast: TScheme?): Scheme? {
     return when (ast) {
         null ->
             null
@@ -180,9 +180,9 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
                 TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
         }
 
-private fun astToCoreAST(ast: TScheme): Schema {
+private fun astToCoreAST(ast: TScheme): Scheme {
     val substitution =
             ast.parameters.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
 
-    return Schema(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type, substitution))
+    return Scheme(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type, substitution))
 }

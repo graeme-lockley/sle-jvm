@@ -31,5 +31,5 @@ Module:
       name:
         ID:
           name: binaryOpExpression
-      schema: null
+      scheme: null
   ]

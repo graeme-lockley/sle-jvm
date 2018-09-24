@@ -1,7 +1,7 @@
 package za.co.no9.sle.ast.typelessCore
 
 import za.co.no9.sle.Location
-import za.co.no9.sle.typing.Schema
+import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
 
 
@@ -20,13 +20,13 @@ sealed class Declaration(
 data class LetDeclaration(
         override val location: Location,
         val name: ID,
-        val schema: Schema?,
+        val scheme: Scheme?,
         val expression: Expression) : Declaration(location)
 
 data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
-        val schema: Schema) : Declaration(location)
+        val scheme: Scheme) : Declaration(location)
 
 data class TypeDeclaration(
         override val location: Location,

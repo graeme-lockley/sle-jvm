@@ -230,8 +230,8 @@ Module:
         name:
           ID:
             name: factorial
-        schema:
-          Schema:
+        scheme:
+          Scheme:
             parameters: []
             type:
               TArr:
