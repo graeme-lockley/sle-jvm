@@ -22,9 +22,11 @@ Module:
               TArr:
                 domain:
                   TCon:
+                    arguments: []
                     name: ()
                 range:
                   TCon:
+                    arguments: []
                     name: Int
       LetDeclaration:
         expression:

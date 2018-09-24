@@ -8,52 +8,55 @@ add =
 -- ast
 Module:
   declarations: [
-    TypeAliasDeclaration:
-      name:
-        ID:
-          name: IntMap
-      schema:
-        Schema:
-          parameters: []
-          type:
-            TArr:
-              domain:
-                TCon:
-                  name: Int
-              range:
-                TCon:
-                  name: Int
-    LetDeclaration:
-      expression:
-        LambdaExpression:
-          argument:
-            ID:
-              name: a
-          expression:
-            LambdaExpression:
-              argument:
-                ID:
-                  name: b
-              expression:
-                CallExpression:
-                  operand:
-                    IdReference:
-                      name: b
-                  operator:
-                    CallExpression:
-                      operand:
-                        IdReference:
-                          name: a
-                      operator:
-                        IdReference:
-                          name: (+)
-      name:
-        ID:
-          name: add
-      schema:
-        Schema:
-          parameters: []
-          type:
-            TCon:
-              name: IntMap
-  ]
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: IntMap
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: Int
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: a
+            expression:
+              LambdaExpression:
+                argument:
+                  ID:
+                    name: b
+                expression:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: b
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: a
+                        operator:
+                          IdReference:
+                            name: (+)
+        name:
+          ID:
+            name: add
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: IntMap
+    ]

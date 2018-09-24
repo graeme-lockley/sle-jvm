@@ -5,47 +5,50 @@ add x y =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expression:
-        LambdaExpression:
-          argument:
-            ID:
-              name: x
-          expression:
-            LambdaExpression:
-              argument:
-                ID:
-                  name: y
-              expression:
-                CallExpression:
-                  operand:
-                    IdReference:
-                      name: y
-                  operator:
-                    CallExpression:
-                      operand:
-                        IdReference:
-                          name: x
-                      operator:
-                        IdReference:
-                          name: (+)
-      name:
-        ID:
-          name: add
-      schema:
-        Schema:
-          parameters: []
-          type:
-            TArr:
-              domain:
-                TCon:
-                  name: Int
-              range:
-                TArr:
-                  domain:
-                    TCon:
-                      name: Int
-                  range:
-                    TCon:
-                      name: Int
-  ]
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: x
+            expression:
+              LambdaExpression:
+                argument:
+                  ID:
+                    name: y
+                expression:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: y
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: x
+                        operator:
+                          IdReference:
+                            name: (+)
+        name:
+          ID:
+            name: add
+        schema:
+          Schema:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Int
+    ]
