@@ -59,7 +59,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     if (scheme == null) {
                         e
                     } else {
-                        e.set(name, scheme)
+                        e.newValue(name, scheme)
                     }
                 }
 
@@ -116,7 +116,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                             LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e)
                                         }
 
-                                Pair(ds.first + declaration, env.set(d.name.name, scheme))
+                                Pair(ds.first + declaration, env.newValue(d.name.name, scheme))
                             } else {
                                 val type =
                                         dScheme.instantiate(varPump)
@@ -182,7 +182,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessCore.IdReference -> {
                     val scheme =
-                            env.scheme(expression.name)
+                            env.value(expression.name)
 
                     when (scheme) {
                         null -> {
@@ -202,7 +202,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessCore.ConstructorReference -> {
                     val scheme =
-                            env.scheme(expression.name)
+                            env.value(expression.name)
 
                     when (scheme) {
                         null -> {
@@ -242,7 +242,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                     val currentEnv = env
 
-                    env = env.set(expression.argument.name, Scheme(emptyList(), tv))
+                    env = env.newValue(expression.argument.name, Scheme(emptyList(), tv))
 
                     val t =
                             infer(expression.expression)

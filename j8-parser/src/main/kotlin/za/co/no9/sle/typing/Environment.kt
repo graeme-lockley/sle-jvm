@@ -3,7 +3,7 @@ package za.co.no9.sle.typing
 
 sealed class Binding
 
-data class SchemeBinding(
+data class ValueBinding(
         val scheme: Scheme) : Binding()
 
 data class TypeBinding(
@@ -11,7 +11,7 @@ data class TypeBinding(
 
 
 data class Environment(val state: Map<String, Binding> = mapOf()) {
-    fun scheme(name: String): Scheme? {
+    fun value(name: String): Scheme? {
         val binding =
                 state[name]
 
@@ -19,7 +19,7 @@ data class Environment(val state: Map<String, Binding> = mapOf()) {
             null
         } else {
             when (binding) {
-                is SchemeBinding ->
+                is ValueBinding ->
                     binding.scheme
 
                 else ->
@@ -28,10 +28,10 @@ data class Environment(val state: Map<String, Binding> = mapOf()) {
         }
     }
 
-    fun set(name: String, scheme: Scheme): Environment =
-            Environment(this.state + Pair(name, SchemeBinding(scheme)))
+    fun newValue(name: String, scheme: Scheme): Environment =
+            Environment(this.state + Pair(name, ValueBinding(scheme)))
 
-    fun set(name: String, type: Type): Environment =
+    fun newType(name: String, type: Type): Environment =
             Environment(this.state + Pair(name, TypeBinding(type)))
 
     fun containsKey(name: String): Boolean =
