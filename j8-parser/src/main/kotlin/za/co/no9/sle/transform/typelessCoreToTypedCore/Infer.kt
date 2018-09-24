@@ -182,7 +182,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessCore.IdReference -> {
                     val scheme =
-                            env[expression.name]
+                            env.scheme(expression.name)
 
                     when (scheme) {
                         null -> {
@@ -202,7 +202,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessCore.ConstructorReference -> {
                     val scheme =
-                            env[expression.name]
+                            env.scheme(expression.name)
 
                     when (scheme) {
                         null -> {
