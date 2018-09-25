@@ -12,10 +12,6 @@ duplicate x =
 Module:
   declarations: [
       TypeDeclaration:
-        arguments: [
-            ID:
-              name: a
-          ]
         constructors: [
             Constructor:
               arguments: []
@@ -24,11 +20,13 @@ Module:
                   name: Nil
             Constructor:
               arguments: [
+                  TVar:
+                    variable: 0
                   TCon:
-                    arguments: []
-                    name: a
-                  TCon:
-                    arguments: []
+                    arguments: [
+                        TVar:
+                          variable: 0
+                    ]
                     name: List
                 ]
               name:
@@ -38,6 +36,18 @@ Module:
         name:
           ID:
             name: List
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                  ]
+                name: List
       LetDeclaration:
         expression:
           LambdaExpression:

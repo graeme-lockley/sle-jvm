@@ -31,7 +31,7 @@ data class TypeAliasDeclaration(
 data class TypeDeclaration(
         override val location: Location,
         val name: ID,
-        val arguments: List<ID>,
+        val scheme: Scheme,
         val constructors: List<Constructor>) : Declaration(location)
 
 data class Constructor(

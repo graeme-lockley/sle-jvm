@@ -69,13 +69,23 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
     return letSignatureDict.map {
         Module(ast.location, ast.declarations.fold(emptyList()) { declarations, ast ->
             when (ast) {
-                is za.co.no9.sle.ast.typeless.TypeDeclaration ->
+                is za.co.no9.sle.ast.typeless.TypeDeclaration -> {
+                    val substitution =
+                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(index)) }
+
+                    val parameters =
+                            ast.arguments.mapIndexed { index, _ -> index }
+
+                    val scheme =
+                            Scheme(parameters, TCon(ast.name.name, ast.arguments.map { substitution[it.name]!! }))
+
                     declarations + TypeDeclaration(
                             ast.location,
                             astToCoreAST(ast.name),
-                            ast.arguments.map { id -> astToCoreAST(id) },
-                            ast.constructors.map { Constructor(it.location, astToCoreAST(it.name), it.arguments.map { ttype -> astToType(ttype) }) }
+                            scheme,
+                            ast.constructors.map { Constructor(it.location, astToCoreAST(it.name), it.arguments.map { ttype -> astToType(ttype, substitution) }) }
                     )
+                }
 
                 is LetSignature ->
                     declarations
@@ -174,7 +184,7 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
                 substitution[type.name] ?: TCon(type.name)
 
             is TConstReference ->
-                TCon(type.name.name)
+                TCon(type.name.name, type.arguments.map { astToType(it, substitution) })
 
             is TArrow ->
                 TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
