@@ -41,6 +41,10 @@ data class DuplicateLetDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class DuplicateConstructorDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
 data class DuplicateLetSignature(
         override val location: Location,
         val otherLocation: Location,

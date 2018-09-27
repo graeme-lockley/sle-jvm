@@ -1,0 +1,342 @@
+-- A cons list declaration with operations
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+singleton x =
+    Cons x Nil
+
+duplicate x =
+    Cons x (Cons x Nil)
+-- constraints
+[
+  '1 -> List '1 -> List '1 : '0 -> '2
+  '2 : List '3 -> '4
+  '6 -> List '6 -> List '6 : '5 -> '7
+  '8 -> List '8 -> List '8 : '5 -> '9
+  '9 : List '10 -> '11
+  '7 : '11 -> '12
+]
+-- substitution
+[
+  1='3
+  2=List '3 -> List '3
+  0='3
+  4=List '3
+  6='10
+  7=List '10 -> List '10
+  8='10
+  9=List '10 -> List '10
+  5='10
+  11=List '10
+  12=List '10
+]
+-- typeAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                  ]
+                name: List
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: x
+            expression:
+              CallExpression:
+                operand:
+                  IdReference:
+                    name: Nil
+                    type:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 3
+                          ]
+                        name: List
+                operator:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: x
+                        type:
+                          TVar:
+                            variable: 3
+                    operator:
+                      IdReference:
+                        name: Cons
+                        type:
+                          TArr:
+                            domain:
+                              TVar:
+                                variable: 3
+                            range:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 3
+                                      ]
+                                    name: List
+                                range:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 3
+                                      ]
+                                    name: List
+                    type:
+                      TArr:
+                        domain:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 3
+                              ]
+                            name: List
+                        range:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 3
+                              ]
+                            name: List
+                type:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 3
+                      ]
+                    name: List
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 3
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 3
+                      ]
+                    name: List
+        name:
+          ID:
+            name: singleton
+        scheme:
+          Scheme:
+            parameters: [
+                3
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 3
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 3
+                      ]
+                    name: List
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: x
+            expression:
+              CallExpression:
+                operand:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: Nil
+                        type:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 10
+                              ]
+                            name: List
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: x
+                            type:
+                              TVar:
+                                variable: 10
+                        operator:
+                          IdReference:
+                            name: Cons
+                            type:
+                              TArr:
+                                domain:
+                                  TVar:
+                                    variable: 10
+                                range:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        arguments: [
+                                            TVar:
+                                              variable: 10
+                                          ]
+                                        name: List
+                                    range:
+                                      TCon:
+                                        arguments: [
+                                            TVar:
+                                              variable: 10
+                                          ]
+                                        name: List
+                        type:
+                          TArr:
+                            domain:
+                              TCon:
+                                arguments: [
+                                    TVar:
+                                      variable: 10
+                                  ]
+                                name: List
+                            range:
+                              TCon:
+                                arguments: [
+                                    TVar:
+                                      variable: 10
+                                  ]
+                                name: List
+                    type:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 10
+                          ]
+                        name: List
+                operator:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: x
+                        type:
+                          TVar:
+                            variable: 10
+                    operator:
+                      IdReference:
+                        name: Cons
+                        type:
+                          TArr:
+                            domain:
+                              TVar:
+                                variable: 10
+                            range:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 10
+                                      ]
+                                    name: List
+                                range:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 10
+                                      ]
+                                    name: List
+                    type:
+                      TArr:
+                        domain:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 10
+                              ]
+                            name: List
+                        range:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 10
+                              ]
+                            name: List
+                type:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 10
+                      ]
+                    name: List
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 10
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 10
+                      ]
+                    name: List
+        name:
+          ID:
+            name: duplicate
+        scheme:
+          Scheme:
+            parameters: [
+                10
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 10
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 10
+                      ]
+                    name: List
+    ]

@@ -67,7 +67,17 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     e
 
                 is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
-                    e
+                    d.constructors.fold(e) { fds, constructor ->
+                        if (fds.containsValue(constructor.name.name)) {
+                            errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                            fds
+                        } else {
+                            val result =
+                                    fds.newValue(constructor.name.name, Scheme(d.scheme.parameters, constructor.arguments.foldRight(d.scheme.type) { a, b -> TArr(a, b) }))
+
+                            result
+                        }
+                    }
             }
         }
 
@@ -131,7 +141,12 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             Pair(ds.first + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme), ds.second)
 
                         is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
-                            ds
+                            Pair(ds.first + za.co.no9.sle.ast.typedCore.TypeDeclaration(
+                                    d.location,
+                                    ID(d.name.location, d.name.name),
+                                    d.scheme,
+                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments) }
+                            ), ds.second)
                     }
                 }
 

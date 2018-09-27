@@ -36,6 +36,9 @@ fun Module.apply(substitution: Substitution): Module =
 
                 is TypeAliasDeclaration ->
                     it
+
+                is TypeDeclaration ->
+                    it
             }
         })
 
@@ -104,6 +107,9 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
             when {
                 t1 == t2 ->
                     Pair(nullSubstitution, noConstraints)
+
+                t1 is TCon && t2 is TCon && t1.name == t2.name && t1.arguments.size == t2.arguments.size ->
+                    unifyMany(t1.arguments, t2.arguments)
 
                 t1 is TVar ->
                     Pair(Substitution(t1.variable, t2), noConstraints)

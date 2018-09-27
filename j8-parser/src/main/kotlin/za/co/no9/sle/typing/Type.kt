@@ -22,13 +22,19 @@ data class TVar(val variable: Var) : Type() {
 
 data class TCon(val name: String, val arguments: List<Type> = emptyList()) : Type() {
     override fun apply(s: Substitution) =
-            this
+            if (arguments.isEmpty())
+                this
+            else
+                TCon(name, arguments.map { it.apply(s) })
 
     override fun ftv() =
             emptySet<Var>()
 
     override fun toString(): String =
-            name
+            if (arguments.isEmpty())
+                name
+            else
+                "$name ${arguments.map { it.toString() }.joinToString(" ")}"
 }
 
 

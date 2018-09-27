@@ -28,6 +28,17 @@ data class TypeAliasDeclaration(
         val name: ID,
         val scheme: Scheme) : Declaration(location)
 
+data class TypeDeclaration(
+        override val location: Location,
+        val name: ID,
+        val scheme: Scheme,
+        val constructors: List<Constructor>) : Declaration(location)
+
+data class Constructor(
+        override val location: Location,
+        val name: ID,
+        val arguments: List<Type>) : Node(location)
+
 
 data class ID(
         override val location: Location,
