@@ -1,0 +1,12 @@
+-- Error if duplicate constructor name across types
+type ListA a =
+    NilA
+  | Cons a (ListA a)
+
+type ListB a =
+    NilB
+  | Cons a (ListB a)
+-- errors
+[
+  DuplicateConstructorDeclaration(location=[(7, 4) (7, 19)], name=Cons)
+]
