@@ -89,7 +89,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
 
         val declarations =
-                module.declarations.fold(Pair(emptyList<za.co.no9.sle.ast.typedCore.Declaration>(), env)) { ds, d ->
+                module.declarations.fold(emptyList<za.co.no9.sle.ast.typedCore.Declaration>()) { ds, d ->
                     when (d) {
                         is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
                             val e =
@@ -126,33 +126,36 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                             LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e)
                                         }
 
-                                Pair(ds.first + declaration, env.newValue(d.name.name, scheme))
+
+                                env = env.newValue(d.name.name, scheme)
+
+                                ds + declaration
                             } else {
                                 val type =
                                         dScheme.instantiate(varPump)
 
                                 unify(type, e.type)
 
-                                Pair(ds.first + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), e), ds.second)
+                                ds + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), e)
                             }
                         }
 
                         is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                            Pair(ds.first + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme), ds.second)
+                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme)
 
                         is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
-                            Pair(ds.first + za.co.no9.sle.ast.typedCore.TypeDeclaration(
+                            ds + za.co.no9.sle.ast.typedCore.TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
                                     d.scheme,
                                     d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments) }
-                            ), ds.second)
+                            )
                     }
                 }
 
         return Module(
                 module.location,
-                declarations.first)
+                declarations)
     }
 
 

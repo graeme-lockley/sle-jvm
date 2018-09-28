@@ -26,19 +26,6 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
 }
 
 
-private fun isConstraint(type: Type): Boolean =
-        when (type) {
-            is TVar ->
-                true
-
-            is TCon ->
-                false
-
-            is TArr ->
-                isConstraint(type.domain) || isConstraint(type.range)
-        }
-
-
 fun generalise(type: Type, substitution: Substitution = nullSubstitution): Scheme {
     val typeFtv =
             type.ftv().toList()
@@ -47,7 +34,9 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
             typeFtv.map { TVar(it).apply(substitution) }
 
     val typeSubstitution =
-            typeFtv.zip(substitutionParameters).filter { !isConstraint(it.second) }.map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
+            typeFtv.zip(substitutionParameters).map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
 
-    return Scheme(typeFtv.zip(substitutionParameters).filter { isConstraint(it.second) }.map { it.first }, type.apply(typeSubstitution))
+    val type1 = type.apply(typeSubstitution)
+
+    return Scheme(type1.ftv().toList(), type1)
 }

@@ -9,6 +9,12 @@ singleton x =
 
 duplicate x =
     Cons x (Cons x Nil)
+
+intList =
+    singleton 10
+
+boolList =
+    duplicate True
 -- constraints
 [
   '1 -> List '1 -> List '1 : '0 -> '2
@@ -17,6 +23,8 @@ duplicate x =
   '8 -> List '8 -> List '8 : '5 -> '9
   '9 : List '10 -> '11
   '7 : '11 -> '12
+  '13 -> List '13 : Int -> '14
+  '15 -> List '15 : Bool -> '16
 ]
 -- substitution
 [
@@ -31,6 +39,10 @@ duplicate x =
   5='10
   11=List '10
   12=List '10
+  13=Int
+  14=List Int
+  15=Bool
+  16=List Bool
 ]
 -- typeAST
 Module:
@@ -339,4 +351,102 @@ Module:
                           variable: 10
                       ]
                     name: List
+      LetDeclaration:
+        expression:
+          CallExpression:
+            operand:
+              ConstantInt:
+                type:
+                  TCon:
+                    arguments: []
+                    name: Int
+                value: 10
+            operator:
+              IdReference:
+                name: singleton
+                type:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Int
+                    range:
+                      TCon:
+                        arguments: [
+                            TCon:
+                              arguments: []
+                              name: Int
+                          ]
+                        name: List
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Int
+                  ]
+                name: List
+        name:
+          ID:
+            name: intList
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Int
+                  ]
+                name: List
+      LetDeclaration:
+        expression:
+          CallExpression:
+            operand:
+              ConstantBool:
+                type:
+                  TCon:
+                    arguments: []
+                    name: Bool
+                value: true
+            operator:
+              IdReference:
+                name: duplicate
+                type:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Bool
+                    range:
+                      TCon:
+                        arguments: [
+                            TCon:
+                              arguments: []
+                              name: Bool
+                          ]
+                        name: List
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Bool
+                  ]
+                name: List
+        name:
+          ID:
+            name: boolList
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Bool
+                  ]
+                name: List
     ]

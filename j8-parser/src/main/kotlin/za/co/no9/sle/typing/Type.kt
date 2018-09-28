@@ -28,7 +28,7 @@ data class TCon(val name: String, val arguments: List<Type> = emptyList()) : Typ
                 TCon(name, arguments.map { it.apply(s) })
 
     override fun ftv() =
-            emptySet<Var>()
+            arguments.fold(emptySet<Var>()) { ftvs, type -> ftvs + type.ftv() }
 
     override fun toString(): String =
             if (arguments.isEmpty())
