@@ -5,8 +5,8 @@ type List a =
 
 type List a =
     NilB
-  | ConsB a (ListB a)
+  | ConsB a (List a)
 -- errors
 [
-  DuplicateTypeDeclaration(location=[(5, 0) (7, 20)], name=List)
+  DuplicateTypeDeclaration(location=[(5, 0) (7, 19)], name=List)
 ]

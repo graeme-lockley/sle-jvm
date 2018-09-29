@@ -63,8 +63,14 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
-                    e
+                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration -> {
+                    if (e.containsType(d.name.name)) {
+                        errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
+                        e
+                    } else {
+                        e.newType(d.name.name, d.scheme)
+                    }
+                }
 
                 is za.co.no9.sle.ast.typelessCore.TypeDeclaration -> {
                     val newEnv =

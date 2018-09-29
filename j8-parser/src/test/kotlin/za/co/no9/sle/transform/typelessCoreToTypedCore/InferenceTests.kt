@@ -15,7 +15,7 @@ class InferenceTests : FunSpec({
 
 private class RunnerConsumer : Consumer<Map<String, List<String>>> {
     private val environment =
-            emptyEnvironment
+            initialEnvironment
                     .newValue("(+)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
                     .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
                     .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))

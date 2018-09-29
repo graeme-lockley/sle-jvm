@@ -3,8 +3,8 @@ package za.co.no9.sle.mojo
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
-import za.co.no9.sle.transform.typelessCoreToTypedCore.parseWithDetail
 import za.co.no9.sle.pass4.translateToJava
+import za.co.no9.sle.transform.typelessCoreToTypedCore.parseWithDetail
 import za.co.no9.sle.typing.*
 import java.io.File
 
@@ -55,7 +55,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         sourceFileName.name
 
                 val environment =
-                        emptyEnvironment
+                        initialEnvironment
                                 .newValue("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
                                 .newValue("(!=)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
                                 .newValue("(<)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))

@@ -45,6 +45,10 @@ data class DuplicateTypeDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class DuplicateTypeAliasDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
 data class DuplicateLetDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)

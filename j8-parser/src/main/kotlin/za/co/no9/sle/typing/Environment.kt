@@ -21,3 +21,10 @@ data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typ
 
 val emptyEnvironment =
         Environment()
+
+val initialEnvironment =
+        emptyEnvironment
+                .newType("Int", Scheme(listOf(), typeInt))
+                .newType("Bool", Scheme(listOf(), typeBool))
+                .newType("String", Scheme(listOf(), typeString))
+                .newType("()", Scheme(listOf(), typeUnit))

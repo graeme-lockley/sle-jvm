@@ -23,24 +23,25 @@ class JavaGenTests : StringSpec({
 
     }
 
-
     "Compile test/First.sle" {
         stuff("First",
-                za.co.no9.sle.typing.emptyEnvironment
+                initialEnvironment
                         .newValue("(==)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
                         .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                        .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+        )
     }
 
 
     "Compile test/TypeReference.sle" {
         stuff("TypeReference",
-                za.co.no9.sle.typing.emptyEnvironment
-                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool)))))
+                initialEnvironment
+                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+        )
     }
 
 
     "Compile test/UnitValue.sle" {
-        stuff("UnitValue", emptyEnvironment)
+        stuff("UnitValue", initialEnvironment)
     }
 })
