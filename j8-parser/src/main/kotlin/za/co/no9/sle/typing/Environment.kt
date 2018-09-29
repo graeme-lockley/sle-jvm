@@ -13,6 +13,9 @@ data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typ
 
     fun containsValue(name: String): Boolean =
             valueBindings.contains(name)
+
+    fun containsType(name: String): Boolean =
+            typeBindings.contains(name)
 }
 
 
