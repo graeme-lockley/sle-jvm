@@ -66,6 +66,12 @@ data class LetSignatureWithoutDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class IncorrectNumberOfSchemeArguments(
+        override val location: Location,
+        val name: String,
+        val expected: Int,
+        val actual: Int) : LocationError(location)
+
 data class UnificationFail(
         val t1: Type,
         val t2: Type) : Error()

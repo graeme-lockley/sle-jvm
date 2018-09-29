@@ -239,6 +239,11 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             Location(Position(0, 0))
 
                     errors.add(UnknownTypeReference(emptyLocation, type.name))
+                } else if (type.arguments.size != scheme.parameters.size) {
+                    val emptyLocation =
+                            Location(Position(0, 0))
+
+                    errors.add(IncorrectNumberOfSchemeArguments(emptyLocation, type.name, scheme.parameters.size, type.arguments.size))
                 }
             }
 
