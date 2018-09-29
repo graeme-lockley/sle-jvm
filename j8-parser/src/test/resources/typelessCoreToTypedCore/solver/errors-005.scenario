@@ -1,0 +1,12 @@
+-- Duplicate type name although no constructor names overlap
+type List a =
+    NilA
+  | ConsA a (List a)
+
+type List a =
+    NilB
+  | ConsB a (ListB a)
+-- errors
+[
+  DuplicateTypeDeclaration(location=[(5, 0) (7, 20)], name=List)
+]
