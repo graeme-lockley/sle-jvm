@@ -12,8 +12,8 @@
 
     <properties>
         <antlr.version>4.7.1</antlr.version>
-        <kotlin.version>1.2.61</kotlin.version>
-        <kotlin.test.version>3.1.9</kotlin.test.version>
+        <kotlin.version>1.2.71</kotlin.version>
+        <kotlin.test.version>3.1.10</kotlin.test.version>
         <javaparser.version>3.6.20</javaparser.version>
         <junit.version>5.2.0</junit.version>
         <maven.surefire.plugin.version>2.22.0</maven.surefire.plugin.version>
