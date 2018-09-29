@@ -37,6 +37,14 @@ data class UnboundVariable(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class UnknownTypeReference(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
+data class DuplicateTypeDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
 data class DuplicateLetDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)
