@@ -66,18 +66,24 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
                     e
 
-                is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
-                    d.constructors.fold(e) { fds, constructor ->
-                        if (fds.containsValue(constructor.name.name)) {
-                            errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
-                            fds
-                        } else {
-                            val result =
+                is za.co.no9.sle.ast.typelessCore.TypeDeclaration -> {
+                    val newEnv =
+                            d.constructors.fold(e) { fds, constructor ->
+                                if (fds.containsValue(constructor.name.name)) {
+                                    errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                                    fds
+                                } else {
                                     fds.newValue(constructor.name.name, Scheme(d.scheme.parameters, constructor.arguments.foldRight(d.scheme.type) { a, b -> TArr(a, b) }))
+                                }
+                            }
 
-                            result
-                        }
+                    if (newEnv.containsType(d.name.name)) {
+                        errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
+                        newEnv
+                    } else {
+                        newEnv.newType(d.name.name, d.scheme)
                     }
+                }
             }
         }
 
@@ -86,6 +92,33 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         .filter { it is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
                         .map { it as za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
                         .fold(emptyMap<String, Scheme>()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
+
+
+        for (declaration in module.declarations) {
+            when (declaration) {
+                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                    val scheme =
+                            declaration.scheme
+
+                    if (scheme != null) {
+                        validateScheme(scheme)
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration -> {
+                    validateScheme(declaration.scheme)
+                }
+
+                is za.co.no9.sle.ast.typelessCore.TypeDeclaration -> {
+                    validateScheme(declaration.scheme)
+                    for (constructor in declaration.constructors) {
+                        for (type in constructor.arguments) {
+                            validateType(type)
+                        }
+                    }
+                }
+            }
+        }
 
 
         val declarations =
@@ -179,6 +212,36 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is TypeDeclaration ->
                     e
+            }
+        }
+    }
+
+
+    private fun validateScheme(scheme: Scheme) {
+        validateType(scheme.type)
+    }
+
+
+    private fun validateType(type: Type) {
+        when (type) {
+            is TCon -> {
+                val scheme =
+                        env.typeBindings[type.name]
+
+                if (scheme == null) {
+                    val emptyLocation =
+                            Location(Position(0, 0))
+
+                    errors.add(UnknownTypeReference(emptyLocation, type.name))
+                }
+            }
+
+            is TArr -> {
+                validateType(type.domain)
+                validateType(type.range)
+            }
+
+            else -> {
             }
         }
     }
