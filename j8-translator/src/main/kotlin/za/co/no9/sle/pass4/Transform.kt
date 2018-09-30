@@ -41,7 +41,7 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     compilationUnit.addImport("java.util.function.Function", false, false)
     compilationUnit.addImport("za.co.no9.sle.runtime.Builtin", true, true)
 
-    val thingy =
+    val classDeclaration =
             compilationUnit.addClass(className)
                     .setPublic(true)
 
@@ -49,7 +49,7 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
         when (declaration) {
             is TypeDeclaration -> {
                 for ((constructorIndex, constructor) in declaration.constructors.withIndex()) {
-                    thingy.addFieldWithInitializer(
+                    classDeclaration.addFieldWithInitializer(
                             "int",
                             "${constructor.name.name}$",
                             IntegerLiteralExpr(constructorIndex),
@@ -102,9 +102,9 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
                         )
                     }
 
-                    thingy.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
+                    classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
 
-                    thingy.addFieldWithInitializer(
+                    classDeclaration.addFieldWithInitializer(
                             javaType(constructorType),
                             constructor.name.name,
                             expression.expression,
@@ -118,9 +118,9 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     for (declaration in module.declarations) {
         when (declaration) {
             is LetDeclaration -> {
-                thingy.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme}"))
+                classDeclaration.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme}"))
 
-                thingy.addFieldWithInitializer(
+                classDeclaration.addFieldWithInitializer(
                         javaType(declaration.scheme.type),
                         declaration.name.name,
                         javaExpression(declaration.expression),
