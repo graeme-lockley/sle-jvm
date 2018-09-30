@@ -48,16 +48,12 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     for (declaration in module.declarations) {
         when (declaration) {
             is TypeDeclaration -> {
-                var constructorIndex =
-                        0
-
-                for (constructor in declaration.constructors) {
+                for ((constructorIndex, constructor) in declaration.constructors.withIndex()) {
                     thingy.addFieldWithInitializer(
                             "int",
                             "${constructor.name.name}$",
                             IntegerLiteralExpr(constructorIndex),
                             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-
 
                     val constructorType =
                             constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
@@ -113,8 +109,6 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
                             constructor.name.name,
                             expression.expression,
                             Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-
-                    constructorIndex += 1
                 }
             }
         }
