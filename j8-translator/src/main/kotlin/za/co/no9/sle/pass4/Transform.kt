@@ -100,7 +100,7 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
         }
 
         val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
-                { a: Int, b: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(b, NameExpr("v$a")) }
+                { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(nodeList, NameExpr("v$index")) }
 
         data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
 
@@ -111,9 +111,9 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
                                 .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
 
 
-        val expression = constructor.arguments.foldRight(initExpressionState) { type, acc ->
+        val expression = constructor.arguments.foldRight(initExpressionState) { type, expressionState ->
             val argumentType =
-                    TArr(type, acc.type)
+                    TArr(type, expressionState.type)
 
             val objectTypes =
                     javaPairType(argumentType)
@@ -123,11 +123,11 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
                             .setName("apply")
                             .setType(objectTypes.second)
                             .setModifier(Modifier.PUBLIC, true)
-                            .setParameters(NodeList.nodeList(Parameter().setName("v${acc.argumentIndex - 1}").setType(objectTypes.first)))
-                            .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(acc.expression))))
+                            .setParameters(NodeList.nodeList(Parameter().setName("v${expressionState.argumentIndex - 1}").setType(objectTypes.first)))
+                            .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
 
             ExpressionState(
-                    acc.argumentIndex - 1,
+                    expressionState.argumentIndex - 1,
                     argumentType,
                     ObjectCreationExpr()
                             .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
