@@ -91,58 +91,63 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
         val constructorType =
                 constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
 
-        val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
-                NodeList.nodeList(NameExpr("${constructor.name.name}$"))
-
-        fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
-            nodeList.add(expression)
-            return nodeList
-        }
-
-        val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
-                { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(nodeList, NameExpr("v$index")) }
-
-        data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
-
-        val initExpressionState =
-                ExpressionState(constructor.arguments.size, declaration.scheme.type,
-                        ArrayCreationExpr()
-                                .setElementType("Object[]")
-                                .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
-
-
-        val expression = constructor.arguments.foldRight(initExpressionState) { type, expressionState ->
-            val argumentType =
-                    TArr(type, expressionState.type)
-
-            val objectTypes =
-                    javaPairType(argumentType)
-
-            val applyMethod =
-                    MethodDeclaration()
-                            .setName("apply")
-                            .setType(objectTypes.second)
-                            .setModifier(Modifier.PUBLIC, true)
-                            .setParameters(NodeList.nodeList(Parameter().setName("v${expressionState.argumentIndex - 1}").setType(objectTypes.first)))
-                            .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
-
-            ExpressionState(
-                    expressionState.argumentIndex - 1,
-                    argumentType,
-                    ObjectCreationExpr()
-                            .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
-                            .setAnonymousClassBody(NodeList.nodeList(applyMethod))
-            )
-        }
-
         classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
 
         classDeclaration.addFieldWithInitializer(
                 javaType(constructorType),
                 constructor.name.name,
-                expression.expression,
+                constructorExpression(declaration, constructor),
                 Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
     }
+}
+
+
+private fun constructorExpression(declaration: TypeDeclaration, constructor: Constructor): com.github.javaparser.ast.expr.Expression {
+    val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
+            NodeList.nodeList(NameExpr("${constructor.name.name}$"))
+
+    fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
+        nodeList.add(expression)
+        return nodeList
+    }
+
+    val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
+            { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(nodeList, NameExpr("v$index")) }
+
+    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
+
+    val initExpressionState =
+            ExpressionState(constructor.arguments.size, declaration.scheme.type,
+                    ArrayCreationExpr()
+                            .setElementType("Object[]")
+                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
+
+
+    val expression = constructor.arguments.foldRight(initExpressionState) { type, expressionState ->
+        val argumentType =
+                TArr(type, expressionState.type)
+
+        val objectTypes =
+                javaPairType(argumentType)
+
+        val applyMethod =
+                MethodDeclaration()
+                        .setName("apply")
+                        .setType(objectTypes.second)
+                        .setModifier(Modifier.PUBLIC, true)
+                        .setParameters(NodeList.nodeList(Parameter().setName("v${expressionState.argumentIndex - 1}").setType(objectTypes.first)))
+                        .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
+
+        ExpressionState(
+                expressionState.argumentIndex - 1,
+                argumentType,
+                ObjectCreationExpr()
+                        .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
+                        .setAnonymousClassBody(NodeList.nodeList(applyMethod))
+        )
+    }
+
+    return expression.expression
 }
 
 
