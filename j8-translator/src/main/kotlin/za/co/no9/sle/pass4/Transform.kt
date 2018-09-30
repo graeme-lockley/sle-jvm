@@ -105,36 +105,41 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
 private fun constructorExpression(declaration: TypeDeclaration, constructor: Constructor): com.github.javaparser.ast.expr.Expression {
     data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
 
-    val initialExpression: NodeList<com.github.javaparser.ast.expr.Expression> =
-            NodeList.nodeList(NameExpr("${constructor.name.name}$"))
+    val initialExpressionStateInitializer = ArrayInitializerExpr(
+            constructor.arguments.foldIndexed(
+                    NodeList.nodeList<com.github.javaparser.ast.expr.Expression>(NameExpr("${constructor.name.name}$"))) { index, nodeList, _ ->
+                nodeList.addLast(NameExpr("v$index"))
+            }
+    )
 
-    val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
-            { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> nodeList.addLast(NameExpr("v$index")) }
-
-    val initExpressionState =
+    val initialExpressionState =
             ExpressionState(constructor.arguments.size, declaration.scheme.type,
                     ArrayCreationExpr()
                             .setElementType("Object[]")
-                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initialExpression, acc))))
+                            .setInitializer(initialExpressionStateInitializer))
 
 
-    val expression = constructor.arguments.foldRight(initExpressionState) { type, expressionState ->
+    val finalExpressionState = constructor.arguments.foldRight(
+            initialExpressionState) { type, expressionState ->
         val argumentType =
                 TArr(type, expressionState.type)
 
         val objectTypes =
                 javaPairType(argumentType)
 
+        val nextArgumentIndex =
+                expressionState.argumentIndex - 1
+
         val applyMethod =
                 MethodDeclaration()
                         .setName("apply")
                         .setType(objectTypes.second)
                         .setModifier(Modifier.PUBLIC, true)
-                        .setParameters(NodeList.nodeList(Parameter().setName("v${expressionState.argumentIndex - 1}").setType(objectTypes.first)))
+                        .setParameters(NodeList.nodeList(Parameter().setName("v$nextArgumentIndex").setType(objectTypes.first)))
                         .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
 
         ExpressionState(
-                expressionState.argumentIndex - 1,
+                nextArgumentIndex,
                 argumentType,
                 ObjectCreationExpr()
                         .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
@@ -142,7 +147,7 @@ private fun constructorExpression(declaration: TypeDeclaration, constructor: Con
         )
     }
 
-    return expression.expression
+    return finalExpressionState.expression
 }
 
 
