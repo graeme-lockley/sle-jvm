@@ -103,24 +103,19 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
 
 
 private fun constructorExpression(declaration: TypeDeclaration, constructor: Constructor): com.github.javaparser.ast.expr.Expression {
-    val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
+    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
+
+    val initialExpression: NodeList<com.github.javaparser.ast.expr.Expression> =
             NodeList.nodeList(NameExpr("${constructor.name.name}$"))
 
-    fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
-        nodeList.add(expression)
-        return nodeList
-    }
-
     val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
-            { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(nodeList, NameExpr("v$index")) }
-
-    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
+            { index: Int, nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> nodeList.addLast(NameExpr("v$index")) }
 
     val initExpressionState =
             ExpressionState(constructor.arguments.size, declaration.scheme.type,
                     ArrayCreationExpr()
                             .setElementType("Object[]")
-                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
+                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initialExpression, acc))))
 
 
     val expression = constructor.arguments.foldRight(initExpressionState) { type, expressionState ->
