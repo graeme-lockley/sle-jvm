@@ -13,10 +13,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType
 import za.co.no9.sle.ast.typedCore.*
 import za.co.no9.sle.ast.typedCore.Expression
 import za.co.no9.sle.ast.typedCore.Unit
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.TCon
-import za.co.no9.sle.typing.TVar
-import za.co.no9.sle.typing.Type
+import za.co.no9.sle.typing.*
 
 
 private val RefMapping = mapOf(
@@ -50,6 +47,82 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
 
     for (declaration in module.declarations) {
         when (declaration) {
+            is TypeDeclaration -> {
+                var constructorIndex =
+                        0
+
+                for (constructor in declaration.constructors) {
+                    thingy.addFieldWithInitializer(
+                            "int",
+                            "${constructor.name.name}$",
+                            IntegerLiteralExpr(constructorIndex),
+                            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+
+
+                    val constructorType =
+                            constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
+
+                    val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
+                            NodeList.nodeList(NameExpr("${constructor.name.name}$"))
+
+                    fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
+                        nodeList.add(expression)
+                        return nodeList
+                    }
+
+                    val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
+                            { a: Int, b: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(b, NameExpr("v$a")) }
+
+                    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
+
+                    val initExpressionState =
+                            ExpressionState(constructor.arguments.size, declaration.scheme.type,
+                                    ArrayCreationExpr()
+                                            .setElementType("Object[]")
+                                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
+
+
+                    val expression = constructor.arguments.foldRight(initExpressionState) { type, acc ->
+                        val argumentType =
+                                TArr(type, acc.type)
+
+                        val objectTypes =
+                                javaPairType(argumentType)
+
+                        val applyMethod =
+                                MethodDeclaration()
+                                        .setName("apply")
+                                        .setType(objectTypes.second)
+                                        .setModifier(Modifier.PUBLIC, true)
+                                        .setParameters(NodeList.nodeList(Parameter().setName("v${acc.argumentIndex - 1}").setType(objectTypes.first)))
+                                        .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(acc.expression))))
+
+                        ExpressionState(
+                                acc.argumentIndex - 1,
+                                argumentType,
+                                ObjectCreationExpr()
+                                        .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(com.github.javaparser.ast.type.ClassOrInterfaceType().setName(objectTypes.first), com.github.javaparser.ast.type.ClassOrInterfaceType().setName(objectTypes.second)))
+                                        .setAnonymousClassBody(NodeList.nodeList(applyMethod))
+                        )
+                    }
+
+                    thingy.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
+
+                    thingy.addFieldWithInitializer(
+                            javaType(constructorType),
+                            constructor.name.name,
+                            expression.expression,
+                            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+
+                    constructorIndex += 1
+                }
+            }
+        }
+    }
+
+
+    for (declaration in module.declarations) {
+        when (declaration) {
             is LetDeclaration -> {
                 thingy.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme}"))
 
@@ -76,11 +149,14 @@ fun javaType(type: Type): String =
                     type.name == "Bool" ->
                         "Boolean"
 
+                    type.name == "String" ->
+                        "String"
+
                     type.name == "()" ->
                         "za.co.no9.sle.runtime.Unit"
 
                     else ->
-                        type.name
+                        "Object"
                 }
 
             is TVar ->

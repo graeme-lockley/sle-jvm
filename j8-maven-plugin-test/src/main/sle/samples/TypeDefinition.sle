@@ -1,0 +1,29 @@
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+type Tuple a b =
+    Tuple a b
+
+
+singleton x =
+    Cons x Nil
+
+tupleList x y =
+    Cons x (singleton y)
+
+
+singleIntList =
+    singleton 10
+
+
+doubleIntList =
+    tupleList 1 2
+
+
+doubleBooleanList =
+    tupleList True False
+
+intIntTuple =
+    Tuple 1 2

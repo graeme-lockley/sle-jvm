@@ -44,4 +44,9 @@ class JavaGenTests : StringSpec({
     "Compile test/UnitValue.sle" {
         stuff("UnitValue", initialEnvironment)
     }
+
+
+    "Compile test/ListType.sle" {
+        stuff("ListType", initialEnvironment)
+    }
 })

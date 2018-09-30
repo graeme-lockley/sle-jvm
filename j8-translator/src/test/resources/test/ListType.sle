@@ -1,0 +1,23 @@
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+singleton x =
+    Cons x Nil
+
+double x y =
+    Cons x (singleton y)
+
+
+singleIntList =
+    singleton 10
+
+
+doubleIntList =
+    double 1 2
+
+
+doubleBooleanList =
+    double True False
+
