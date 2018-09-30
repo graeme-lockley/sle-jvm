@@ -46,14 +46,14 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
             compilationUnit.addClass(className)
                     .setPublic(true)
 
-    for (declaration in module.declarations) {
-        when (declaration) {
-            is TypeDeclaration ->
-                translateTypeDeclaration(declaration, classDeclaration)
-        }
-    }
+    translateTypeDeclarations(module, classDeclaration)
+    translateLetDeclarations(module, classDeclaration)
+
+    return compilationUnit
+}
 
 
+private fun translateLetDeclarations(module: Module, classDeclaration: ClassOrInterfaceDeclaration) {
     for (declaration in module.declarations) {
         when (declaration) {
             is LetDeclaration -> {
@@ -67,8 +67,16 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
             }
         }
     }
+}
 
-    return compilationUnit
+
+private fun translateTypeDeclarations(module: Module, classDeclaration: ClassOrInterfaceDeclaration) {
+    for (declaration in module.declarations) {
+        when (declaration) {
+            is TypeDeclaration ->
+                translateTypeDeclaration(declaration, classDeclaration)
+        }
+    }
 }
 
 
