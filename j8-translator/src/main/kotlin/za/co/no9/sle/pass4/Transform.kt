@@ -3,6 +3,7 @@ package za.co.no9.sle.pass4
 import com.github.javaparser.ast.CompilationUnit
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.NodeList
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.Parameter
 import com.github.javaparser.ast.comments.JavadocComment
@@ -47,70 +48,8 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
 
     for (declaration in module.declarations) {
         when (declaration) {
-            is TypeDeclaration -> {
-                for ((constructorIndex, constructor) in declaration.constructors.withIndex()) {
-                    classDeclaration.addFieldWithInitializer(
-                            "int",
-                            "${constructor.name.name}$",
-                            IntegerLiteralExpr(constructorIndex),
-                            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-
-                    val constructorType =
-                            constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
-
-                    val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
-                            NodeList.nodeList(NameExpr("${constructor.name.name}$"))
-
-                    fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
-                        nodeList.add(expression)
-                        return nodeList
-                    }
-
-                    val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
-                            { a: Int, b: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(b, NameExpr("v$a")) }
-
-                    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
-
-                    val initExpressionState =
-                            ExpressionState(constructor.arguments.size, declaration.scheme.type,
-                                    ArrayCreationExpr()
-                                            .setElementType("Object[]")
-                                            .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
-
-
-                    val expression = constructor.arguments.foldRight(initExpressionState) { type, acc ->
-                        val argumentType =
-                                TArr(type, acc.type)
-
-                        val objectTypes =
-                                javaPairType(argumentType)
-
-                        val applyMethod =
-                                MethodDeclaration()
-                                        .setName("apply")
-                                        .setType(objectTypes.second)
-                                        .setModifier(Modifier.PUBLIC, true)
-                                        .setParameters(NodeList.nodeList(Parameter().setName("v${acc.argumentIndex - 1}").setType(objectTypes.first)))
-                                        .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(acc.expression))))
-
-                        ExpressionState(
-                                acc.argumentIndex - 1,
-                                argumentType,
-                                ObjectCreationExpr()
-                                        .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(com.github.javaparser.ast.type.ClassOrInterfaceType().setName(objectTypes.first), com.github.javaparser.ast.type.ClassOrInterfaceType().setName(objectTypes.second)))
-                                        .setAnonymousClassBody(NodeList.nodeList(applyMethod))
-                        )
-                    }
-
-                    classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
-
-                    classDeclaration.addFieldWithInitializer(
-                            javaType(constructorType),
-                            constructor.name.name,
-                            expression.expression,
-                            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                }
-            }
+            is TypeDeclaration ->
+                translateTypeDeclaration(declaration, classDeclaration)
         }
     }
 
@@ -130,6 +69,72 @@ fun translateToJava(module: Module, packageDeclaration: String, className: Strin
     }
 
     return compilationUnit
+}
+
+
+private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclaration: ClassOrInterfaceDeclaration) {
+    for ((constructorIndex, constructor) in declaration.constructors.withIndex()) {
+        classDeclaration.addFieldWithInitializer(
+                "int",
+                "${constructor.name.name}$",
+                IntegerLiteralExpr(constructorIndex),
+                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+
+        val constructorType =
+                constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
+
+        val initial: NodeList<com.github.javaparser.ast.expr.Expression> =
+                NodeList.nodeList(NameExpr("${constructor.name.name}$"))
+
+        fun addExpressionToNodeList(nodeList: NodeList<com.github.javaparser.ast.expr.Expression>, expression: com.github.javaparser.ast.expr.Expression): NodeList<com.github.javaparser.ast.expr.Expression> {
+            nodeList.add(expression)
+            return nodeList
+        }
+
+        val acc: (Int, NodeList<com.github.javaparser.ast.expr.Expression>, Type) -> NodeList<com.github.javaparser.ast.expr.Expression> =
+                { a: Int, b: NodeList<com.github.javaparser.ast.expr.Expression>, _: Type -> addExpressionToNodeList(b, NameExpr("v$a")) }
+
+        data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
+
+        val initExpressionState =
+                ExpressionState(constructor.arguments.size, declaration.scheme.type,
+                        ArrayCreationExpr()
+                                .setElementType("Object[]")
+                                .setInitializer(ArrayInitializerExpr(constructor.arguments.foldIndexed(initial, acc))))
+
+
+        val expression = constructor.arguments.foldRight(initExpressionState) { type, acc ->
+            val argumentType =
+                    TArr(type, acc.type)
+
+            val objectTypes =
+                    javaPairType(argumentType)
+
+            val applyMethod =
+                    MethodDeclaration()
+                            .setName("apply")
+                            .setType(objectTypes.second)
+                            .setModifier(Modifier.PUBLIC, true)
+                            .setParameters(NodeList.nodeList(Parameter().setName("v${acc.argumentIndex - 1}").setType(objectTypes.first)))
+                            .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(acc.expression))))
+
+            ExpressionState(
+                    acc.argumentIndex - 1,
+                    argumentType,
+                    ObjectCreationExpr()
+                            .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
+                            .setAnonymousClassBody(NodeList.nodeList(applyMethod))
+            )
+        }
+
+        classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
+
+        classDeclaration.addFieldWithInitializer(
+                javaType(constructorType),
+                constructor.name.name,
+                expression.expression,
+                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+    }
 }
 
 
