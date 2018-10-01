@@ -44,7 +44,7 @@ fun Module.apply(substitution: Substitution): Module =
 
 
 fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
-        LetDeclaration(this.location, generalise(this.scheme.type.apply(substitution), substitution), this.name, this.expression.apply(substitution))
+     LetDeclaration(this.location, this.scheme, this.name, this.expression.apply(substitution))
 
 
 private fun Expression.apply(substitution: Substitution): Expression =
