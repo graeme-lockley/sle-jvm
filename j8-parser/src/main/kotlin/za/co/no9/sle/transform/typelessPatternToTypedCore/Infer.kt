@@ -1,14 +1,14 @@
-package za.co.no9.sle.transform.typelessCoreToTypedCore
+package za.co.no9.sle.transform.typelessPatternToTypedCore
 
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedCore.*
 import za.co.no9.sle.ast.typedCore.Unit
-import za.co.no9.sle.ast.typelessCore.Declaration
-import za.co.no9.sle.ast.typelessCore.TypeDeclaration
+import za.co.no9.sle.ast.typelessPattern.Declaration
+import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.typing.*
 
 
-fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
+fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
     val context =
             InferContext(varPump, env)
 
@@ -22,7 +22,7 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env: 
 }
 
 
-fun infer2(varPump: VarPump, module: za.co.no9.sle.ast.typelessCore.Module, env: Environment): Either<Errors, Module> {
+fun infer2(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Module> {
     val context =
             InferContext(varPump, env)
 
@@ -44,12 +44,12 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
             mutableSetOf<Error>()
 
 
-    fun infer(module: za.co.no9.sle.ast.typelessCore.Module): Module {
+    fun infer(module: za.co.no9.sle.ast.typelessPattern.Module): Module {
         reportDuplicateLetDeclarationNames(module)
 
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
                             d.name.name
 
@@ -63,7 +63,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
                     if (e.containsType(d.name.name)) {
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
@@ -72,7 +72,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
                     val newEnv =
                             d.constructors.fold(e) { fds, constructor ->
                                 if (fds.containsValue(constructor.name.name)) {
@@ -95,14 +95,14 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
         val aliases =
                 module.declarations
-                        .filter { it is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
-                        .map { it as za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration }
+                        .filter { it is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration }
+                        .map { it as za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration }
                         .fold(emptyMap<String, Scheme>()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
 
 
         for (declaration in module.declarations) {
             when (declaration) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val scheme =
                             declaration.scheme
 
@@ -111,11 +111,11 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
                     validateScheme(declaration.scheme)
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
                     validateScheme(declaration.scheme)
                     for (constructor in declaration.constructors) {
                         for (type in constructor.arguments) {
@@ -130,7 +130,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         val declarations =
                 module.declarations.fold(emptyList<za.co.no9.sle.ast.typedCore.Declaration>()) { ds, d ->
                     when (d) {
-                        is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                        is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                             val e =
                                     infer(d.expression)
 
@@ -179,10 +179,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             }
                         }
 
-                        is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
+                        is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
                             ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme)
 
-                        is za.co.no9.sle.ast.typelessCore.TypeDeclaration ->
+                        is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
                             ds + za.co.no9.sle.ast.typedCore.TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
@@ -198,10 +198,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
     }
 
 
-    private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessCore.Module) {
+    private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessPattern.Module) {
         module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
             when (d) {
-                is za.co.no9.sle.ast.typelessCore.LetDeclaration -> {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
                             d.name.name
 
@@ -213,7 +213,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration ->
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
                     e
 
                 is TypeDeclaration ->
@@ -260,21 +260,21 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
     }
 
 
-    private fun infer(expression: za.co.no9.sle.ast.typelessCore.Expression): Expression =
+    private fun infer(expression: za.co.no9.sle.ast.typelessPattern.Expression): Expression =
             when (expression) {
-                is za.co.no9.sle.ast.typelessCore.Unit ->
+                is za.co.no9.sle.ast.typelessPattern.Unit ->
                     Unit(expression.location, typeUnit)
 
-                is za.co.no9.sle.ast.typelessCore.ConstantBool ->
+                is za.co.no9.sle.ast.typelessPattern.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
 
-                is za.co.no9.sle.ast.typelessCore.ConstantInt ->
+                is za.co.no9.sle.ast.typelessPattern.ConstantInt ->
                     ConstantInt(expression.location, typeInt, expression.value)
 
-                is za.co.no9.sle.ast.typelessCore.ConstantString ->
+                is za.co.no9.sle.ast.typelessPattern.ConstantString ->
                     ConstantString(expression.location, typeString, expression.value)
 
-                is za.co.no9.sle.ast.typelessCore.IdReference -> {
+                is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val scheme =
                             env.value(expression.name)
 
@@ -294,7 +294,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.ConstructorReference -> {
+                is za.co.no9.sle.ast.typelessPattern.ConstructorReference -> {
                     val scheme =
                             env.value(expression.name)
 
@@ -314,7 +314,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessCore.IfExpression -> {
+                is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
                     val t1 =
                             infer(expression.guardExpression)
 
@@ -330,7 +330,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     IfExpression(expression.location, t2.type, t1, t2, t3)
                 }
 
-                is za.co.no9.sle.ast.typelessCore.LambdaExpression -> {
+                is za.co.no9.sle.ast.typelessPattern.LambdaExpression -> {
                     val tv =
                             varPump.fresh()
 
@@ -346,7 +346,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     LambdaExpression(expression.location, TArr(tv, t.type), ID(expression.argument.location, expression.argument.name), t)
                 }
 
-                is za.co.no9.sle.ast.typelessCore.CallExpression -> {
+                is za.co.no9.sle.ast.typelessPattern.CallExpression -> {
                     val t1 =
                             infer(expression.operator)
 

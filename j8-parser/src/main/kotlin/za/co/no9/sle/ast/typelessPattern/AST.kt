@@ -1,4 +1,4 @@
-package za.co.no9.sle.ast.typelessCore
+package za.co.no9.sle.ast.typelessPattern
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.typing.Scheme

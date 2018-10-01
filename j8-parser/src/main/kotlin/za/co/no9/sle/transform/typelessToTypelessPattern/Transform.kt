@@ -1,22 +1,22 @@
-package za.co.no9.sle.transform.typelessToTypelessCore
+package za.co.no9.sle.transform.typelessToTypelessPattern
 
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
-import za.co.no9.sle.ast.typelessCore.*
-import za.co.no9.sle.ast.typelessCore.CallExpression
-import za.co.no9.sle.ast.typelessCore.ConstantInt
-import za.co.no9.sle.ast.typelessCore.ConstantString
-import za.co.no9.sle.ast.typelessCore.ConstructorReference
-import za.co.no9.sle.ast.typelessCore.Expression
-import za.co.no9.sle.ast.typelessCore.ID
-import za.co.no9.sle.ast.typelessCore.IdReference
-import za.co.no9.sle.ast.typelessCore.IfExpression
-import za.co.no9.sle.ast.typelessCore.LambdaExpression
-import za.co.no9.sle.ast.typelessCore.LetDeclaration
-import za.co.no9.sle.ast.typelessCore.Module
-import za.co.no9.sle.ast.typelessCore.TypeAliasDeclaration
-import za.co.no9.sle.ast.typelessCore.TypeDeclaration
-import za.co.no9.sle.ast.typelessCore.Unit
+import za.co.no9.sle.ast.typelessPattern.*
+import za.co.no9.sle.ast.typelessPattern.CallExpression
+import za.co.no9.sle.ast.typelessPattern.ConstantInt
+import za.co.no9.sle.ast.typelessPattern.ConstantString
+import za.co.no9.sle.ast.typelessPattern.ConstructorReference
+import za.co.no9.sle.ast.typelessPattern.Expression
+import za.co.no9.sle.ast.typelessPattern.ID
+import za.co.no9.sle.ast.typelessPattern.IdReference
+import za.co.no9.sle.ast.typelessPattern.IfExpression
+import za.co.no9.sle.ast.typelessPattern.LambdaExpression
+import za.co.no9.sle.ast.typelessPattern.LetDeclaration
+import za.co.no9.sle.ast.typelessPattern.Module
+import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
+import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
+import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.typing.*
 
 

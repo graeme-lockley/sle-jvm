@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typelessToTypelessCore
+package za.co.no9.sle.transform.typelessToTypelessPattern
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
@@ -11,7 +11,7 @@ import java.util.function.Consumer
 
 
 class TypelessToTypelessCoreTests : FunSpec({
-    runner(this, "typelessToTypelessCore", RunnerConsumer())
+    runner(this, "typelessToTypelessPattern", RunnerConsumer())
 })
 
 

@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typelessCoreToTypedCore
+package za.co.no9.sle.transform.typelessPatternToTypedCore
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

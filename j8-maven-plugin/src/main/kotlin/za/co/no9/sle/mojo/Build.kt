@@ -4,7 +4,7 @@ import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
 import za.co.no9.sle.pass4.translateToJava
-import za.co.no9.sle.transform.typelessCoreToTypedCore.parseWithDetail
+import za.co.no9.sle.transform.typelessPatternToTypedCore.parseWithDetail
 import za.co.no9.sle.typing.*
 import java.io.File
 
