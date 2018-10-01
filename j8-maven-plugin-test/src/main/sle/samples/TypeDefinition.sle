@@ -7,8 +7,15 @@ type Tuple a b =
     Tuple a b
 
 
-singleton x =
-    Cons x Nil
+repeat : Int -> a -> (List a)
+repeat n e
+    | n == 0 = Nil
+    | otherwise = Cons e (repeat (n - 1) e)
+
+
+singleton =
+    repeat 1
+
 
 tupleList x y =
     Cons x (singleton y)
@@ -24,6 +31,7 @@ doubleIntList =
 
 doubleBooleanList =
     tupleList True False
+
 
 intIntTuple =
     Tuple 1 2
