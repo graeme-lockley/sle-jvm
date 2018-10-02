@@ -1,0 +1,10 @@
+-- Duplicate let declarations error where neither have a type signature
+add a b =
+    a + b
+
+add x y =
+    x + y
+-- errors
+[
+    DuplicateLetDeclaration(location=[(4, 0) (5, 8)], name=add)
+]

@@ -1,0 +1,8 @@
+-- Constant Int
+value : Int
+value =
+    123
+-- constraints
+[
+    Int : Int
+]

@@ -1,0 +1,10 @@
+-- if-then-else
+value : Bool-> String -> String -> String
+value =
+    \a b c -> if a then b else c
+-- constraints
+[
+    '0 : Bool
+    '1 : '2
+    Bool -> String -> String -> String : '0 -> '1 -> '2 -> '1
+]

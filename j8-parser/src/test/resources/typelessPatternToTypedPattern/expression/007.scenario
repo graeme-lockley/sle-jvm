@@ -1,0 +1,10 @@
+-- apply
+test : (String -> Bool) -> String -> Bool
+test =
+    \predicate testValue ->
+        predicate testValue
+-- constraints
+[
+    '0 : '1 -> '2
+    (String -> Bool) -> String -> Bool : '0 -> '1 -> '2
+]

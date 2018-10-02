@@ -1,0 +1,8 @@
+-- Constant String
+value : String
+value =
+    "Hello World"
+-- constraints
+[
+    String : String
+]

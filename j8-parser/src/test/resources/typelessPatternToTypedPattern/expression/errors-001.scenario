@@ -1,0 +1,8 @@
+-- Unbound Variable error
+value : Int
+value =
+    1 + somethingOrElse
+-- errors
+[
+    UnboundVariable(location=[(3, 8) (3, 22)], name=somethingOrElse)
+]

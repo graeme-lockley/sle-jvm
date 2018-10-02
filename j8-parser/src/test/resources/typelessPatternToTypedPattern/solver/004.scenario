@@ -1,0 +1,92 @@
+-- Inference and substitution of the identity function
+id : a -> a
+id x =
+    x
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: x
+            expression:
+              IdReference:
+                name: x
+                type:
+                  TVar:
+                    variable: 0
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 0
+                range:
+                  TVar:
+                    variable: 0
+        name:
+          ID:
+            name: id
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 0
+                range:
+                  TVar:
+                    variable: 0
+    ]
+-- constraints
+[
+    '1 -> '1 : '0 -> '0
+]
+-- substitution
+[
+  1='0
+]
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: x
+            expression:
+              IdReference:
+                name: x
+                type:
+                  TVar:
+                    variable: 0
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 0
+                range:
+                  TVar:
+                    variable: 0
+        name:
+          ID:
+            name: id
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 0
+                range:
+                  TVar:
+                    variable: 0
+    ]

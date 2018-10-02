@@ -1,0 +1,8 @@
+-- True
+value : Bool
+value =
+    True
+-- constraints
+[
+    Bool : Bool
+]

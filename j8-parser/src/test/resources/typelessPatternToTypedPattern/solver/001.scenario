@@ -1,0 +1,246 @@
+-- Inference and substitution of factorial
+factorial : Int -> Int
+factorial n =
+    if n == 0 then
+        1
+    else
+        n * factorial (n - 1)
+-- constraints
+[
+    '1 -> '1 -> Bool : '0 -> '2
+    '2 : Int -> '3
+    Int -> Int -> Int : '0 -> '4
+    Int -> Int -> Int : '0 -> '5
+    '5 : Int -> '6
+    Int -> Int : '6 -> '7
+    '4 : '7 -> '8
+    '3 : Bool
+    Int : '8
+    Int -> Int : '0 -> Int
+]
+-- substitution
+[
+  1=Int
+  2=Int -> Bool
+  0=Int
+  3=Bool
+  4=Int -> Int
+  5=Int -> Int
+  6=Int
+  7=Int
+  8=Int
+]
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: n
+            expression:
+              IfExpression:
+                elseExpression:
+                  CallExpression:
+                    operand:
+                      CallExpression:
+                        operand:
+                          CallExpression:
+                            operand:
+                              ConstantInt:
+                                type:
+                                  TCon:
+                                    arguments: []
+                                    name: Int
+                                value: 1
+                            operator:
+                              CallExpression:
+                                operand:
+                                  IdReference:
+                                    name: n
+                                    type:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                operator:
+                                  IdReference:
+                                    name: (-)
+                                    type:
+                                      TArr:
+                                        domain:
+                                          TCon:
+                                            arguments: []
+                                            name: Int
+                                        range:
+                                          TArr:
+                                            domain:
+                                              TCon:
+                                                arguments: []
+                                                name: Int
+                                            range:
+                                              TCon:
+                                                arguments: []
+                                                name: Int
+                                type:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Int
+                        operator:
+                          IdReference:
+                            name: factorial
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: []
+                                    name: Int
+                                range:
+                                  TCon:
+                                    arguments: []
+                                    name: Int
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Int
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: n
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Int
+                        operator:
+                          IdReference:
+                            name: (*)
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: []
+                                    name: Int
+                                range:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                        type:
+                          TArr:
+                            domain:
+                              TCon:
+                                arguments: []
+                                name: Int
+                            range:
+                              TCon:
+                                arguments: []
+                                name: Int
+                    type:
+                      TCon:
+                        arguments: []
+                        name: Int
+                guardExpression:
+                  CallExpression:
+                    operand:
+                      ConstantInt:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Int
+                        value: 0
+                    operator:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: n
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Int
+                        operator:
+                          IdReference:
+                            name: (==)
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: []
+                                    name: Int
+                                range:
+                                  TArr:
+                                    domain:
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                    range:
+                                      TCon:
+                                        arguments: []
+                                        name: Bool
+                        type:
+                          TArr:
+                            domain:
+                              TCon:
+                                arguments: []
+                                name: Int
+                            range:
+                              TCon:
+                                arguments: []
+                                name: Bool
+                    type:
+                      TCon:
+                        arguments: []
+                        name: Bool
+                thenExpression:
+                  ConstantInt:
+                    type:
+                      TCon:
+                        arguments: []
+                        name: Int
+                    value: 1
+                type:
+                  TCon:
+                    arguments: []
+                    name: Int
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: Int
+        name:
+          ID:
+            name: factorial
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: Int
+    ]

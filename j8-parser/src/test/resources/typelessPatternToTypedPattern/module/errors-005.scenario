@@ -1,0 +1,12 @@
+-- Let signature without accompanying let declaration
+addX : Int -> Int -> Int
+addX =
+    \a b -> a + b
+
+addY : Int -> Int -> Int
+add =
+    \x y -> x + y
+-- errors
+[
+    LetSignatureWithoutDeclaration(location=[(5, 0) (5, 23)], name=addY)
+]
