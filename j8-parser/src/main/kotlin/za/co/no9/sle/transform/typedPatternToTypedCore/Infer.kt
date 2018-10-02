@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typelessPatternToTypedCore
+package za.co.no9.sle.transform.typedPatternToTypedCore
 
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedCore.*

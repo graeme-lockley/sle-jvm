@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typelessPatternToTypedCore
+package za.co.no9.sle.transform.typedPatternToTypedCore
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors

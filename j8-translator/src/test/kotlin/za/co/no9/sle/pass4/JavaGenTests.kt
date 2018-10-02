@@ -4,7 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import za.co.no9.sle.map
 import za.co.no9.sle.right
-import za.co.no9.sle.transform.typelessPatternToTypedCore.parseWithDetail
+import za.co.no9.sle.transform.typedPatternToTypedCore.parseWithDetail
 import za.co.no9.sle.typing.*
 
 
