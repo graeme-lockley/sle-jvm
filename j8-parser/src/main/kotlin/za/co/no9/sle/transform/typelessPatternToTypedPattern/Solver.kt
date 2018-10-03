@@ -1,8 +1,8 @@
 package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import za.co.no9.sle.*
-import za.co.no9.sle.ast.typedCore.*
-import za.co.no9.sle.ast.typedCore.Unit
+import za.co.no9.sle.ast.typedPattern.*
+import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.typing.*
 
 

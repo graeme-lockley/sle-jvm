@@ -78,7 +78,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                 val output =
                         parseWithDetail(sourceFileName.readText(), environment)
-                                .map { translateToJava(it.resolvedModule, packageName, className) }
+                                .map { translateToJava(it.coreModule, packageName, className) }
                                 .map { it.toString() }
 
                 val errors =

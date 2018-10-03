@@ -3,8 +3,8 @@ package za.co.no9.sle.transform.typelessPatternToTypedPattern
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.andThen
-import za.co.no9.sle.ast.typedCore.Module
-import za.co.no9.sle.ast.typedCore.TypeAliasDeclaration
+import za.co.no9.sle.ast.typedPattern.Module
+import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.transform.typelessToTypelessPattern.parse
 import za.co.no9.sle.map
 import za.co.no9.sle.typing.Environment

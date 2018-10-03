@@ -15,7 +15,7 @@ class JavaGenTests : StringSpec({
 
         val result =
                 parseWithDetail(input, environment)
-                        .map { translateToJava(it.resolvedModule, "test", name) }
+                        .map { translateToJava(it.coreModule, "test", name) }
                         .map { it.toString() }
 
         this.javaClass.getResource("/test/$name.java").readText()

@@ -1,8 +1,8 @@
 package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import za.co.no9.sle.*
-import za.co.no9.sle.ast.typedCore.*
-import za.co.no9.sle.ast.typedCore.Unit
+import za.co.no9.sle.ast.typedPattern.*
+import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.typing.*
@@ -128,7 +128,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
 
         val declarations =
-                module.declarations.fold(emptyList<za.co.no9.sle.ast.typedCore.Declaration>()) { ds, d ->
+                module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
                     when (d) {
                         is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                             val e =
@@ -183,7 +183,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme)
 
                         is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
-                            ds + za.co.no9.sle.ast.typedCore.TypeDeclaration(
+                            ds + za.co.no9.sle.ast.typedPattern.TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
                                     d.scheme,
