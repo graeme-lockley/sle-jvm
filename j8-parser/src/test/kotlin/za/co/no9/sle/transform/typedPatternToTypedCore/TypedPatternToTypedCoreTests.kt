@@ -8,7 +8,7 @@ import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
 
-class InferenceTests : FunSpec({
+class TypedPatternToTypedCoreTests : FunSpec({
     runner(this, "typedPatternToTypedCore", RunnerConsumer())
 })
 
@@ -63,6 +63,15 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
         if (typeAST != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
             parseWithDetail.right()!!.resolvedModule.shouldBeEqual(typeAST)
+        }
+
+
+        val coreAST =
+                fileContent["coreAST"]
+
+        if (coreAST != null) {
+            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.right()!!.coreModule.shouldBeEqual(coreAST)
         }
 
 

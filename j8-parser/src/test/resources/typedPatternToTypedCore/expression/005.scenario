@@ -1,8 +1,0 @@
--- Identifier of type string
-value : String
-value =
-    aString
--- constraints
-[
-    String : String
-]

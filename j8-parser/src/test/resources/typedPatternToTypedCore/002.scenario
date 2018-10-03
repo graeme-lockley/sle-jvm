@@ -5,17 +5,7 @@ calculate =
 
 value =
     calculate ()
--- constraints
-[
-  () -> Int : '0 -> Int
-  () -> Int : () -> '1
-]
--- substitution
-[
-  0=()
-  1=Int
-]
--- typeAST
+-- coreAST
 Module:
   declarations: [
       LetDeclaration:

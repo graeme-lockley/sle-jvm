@@ -1,8 +1,0 @@
--- Error if duplicate constructor name within a single type
-type List a =
-    Node
-  | Node a (List a)
--- errors
-[
-  DuplicateConstructorDeclaration(location=[(3, 4) (3, 18)], name=Node)
-]

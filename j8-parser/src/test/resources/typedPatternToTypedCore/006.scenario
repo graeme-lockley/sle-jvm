@@ -12,43 +12,7 @@ repeat n e
 
 singleton x =
     repeat 1 x
--- constraints
-[
-  '2 -> '2 -> Bool : '0 -> '3
-  '3 : Int -> '4
-  '6 -> List '6 -> List '6 : '1 -> '7
-  Int -> Int -> Int : '0 -> '9
-  '9 : Int -> '10
-  Int -> '8 -> List '8 : '10 -> '11
-  '11 : '1 -> '12
-  '7 : '12 -> '13
-  '4 : Bool
-  List '5 : '13
-  Int -> '14 -> List '14 : '0 -> '1 -> List '5
-  Int -> '16 -> List '16 : Int -> '17
-  '17 : '15 -> '18
-]
--- substitution
-[
-  2=Int
-  3=Int -> Bool
-  0=Int
-  4=Bool
-  6='1
-  7=List '1 -> List '1
-  9=Int -> Int
-  10=Int
-  11='1 -> List '1
-  8='1
-  12=List '1
-  13=List '1
-  5='1
-  14='1
-  17='15 -> List '15
-  16='15
-  18=List '15
-]
--- typeAST
+-- coreAST
 Module:
   declarations: [
       TypeDeclaration:

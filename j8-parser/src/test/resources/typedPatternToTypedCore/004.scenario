@@ -42,15 +42,7 @@ Module:
                   TVar:
                     variable: 0
     ]
--- constraints
-[
-    '1 -> '1 : '0 -> '0
-]
--- substitution
-[
-  1='0
-]
--- typeAST
+-- coreAST
 Module:
   declarations: [
       LetDeclaration:

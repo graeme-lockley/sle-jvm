@@ -1,8 +1,0 @@
--- Constraints of simple addition function
-add a b =
-    a + b
--- constraints
-[
-  Int -> Int -> Int : '0 -> '2
-  '2 : '1 -> '3
-]

@@ -1,8 +1,0 @@
--- Reference to a known type with the incorrect number of type arguments
-type List a =
-    Nil
-  | Cons a List
--- errors
-[
-  IncorrectNumberOfSchemeArguments(location=[(0, 0) (0, 0)], name=List, expected=1, actual=0)
-]

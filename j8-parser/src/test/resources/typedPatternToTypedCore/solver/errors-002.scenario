@@ -1,9 +1,0 @@
--- Error if attempt to reference an unknown constructor
-singleton x =
-    Cons x Nil
--- errors
-[
-  UnboundVariable(location=[(2, 4) (2, 7)], name=Cons)
-  UnboundVariable(location=[(2, 11) (2, 13)], name=Nil)
-  UnificationFail(t1=:Error:, t2='0 -> '1)
-]

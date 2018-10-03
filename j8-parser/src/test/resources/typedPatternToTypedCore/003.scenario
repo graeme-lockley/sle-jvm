@@ -1,36 +1,9 @@
--- Inference and substitution of factorial
+-- A let guard declaration
 factorial : Int -> Int
-factorial n =
-    if n == 0 then
-        1
-    else
-        n * factorial (n - 1)
--- constraints
-[
-    '1 -> '1 -> Bool : '0 -> '2
-    '2 : Int -> '3
-    Int -> Int -> Int : '0 -> '4
-    Int -> Int -> Int : '0 -> '5
-    '5 : Int -> '6
-    Int -> Int : '6 -> '7
-    '4 : '7 -> '8
-    '3 : Bool
-    Int : '8
-    Int -> Int : '0 -> Int
-]
--- substitution
-[
-  1=Int
-  2=Int -> Bool
-  0=Int
-  3=Bool
-  4=Int -> Int
-  5=Int -> Int
-  6=Int
-  7=Int
-  8=Int
-]
--- typeAST
+factorial n
+    | n == 0 = 1
+    | otherwise = n * factorial (n - 1)
+-- coreAST
 Module:
   declarations: [
       LetDeclaration:
