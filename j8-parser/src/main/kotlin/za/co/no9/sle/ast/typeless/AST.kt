@@ -108,6 +108,44 @@ data class CallExpression(
         val operator: Expression,
         val operands: List<Expression>) : Expression(location)
 
+data class CaseExpression(
+        override val location: Location,
+        val operator: Expression,
+        val items: List<Expression>) : Expression(location)
+
+data class CaseItem (
+        override val location: Location,
+        val pattern: Pattern,
+        val expression: Expression): Node(location)
+
+
+sealed class Pattern (
+        override val location: Location): Node(location)
+
+data class ConstantIntPattern(
+        override val location: Location,
+        val value: Int): Pattern(location)
+
+data class ConstantBoolPattern(
+        override val location: Location,
+        val value: Boolean): Pattern(location)
+
+data class ConstantStringPattern(
+        override val location: Location,
+        val value: String): Pattern(location)
+
+data class ConstantUnitPattern(
+        override val location: Location): Pattern(location)
+
+data class IdReferencePattern(
+        override val location: Location,
+        val name: String): Pattern(location)
+
+data class ConstructorReferencePattern(
+        override val location: Location,
+        val name: String,
+        val parameters: List<Pattern>): Pattern(location)
+
 
 data class TScheme(
         override val location: Location,
