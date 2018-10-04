@@ -33,7 +33,9 @@ typeConstructor
 
 
 expression
-    : expression op=('*' | '/') expression
+    : 'case' expression 'of' caseItem+
+        # CaseExpression
+    | expression op=('*' | '/') expression
         # MultiplicativeExpression
     | expression op=('+' | '-') expression
         # AdditiveExpression
@@ -49,6 +51,11 @@ expression
         # IfExpression
     | term ( {notStartOfLine()}? term )*
         # CallExpression
+    ;
+
+
+caseItem
+    : pattern '->' expression
     ;
 
 term

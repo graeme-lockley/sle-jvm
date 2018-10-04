@@ -162,6 +162,9 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
 
             is za.co.no9.sle.ast.typeless.CallExpression ->
                 ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
+
+            is za.co.no9.sle.ast.typeless.CaseExpression ->
+                TODO()
         }
 
 
