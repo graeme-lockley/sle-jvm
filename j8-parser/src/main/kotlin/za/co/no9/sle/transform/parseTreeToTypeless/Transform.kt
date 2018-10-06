@@ -31,15 +31,32 @@ private fun walkParseTree(node: ParserRuleContext): ParserToAST {
 }
 
 
+private class Stack<T>(private var stack: List<T> = emptyList()) {
+    fun pop(): T {
+        val result =
+                stack.last()
+
+        stack = stack.dropLast(1)
+
+        return result
+    }
+
+
+    fun push(item: T) {
+        stack += item
+    }
+}
+
+
 private class ParserToAST : ParserBaseListener() {
     private var expressionStack =
-            emptyList<Expression>()
+            Stack<Expression>()
 
     private var patternStack =
-            emptyList<Pattern>()
+            Stack<Pattern>()
 
     private var typeStack =
-            emptyList<TType>()
+            Stack<TType>()
 
     private var typeConstructors =
             emptyList<TypeConstructor>()
@@ -57,54 +74,19 @@ private class ParserToAST : ParserBaseListener() {
             emptyList<Declaration>()
 
 
-    fun popExpression(): Expression {
-        val result =
-                expressionStack.last()
+    private fun popExpression(): Expression = expressionStack.pop()
 
-        expressionStack = expressionStack.dropLast(1)
-
-        return result
-    }
+    private fun pushExpression(expression: Expression) = expressionStack.push(expression)
 
 
-    private fun pushExpression(expression: Expression) {
-        expressionStack += expression
-    }
+    private fun popType(): TType = typeStack.pop()
+
+    private fun pushType(type: TType) = typeStack.push(type)
 
 
-    fun popType(): TType {
-        val result =
-                typeStack.last()
+    private fun pushPattern(pattern: Pattern) = patternStack.push(pattern)
 
-        typeStack = typeStack.dropLast(1)
-
-        return result
-    }
-
-    private fun pushType(type: TType) {
-        typeStack += type
-    }
-
-
-    private fun pushPattern(pattern: Pattern) {
-        patternStack += pattern
-    }
-
-
-    fun popPattern(): Pattern? =
-            when {
-                patternStack.isEmpty() ->
-                    null
-
-                else -> {
-                    val pattern =
-                            patternStack.last()
-
-                    patternStack = patternStack.dropLast(1)
-
-                    pattern
-                }
-            }
+    private fun popPattern(): Pattern = patternStack.pop()
 
 
     private fun addDeclaration(declaration: Declaration) {
@@ -240,7 +222,7 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitCaseItem(ctx: ParserParser.CaseItemContext?) {
-        addCaseItem(CaseItem(ctx!!.location(), popPattern()!!, popExpression()))
+        addCaseItem(CaseItem(ctx!!.location(), popPattern(), popExpression()))
     }
 
 
@@ -385,7 +367,7 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<Pattern>()
 
         for (lp in 1..numberOfPatterns) {
-            patterns += popPattern()!!
+            patterns += popPattern()
         }
 
         pushPattern(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns.asReversed()))
