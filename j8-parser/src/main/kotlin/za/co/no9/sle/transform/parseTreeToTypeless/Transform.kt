@@ -64,7 +64,7 @@ private class Stack<T>(private var stack: List<T> = emptyList()) {
 
         stack = emptyList()
 
-        return result.asReversed()
+        return result
     }
 
 
@@ -75,13 +75,13 @@ private class Stack<T>(private var stack: List<T> = emptyList()) {
 
 
 private class ParserToAST : ParserBaseListener() {
-    private var expressionStack =
+    private val expressionStack =
             Stack<Expression>()
 
-    private var patternStack =
+    private val patternStack =
             Stack<Pattern>()
 
-    private var typeStack =
+    private val typeStack =
             Stack<TType>()
 
     private var typeConstructors =
@@ -90,29 +90,12 @@ private class ParserToAST : ParserBaseListener() {
     private val caseItems =
             Stack<CaseItem>()
 
+    private val declarations =
+            Stack<Declaration>()
 
     var module: Module? =
             null
         private set
-
-
-    private var declarations =
-            emptyList<Declaration>()
-
-
-    private fun addDeclaration(declaration: Declaration) {
-        declarations += declaration
-    }
-
-
-    private fun popDeclarations(): List<Declaration> {
-        val result =
-                declarations
-
-        declarations = emptyList()
-
-        return result
-    }
 
 
     override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) =
@@ -246,7 +229,7 @@ private class ParserToAST : ParserBaseListener() {
         val type =
                 typeStack.pop()
 
-        addDeclaration(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), generaliseType(type)!!))
+        declarations.push(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), generaliseType(type)!!))
     }
 
 
@@ -257,7 +240,7 @@ private class ParserToAST : ParserBaseListener() {
         val expression =
                 expressionStack.pop()
 
-        addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
+        declarations.push(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
     }
 
 
@@ -281,7 +264,7 @@ private class ParserToAST : ParserBaseListener() {
             guardedExpressions += Pair(guard, expression)
         }
 
-        addDeclaration(LetGuardDeclaration(ctx.location(), names[0], names.drop(1), guardedExpressions.asReversed()))
+        declarations.push(LetGuardDeclaration(ctx.location(), names[0], names.drop(1), guardedExpressions.asReversed()))
     }
 
 
@@ -289,12 +272,12 @@ private class ParserToAST : ParserBaseListener() {
         val type =
                 typeStack.pop()
 
-        addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), generaliseType(type)!!))
+        declarations.push(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), generaliseType(type)!!))
     }
 
 
     override fun exitTypeDeclaration(ctx: ParserParser.TypeDeclarationContext?) {
-        addDeclaration(TypeDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), ctx.LowerID().map { ID(it.location(), it.text) }, typeConstructors))
+        declarations.push(TypeDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), ctx.LowerID().map { ID(it.location(), it.text) }, typeConstructors))
 
         typeConstructors = emptyList()
     }
@@ -309,7 +292,7 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitModule(ctx: ParserParser.ModuleContext?) {
-        module = Module(ctx!!.location(), popDeclarations())
+        module = Module(ctx!!.location(), declarations.popAllReversed())
     }
 
 
