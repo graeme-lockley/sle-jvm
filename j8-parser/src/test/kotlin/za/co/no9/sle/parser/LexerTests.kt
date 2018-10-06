@@ -20,6 +20,11 @@ class LexerTests : StringSpec({
                 .shouldBe(listOf("hello", "World"))
     }
 
+    "case else if of then type typealias  -> [CASE, ELSE, IF, OF, THEN, TYPE, TYPEALIAS]" {
+        Lexer("case else if of then type typealias").tokens()
+                .shouldBe(listOf(Token.CASE, Token.ELSE, Token.IF, Token.OF, Token.THEN, Token.TYPE, Token.TYPEALIAS))
+    }
+
     "123 -> [ConstantInt]" {
         Lexer("123").tokens()
                 .shouldBe(listOf(Token.ConstantInt))
