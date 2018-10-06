@@ -74,21 +74,6 @@ private class ParserToAST : ParserBaseListener() {
             emptyList<Declaration>()
 
 
-    private fun popExpression(): Expression = expressionStack.pop()
-
-    private fun pushExpression(expression: Expression) = expressionStack.push(expression)
-
-
-    private fun popType(): TType = typeStack.pop()
-
-    private fun pushType(type: TType) = typeStack.push(type)
-
-
-    private fun pushPattern(pattern: Pattern) = patternStack.push(pattern)
-
-    private fun popPattern(): Pattern = patternStack.pop()
-
-
     private fun addDeclaration(declaration: Declaration) {
         declarations += declaration
     }
@@ -120,13 +105,13 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTrueExpression(ctx: ParserParser.TrueExpressionContext?) =
-            pushExpression(True(ctx!!.location()))
+            expressionStack.push(True(ctx!!.location()))
 
     override fun exitFalseExpression(ctx: ParserParser.FalseExpressionContext?) =
-            pushExpression(False(ctx!!.location()))
+            expressionStack.push(False(ctx!!.location()))
 
     override fun exitConstantIntExpression(ctx: ParserParser.ConstantIntExpressionContext?) =
-            pushExpression(ConstantInt(ctx!!.location(), ctx.text.toInt()))
+            expressionStack.push(ConstantInt(ctx!!.location(), ctx.text.toInt()))
 
     override fun exitConstantStringExpression(ctx: ParserParser.ConstantStringExpressionContext?) {
         val text =
@@ -136,41 +121,41 @@ private class ParserToAST : ParserBaseListener() {
                         .replace("\\\\", "\\")
                         .replace("\\\"", "\"")
 
-        pushExpression(ConstantString(ctx.location(), text))
+        expressionStack.push(ConstantString(ctx.location(), text))
     }
 
     override fun exitNotExpression(ctx: ParserParser.NotExpressionContext?) =
-            pushExpression(NotExpression(ctx!!.location(), popExpression()))
+            expressionStack.push(NotExpression(ctx!!.location(), expressionStack.pop()))
 
     override fun exitLowerIDExpression(ctx: ParserParser.LowerIDExpressionContext?) =
-            pushExpression(IdReference(ctx!!.location(), ctx.text))
+            expressionStack.push(IdReference(ctx!!.location(), ctx.text))
 
     override fun exitUpperIDExpression(ctx: ParserParser.UpperIDExpressionContext?) =
-            pushExpression(ConstructorReference(ctx!!.location(), ctx.text))
+            expressionStack.push(ConstructorReference(ctx!!.location(), ctx.text))
 
 
     override fun exitIfExpression(ctx: ParserParser.IfExpressionContext?) {
         val elseExpression =
-                popExpression()
+                expressionStack.pop()
 
         val thenExpression =
-                popExpression()
+                expressionStack.pop()
 
         val guardExpression =
-                popExpression()
+                expressionStack.pop()
 
-        pushExpression(IfExpression(ctx!!.location(), guardExpression, thenExpression, elseExpression))
+        expressionStack.push(IfExpression(ctx!!.location(), guardExpression, thenExpression, elseExpression))
     }
 
     override fun exitLambdaExpression(ctx: ParserParser.LambdaExpressionContext?) {
         val expression =
-                popExpression()
+                expressionStack.pop()
 
-        pushExpression(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { ID(it.location(), it.text) }, expression))
+        expressionStack.push(LambdaExpression(ctx!!.location(), ctx.LowerID().toList().map { ID(it.location(), it.text) }, expression))
     }
 
     override fun exitUnitValueExpression(ctx: ParserParser.UnitValueExpressionContext?) {
-        pushExpression(Unit(ctx!!.location()))
+        expressionStack.push(Unit(ctx!!.location()))
     }
 
     override fun exitBooleanOrExpression(ctx: ParserParser.BooleanOrExpressionContext?) =
@@ -190,11 +175,11 @@ private class ParserToAST : ParserBaseListener() {
 
     private fun translateBinaryOperatorExpression(ctx: ParserParser.ExpressionContext, op: Token) {
         val right =
-                popExpression()
+                expressionStack.pop()
         val left =
-                popExpression()
+                expressionStack.pop()
 
-        pushExpression(BinaryOpExpression(ctx.location(), left, ID(op.location(), op.text), right))
+        expressionStack.push(BinaryOpExpression(ctx.location(), left, ID(op.location(), op.text), right))
     }
 
     override fun exitCallExpression(ctx: ParserParser.CallExpressionContext?) {
@@ -206,23 +191,23 @@ private class ParserToAST : ParserBaseListener() {
                     mutableListOf<Expression>()
 
             for (lp in 1..numberOfOperands) {
-                operands.add(popExpression())
+                operands.add(expressionStack.pop())
             }
 
             val operator =
-                    popExpression()
+                    expressionStack.pop()
 
-            pushExpression(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
+            expressionStack.push(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
         }
     }
 
     override fun exitCaseExpression(ctx: ParserParser.CaseExpressionContext?) {
-        pushExpression(CaseExpression(ctx!!.location(), popExpression(), popCaseItems()))
+        expressionStack.push(CaseExpression(ctx!!.location(), expressionStack.pop(), popCaseItems()))
     }
 
 
     override fun exitCaseItem(ctx: ParserParser.CaseItemContext?) {
-        addCaseItem(CaseItem(ctx!!.location(), popPattern(), popExpression()))
+        addCaseItem(CaseItem(ctx!!.location(), patternStack.pop(), expressionStack.pop()))
     }
 
 
@@ -251,7 +236,7 @@ private class ParserToAST : ParserBaseListener() {
 
     override fun exitLetSignature(ctx: ParserParser.LetSignatureContext?) {
         val type =
-                popType()
+                typeStack.pop()
 
         addDeclaration(LetSignature(ctx!!.location(), ID(ctx.LowerID().location(), ctx.LowerID().text), generaliseType(type)!!))
     }
@@ -262,7 +247,7 @@ private class ParserToAST : ParserBaseListener() {
                 ctx!!.LowerID().toList().map { ID(it.location(), it.text) }
 
         val expression =
-                popExpression()
+                expressionStack.pop()
 
         addDeclaration(LetDeclaration(ctx.location(), names[0], names.drop(1), expression))
     }
@@ -280,10 +265,10 @@ private class ParserToAST : ParserBaseListener() {
 
         for (lp in 1..numberOfGuards) {
             val expression =
-                    popExpression()
+                    expressionStack.pop()
 
             val guard =
-                    popExpression()
+                    expressionStack.pop()
 
             guardedExpressions += Pair(guard, expression)
         }
@@ -294,7 +279,7 @@ private class ParserToAST : ParserBaseListener() {
 
     override fun exitTypeAliasDeclaration(ctx: ParserParser.TypeAliasDeclarationContext?) {
         val type =
-                popType()
+                typeStack.pop()
 
         addDeclaration(TypeAliasDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), generaliseType(type)!!))
     }
@@ -315,7 +300,7 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<TType>()
 
         for (lp in 1..numberOfTypes) {
-            types += popType()
+            types += typeStack.pop()
         }
 
         typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed())
@@ -328,15 +313,15 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitConstantIntPattern(ctx: ParserParser.ConstantIntPatternContext?) {
-        pushPattern(ConstantIntPattern(ctx!!.location(), ctx.text.toInt()))
+        patternStack.push(ConstantIntPattern(ctx!!.location(), ctx.text.toInt()))
     }
 
     override fun exitTruePattern(ctx: ParserParser.TruePatternContext?) {
-        pushPattern(ConstantBoolPattern(ctx!!.location(), true))
+        patternStack.push(ConstantBoolPattern(ctx!!.location(), true))
     }
 
     override fun exitFalsePattern(ctx: ParserParser.FalsePatternContext?) {
-        pushPattern(ConstantBoolPattern(ctx!!.location(), false))
+        patternStack.push(ConstantBoolPattern(ctx!!.location(), false))
     }
 
     override fun exitConstantStringPattern(ctx: ParserParser.ConstantStringPatternContext?) {
@@ -348,15 +333,15 @@ private class ParserToAST : ParserBaseListener() {
                         .replace("\\\"", "\"")
 
 
-        pushPattern(ConstantStringPattern(ctx.location(), text))
+        patternStack.push(ConstantStringPattern(ctx.location(), text))
     }
 
     override fun exitUnitPattern(ctx: ParserParser.UnitPatternContext?) {
-        pushPattern(ConstantUnitPattern(ctx!!.location()))
+        patternStack.push(ConstantUnitPattern(ctx!!.location()))
     }
 
     override fun exitLowerIDPattern(ctx: ParserParser.LowerIDPatternContext?) {
-        pushPattern(IdReferencePattern(ctx!!.location(), ctx.text))
+        patternStack.push(IdReferencePattern(ctx!!.location(), ctx.text))
     }
 
     override fun exitUpperIDPattern(ctx: ParserParser.UpperIDPatternContext?) {
@@ -367,24 +352,24 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<Pattern>()
 
         for (lp in 1..numberOfPatterns) {
-            patterns += popPattern()
+            patterns += patternStack.pop()
         }
 
-        pushPattern(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns.asReversed()))
+        patternStack.push(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns.asReversed()))
     }
 
     override fun exitUnitType(ctx: ParserParser.UnitTypeContext?) {
-        pushType(TUnit(ctx!!.location()))
+        typeStack.push(TUnit(ctx!!.location()))
     }
 
 
     override fun exitLowerIDType(ctx: ParserParser.LowerIDTypeContext?) {
-        pushType(TVarReference(ctx!!.location(), ctx.text))
+        typeStack.push(TVarReference(ctx!!.location(), ctx.text))
     }
 
 
     override fun exitUpperIDType(ctx: ParserParser.UpperIDTypeContext?) {
-        pushType(TConstReference(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), emptyList()))
+        typeStack.push(TConstReference(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), emptyList()))
     }
 
 
@@ -396,21 +381,21 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<TType>()
 
         for (lp in 1..numberOfTypes) {
-            types += popType()
+            types += typeStack.pop()
         }
 
-        pushType(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed()))
+        typeStack.push(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed()))
     }
 
 
     override fun exitArrowType(ctx: ParserParser.ArrowTypeContext?) {
         val range =
-                popType()
+                typeStack.pop()
 
         val domain =
-                popType()
+                typeStack.pop()
 
-        pushType(TArrow(ctx!!.location(), domain, range))
+        typeStack.push(TArrow(ctx!!.location(), domain, range))
     }
 }
 
