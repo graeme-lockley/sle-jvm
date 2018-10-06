@@ -173,7 +173,6 @@ class Parser(val lexer: Lexer) {
     fun parseExpression(): Expression =
             parseMultiplicative()
 
-
     fun parseMultiplicative(): Expression =
             parseBinaryOp(setOf("*", "/")) { parseAdditive() }
 
@@ -263,7 +262,7 @@ class Parser(val lexer: Lexer) {
         val operands =
                 mutableListOf<Expression>()
 
-        while (lexer.column > 2 && (
+        while (lexer.column > 1 && (
                         isOperator("(") ||
                                 lexer.token == Token.ConstantInt ||
                                 lexer.token == Token.ConstantString ||
@@ -284,6 +283,33 @@ class Parser(val lexer: Lexer) {
 
     fun parseTerm(): Expression =
             when {
+                lexer.token == Token.CASE -> {
+                    val caseSymbol =
+                            lexer.next()
+
+                    val expression =
+                            parseExpression()
+
+                    matchToken(Token.OF, "of")
+
+                    val caseItems =
+                            mutableListOf<CaseItem>()
+
+                    while (lexer.column > caseSymbol.column && isFirstPattern()) {
+                        val pattern =
+                                parsePattern()
+
+                        matchOperator("->")
+
+                        val caseExpression =
+                                parseExpression()
+
+                        caseItems.add(CaseItem(pattern.location + caseExpression.location, pattern, caseExpression))
+                    }
+
+                    CaseExpression(caseSymbol.location + locationFrom(caseItems.map { it.expression }), expression, caseItems)
+                }
+
                 lexer.token == Token.ConstantInt -> {
                     val token =
                             lexer.next()
@@ -430,6 +456,96 @@ class Parser(val lexer: Lexer) {
         }
     }
 
+
+    fun parsePattern(): Pattern {
+        when {
+            lexer.token == Token.ConstantInt -> {
+                val constantIntSymbol =
+                        lexer.next()
+
+                return ConstantIntPattern(constantIntSymbol.location, constantIntSymbol.text.toInt())
+            }
+
+            lexer.token == Token.UpperID && lexer.text == "True" -> {
+                val trueSymbol =
+                        lexer.next()
+
+                return ConstantBoolPattern(trueSymbol.location, true)
+            }
+
+            lexer.token == Token.UpperID && lexer.text == "False" -> {
+                val trueSymbol =
+                        lexer.next()
+
+                return ConstantBoolPattern(trueSymbol.location, false)
+            }
+
+            lexer.token == Token.ConstantString -> {
+                val constantStringSymbol =
+                        lexer.next()
+
+                val text =
+                        constantStringSymbol.text
+                                .drop(1)
+                                .dropLast(1)
+                                .replace("\\\\", "\\")
+                                .replace("\\\"", "\"")
+
+                return ConstantStringPattern(constantStringSymbol.location, text)
+            }
+
+            isOperator("()") -> {
+                val unitSymbol =
+                        lexer.next()
+
+                return ConstantUnitPattern(unitSymbol.location)
+
+            }
+
+            isOperator("(") -> {
+                lexer.next()
+
+                val pattern =
+                        parsePattern()
+
+                matchOperator(")")
+
+                return pattern
+            }
+
+            lexer.token == Token.LowerID -> {
+                val lowerIDSymbol =
+                        lexer.next()
+
+                return IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
+            }
+
+            lexer.token == Token.UpperID -> {
+                val upperIDSymbol =
+                        lexer.next()
+
+                val parameters =
+                        mutableListOf<Pattern>()
+
+                while (lexer.column > 1 && isFirstPattern()) {
+                    parameters.add(parsePattern())
+                }
+
+                return ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
+            }
+
+            else ->
+                throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
+        }
+    }
+
+    fun isFirstPattern(): Boolean =
+            lexer.token == Token.ConstantInt ||
+                    lexer.token == Token.ConstantString ||
+                    lexer.token == Token.UpperID ||
+                    lexer.token == Token.LowerID ||
+                    isOperator("()") ||
+                    isOperator("(")
 
     private fun isOperator(text: String): Boolean =
             lexer.token == Token.ConstantOperator && lexer.text == text
