@@ -48,6 +48,9 @@ class Lexer(val input: String) {
             Symbol(Token.EOF, Location(Position(0, 0), Position(0, 0)), "")
         private set
 
+    val token: Token
+        get() = this.currentSymbol.token
+
     private val inputLength =
             input.length
 
@@ -72,10 +75,10 @@ class Lexer(val input: String) {
 
     fun skip() {
         try {
-            next()
+            nextCharacter()
 
             while (currentCh.isWhitespace()) {
-                next()
+                nextCharacter()
             }
 
             when {
@@ -87,10 +90,10 @@ class Lexer(val input: String) {
                             currentIndex
 
                     while (nextCh.isLetterOrDigit() || nextCh == '_') {
-                        next()
+                        nextCharacter()
                     }
                     while (nextCh == '\'') {
-                        next()
+                        nextCharacter()
                     }
 
                     val endPosition =
@@ -114,10 +117,10 @@ class Lexer(val input: String) {
                             currentIndex
 
                     while (nextCh.isLetterOrDigit() || nextCh == '_') {
-                        next()
+                        nextCharacter()
                     }
                     while (nextCh == '\'') {
-                        next()
+                        nextCharacter()
                     }
 
                     val endPosition =
@@ -141,7 +144,7 @@ class Lexer(val input: String) {
                             currentIndex
 
                     while (nextCh.isDigit()) {
-                        next()
+                        nextCharacter()
                     }
                     val endPosition =
                             position()
@@ -163,15 +166,15 @@ class Lexer(val input: String) {
                     val startIndex =
                             currentIndex
 
-                    next()
+                    nextCharacter()
                     while (true) {
                         if (currentCh == '"') {
                             break
                         } else if (currentCh == '\\') {
-                            next()
-                            next()
+                            nextCharacter()
+                            nextCharacter()
                         } else {
-                            next()
+                            nextCharacter()
                         }
                     }
 
@@ -196,7 +199,7 @@ class Lexer(val input: String) {
                             currentIndex
 
                     while (operatorCharacters.contains(nextCh)) {
-                        next()
+                        nextCharacter()
                     }
                     val endPosition =
                             position()
@@ -211,13 +214,13 @@ class Lexer(val input: String) {
                             Symbol(Token.ConstantOperator, Location(startPosition, endPosition), text)
                 }
             }
-            } catch (e: StringIndexOutOfBoundsException) {
+        } catch (e: StringIndexOutOfBoundsException) {
             currentSymbol = Symbol(Token.EOF, location(), "")
         }
     }
 
 
-    private fun next() {
+    private fun nextCharacter() {
         if (currentIndex < inputLength) {
             currentIndex += 1
             currentCh = input[currentIndex]
@@ -232,7 +235,7 @@ class Lexer(val input: String) {
         }
     }
 
-    private fun location(): Location =
+    fun location(): Location =
             Location(position())
 
 
