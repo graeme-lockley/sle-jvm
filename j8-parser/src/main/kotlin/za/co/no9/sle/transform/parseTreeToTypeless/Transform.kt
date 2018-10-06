@@ -42,6 +42,22 @@ private class Stack<T>(private var stack: List<T> = emptyList()) {
     }
 
 
+    fun popN(n: Int): List<T> {
+        var items =
+                emptyList<T>()
+
+        for (lp in 1..n) {
+            items += pop()
+        }
+
+        return items
+    }
+
+
+    fun popNReversed(n: Int): List<T> =
+            popN(n).asReversed()
+
+
     fun push(item: T) {
         stack += item
     }
@@ -176,6 +192,7 @@ private class ParserToAST : ParserBaseListener() {
     private fun translateBinaryOperatorExpression(ctx: ParserParser.ExpressionContext, op: Token) {
         val right =
                 expressionStack.pop()
+
         val left =
                 expressionStack.pop()
 
@@ -188,16 +205,12 @@ private class ParserToAST : ParserBaseListener() {
 
         if (numberOfOperands > 0) {
             val operands =
-                    mutableListOf<Expression>()
-
-            for (lp in 1..numberOfOperands) {
-                operands.add(expressionStack.pop())
-            }
+                    expressionStack.popNReversed(numberOfOperands)
 
             val operator =
                     expressionStack.pop()
 
-            expressionStack.push(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
+            expressionStack.push(CallExpression(ctx.location(), operator, operands))
         }
     }
 
@@ -293,17 +306,10 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTypeConstructor(ctx: ParserParser.TypeConstructorContext?) {
-        val numberOfTypes =
-                ctx!!.type().size
+        val types =
+                typeStack.popNReversed(ctx!!.type().size)
 
-        var types =
-                emptyList<TType>()
-
-        for (lp in 1..numberOfTypes) {
-            types += typeStack.pop()
-        }
-
-        typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed())
+        typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types)
     }
 
 
@@ -345,17 +351,10 @@ private class ParserToAST : ParserBaseListener() {
     }
 
     override fun exitUpperIDPattern(ctx: ParserParser.UpperIDPatternContext?) {
-        val numberOfPatterns =
-                ctx!!.pattern().size
+        val patterns =
+                patternStack.popNReversed(ctx!!.pattern().size)
 
-        var patterns =
-                emptyList<Pattern>()
-
-        for (lp in 1..numberOfPatterns) {
-            patterns += patternStack.pop()
-        }
-
-        patternStack.push(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns.asReversed()))
+        patternStack.push(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns))
     }
 
     override fun exitUnitType(ctx: ParserParser.UnitTypeContext?) {
@@ -374,17 +373,10 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitParameterTypeArgument(ctx: ParserParser.ParameterTypeArgumentContext?) {
-        val numberOfTypes =
-                ctx!!.type().size
+        val types =
+                typeStack.popNReversed(ctx!!.type().size)
 
-        var types =
-                emptyList<TType>()
-
-        for (lp in 1..numberOfTypes) {
-            types += typeStack.pop()
-        }
-
-        typeStack.push(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed()))
+        typeStack.push(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types))
     }
 
 
