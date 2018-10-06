@@ -32,6 +32,14 @@ class LexerTests : StringSpec({
         Lexer("123").tokenTexts()
                 .shouldBe(listOf("123"))
     }
+
+    "\"hello\" -> [ConstantString]" {
+        Lexer("\"hello\"").tokens()
+                .shouldBe(listOf(Token.ConstantString))
+
+        Lexer("\"hello\"").tokenTexts()
+                .shouldBe(listOf("\"hello\""))
+    }
 })
 
 

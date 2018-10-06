@@ -7,7 +7,10 @@ import za.co.no9.sle.Position
 enum class Token {
     EOF,
 
+    ERROR,
+
     ConstantInt,
+    ConstantString,
 
     LowerID,
     UpperID,
@@ -146,7 +149,38 @@ class Lexer(val input: String) {
 
                     currentSymbol =
                             Symbol(Token.ConstantInt, Location(startPosition, endPosition), text)
+                }
 
+                currentCh == '"' -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    next()
+                    while (true) {
+                        if (currentCh == '"') {
+                            break
+                        } else if (currentCh == '\\') {
+                            next()
+                            next()
+                        } else {
+                            next()
+                        }
+                    }
+
+                    val endPosition =
+                            position()
+
+                    val endIndex =
+                            currentIndex
+
+                    val text =
+                            input.substring(startIndex, endIndex + 1)
+
+                    currentSymbol =
+                            Symbol(Token.ConstantString, Location(startPosition, endPosition), text)
                 }
             }
         } catch (e: StringIndexOutOfBoundsException) {
