@@ -1,15 +1,9 @@
 package za.co.no9.sle.transform.parseTreeToTypeless
 
 
-class Stack<T>(private var stack: List<T> = emptyList()) {
-    fun pop(): T {
-        val result =
-                stack.last()
-
-        stack = stack.dropLast(1)
-
-        return result
-    }
+class Stack<T>(private val stack: MutableList<T> = mutableListOf()) {
+    fun pop(): T =
+            stack.removeAt(stack.size - 1)
 
 
     fun popN(n: Int): List<T> {
@@ -30,15 +24,14 @@ class Stack<T>(private var stack: List<T> = emptyList()) {
 
     fun popAllReversed(): List<T> {
         val result =
-                stack
+                stack.toList()
 
-        stack = emptyList()
+        stack.clear()
 
         return result
     }
 
 
-    fun push(item: T) {
-        stack += item
-    }
+    fun push(item: T) =
+            stack.add(stack.size, item)
 }
