@@ -41,8 +41,8 @@ private class ParserToAST : ParserBaseListener() {
     private val typeStack =
             Stack<TType>()
 
-    private var typeConstructors =
-            emptyList<TypeConstructor>()
+    private val typeConstructors =
+            Stack<TypeConstructor>()
 
     private val caseItems =
             Stack<CaseItem>()
@@ -234,9 +234,7 @@ private class ParserToAST : ParserBaseListener() {
 
 
     override fun exitTypeDeclaration(ctx: ParserParser.TypeDeclarationContext?) {
-        declarations.push(TypeDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), ctx.LowerID().map { ID(it.location(), it.text) }, typeConstructors))
-
-        typeConstructors = emptyList()
+        declarations.push(TypeDeclaration(ctx!!.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), ctx.LowerID().map { ID(it.location(), it.text) }, typeConstructors.popAllReversed()))
     }
 
 
@@ -244,7 +242,7 @@ private class ParserToAST : ParserBaseListener() {
         val types =
                 typeStack.popNReversed(ctx!!.type().size)
 
-        typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types)
+        typeConstructors.push(TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types))
     }
 
 
