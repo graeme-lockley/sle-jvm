@@ -7,6 +7,8 @@ import za.co.no9.sle.Position
 enum class Token {
     EOF,
 
+    ConstantInt,
+
     LowerID,
     UpperID,
 
@@ -69,6 +71,33 @@ class Lexer(val input: String) {
             }
 
             when {
+                currentCh in 'a'..'z' -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    while (nextCh.isLetterOrDigit() || nextCh == '_') {
+                        next()
+                    }
+                    while (nextCh == '\'') {
+                        next()
+                    }
+
+                    val endPosition =
+                            position()
+
+                    val endIndex =
+                            currentIndex
+
+                    val text =
+                            input.substring(startIndex, endIndex + 1)
+
+                    currentSymbol =
+                            Symbol(keywords.getOrDefault(text, Token.LowerID), Location(startPosition, endPosition), text)
+                }
+
                 currentCh in 'A'..'Z' -> {
                     val startPosition =
                             position()
@@ -96,20 +125,16 @@ class Lexer(val input: String) {
                             Symbol(Token.UpperID, Location(startPosition, endPosition), text)
                 }
 
-                currentCh in 'a'..'z' -> {
+                currentCh in '0'..'9' -> {
                     val startPosition =
                             position()
 
                     val startIndex =
                             currentIndex
 
-                    while (nextCh.isLetterOrDigit() || nextCh == '_') {
+                    while (nextCh.isDigit()) {
                         next()
                     }
-                    while (nextCh == '\'') {
-                        next()
-                    }
-
                     val endPosition =
                             position()
 
@@ -120,7 +145,8 @@ class Lexer(val input: String) {
                             input.substring(startIndex, endIndex + 1)
 
                     currentSymbol =
-                            Symbol(keywords.getOrDefault(text, Token.LowerID), Location(startPosition, endPosition), text)
+                            Symbol(Token.ConstantInt, Location(startPosition, endPosition), text)
+
                 }
             }
         } catch (e: StringIndexOutOfBoundsException) {
