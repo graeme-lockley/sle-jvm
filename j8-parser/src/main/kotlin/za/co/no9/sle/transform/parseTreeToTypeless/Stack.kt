@@ -6,7 +6,7 @@ class Stack<T>(private val stack: MutableList<T> = mutableListOf()) {
             stack.removeAt(stack.size - 1)
 
 
-    fun popN(n: Int): List<T> {
+    private fun popN(n: Int): List<T> {
         var items =
                 emptyList<T>()
 
