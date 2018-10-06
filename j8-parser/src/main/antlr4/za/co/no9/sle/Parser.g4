@@ -81,13 +81,21 @@ term
 
 pattern
     : ConstantInt
+        # ConstantIntPattern
     | 'True'
+        # TruePattern
     | 'False'
+        # FalsePattern
     | ConstantString
+        # ConstantStringPattern
     | '(' ')'
+        # UnitPattern
     | LowerID
+        # LowerIDPattern
     | UpperID pattern*
+        # UpperIDPattern
     | '(' pattern ')'
+        # ParentPattern
     ;
 
 type

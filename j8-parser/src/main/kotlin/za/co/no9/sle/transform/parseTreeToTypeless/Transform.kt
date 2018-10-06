@@ -35,11 +35,17 @@ private class ParserToAST : ParserBaseListener() {
     private var expressionStack =
             emptyList<Expression>()
 
+    private var patternStack =
+            emptyList<Pattern>()
+
     private var typeStack =
             emptyList<TType>()
 
     private var typeConstructors =
             emptyList<TypeConstructor>()
+
+    private var caseItems =
+            emptyList<CaseItem>()
 
 
     var module: Module? =
@@ -86,6 +92,27 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
+    private fun pushPattern(pattern: Pattern) {
+        patternStack += pattern
+    }
+
+
+    fun popPattern(): Pattern? =
+            when {
+                patternStack.isEmpty() ->
+                    null
+
+                else -> {
+                    val pattern =
+                            patternStack.last()
+
+                    patternStack = patternStack.dropLast(1)
+
+                    pattern
+                }
+            }
+
+
     private fun addDeclaration(declaration: Declaration) {
         declarations += declaration
     }
@@ -96,6 +123,21 @@ private class ParserToAST : ParserBaseListener() {
                 declarations
 
         declarations = emptyList()
+
+        return result
+    }
+
+
+    private fun addCaseItem(caseItem: CaseItem) {
+        caseItems += caseItem
+    }
+
+
+    private fun popCaseItems(): List<CaseItem> {
+        val result =
+                caseItems
+
+        caseItems = emptyList()
 
         return result
     }
@@ -180,7 +222,8 @@ private class ParserToAST : ParserBaseListener() {
     }
 
     override fun exitCallExpression(ctx: ParserParser.CallExpressionContext?) {
-        val numberOfOperands = ctx!!.childCount - 1
+        val numberOfOperands =
+                ctx!!.childCount - 1
 
         if (numberOfOperands > 0) {
             val operands =
@@ -195,6 +238,15 @@ private class ParserToAST : ParserBaseListener() {
 
             pushExpression(CallExpression(ctx.location(), operator, operands.toList().asReversed()))
         }
+    }
+
+    override fun exitCaseExpression(ctx: ParserParser.CaseExpressionContext?) {
+        pushExpression(CaseExpression(ctx!!.location(), popExpression(), popCaseItems()))
+    }
+
+
+    override fun exitCaseItem(ctx: ParserParser.CaseItemContext?) {
+        addCaseItem(CaseItem(ctx!!.location(), popPattern()!!, popExpression()))
     }
 
 
@@ -298,6 +350,52 @@ private class ParserToAST : ParserBaseListener() {
         module = Module(ctx!!.location(), popDeclarations())
     }
 
+
+    override fun exitConstantIntPattern(ctx: ParserParser.ConstantIntPatternContext?) {
+        pushPattern(ConstantIntPattern(ctx!!.location(), ctx.text.toInt()))
+    }
+
+    override fun exitTruePattern(ctx: ParserParser.TruePatternContext?) {
+        pushPattern(ConstantBoolPattern(ctx!!.location(), true))
+    }
+
+    override fun exitFalsePattern(ctx: ParserParser.FalsePatternContext?) {
+        pushPattern(ConstantBoolPattern(ctx!!.location(), false))
+    }
+
+    override fun exitConstantStringPattern(ctx: ParserParser.ConstantStringPatternContext?) {
+        val text =
+                ctx!!.text
+                        .drop(1)
+                        .dropLast(1)
+                        .replace("\\\\", "\\")
+                        .replace("\\\"", "\"")
+
+
+        pushPattern(ConstantStringPattern(ctx.location(), text))
+    }
+
+    override fun exitUnitPattern(ctx: ParserParser.UnitPatternContext?) {
+        pushPattern(ConstantUnitPattern(ctx!!.location()))
+    }
+
+    override fun exitLowerIDPattern(ctx: ParserParser.LowerIDPatternContext?) {
+        pushPattern(IdReferencePattern(ctx!!.location(), ctx.text))
+    }
+
+    override fun exitUpperIDPattern(ctx: ParserParser.UpperIDPatternContext?) {
+        val numberOfPatterns =
+                ctx!!.pattern().size
+
+        var patterns =
+                emptyList<Pattern>()
+
+        for (lp in 1..numberOfPatterns) {
+            patterns += popPattern()!!
+        }
+
+        pushPattern(ConstructorReferencePattern(ctx.location(), ctx.UpperID().text, patterns.asReversed()))
+    }
 
     override fun exitUnitType(ctx: ParserParser.UnitTypeContext?) {
         pushType(TUnit(ctx!!.location()))

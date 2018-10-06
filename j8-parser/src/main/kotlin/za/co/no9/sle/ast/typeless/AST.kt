@@ -111,7 +111,7 @@ data class CallExpression(
 data class CaseExpression(
         override val location: Location,
         val operator: Expression,
-        val items: List<Expression>) : Expression(location)
+        val items: List<CaseItem>) : Expression(location)
 
 data class CaseItem (
         override val location: Location,
