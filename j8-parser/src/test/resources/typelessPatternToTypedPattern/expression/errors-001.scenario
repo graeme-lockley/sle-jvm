@@ -4,5 +4,5 @@ value =
     1 + somethingOrElse
 -- errors
 [
-    UnboundVariable(location=[(3, 8) (3, 22)], name=somethingOrElse)
+    UnboundVariable(location=[(3, 9) (3, 23)], name=somethingOrElse)
 ]

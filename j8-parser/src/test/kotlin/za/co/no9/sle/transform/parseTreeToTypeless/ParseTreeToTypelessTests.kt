@@ -30,5 +30,3 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
         }
     }
 }
-
-

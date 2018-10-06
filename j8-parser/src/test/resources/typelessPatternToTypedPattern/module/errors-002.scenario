@@ -7,5 +7,5 @@ add x y =
     x + y
 -- errors
 [
-    DuplicateLetDeclaration(location=[(5, 0) (6, 8)], name=add)
+    DuplicateLetDeclaration(location=[(5, 1) (6, 9)], name=add)
 ]

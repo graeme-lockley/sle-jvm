@@ -8,5 +8,5 @@ add =
     \x y -> x + y
 -- errors
 [
-    LetSignatureWithoutDeclaration(location=[(5, 0) (5, 23)], name=addY)
+    LetSignatureWithoutDeclaration(location=[(5, 1) (5, 24)], name=addY)
 ]

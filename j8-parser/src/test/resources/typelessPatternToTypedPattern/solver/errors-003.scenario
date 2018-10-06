@@ -4,5 +4,5 @@ type List a =
   | Node a (List a)
 -- errors
 [
-  DuplicateConstructorDeclaration(location=[(3, 4) (3, 18)], name=Node)
+  DuplicateConstructorDeclaration(location=[(3, 5) (3, 18)], name=Node)
 ]

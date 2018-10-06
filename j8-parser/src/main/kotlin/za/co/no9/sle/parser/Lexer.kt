@@ -37,10 +37,13 @@ val keywords =
         )
 
 val operatorCharacters =
-        setOf('-', '=', '|', '(', ')', '*', '/', '=', '!', '<', '>', '&')
+        setOf('-', '=', '|', '(', ')', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':')
 
 
-data class Symbol(val token: Token, val location: Location, val text: String)
+data class Symbol(val token: Token, val location: Location, val text: String) {
+    val column: Int
+        get() = location.start.column
+}
 
 
 class Lexer(val input: String) {
@@ -50,6 +53,13 @@ class Lexer(val input: String) {
 
     val token: Token
         get() = this.currentSymbol.token
+
+    val text: String
+        get() = this.currentSymbol.text
+
+    val column: Int
+        get() = this.currentSymbol.location.start.column
+
 
     private val inputLength =
             input.length
@@ -72,6 +82,16 @@ class Lexer(val input: String) {
     init {
         skip()
     }
+
+    fun next(): Symbol {
+        val current =
+                currentSymbol
+
+        skip()
+
+        return current
+    }
+
 
     fun skip() {
         try {
@@ -227,9 +247,9 @@ class Lexer(val input: String) {
             nextCh = if (currentIndex + 1 < inputLength) input[currentIndex + 1] else ' '
 
             if (currentCh == '\n') {
-                currentColumn = 1
+                currentColumn = 0
                 currentLine += 1
-            } else {
+            } else if (currentCh != '\r'){
                 currentColumn += 1
             }
         }

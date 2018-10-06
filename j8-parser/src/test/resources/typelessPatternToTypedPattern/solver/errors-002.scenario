@@ -3,7 +3,7 @@ singleton x =
     Cons x Nil
 -- errors
 [
-  UnboundVariable(location=[(2, 4) (2, 7)], name=Cons)
-  UnboundVariable(location=[(2, 11) (2, 13)], name=Nil)
+  UnboundVariable(location=[(2, 5) (2, 8)], name=Cons)
+  UnboundVariable(location=[(2, 12) (2, 14)], name=Nil)
   UnificationFail(t1=:Error:, t2='0 -> '1)
 ]

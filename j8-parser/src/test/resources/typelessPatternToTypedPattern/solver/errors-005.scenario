@@ -8,5 +8,5 @@ type List a =
   | ConsB a (List a)
 -- errors
 [
-  DuplicateTypeDeclaration(location=[(5, 0) (7, 19)], name=List)
+  DuplicateTypeDeclaration(location=[(5, 1) (7, 19)], name=List)
 ]

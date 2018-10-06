@@ -7,14 +7,16 @@ import org.antlr.v4.runtime.tree.TerminalNode
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typeless.Unit
+import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
 
 
 fun parse(text: String): Either<Errors, Module> {
-    fun parseTreeToAST(node: ParserRuleContext): Module =
-            walkParseTree(node).module!!
-
-    return parseModule(text).map { parseTreeToAST(it.node) }
+//    fun parseTreeToAST(node: ParserRuleContext): Module =
+//            walkParseTree(node).module!!
+//
+//    return parseModule(text).map { parseTreeToAST(it.node) }
+    return parseModule(Lexer(text))
 }
 
 

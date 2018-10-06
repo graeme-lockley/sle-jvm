@@ -8,5 +8,5 @@ add =
     \x y -> x + y
 -- errors
 [
-    DuplicateLetSignature(location=[(5, 0) (5, 22)], otherLocation=[(1, 0) (1, 22)], name=add)
+    DuplicateLetSignature(location=[(5, 1) (5, 23)], otherLocation=[(1, 1) (1, 23)], name=add)
 ]
