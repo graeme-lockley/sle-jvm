@@ -10,6 +10,7 @@ enum class Token {
     ERROR,
 
     ConstantInt,
+    ConstantOperator,
     ConstantString,
 
     LowerID,
@@ -34,6 +35,10 @@ val keywords =
                 Pair("type", Token.TYPE),
                 Pair("typealias", Token.TYPEALIAS)
         )
+
+val operatorCharacters =
+        setOf('-', '=', '|', '(', ')', '*', '/', '=', '!', '<', '>', '&')
+
 
 data class Symbol(val token: Token, val location: Location, val text: String)
 
@@ -182,8 +187,31 @@ class Lexer(val input: String) {
                     currentSymbol =
                             Symbol(Token.ConstantString, Location(startPosition, endPosition), text)
                 }
+
+                operatorCharacters.contains(currentCh) -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    while (operatorCharacters.contains(nextCh)) {
+                        next()
+                    }
+                    val endPosition =
+                            position()
+
+                    val endIndex =
+                            currentIndex
+
+                    val text =
+                            input.substring(startIndex, endIndex + 1)
+
+                    currentSymbol =
+                            Symbol(Token.ConstantOperator, Location(startPosition, endPosition), text)
+                }
             }
-        } catch (e: StringIndexOutOfBoundsException) {
+            } catch (e: StringIndexOutOfBoundsException) {
             currentSymbol = Symbol(Token.EOF, location(), "")
         }
     }

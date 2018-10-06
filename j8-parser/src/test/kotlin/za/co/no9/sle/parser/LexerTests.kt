@@ -40,6 +40,14 @@ class LexerTests : StringSpec({
         Lexer("\"hello\"").tokenTexts()
                 .shouldBe(listOf("\"hello\""))
     }
+
+    "() != == <= < -> -> [ConstantOperator, ..., ConstantOperator]" {
+        Lexer("() != == <= < ->").tokens()
+                .shouldBe(listOf(Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator))
+
+        Lexer("() != == <= < ->").tokenTexts()
+                .shouldBe(listOf("()", "!=", "==", "<=", "<", "->"))
+    }
 })
 
 
