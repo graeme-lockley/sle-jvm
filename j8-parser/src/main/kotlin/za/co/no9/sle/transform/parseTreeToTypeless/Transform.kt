@@ -72,20 +72,14 @@ private class ParserToAST : ParserBaseListener() {
     }
 
 
-    fun popType(): TType? =
-            when {
-                typeStack.isEmpty() ->
-                    null
+    fun popType(): TType {
+        val result =
+                typeStack.last()
 
-                else -> {
-                    val result =
-                            typeStack.last()
+        typeStack = typeStack.dropLast(1)
 
-                    typeStack = typeStack.dropLast(1)
-
-                    result
-                }
-            }
+        return result
+    }
 
     private fun pushType(type: TType) {
         typeStack += type
@@ -339,7 +333,7 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<TType>()
 
         for (lp in 1..numberOfTypes) {
-            types += popType()!!
+            types += popType()
         }
 
         typeConstructors += TypeConstructor(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed())
@@ -420,7 +414,7 @@ private class ParserToAST : ParserBaseListener() {
                 emptyList<TType>()
 
         for (lp in 1..numberOfTypes) {
-            types += popType()!!
+            types += popType()
         }
 
         pushType(TConstReference(ctx.location(), ID(ctx.UpperID().location(), ctx.UpperID().text), types.asReversed()))
@@ -429,10 +423,10 @@ private class ParserToAST : ParserBaseListener() {
 
     override fun exitArrowType(ctx: ParserParser.ArrowTypeContext?) {
         val range =
-                popType()!!
+                popType()
 
         val domain =
-                popType()!!
+                popType()
 
         pushType(TArrow(ctx!!.location(), domain, range))
     }
