@@ -58,6 +58,16 @@ private class Stack<T>(private var stack: List<T> = emptyList()) {
             popN(n).asReversed()
 
 
+    fun popAllReversed(): List<T> {
+        val result =
+                stack
+
+        stack = emptyList()
+
+        return result.asReversed()
+    }
+
+
     fun push(item: T) {
         stack += item
     }
@@ -77,8 +87,8 @@ private class ParserToAST : ParserBaseListener() {
     private var typeConstructors =
             emptyList<TypeConstructor>()
 
-    private var caseItems =
-            emptyList<CaseItem>()
+    private val caseItems =
+            Stack<CaseItem>()
 
 
     var module: Module? =
@@ -100,21 +110,6 @@ private class ParserToAST : ParserBaseListener() {
                 declarations
 
         declarations = emptyList()
-
-        return result
-    }
-
-
-    private fun addCaseItem(caseItem: CaseItem) {
-        caseItems += caseItem
-    }
-
-
-    private fun popCaseItems(): List<CaseItem> {
-        val result =
-                caseItems
-
-        caseItems = emptyList()
 
         return result
     }
@@ -215,12 +210,12 @@ private class ParserToAST : ParserBaseListener() {
     }
 
     override fun exitCaseExpression(ctx: ParserParser.CaseExpressionContext?) {
-        expressionStack.push(CaseExpression(ctx!!.location(), expressionStack.pop(), popCaseItems()))
+        expressionStack.push(CaseExpression(ctx!!.location(), expressionStack.pop(), caseItems.popAllReversed()))
     }
 
 
     override fun exitCaseItem(ctx: ParserParser.CaseItemContext?) {
-        addCaseItem(CaseItem(ctx!!.location(), patternStack.pop(), expressionStack.pop()))
+        caseItems.push(CaseItem(ctx!!.location(), patternStack.pop(), expressionStack.pop()))
     }
 
 
