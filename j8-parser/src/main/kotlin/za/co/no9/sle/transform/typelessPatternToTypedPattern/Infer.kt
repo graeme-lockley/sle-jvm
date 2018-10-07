@@ -360,6 +360,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                     CallExpression(expression.location, tv, t1, t2)
                 }
+
+                is za.co.no9.sle.ast.typelessPattern.CaseExpression ->
+                    TODO()
             }
 
 
