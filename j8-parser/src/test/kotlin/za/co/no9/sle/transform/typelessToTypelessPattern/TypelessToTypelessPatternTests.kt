@@ -3,6 +3,7 @@ package za.co.no9.sle.transform.typelessToTypelessPattern
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.Either
+import za.co.no9.sle.ast.typeless.Module
 import za.co.no9.sle.right
 import za.co.no9.sle.runner
 import za.co.no9.sle.shouldBeEqual
