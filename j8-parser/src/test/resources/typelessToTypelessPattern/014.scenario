@@ -1,0 +1,328 @@
+-- A simple case expression over a product Tuple
+type Tuple a b =
+    Tuple a b
+
+first : (Tuple a b) -> a
+first t =
+    case t of
+        Tuple a b -> a
+
+second : (Tuple a b) -> b
+second t =
+    case t of
+        Tuple a b -> b
+
+mapFirst : (a -> c) -> (Tuple a b) -> (Tuple c b)
+mapFirst f t =
+    case t of
+        Tuple a b -> Tuple (f a) b
+
+mapSecond : (b -> c) -> (Tuple a b) -> (Tuple a c)
+mapSecond f t =
+    case t of
+        Tuple a b -> Tuple a (f b)
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                  ]
+                name: Tuple
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: t
+            expression:
+              CaseExpression:
+                items: [
+                    CaseItem:
+                      expression:
+                        IdReference:
+                          name: a
+                      pattern:
+                        ConstructorReferencePattern:
+                          name: Tuple
+                          parameters: [
+                              IdReferencePattern:
+                                name: a
+                              IdReferencePattern:
+                                name: b
+                            ]
+                  ]
+                operator:
+                  IdReference:
+                    name: t
+        name:
+          ID:
+            name: first
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                        TVar:
+                          variable: 1
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 0
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: t
+            expression:
+              CaseExpression:
+                items: [
+                    CaseItem:
+                      expression:
+                        IdReference:
+                          name: b
+                      pattern:
+                        ConstructorReferencePattern:
+                          name: Tuple
+                          parameters: [
+                              IdReferencePattern:
+                                name: a
+                              IdReferencePattern:
+                                name: b
+                            ]
+                  ]
+                operator:
+                  IdReference:
+                    name: t
+        name:
+          ID:
+            name: second
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                        TVar:
+                          variable: 1
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 1
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: f
+            expression:
+              LambdaExpression:
+                argument:
+                  ID:
+                    name: t
+                expression:
+                  CaseExpression:
+                    items: [
+                        CaseItem:
+                          expression:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: b
+                              operator:
+                                CallExpression:
+                                  operand:
+                                    CallExpression:
+                                      operand:
+                                        IdReference:
+                                          name: a
+                                      operator:
+                                        IdReference:
+                                          name: f
+                                  operator:
+                                    ConstructorReference:
+                                      name: Tuple
+                          pattern:
+                            ConstructorReferencePattern:
+                              name: Tuple
+                              parameters: [
+                                  IdReferencePattern:
+                                    name: a
+                                  IdReferencePattern:
+                                    name: b
+                                ]
+                      ]
+                    operator:
+                      IdReference:
+                        name: t
+        name:
+          ID:
+            name: mapFirst
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+                2
+              ]
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TVar:
+                        variable: 0
+                    range:
+                      TVar:
+                        variable: 1
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 0
+                            TVar:
+                              variable: 2
+                          ]
+                        name: Tuple
+                    range:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 1
+                            TVar:
+                              variable: 2
+                          ]
+                        name: Tuple
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              ID:
+                name: f
+            expression:
+              LambdaExpression:
+                argument:
+                  ID:
+                    name: t
+                expression:
+                  CaseExpression:
+                    items: [
+                        CaseItem:
+                          expression:
+                            CallExpression:
+                              operand:
+                                CallExpression:
+                                  operand:
+                                    IdReference:
+                                      name: b
+                                  operator:
+                                    IdReference:
+                                      name: f
+                              operator:
+                                CallExpression:
+                                  operand:
+                                    IdReference:
+                                      name: a
+                                  operator:
+                                    ConstructorReference:
+                                      name: Tuple
+                          pattern:
+                            ConstructorReferencePattern:
+                              name: Tuple
+                              parameters: [
+                                  IdReferencePattern:
+                                    name: a
+                                  IdReferencePattern:
+                                    name: b
+                                ]
+                      ]
+                    operator:
+                      IdReference:
+                        name: t
+        name:
+          ID:
+            name: mapSecond
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+                2
+              ]
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TVar:
+                        variable: 0
+                    range:
+                      TVar:
+                        variable: 1
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 2
+                            TVar:
+                              variable: 0
+                          ]
+                        name: Tuple
+                    range:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 2
+                            TVar:
+                              variable: 1
+                          ]
+                        name: Tuple
+    ]

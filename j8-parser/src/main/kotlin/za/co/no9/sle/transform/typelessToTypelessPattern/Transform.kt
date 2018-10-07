@@ -4,16 +4,25 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typelessPattern.*
 import za.co.no9.sle.ast.typelessPattern.CallExpression
+import za.co.no9.sle.ast.typelessPattern.CaseExpression
+import za.co.no9.sle.ast.typelessPattern.CaseItem
+import za.co.no9.sle.ast.typelessPattern.ConstantBoolPattern
 import za.co.no9.sle.ast.typelessPattern.ConstantInt
+import za.co.no9.sle.ast.typelessPattern.ConstantIntPattern
 import za.co.no9.sle.ast.typelessPattern.ConstantString
+import za.co.no9.sle.ast.typelessPattern.ConstantStringPattern
+import za.co.no9.sle.ast.typelessPattern.ConstantUnitPattern
 import za.co.no9.sle.ast.typelessPattern.ConstructorReference
+import za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern
 import za.co.no9.sle.ast.typelessPattern.Expression
 import za.co.no9.sle.ast.typelessPattern.ID
 import za.co.no9.sle.ast.typelessPattern.IdReference
+import za.co.no9.sle.ast.typelessPattern.IdReferencePattern
 import za.co.no9.sle.ast.typelessPattern.IfExpression
 import za.co.no9.sle.ast.typelessPattern.LambdaExpression
 import za.co.no9.sle.ast.typelessPattern.LetDeclaration
 import za.co.no9.sle.ast.typelessPattern.Module
+import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.ast.typelessPattern.Unit
@@ -166,7 +175,29 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
 
             is za.co.no9.sle.ast.typeless.CaseExpression ->
-                TODO()
+                CaseExpression(ast.location, astToCoreAST(ast.operator), ast.items.map { item -> CaseItem(item.location, transform(item.pattern), astToCoreAST(item.expression)) })
+        }
+
+
+private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
+        when (pattern) {
+            is za.co.no9.sle.ast.typeless.ConstantIntPattern ->
+                ConstantIntPattern(pattern.location, pattern.value)
+
+            is za.co.no9.sle.ast.typeless.ConstantBoolPattern ->
+                ConstantBoolPattern(pattern.location, pattern.value)
+
+            is za.co.no9.sle.ast.typeless.ConstantStringPattern ->
+                ConstantStringPattern(pattern.location, pattern.value)
+
+            is za.co.no9.sle.ast.typeless.ConstantUnitPattern ->
+                ConstantUnitPattern(pattern.location)
+
+            is za.co.no9.sle.ast.typeless.IdReferencePattern ->
+                IdReferencePattern(pattern.location, pattern.name)
+
+            is za.co.no9.sle.ast.typeless.ConstructorReferencePattern ->
+                ConstructorReferencePattern(pattern.location, pattern.name, pattern.parameters.map { transform(it) })
         }
 
 
