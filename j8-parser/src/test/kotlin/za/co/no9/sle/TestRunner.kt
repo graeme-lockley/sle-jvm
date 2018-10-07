@@ -235,7 +235,7 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                             val value =
                                     it.call(o)
 
-                            if (it.name == "location") {
+                            if (it.name == "location" || it.name == "column") {
                                 ""
                             } else {
                                 dd(it.name, value, indent + 2)

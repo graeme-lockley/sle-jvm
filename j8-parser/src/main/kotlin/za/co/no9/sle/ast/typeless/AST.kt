@@ -4,7 +4,10 @@ import za.co.no9.sle.Location
 
 
 sealed class Node(
-        open val location: Location)
+        open val location: Location) {
+    val column: Int
+        get() = this.location.start.column
+}
 
 
 data class Module(
@@ -113,38 +116,38 @@ data class CaseExpression(
         val operator: Expression,
         val items: List<CaseItem>) : Expression(location)
 
-data class CaseItem (
+data class CaseItem(
         override val location: Location,
         val pattern: Pattern,
-        val expression: Expression): Node(location)
+        val expression: Expression) : Node(location)
 
 
-sealed class Pattern (
-        override val location: Location): Node(location)
+sealed class Pattern(
+        override val location: Location) : Node(location)
 
 data class ConstantIntPattern(
         override val location: Location,
-        val value: Int): Pattern(location)
+        val value: Int) : Pattern(location)
 
 data class ConstantBoolPattern(
         override val location: Location,
-        val value: Boolean): Pattern(location)
+        val value: Boolean) : Pattern(location)
 
 data class ConstantStringPattern(
         override val location: Location,
-        val value: String): Pattern(location)
+        val value: String) : Pattern(location)
 
 data class ConstantUnitPattern(
-        override val location: Location): Pattern(location)
+        override val location: Location) : Pattern(location)
 
 data class IdReferencePattern(
         override val location: Location,
-        val name: String): Pattern(location)
+        val name: String) : Pattern(location)
 
 data class ConstructorReferencePattern(
         override val location: Location,
         val name: String,
-        val parameters: List<Pattern>): Pattern(location)
+        val parameters: List<Pattern>) : Pattern(location)
 
 
 sealed class TType(

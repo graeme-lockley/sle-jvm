@@ -106,12 +106,12 @@ class Parser(private val lexer: Lexer) {
                             matchOperator("|")
 
                             val guard =
-                                    parseExpression()
+                                    parseExpression(id.column)
 
                             matchOperator("=")
 
                             val expression =
-                                    parseExpression()
+                                    parseExpression(id.column)
 
                             guardedExpressions.add(Pair(guard, expression))
                         }
@@ -121,7 +121,7 @@ class Parser(private val lexer: Lexer) {
                         matchOperator("=")
 
                         val expression =
-                                parseExpression()
+                                parseExpression(id.column)
 
                         return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
                     }
@@ -155,18 +155,18 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parseExpression(): Expression =
-            parseCaseExpression()
+    fun parseExpression(leftEdge: Int): Expression =
+            parseCaseExpression(leftEdge)
 
 
-    fun parseCaseExpression(): Expression =
+    fun parseCaseExpression(leftEdge: Int): Expression =
             when {
                 isToken(Token.CASE) -> {
                     val caseSymbol =
                             lexer.next()
 
                     val expression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     matchToken(Token.OF, "of")
 
@@ -180,7 +180,7 @@ class Parser(private val lexer: Lexer) {
                         matchOperator("->")
 
                         val caseExpression =
-                                parseExpression()
+                                parseExpression(pattern.column)
 
                         caseItems.add(CaseItem(pattern.location + caseExpression.location, pattern, caseExpression))
                     }
@@ -188,25 +188,25 @@ class Parser(private val lexer: Lexer) {
                     CaseExpression(caseSymbol.location + locationFrom(caseItems.map { it.expression }), expression, caseItems)
                 }
                 else ->
-                    parseMultiplicative()
+                    parseMultiplicative(leftEdge)
 
             }
 
 
-    fun parseMultiplicative(): Expression =
-            parseBinaryOp(setOf("*", "/")) { parseAdditive() }
+    fun parseMultiplicative(leftEdge: Int): Expression =
+            parseBinaryOp(setOf("*", "/")) { parseAdditive(leftEdge) }
 
-    fun parseAdditive(): Expression =
-            parseBinaryOp(setOf("+", "-")) { parseRelationalOp() }
+    fun parseAdditive(leftEdge: Int): Expression =
+            parseBinaryOp(setOf("+", "-")) { parseRelationalOp(leftEdge) }
 
-    fun parseRelationalOp(): Expression =
-            parseBinaryOp(setOf("==", "!=", "<=", "<", ">=", ">")) { parseBooleanAnd() }
+    fun parseRelationalOp(leftEdge: Int): Expression =
+            parseBinaryOp(setOf("==", "!=", "<=", "<", ">=", ">")) { parseBooleanAnd(leftEdge) }
 
-    fun parseBooleanAnd(): Expression =
-            parseBinaryOp(setOf("&&")) { parseBooleanOr() }
+    fun parseBooleanAnd(leftEdge: Int): Expression =
+            parseBinaryOp(setOf("&&")) { parseBooleanOr(leftEdge) }
 
-    fun parseBooleanOr(): Expression =
-            parseBinaryOp(setOf("||")) { parseLambda() }
+    fun parseBooleanOr(leftEdge: Int): Expression =
+            parseBinaryOp(setOf("||")) { parseLambda(leftEdge) }
 
 
     fun parseBinaryOp(operators: Set<String>, next: () -> Expression): Expression {
@@ -226,7 +226,7 @@ class Parser(private val lexer: Lexer) {
         }
     }
 
-    fun parseLambda(): Expression =
+    fun parseLambda(leftEdge: Int): Expression =
             when {
                 isOperator("\\") -> {
                     val lambdaSymbol =
@@ -244,52 +244,52 @@ class Parser(private val lexer: Lexer) {
                     matchOperator("->")
 
                     val expression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     LambdaExpression(lambdaSymbol.location + expression.location, arguments, expression)
                 }
 
                 else ->
-                    parseIf()
+                    parseIf(leftEdge)
             }
 
 
-    fun parseIf(): Expression =
+    fun parseIf(leftEdge: Int): Expression =
             when {
                 isToken(Token.IF) -> {
                     val ifSymbol =
                             lexer.next()
 
                     val guardExpression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     matchToken(Token.THEN, "then")
 
                     val thenExpression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     matchToken(Token.ELSE, "else")
 
                     val elseExpression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     IfExpression(ifSymbol.location + elseExpression.location, guardExpression, thenExpression, elseExpression)
                 }
 
                 else ->
-                    parseCall()
+                    parseCall(leftEdge)
             }
 
 
-    fun parseCall(): Expression {
+    fun parseCall(leftEdge: Int): Expression {
         val operator =
-                parseTerm()
+                parseTerm(leftEdge)
 
         val operands =
                 mutableListOf<Expression>()
 
-        while (lexer.column > 1 && isFirstTerm()) {
-            operands.add(parseTerm())
+        while (lexer.column > leftEdge && isFirstTerm()) {
+            operands.add(parseTerm(leftEdge))
         }
 
         return if (operands.isEmpty())
@@ -299,7 +299,7 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parseTerm(): Expression =
+    fun parseTerm(leftEdge: Int): Expression =
             when {
                 isToken(Token.ConstantInt) -> {
                     val token =
@@ -333,7 +333,7 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val expression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     NotExpression(bangSymbol.location + expression.location, expression)
                 }
@@ -349,7 +349,7 @@ class Parser(private val lexer: Lexer) {
                     lexer.next()
 
                     val expression =
-                            parseExpression()
+                            parseExpression(leftEdge)
 
                     matchOperator(")")
 
