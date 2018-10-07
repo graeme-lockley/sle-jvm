@@ -79,13 +79,13 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                             ast.arguments.mapIndexed { index, _ -> index }
 
                     val scheme =
-                            Scheme(parameters, TCon(ast.name.name, ast.arguments.map { substitution[it.name]!! }))
+                            Scheme(parameters, TCon(ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
 
                     declarations + TypeDeclaration(
                             ast.location,
                             astToCoreAST(ast.name),
                             scheme,
-                            ast.constructors.map { Constructor(it.location, astToCoreAST(it.name), it.arguments.map { ttype -> astToType(ttype, substitution) }) }
+                            ast.constructors.map { constructor -> Constructor(constructor.location, astToCoreAST(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
                     )
                 }
 
