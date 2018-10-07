@@ -171,7 +171,42 @@ class Parser(val lexer: Lexer) {
 
 
     fun parseExpression(): Expression =
-            parseMultiplicative()
+            parseCaseExpression()
+
+
+    fun parseCaseExpression(): Expression =
+            when {
+                isToken(Token.CASE) -> {
+                    val caseSymbol =
+                            lexer.next()
+
+                    val expression =
+                            parseExpression()
+
+                    matchToken(Token.OF, "of")
+
+                    val caseItems =
+                            mutableListOf<CaseItem>()
+
+                    while (lexer.column > caseSymbol.column && isFirstPattern()) {
+                        val pattern =
+                                parsePattern()
+
+                        matchOperator("->")
+
+                        val caseExpression =
+                                parseExpression()
+
+                        caseItems.add(CaseItem(pattern.location + caseExpression.location, pattern, caseExpression))
+                    }
+
+                    CaseExpression(caseSymbol.location + locationFrom(caseItems.map { it.expression }), expression, caseItems)
+                }
+                else ->
+                    parseMultiplicative()
+
+            }
+
 
     fun parseMultiplicative(): Expression =
             parseBinaryOp(setOf("*", "/")) { parseAdditive() }
@@ -207,51 +242,57 @@ class Parser(val lexer: Lexer) {
     }
 
     fun parseLambda(): Expression =
-            if (isOperator("\\")) {
-                val lambdaSymbol =
-                        lexer.next()
+            when {
+                isOperator("\\") -> {
+                    val lambdaSymbol =
+                            lexer.next()
 
-                val arguments =
-                        mutableListOf<ID>()
+                    val arguments =
+                            mutableListOf<ID>()
 
-                arguments.add(matchToken(Token.LowerID, "lower ID").toID())
-
-                while (lexer.token == Token.LowerID) {
                     arguments.add(matchToken(Token.LowerID, "lower ID").toID())
+
+                    while (lexer.token == Token.LowerID) {
+                        arguments.add(matchToken(Token.LowerID, "lower ID").toID())
+                    }
+
+                    matchOperator("->")
+
+                    val expression =
+                            parseExpression()
+
+                    LambdaExpression(lambdaSymbol.location + expression.location, arguments, expression)
                 }
 
-                matchOperator("->")
-
-                val expression =
-                        parseExpression()
-
-                LambdaExpression(lambdaSymbol.location + expression.location, arguments, expression)
-            } else {
-                parseIf()
+                else ->
+                    parseIf()
             }
 
 
     fun parseIf(): Expression =
-            if (isToken(Token.IF)) {
-                val ifSymbol =
-                        lexer.next()
+            when {
+                isToken(Token.IF) -> {
+                    val ifSymbol =
+                            lexer.next()
 
-                val guardExpression =
-                        parseExpression()
+                    val guardExpression =
+                            parseExpression()
 
-                matchToken(Token.THEN, "then")
+                    matchToken(Token.THEN, "then")
 
-                val thenExpression =
-                        parseExpression()
+                    val thenExpression =
+                            parseExpression()
 
-                matchToken(Token.ELSE, "else")
+                    matchToken(Token.ELSE, "else")
 
-                val elseExpression =
-                        parseExpression()
+                    val elseExpression =
+                            parseExpression()
 
-                IfExpression(ifSymbol.location + elseExpression.location, guardExpression, thenExpression, elseExpression)
-            } else {
-                parseCall()
+                    IfExpression(ifSymbol.location + elseExpression.location, guardExpression, thenExpression, elseExpression)
+                }
+
+                else ->
+                    parseCall()
             }
 
 
@@ -262,15 +303,7 @@ class Parser(val lexer: Lexer) {
         val operands =
                 mutableListOf<Expression>()
 
-        while (lexer.column > 1 && (
-                        isOperator("(") ||
-                                isToken(Token.ConstantInt) ||
-                                isToken(Token.ConstantString) ||
-                                isOperator("!") ||
-                                isToken(Token.LowerID) ||
-                                isToken(Token.UpperID) ||
-                                isOperator("()")
-                        )) {
+        while (lexer.column > 1 && isFirstTerm()) {
             operands.add(parseTerm())
         }
 
@@ -283,34 +316,6 @@ class Parser(val lexer: Lexer) {
 
     fun parseTerm(): Expression =
             when {
-                isToken(Token.CASE) -> {
-                    // TODO move this higher up so that the precedence is correct
-                    val caseSymbol =
-                            lexer.next()
-
-                    val expression =
-                            parseExpression()
-
-                    matchToken(Token.OF, "of")
-
-                    val caseItems =
-                            mutableListOf<CaseItem>()
-
-                    while (lexer.column > caseSymbol.column && isFirstPattern()) {
-                        val pattern =
-                                parsePattern()
-
-                        matchOperator("->")
-
-                        val caseExpression =
-                                parseExpression()
-
-                        caseItems.add(CaseItem(pattern.location + caseExpression.location, pattern, caseExpression))
-                    }
-
-                    CaseExpression(caseSymbol.location + locationFrom(caseItems.map { it.expression }), expression, caseItems)
-                }
-
                 isToken(Token.ConstantInt) -> {
                     val token =
                             lexer.next()
@@ -325,34 +330,34 @@ class Parser(val lexer: Lexer) {
                     False(lexer.next().location)
 
                 isToken(Token.ConstantString) -> {
-                    val token =
+                    val constantStringSymbol =
                             lexer.next()
 
                     val text =
-                            token.text
+                            constantStringSymbol.text
                                     .drop(1)
                                     .dropLast(1)
                                     .replace("\\\\", "\\")
                                     .replace("\\\"", "\"")
 
-                    ConstantString(token.location, text)
+                    ConstantString(constantStringSymbol.location, text)
                 }
 
                 isOperator("!") -> {
-                    val not =
+                    val bangSymbol =
                             lexer.next()
 
                     val expression =
                             parseExpression()
 
-                    NotExpression(not.location + expression.location, expression)
+                    NotExpression(bangSymbol.location + expression.location, expression)
                 }
 
                 isToken(Token.LowerID) -> {
-                    val lowerID =
+                    val lowerIDSymbol =
                             lexer.next()
 
-                    IdReference(lowerID.location, lowerID.text)
+                    IdReference(lowerIDSymbol.location, lowerIDSymbol.text)
                 }
 
                 isOperator("(") -> {
@@ -383,6 +388,15 @@ class Parser(val lexer: Lexer) {
                 else ->
                     TODO(lexer.next().toString())
             }
+
+    fun isFirstTerm(): Boolean =
+            isOperator("(") ||
+                    isToken(Token.ConstantInt) ||
+                    isToken(Token.ConstantString) ||
+                    isOperator("!") ||
+                    isToken(Token.LowerID) ||
+                    isToken(Token.UpperID) ||
+                    isOperator("()")
 
 
     fun parseType(): TType {
