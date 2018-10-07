@@ -187,11 +187,11 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
 
 
 private fun typeToScheme(ttype: TType?): Scheme? {
-    var currentID =
-            0
+    val pump =
+            VarPump()
 
     val substitution =
-            mutableMapOf<String, Int>()
+            mutableMapOf<String, TVar>()
 
 
     fun map(ttype: TType): Type =
@@ -200,20 +200,18 @@ private fun typeToScheme(ttype: TType?): Scheme? {
                     typeUnit
 
                 is TVarReference -> {
-                    val value =
+                    val varRef =
                             substitution[ttype.name]
 
-                    if (value == null) {
-                        val varRef =
-                                currentID
+                    if (varRef == null) {
+                        val newVarRef =
+                                pump.fresh()
 
-                        currentID += 1
+                        substitution[ttype.name] = newVarRef
 
-                        substitution[ttype.name] = varRef
-
-                        TVar(varRef)
+                        newVarRef
                     } else {
-                        TVar(value)
+                        varRef
                     }
                 }
 
@@ -233,7 +231,7 @@ private fun typeToScheme(ttype: TType?): Scheme? {
             val type =
                     map(ttype)
 
-            Scheme(substitution.values.toList(), type)
+            Scheme(substitution.values.map { it.variable }, type)
         }
     }
 }
