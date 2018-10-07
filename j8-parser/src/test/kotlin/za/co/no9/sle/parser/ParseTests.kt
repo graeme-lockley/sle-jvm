@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.parseTreeToTypeless
+package za.co.no9.sle.parser
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 
@@ -10,15 +10,15 @@ import za.co.no9.sle.shouldBeEqual
 import java.util.function.Consumer
 
 
-class ParseTreeToTypelessTests : FunSpec({
-    runner(this, "parseTreeToTypeless", RunnerConsumer())
+class ParseTests : FunSpec({
+    runner(this, "parser", RunnerConsumer())
 })
 
 
 private class RunnerConsumer : Consumer<Map<String, List<String>>> {
     override fun accept(fileContent: Map<String, List<String>>) {
         val result =
-                parse(fileContent["src"]?.joinToString("\n") ?: "")
+                parseModule(Lexer(fileContent["src"]?.joinToString("\n") ?: ""))
 
         val astTest =
                 fileContent["ast"]

@@ -17,11 +17,13 @@ import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.ast.typelessPattern.Unit
+import za.co.no9.sle.parser.Lexer
+import za.co.no9.sle.parser.parseModule
 import za.co.no9.sle.typing.*
 
 
 fun parse(text: String): Either<Errors, Module> =
-        za.co.no9.sle.transform.parseTreeToTypeless.parse(text)
+        parseModule(Lexer(text))
                 .andThen { astToCoreAST(it) }
 
 
