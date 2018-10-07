@@ -17,7 +17,7 @@ fun parseModule(lexer: Lexer): Either<Errors, Module> {
 }
 
 
-class Parser(val lexer: Lexer) {
+class Parser(private val lexer: Lexer) {
     var errors: Errors =
             setOf()
 
@@ -32,59 +32,16 @@ class Parser(val lexer: Lexer) {
         return Module(locationFrom(moduleDeclarations)!!, moduleDeclarations)
     }
 
+
     fun parseDeclaration(): Declaration {
-        if (isToken(Token.TYPE)) {
-            val typeSymbol =
-                    lexer.next()
+        when {
+            isToken(Token.TYPE) -> {
+                val typeSymbol =
+                        lexer.next()
 
-            val upperID =
-                    matchToken(Token.UpperID, "Expected UpperID").toID()
+                val upperID =
+                        matchToken(Token.UpperID, "Expected UpperID").toID()
 
-            val arguments =
-                    mutableListOf<ID>()
-
-            while (lexer.token == Token.LowerID) {
-                arguments.add(lexer.next().toID())
-            }
-
-            matchOperator("=")
-
-            val typeConstructors =
-                    mutableListOf<TypeConstructor>()
-
-            typeConstructors.add(parseTypeConstructor())
-
-            while (isOperator("|")) {
-                matchOperator("|")
-                typeConstructors.add(parseTypeConstructor())
-            }
-
-            return TypeDeclaration(typeSymbol.location + locationFrom(typeConstructors), upperID, arguments, typeConstructors)
-        } else if (isToken(Token.TYPEALIAS)) {
-            val typealiasSymbol =
-                    lexer.next()
-
-            val upperID =
-                    matchToken(Token.UpperID, "Expected UpperID").toID()
-
-            matchOperator("=")
-
-            val type =
-                    parseType()
-
-            return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
-        } else if (lexer.token == Token.LowerID) {
-            val id =
-                    lexer.next().toID()
-
-            if (isOperator(":")) {
-                matchOperator(":")
-
-                val type =
-                        parseType()
-
-                return LetSignature(id.location + type.location, id, type)
-            } else if (isToken(Token.LowerID) || isOperator("=") || isOperator("|")) {
                 val arguments =
                         mutableListOf<ID>()
 
@@ -92,38 +49,89 @@ class Parser(val lexer: Lexer) {
                     arguments.add(lexer.next().toID())
                 }
 
-                if (isOperator("|")) {
-                    val guardedExpressions =
-                            mutableListOf<Pair<Expression, Expression>>()
+                matchOperator("=")
 
-                    while (isOperator("|")) {
-                        matchOperator("|")
+                val typeConstructors =
+                        mutableListOf<TypeConstructor>()
 
-                        val guard =
-                                parseExpression()
+                typeConstructors.add(parseTypeConstructor())
 
+                while (isOperator("|")) {
+                    matchOperator("|")
+                    typeConstructors.add(parseTypeConstructor())
+                }
+
+                return TypeDeclaration(typeSymbol.location + locationFrom(typeConstructors), upperID, arguments, typeConstructors)
+            }
+
+            isToken(Token.TYPEALIAS) -> {
+                val typealiasSymbol =
+                        lexer.next()
+
+                val upperID =
+                        matchToken(Token.UpperID, "Expected UpperID").toID()
+
+                matchOperator("=")
+
+                val type =
+                        parseType()
+
+                return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
+            }
+
+            isToken(Token.LowerID) -> {
+                val id =
+                        lexer.next().toID()
+
+                if (isOperator(":")) {
+                    matchOperator(":")
+
+                    val type =
+                            parseType()
+
+                    return LetSignature(id.location + type.location, id, type)
+                } else if (isToken(Token.LowerID) || isOperator("=") || isOperator("|")) {
+                    val arguments =
+                            mutableListOf<ID>()
+
+                    while (isToken(Token.LowerID)) {
+                        arguments.add(lexer.next().toID())
+                    }
+
+                    if (isOperator("|")) {
+                        val guardedExpressions =
+                                mutableListOf<Pair<Expression, Expression>>()
+
+                        while (isOperator("|")) {
+                            matchOperator("|")
+
+                            val guard =
+                                    parseExpression()
+
+                            matchOperator("=")
+
+                            val expression =
+                                    parseExpression()
+
+                            guardedExpressions.add(Pair(guard, expression))
+                        }
+
+                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
+                    } else {
                         matchOperator("=")
 
                         val expression =
                                 parseExpression()
 
-                        guardedExpressions.add(Pair(guard, expression))
+                        return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
                     }
-
-                    return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
                 } else {
-                    matchOperator("=")
-
-                    val expression =
-                            parseExpression()
-
-                    return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
+                    TODO()
                 }
-            } else {
-                TODO()
             }
-        } else {
-            throw syntaxError("Expected typealias, type or LowerID")
+
+            else ->
+                throw syntaxError("Expected typealias, type or LowerID")
         }
     }
 
@@ -229,7 +237,7 @@ class Parser(val lexer: Lexer) {
 
                     arguments.add(matchToken(Token.LowerID, "lower ID").toID())
 
-                    while (lexer.token == Token.LowerID) {
+                    while (isToken(Token.LowerID)) {
                         arguments.add(matchToken(Token.LowerID, "lower ID").toID())
                     }
 
@@ -535,6 +543,7 @@ class Parser(val lexer: Lexer) {
         }
     }
 
+
     fun isFirstPattern(): Boolean =
             isToken(Token.ConstantInt) ||
                     isToken(Token.ConstantString) ||
@@ -542,6 +551,7 @@ class Parser(val lexer: Lexer) {
                     isToken(Token.LowerID) ||
                     isOperator("()") ||
                     isOperator("(")
+
 
     private fun isOperator(text: String): Boolean =
             lexer.token == Token.ConstantOperator && lexer.text == text
@@ -596,6 +606,7 @@ private fun locationFrom(nodes: List<Node>): Location? =
                 current
             }
         }
+
 
 private fun Symbol.toID(): ID =
         ID(this.location, this.text)
