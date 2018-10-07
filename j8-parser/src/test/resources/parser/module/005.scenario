@@ -10,23 +10,20 @@ Module:
         name:
           ID:
             name: factorial
-        scheme:
-          TScheme:
-            parameters: []
-            type:
-              TArrow:
-                domain:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: Int
-                range:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: Int
+        type:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
       LetGuardDeclaration:
         arguments: [
             ID:

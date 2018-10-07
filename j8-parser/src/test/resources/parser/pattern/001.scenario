@@ -50,27 +50,22 @@ Module:
         name:
           ID:
             name: first
-        scheme:
-          TScheme:
-            parameters: [
-                a
-              ]
-            type:
-              TArrow:
-                domain:
-                  TConstReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
-                        TVarReference:
-                          name: b
-                      ]
-                    name:
-                      ID:
-                        name: Tuple
-                range:
-                  TVarReference:
-                    name: a
+        type:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+                name:
+                  ID:
+                    name: Tuple
+            range:
+              TVarReference:
+                name: a
       LetDeclaration:
         arguments: [
             ID:
@@ -103,27 +98,22 @@ Module:
         name:
           ID:
             name: second
-        scheme:
-          TScheme:
-            parameters: [
-                b
-              ]
-            type:
-              TArrow:
-                domain:
-                  TConstReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
-                        TVarReference:
-                          name: b
-                      ]
-                    name:
-                      ID:
-                        name: Tuple
-                range:
-                  TVarReference:
-                    name: b
+        type:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+                name:
+                  ID:
+                    name: Tuple
+            range:
+              TVarReference:
+                name: b
       LetDeclaration:
         arguments: [
             ID:
@@ -156,46 +146,40 @@ Module:
         name:
           ID:
             name: mapFirst
-        scheme:
-          TScheme:
-            parameters: [
-                a
-                c
-              ]
-            type:
+        type:
+          TArrow:
+            domain:
               TArrow:
                 domain:
-                  TArrow:
-                    domain:
-                      TVarReference:
-                        name: a
-                    range:
-                      TVarReference:
-                        name: c
+                  TVarReference:
+                    name: a
                 range:
-                  TArrow:
-                    domain:
-                      TConstReference:
-                        arguments: [
-                            TVarReference:
-                              name: a
-                            TVarReference:
-                              name: b
-                          ]
-                        name:
-                          ID:
-                            name: Tuple
-                    range:
-                      TConstReference:
-                        arguments: [
-                            TVarReference:
-                              name: c
-                            TVarReference:
-                              name: b
-                          ]
-                        name:
-                          ID:
-                            name: Tuple
+                  TVarReference:
+                    name: c
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      ID:
+                        name: Tuple
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: c
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      ID:
+                        name: Tuple
       LetDeclaration:
         arguments: [
             ID:
@@ -244,46 +228,40 @@ Module:
         name:
           ID:
             name: mapSecond
-        scheme:
-          TScheme:
-            parameters: [
-                b
-                c
-              ]
-            type:
+        type:
+          TArrow:
+            domain:
               TArrow:
                 domain:
-                  TArrow:
-                    domain:
-                      TVarReference:
-                        name: b
-                    range:
-                      TVarReference:
-                        name: c
+                  TVarReference:
+                    name: b
                 range:
-                  TArrow:
-                    domain:
-                      TConstReference:
-                        arguments: [
-                            TVarReference:
-                              name: a
-                            TVarReference:
-                              name: b
-                          ]
-                        name:
-                          ID:
-                            name: Tuple
-                    range:
-                      TConstReference:
-                        arguments: [
-                            TVarReference:
-                              name: a
-                            TVarReference:
-                              name: c
-                          ]
-                        name:
-                          ID:
-                            name: Tuple
+                  TVarReference:
+                    name: c
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      ID:
+                        name: Tuple
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: c
+                      ]
+                    name:
+                      ID:
+                        name: Tuple
       LetDeclaration:
         arguments: [
             ID:

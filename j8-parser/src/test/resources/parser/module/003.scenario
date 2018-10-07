@@ -12,36 +12,30 @@ Module:
         name:
           ID:
             name: IntToInt
-        scheme:
-          TScheme:
-            parameters: []
-            type:
-              TArrow:
-                domain:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: Int
-                range:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: Int
-      LetSignature:
-        name:
-          ID:
-            name: negate
-        scheme:
-          TScheme:
-            parameters: []
-            type:
+        type:
+          TArrow:
+            domain:
               TConstReference:
                 arguments: []
                 name:
                   ID:
-                    name: IntToInt
+                    name: Int
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
+      LetSignature:
+        name:
+          ID:
+            name: negate
+        type:
+          TConstReference:
+            arguments: []
+            name:
+              ID:
+                name: IntToInt
       LetDeclaration:
         arguments: [
             ID:

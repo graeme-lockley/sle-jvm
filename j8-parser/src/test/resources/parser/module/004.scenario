@@ -12,19 +12,16 @@ Module:
         name:
           ID:
             name: calculate
-        scheme:
-          TScheme:
-            parameters: []
-            type:
-              TArrow:
-                domain:
-                  TUnit:
-                range:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: Int
+        type:
+          TArrow:
+            domain:
+              TUnit:
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
       LetDeclaration:
         arguments: []
         expression:

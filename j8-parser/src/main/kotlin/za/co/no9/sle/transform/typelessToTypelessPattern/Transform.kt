@@ -93,16 +93,16 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                     declarations
 
                 is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), astToCoreASTOptional(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
+                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
 
                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), astToCoreAST(ast.type))
+                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(ast.type)!!)
 
                 is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
                     declarations + LetDeclaration(
                             ast.location,
                             astToCoreAST(ast.name),
-                            astToCoreASTOptional(it[ast.name.name]?.type),
+                            typeToScheme(it[ast.name.name]?.type),
                             ast.arguments.foldRight(
                                     ast.guardedExpressions.dropLast(1).foldRight(
                                             astToCoreAST(ast.guardedExpressions.last().second)
@@ -170,16 +170,6 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         }
 
 
-private fun astToCoreASTOptional(ast: TScheme?): Scheme? {
-    return when (ast) {
-        null ->
-            null
-
-        else ->
-            astToCoreAST(ast)
-    }
-}
-
 private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
         when (type) {
             is TUnit ->
@@ -195,9 +185,55 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
                 TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
         }
 
-private fun astToCoreAST(ast: TScheme): Scheme {
-    val substitution =
-            ast.parameters.zip(ast.parameters.mapIndexed { index, _ -> TVar(index) }).toMap()
 
-    return Scheme(ast.parameters.mapIndexed { index, _ -> index }, astToType(ast.type, substitution))
+private fun typeToScheme(ttype: TType?): Scheme? {
+    var currentID =
+            0
+
+    val substitution =
+            mutableMapOf<String, Int>()
+
+
+    fun map(ttype: TType): Type =
+            when (ttype) {
+                is TUnit ->
+                    typeUnit
+
+                is TVarReference -> {
+                    val value =
+                            substitution[ttype.name]
+
+                    if (value == null) {
+                        val varRef =
+                                currentID
+
+                        currentID += 1
+
+                        substitution[ttype.name] = varRef
+
+                        TVar(varRef)
+                    } else {
+                        TVar(value)
+                    }
+                }
+
+                is TConstReference ->
+                    TCon(ttype.name.name, ttype.arguments.map { map(it) })
+
+                is TArrow ->
+                    TArr(map(ttype.domain), map(ttype.range))
+            }
+
+
+    return when (ttype) {
+        null ->
+            null
+
+        else -> {
+            val type =
+                    map(ttype)
+
+            Scheme(substitution.values.toList(), type)
+        }
+    }
 }

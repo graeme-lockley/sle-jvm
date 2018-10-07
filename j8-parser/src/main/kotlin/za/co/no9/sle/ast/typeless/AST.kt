@@ -18,7 +18,7 @@ sealed class Declaration(
 data class LetSignature(
         override val location: Location,
         val name: ID,
-        val scheme: TScheme) : Declaration(location)
+        val type: TType) : Declaration(location)
 
 data class LetDeclaration(
         override val location: Location,
@@ -35,7 +35,7 @@ data class LetGuardDeclaration(
 data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
-        val scheme: TScheme) : Declaration(location)
+        val type: TType) : Declaration(location)
 
 data class TypeDeclaration(
         override val location: Location,
@@ -146,11 +146,6 @@ data class ConstructorReferencePattern(
         val name: String,
         val parameters: List<Pattern>): Pattern(location)
 
-
-data class TScheme(
-        override val location: Location,
-        val parameters: List<String>,
-        val type: TType) : Node(location)
 
 sealed class TType(
         override val location: Location) : Node(location)

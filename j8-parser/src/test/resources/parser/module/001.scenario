@@ -9,10 +9,15 @@ Module:
         name:
           ID:
             name: add
-        scheme:
-          TScheme:
-            parameters: []
-            type:
+        type:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
+            range:
               TArrow:
                 domain:
                   TConstReference:
@@ -21,19 +26,11 @@ Module:
                       ID:
                         name: Int
                 range:
-                  TArrow:
-                    domain:
-                      TConstReference:
-                        arguments: []
-                        name:
-                          ID:
-                            name: Int
-                    range:
-                      TConstReference:
-                        arguments: []
-                        name:
-                          ID:
-                            name: Int
+                  TConstReference:
+                    arguments: []
+                    name:
+                      ID:
+                        name: Int
       LetDeclaration:
         arguments: [
             ID:

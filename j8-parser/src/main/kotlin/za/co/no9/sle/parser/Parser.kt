@@ -32,26 +32,6 @@ class Parser(val lexer: Lexer) {
         return Module(locationFrom(moduleDeclarations)!!, moduleDeclarations)
     }
 
-    private fun fv(type: TType): Set<String> =
-            when (type) {
-                is TUnit ->
-                    emptySet()
-
-                is TVarReference ->
-                    setOf(type.name)
-
-                is TConstReference ->
-                    emptySet()
-
-                is TArrow ->
-                    fv(type.domain) + fv(type.range)
-            }
-
-
-    private fun generaliseType(type: TType): TScheme =
-            TScheme(type.location, fv(type).toList(), type)
-
-
     fun parseDeclaration(): Declaration {
         if (isToken(Token.TYPE)) {
             val typeSymbol =
@@ -92,7 +72,7 @@ class Parser(val lexer: Lexer) {
             val type =
                     parseType()
 
-            return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, generaliseType(type))
+            return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
         } else if (lexer.token == Token.LowerID) {
             val id =
                     lexer.next().toID()
@@ -103,7 +83,7 @@ class Parser(val lexer: Lexer) {
                 val type =
                         parseType()
 
-                return LetSignature(id.location + type.location, id, generaliseType(type))
+                return LetSignature(id.location + type.location, id, type)
             } else if (isToken(Token.LowerID) || isOperator("=") || isOperator("|")) {
                 val arguments =
                         mutableListOf<ID>()
