@@ -4,7 +4,6 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.Either
-import za.co.no9.sle.parser.Result
 import za.co.no9.sle.right
 import za.co.no9.sle.runner
 import za.co.no9.sle.shouldBeEqual
@@ -25,7 +24,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["ast"]
 
         if (astTest != null) {
-            result.shouldBeTypeOf<Either.Value<Result>>()
+            result.shouldBeTypeOf<Either.Value<Module>>()
             result.right()!!.shouldBeEqual(astTest)
         }
     }

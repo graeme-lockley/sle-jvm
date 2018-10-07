@@ -4,7 +4,7 @@ import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.AbstractFunSpec
-import org.antlr.v4.runtime.misc.Utils.spaces
+//import org.antlr.v4.runtime.misc.Utils.spaces
 import java.io.File
 import java.util.function.Consumer
 import kotlin.reflect.full.memberProperties
@@ -246,4 +246,13 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                     }.filter { it.isNotEmpty() }.joinToString("")
     }
 }
+
+
+fun spaces(n: Int): String =
+        when {
+            n == 0 ->
+                ""
+            else ->
+                " " + spaces(n - 1)
+        }
 

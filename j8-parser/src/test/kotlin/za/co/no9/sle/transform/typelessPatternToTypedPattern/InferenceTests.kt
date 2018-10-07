@@ -3,7 +3,6 @@ package za.co.no9.sle.transform.typelessPatternToTypedPattern
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.*
-import za.co.no9.sle.parser.Result
 import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
@@ -34,7 +33,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["constraints"]
 
         if (constraints != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
             parseWithDetail.right()!!.constraints.state.map { it.toString() }.shouldBeEqual(constraints)
         }
 
@@ -43,7 +42,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["substitution"]
 
         if (expectedSubstitution != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
             parseWithDetail.right()!!.substitution.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
         }
 
@@ -52,7 +51,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["ast"]
 
         if (astTest != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
             parseWithDetail.right()!!.unresolvedModule.shouldBeEqual(astTest)
         }
 
@@ -61,7 +60,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["typeAST"]
 
         if (typeAST != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Result>>()
+            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
             parseWithDetail.right()!!.resolvedModule.shouldBeEqual(typeAST)
         }
 
@@ -70,7 +69,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                 fileContent["errors"]
 
         if (errors != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Error<Result>>()
+            parseWithDetail.shouldBeTypeOf<Either.Error<InferenceDetail>>()
             parseWithDetail.left()!!.map { it.toString() }.shouldBeEqual(errors)
         }
     }

@@ -1,14 +1,14 @@
 package za.co.no9.sle.transform.parseTreeToTypeless
 
-import org.antlr.v4.runtime.ParserRuleContext
-import org.antlr.v4.runtime.Token
-import org.antlr.v4.runtime.tree.ParseTreeWalker
-import org.antlr.v4.runtime.tree.TerminalNode
+//import org.antlr.v4.runtime.ParserRuleContext
+//import org.antlr.v4.runtime.Token
+//import org.antlr.v4.runtime.tree.ParseTreeWalker
+//import org.antlr.v4.runtime.tree.TerminalNode
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typeless.Unit
 import za.co.no9.sle.parser.Lexer
-import za.co.no9.sle.parser.parseModule
+//import za.co.no9.sle.parser.parseModule
 
 
 fun parse(text: String): Either<Errors, Module> {
@@ -20,6 +20,7 @@ fun parse(text: String): Either<Errors, Module> {
 }
 
 
+/*
 private fun walkParseTree(node: ParserRuleContext): ParserToAST {
     val walker =
             ParseTreeWalker()
@@ -342,3 +343,4 @@ private fun TerminalNode.location(): Location =
 
 private fun Token.location(): Location =
         Location(Position(this.line, this.charPositionInLine), Position(this.line, this.charPositionInLine + this.text.length - 1))
+*/
