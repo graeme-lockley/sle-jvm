@@ -401,30 +401,34 @@ class Parser(val lexer: Lexer) {
         }
     }
 
-    fun parseBType(): TType {
-        if (isToken(Token.UpperID)) {
-            val upperID =
-                    lexer.next().toID()
 
-            val arguments =
-                    mutableListOf<TType>()
+    fun parseBType(): TType =
+            when {
+                isToken(Token.UpperID) -> {
+                    val upperID =
+                            lexer.next().toID()
 
-            while (lexer.column > 2 && (
-                            lexer.token == Token.LowerID ||
-                                    lexer.token == Token.UpperID ||
-                                    isOperator("(") ||
-                                    isOperator("()"))) {
-                arguments.add(parseBType())
+                    val arguments =
+                            mutableListOf<TType>()
+
+                    while (lexer.column > 1 && isFirstBType()) {
+                        arguments.add(parseBType())
+                    }
+
+                    TConstReference(upperID.location + locationFrom(arguments), upperID, arguments)
+                }
+                else -> parseCType()
             }
 
-            return TConstReference(upperID.location + locationFrom(arguments), upperID, arguments)
-        } else {
-            return parseCType()
-        }
-    }
+
+    fun isFirstBType(): Boolean =
+            isToken(Token.LowerID) ||
+                    isToken(Token.UpperID) ||
+                    isOperator("(") ||
+                    isOperator("()")
 
 
-    private fun parseCType(): TType {
+    fun parseCType(): TType {
         when {
             isToken(Token.LowerID) -> {
                 val lowerID =
