@@ -44,7 +44,7 @@ fun Module.apply(substitution: Substitution): Module =
 
 
 fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
-     LetDeclaration(this.location, this.scheme, this.name, this.expression.apply(substitution))
+        LetDeclaration(this.location, this.scheme, this.name, this.expression.apply(substitution))
 
 
 private fun Expression.apply(substitution: Substitution): Expression =
@@ -74,7 +74,32 @@ private fun Expression.apply(substitution: Substitution): Expression =
                 CallExpression(location, type.apply(substitution), operator.apply(substitution), operand.apply(substitution))
 
             is CaseExpression ->
-                TODO()
+                CaseExpression(location, type.apply(substitution), operator.apply(substitution), items.map { it.apply(substitution) })
+        }
+
+
+private fun CaseItem.apply(substitution: Substitution): CaseItem =
+        CaseItem(location, pattern.apply(substitution), expression.apply(substitution))
+
+
+private fun Pattern.apply(substitution: Substitution): Pattern =
+        when (this) {
+            is ConstantIntPattern ->
+                this
+            is ConstantBoolPattern ->
+                this
+
+            is ConstantStringPattern ->
+                this
+
+            is ConstantUnitPattern ->
+                this
+
+            is IdReferencePattern ->
+                IdReferencePattern(location, type.apply(substitution), name)
+
+            is ConstructorReferencePattern ->
+                ConstructorReferencePattern(location, name, type.apply(substitution), parameters.map { it.apply(substitution) })
         }
 
 

@@ -361,7 +361,52 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     CallExpression(expression.location, tv, t1, t2)
                 }
 
-                is za.co.no9.sle.ast.typelessPattern.CaseExpression ->
+                is za.co.no9.sle.ast.typelessPattern.CaseExpression -> {
+                    val tp =
+                            infer(expression.operator)
+
+                    val tr =
+                            varPump.fresh()
+
+                    CaseExpression(expression.location, tr, tp, expression.items.map {
+                        val itemPattern =
+                                infer(it.pattern)
+
+                        val itemExpression =
+                                infer(it.expression)
+
+                        val currentEnv =
+                                env
+
+                        unify(tp.type, itemPattern.type)
+                        unify(tr, itemExpression.type)
+
+                        env = currentEnv
+
+                        CaseItem(it.location, itemPattern, itemExpression)
+                    })
+                }
+            }
+
+
+    private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern): Pattern =
+            when (pattern) {
+                is za.co.no9.sle.ast.typelessPattern.ConstantIntPattern ->
+                    ConstantIntPattern(pattern.location, typeInt, pattern.value)
+
+                is za.co.no9.sle.ast.typelessPattern.ConstantBoolPattern ->
+                    ConstantBoolPattern(pattern.location, typeBool, pattern.value)
+
+                is za.co.no9.sle.ast.typelessPattern.IdReferencePattern -> {
+                    val idType =
+                            varPump.fresh()
+
+                    env.newValue(pattern.name, Scheme(emptyList(), idType))
+
+                    IdReferencePattern(pattern.location, idType, pattern.name)
+                }
+
+                else ->
                     TODO()
             }
 
