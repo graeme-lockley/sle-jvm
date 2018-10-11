@@ -74,6 +74,9 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
 
             is za.co.no9.sle.ast.typedPattern.CallExpression ->
                 CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+
+            is za.co.no9.sle.ast.typedPattern.CaseExpression ->
+                TODO()
         }
 
 

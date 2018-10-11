@@ -72,6 +72,9 @@ private fun Expression.apply(substitution: Substitution): Expression =
 
             is CallExpression ->
                 CallExpression(location, type.apply(substitution), operator.apply(substitution), operand.apply(substitution))
+
+            is CaseExpression ->
+                TODO()
         }
 
 
