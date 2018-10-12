@@ -1,0 +1,17 @@
+-- Constant Bool pattern
+add a b =
+    case b of
+        True ->
+            a
+
+        False ->
+            a + 1
+-- constraints
+[
+  '1 : Bool
+  '2 : '0
+  Int -> Int -> Int : '0 -> '3
+  '3 : Int -> '4
+  '1 : Bool
+  '2 : '4
+]
