@@ -412,8 +412,27 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     IdReferencePattern(pattern.location, idType, pattern.name)
                 }
 
+                is za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern -> {
+                    val constructor =
+                            env.valueBindings[pattern.name]
+
+                    if (constructor == null) {
+                        errors.add(UnknownConstructorReference(pattern.location, pattern.name))
+                        ConstantUnitPattern(pattern.location, typeUnit)
+                    } else {
+                        ConstructorReferencePattern(pattern.location, last(constructor.instantiate(varPump)), pattern.name, pattern.parameters.map { infer(it) })
+                    }
+                }
+            }
+
+
+    private fun last(type: Type): Type =
+            when (type) {
+                is TArr ->
+                    last(type.range)
+
                 else ->
-                    TODO()
+                    type
             }
 
 

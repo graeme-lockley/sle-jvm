@@ -24,6 +24,10 @@ data class UnknownTypeReference(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class UnknownConstructorReference(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
 data class DuplicateTypeDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)

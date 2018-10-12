@@ -1,0 +1,25 @@
+-- Constructor pattern
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+length : List a -> Int
+length l =
+    case l of
+        Nil ->
+            0
+
+        Cons x xs ->
+            1 + (length xs)
+-- constraints
+[
+  '0 : List '2
+  '1 : Int
+  Int -> Int -> Int : Int -> '6
+  List '7 -> Int : '5 -> '8
+  '6 : '8 -> '9
+  '0 : List '3
+  '1 : '9
+  List '10 -> Int : '0 -> '1
+]
