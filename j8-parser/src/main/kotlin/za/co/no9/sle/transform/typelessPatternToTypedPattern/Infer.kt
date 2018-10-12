@@ -401,7 +401,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     val idType =
                             varPump.fresh()
 
-                    env.newValue(pattern.name, Scheme(emptyList(), idType))
+                    env = env.newValue(pattern.name, Scheme(emptyList(), idType))
 
                     IdReferencePattern(pattern.location, idType, pattern.name)
                 }

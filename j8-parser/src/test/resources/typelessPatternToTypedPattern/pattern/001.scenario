@@ -6,7 +6,7 @@ add a b =
             a
 
         n ->
-            add (a + 1) (b - 1)
+            add (a + 1) (n - 1)
 -- constraints
 [
   '1 : Int
@@ -14,7 +14,7 @@ add a b =
   Int -> Int -> Int : '0 -> '4
   '4 : Int -> '5
   Int -> Int -> Int : '5 -> '6
-  Int -> Int -> Int : '1 -> '7
+  Int -> Int -> Int : '3 -> '7
   '7 : Int -> '8
   '6 : '8 -> '9
   '1 : '3
