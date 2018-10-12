@@ -1,0 +1,10 @@
+-- Constant Unit pattern
+add a b =
+    case b of
+        () ->
+            a
+-- constraints
+[
+  '1 : ()
+  '2 : '0
+]

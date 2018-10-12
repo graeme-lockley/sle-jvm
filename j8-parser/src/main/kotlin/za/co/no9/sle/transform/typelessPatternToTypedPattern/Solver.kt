@@ -99,7 +99,7 @@ private fun Pattern.apply(substitution: Substitution): Pattern =
                 IdReferencePattern(location, type.apply(substitution), name)
 
             is ConstructorReferencePattern ->
-                ConstructorReferencePattern(location, name, type.apply(substitution), parameters.map { it.apply(substitution) })
+                ConstructorReferencePattern(location, type.apply(substitution), name, parameters.map { it.apply(substitution) })
         }
 
 

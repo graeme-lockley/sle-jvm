@@ -124,8 +124,8 @@ data class ConstantStringPattern(
         val value: String) : Pattern(location, type)
 
 data class ConstantUnitPattern(
-        override val type: Type,
-        override val location: Location) : Pattern(location, type)
+        override val location: Location,
+        override val type: Type) : Pattern(location, type)
 
 data class IdReferencePattern(
         override val location: Location,
@@ -134,6 +134,6 @@ data class IdReferencePattern(
 
 data class ConstructorReferencePattern(
         override val location: Location,
-        val name: String,
         override val type: Type,
+        val name: String,
         val parameters: List<Pattern>) : Pattern(location, type)

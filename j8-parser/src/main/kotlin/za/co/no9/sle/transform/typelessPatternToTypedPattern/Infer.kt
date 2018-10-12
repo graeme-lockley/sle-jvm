@@ -400,6 +400,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 is za.co.no9.sle.ast.typelessPattern.ConstantStringPattern ->
                     ConstantStringPattern(pattern.location, typeString, pattern.value)
 
+                is za.co.no9.sle.ast.typelessPattern.ConstantUnitPattern ->
+                    ConstantUnitPattern(pattern.location, typeUnit)
+
                 is za.co.no9.sle.ast.typelessPattern.IdReferencePattern -> {
                     val idType =
                             varPump.fresh()
