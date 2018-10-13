@@ -1,0 +1,39 @@
+-- Nested pattern
+type List a =
+    Nil
+  | Cons a (List a)
+
+type Tuple a b =
+    Tuple a b
+
+
+map2 : (a -> b -> c) -> List a -> List b -> List c
+map2 f a b =
+    case Tuple a b of
+        Tuple Nil Nil ->
+            Nil
+
+        Tuple (Cons x xs) (Cons y ys) ->
+            Cons (f x y) (map2 f xs ys)
+
+        any ->
+            Nil
+-- constraints
+[
+  '3 -> '4 -> Tuple '3 '4 : '1 -> '5
+  '5 : '2 -> '6
+  '6 : Tuple '8 '9
+  '7 : List '12
+  '0 : '16 -> '22
+  '22 : '19 -> '23
+  '21 -> List '21 -> List '21 : '23 -> '24
+  ('25 -> '26 -> '27) -> List '25 -> List '26 -> List '27 : '0 -> '28
+  '28 : '17 -> '29
+  '29 : '20 -> '30
+  '24 : '30 -> '31
+  '6 : Tuple '13 '14
+  '7 : '31
+  '6 : '32
+  '7 : List '33
+  ('34 -> '35 -> '36) -> List '34 -> List '35 -> List '36 : '0 -> '1 -> '2 -> '7
+]

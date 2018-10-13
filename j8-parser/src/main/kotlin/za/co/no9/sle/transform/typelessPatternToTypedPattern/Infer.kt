@@ -423,6 +423,19 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         if (arity(constructor.type) != pattern.parameters.size) {
                             errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, arity(constructor.type), pattern.parameters.size))
                         }
+
+//                        val parameters =
+//                                pattern.parameters.map { infer(it) }
+//
+//                        val constructorType =
+//                                constructor.instantiate(varPump)
+//
+//                        if (parameters.isNotEmpty()) {
+//                            unify(constructorType, parameters.dropLast(1).foldRight(parameters.last().type) { a, b -> TArr(a.type, b) })
+//                        }
+//
+//                        ConstructorReferencePattern(pattern.location, last(constructorType), pattern.name, parameters)
+
                         ConstructorReferencePattern(pattern.location, last(constructor.instantiate(varPump)), pattern.name, pattern.parameters.map { infer(it) })
                     }
                 }
