@@ -16,10 +16,11 @@ length l =
 [
   '0 : List '2
   '1 : Int
+  '5 -> List '5 -> List '5 : '3 -> '4 -> List '5
   Int -> Int -> Int : Int -> '6
-  List '7 -> Int : '5 -> '8
+  List '7 -> Int : '4 -> '8
   '6 : '8 -> '9
-  '0 : List '3
+  '0 : List '5
   '1 : '9
   List '10 -> Int : '0 -> '1
 ]

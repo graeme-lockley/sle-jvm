@@ -139,7 +139,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                             if (dScheme == null) {
                                 val unifiesResult =
-                                        unifies(varPump, aliases, constraints)
+                                        unifies(varPump, aliases, constraints, env)
 
                                 val unifyErrors =
                                         unifiesResult.left()
@@ -424,19 +424,23 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, arity(constructor.type), pattern.parameters.size))
                         }
 
-//                        val parameters =
-//                                pattern.parameters.map { infer(it) }
-//
-//                        val constructorType =
-//                                constructor.instantiate(varPump)
-//
-//                        if (parameters.isNotEmpty()) {
-//                            unify(constructorType, parameters.dropLast(1).foldRight(parameters.last().type) { a, b -> TArr(a.type, b) })
-//                        }
-//
-//                        ConstructorReferencePattern(pattern.location, last(constructorType), pattern.name, parameters)
+                        val parameters =
+                                pattern.parameters.map { infer(it) }
 
-                        ConstructorReferencePattern(pattern.location, last(constructor.instantiate(varPump)), pattern.name, pattern.parameters.map { infer(it) })
+                        val constructorType =
+                                constructor.instantiate(varPump)
+
+                        val returnType =
+                                last(constructorType)
+
+                        if (parameters.isNotEmpty()) {
+                            val signature =
+                                    parameters.foldRight(returnType) { a, b -> TArr(a.type, b) }
+
+                            unify(constructorType, signature)
+                        }
+
+                        ConstructorReferencePattern(pattern.location, returnType, pattern.name, parameters)
                     }
                 }
             }

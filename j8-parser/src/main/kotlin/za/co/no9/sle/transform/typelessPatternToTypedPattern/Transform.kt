@@ -32,7 +32,7 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Infe
     return parse(text)
             .andThen { infer(varPump, it, environment) }
             .andThen { (unresolvedModule, constraints) ->
-                unifies(varPump, aliases(unresolvedModule), constraints).map { Triple(unresolvedModule, constraints, it) }
+                unifies(varPump, aliases(unresolvedModule), constraints, environment).map { Triple(unresolvedModule, constraints, it) }
             }.map { (unresolvedModule, constraints, substitution) ->
                 InferenceDetail(constraints, substitution, unresolvedModule, unresolvedModule.apply(substitution))
             }

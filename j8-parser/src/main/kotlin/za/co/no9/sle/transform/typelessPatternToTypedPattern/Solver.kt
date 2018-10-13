@@ -14,9 +14,9 @@ typealias Aliases =
         Map<String, Scheme>
 
 
-fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints): Either<Errors, Substitution> {
+fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
     val context =
-            SolverContext(varPump, aliases, constraints)
+            SolverContext(varPump, aliases, constraints, environment)
 
     val subst =
             context.solve()
@@ -103,7 +103,7 @@ private fun Pattern.apply(substitution: Substitution): Pattern =
         }
 
 
-private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints) {
+private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints, private val environment: Environment) {
     val errors =
             mutableSetOf<Error>()
 
@@ -160,10 +160,10 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
 
                         unifies(t1, type)
                     } else {
-                        if (t1 is TCon && !builtInTypes.contains(t1.name)) {
+                        if (t1 is TCon && !environment.containsType(t1.name)) {
                             errors.add(UnknownType(t1.name))
                             Pair(nullSubstitution, noConstraints)
-                        } else if (t2 is TCon && !builtInTypes.contains(t2.name)) {
+                        } else if (t2 is TCon && !environment.containsType(t2.name)) {
                             errors.add(UnknownType(t2.name))
                             Pair(nullSubstitution, noConstraints)
 

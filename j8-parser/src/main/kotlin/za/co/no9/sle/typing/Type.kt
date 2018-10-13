@@ -71,7 +71,3 @@ val typeString =
         TCon("String")
 
 
-val builtInTypes =
-        setOf(typeUnit.name, typeBool.name, typeError.name, typeInt.name, typeString.name)
-
-
