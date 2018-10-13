@@ -532,7 +532,7 @@ class Parser(private val lexer: Lexer) {
                         mutableListOf<Pattern>()
 
                 while (lexer.column > 1 && isFirstPattern()) {
-                    parameters.add(parsePattern())
+                    parameters.add(parseConstructorArgument())
                 }
 
                 return ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
@@ -540,6 +540,18 @@ class Parser(private val lexer: Lexer) {
 
             else ->
                 throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
+        }
+    }
+
+
+    fun parseConstructorArgument(): Pattern {
+        if (isToken(Token.UpperID)  && lexer.text != "True" && lexer.text != "False") {
+            val upperIDSymbol =
+                    lexer.next()
+
+            return ConstructorReferencePattern(upperIDSymbol.location, upperIDSymbol.text, emptyList())
+        } else {
+            return parsePattern()
         }
     }
 

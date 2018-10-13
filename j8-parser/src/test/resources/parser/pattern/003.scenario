@@ -1,0 +1,225 @@
+-- Nested pattern
+type List a =
+    Nil
+  | Cons a (List a)
+
+type Tuple a b =
+    Tuple a b
+
+
+map2 : (a -> b -> c) -> List a -> List b -> List c
+map2 f a b =
+    case Tuple a b of
+        Tuple Nil Nil ->
+            Nil
+
+        Tuple (Cons x xs) (Cons y ys) ->
+            Cons (f x y) (map2 xs ys)
+
+        any ->
+            Nil
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      ID:
+                        name: List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+      LetSignature:
+        name:
+          ID:
+            name: map2
+        type:
+          TArrow:
+            domain:
+              TArrow:
+                domain:
+                  TVarReference:
+                    name: a
+                range:
+                  TArrow:
+                    domain:
+                      TVarReference:
+                        name: b
+                    range:
+                      TVarReference:
+                        name: c
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      ID:
+                        name: List
+                range:
+                  TArrow:
+                    domain:
+                      TConstReference:
+                        arguments: [
+                            TVarReference:
+                              name: b
+                          ]
+                        name:
+                          ID:
+                            name: List
+                    range:
+                      TConstReference:
+                        arguments: [
+                            TVarReference:
+                              name: c
+                          ]
+                        name:
+                          ID:
+                            name: List
+      LetDeclaration:
+        arguments: [
+            ID:
+              name: f
+            ID:
+              name: a
+            ID:
+              name: b
+          ]
+        expression:
+          CaseExpression:
+            items: [
+                CaseItem:
+                  expression:
+                    ConstructorReference:
+                      name: Nil
+                  pattern:
+                    ConstructorReferencePattern:
+                      name: Tuple
+                      parameters: [
+                          ConstructorReferencePattern:
+                            name: Nil
+                            parameters: []
+                          ConstructorReferencePattern:
+                            name: Nil
+                            parameters: []
+                        ]
+                CaseItem:
+                  expression:
+                    CallExpression:
+                      operands: [
+                          CallExpression:
+                            operands: [
+                                IdReference:
+                                  name: x
+                                IdReference:
+                                  name: y
+                              ]
+                            operator:
+                              IdReference:
+                                name: f
+                          CallExpression:
+                            operands: [
+                                IdReference:
+                                  name: xs
+                                IdReference:
+                                  name: ys
+                              ]
+                            operator:
+                              IdReference:
+                                name: map2
+                        ]
+                      operator:
+                        ConstructorReference:
+                          name: Cons
+                  pattern:
+                    ConstructorReferencePattern:
+                      name: Tuple
+                      parameters: [
+                          ConstructorReferencePattern:
+                            name: Cons
+                            parameters: [
+                                IdReferencePattern:
+                                  name: x
+                                IdReferencePattern:
+                                  name: xs
+                              ]
+                          ConstructorReferencePattern:
+                            name: Cons
+                            parameters: [
+                                IdReferencePattern:
+                                  name: y
+                                IdReferencePattern:
+                                  name: ys
+                              ]
+                        ]
+                CaseItem:
+                  expression:
+                    ConstructorReference:
+                      name: Nil
+                  pattern:
+                    IdReferencePattern:
+                      name: any
+              ]
+            operator:
+              CallExpression:
+                operands: [
+                    IdReference:
+                      name: a
+                    IdReference:
+                      name: b
+                  ]
+                operator:
+                  ConstructorReference:
+                    name: Tuple
+        name:
+          ID:
+            name: map2
+    ]
