@@ -59,6 +59,12 @@ data class IncorrectNumberOfSchemeArguments(
         val expected: Int,
         val actual: Int) : LocationError(location)
 
+data class IncorrectNumberOfConstructorArguments(
+        override val location: Location,
+        val name: String,
+        val expected: Int,
+        val actual: Int) : LocationError(location)
+
 data class UnificationFail(
         val t1: Type,
         val t2: Type) : Error()

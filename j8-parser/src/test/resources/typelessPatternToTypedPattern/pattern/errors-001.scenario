@@ -1,0 +1,18 @@
+-- Constructor pattern
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+length : List a -> Int
+length l =
+    case l of
+        Nil ->
+            0
+
+        Cons xs ->
+            1 + (length xs)
+-- errors
+[
+  IncorrectNumberOfConstructorArguments(location=[(12, 9) (12, 15)], name=Cons, expected=2, actual=1)
+]

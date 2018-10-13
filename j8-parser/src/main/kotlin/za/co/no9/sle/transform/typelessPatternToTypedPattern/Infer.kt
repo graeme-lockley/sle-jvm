@@ -420,6 +420,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         errors.add(UnknownConstructorReference(pattern.location, pattern.name))
                         ConstantUnitPattern(pattern.location, typeUnit)
                     } else {
+                        if (arity(constructor.type) != pattern.parameters.size) {
+                            errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, arity(constructor.type), pattern.parameters.size))
+                        }
                         ConstructorReferencePattern(pattern.location, last(constructor.instantiate(varPump)), pattern.name, pattern.parameters.map { infer(it) })
                     }
                 }
@@ -433,6 +436,16 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 else ->
                     type
+            }
+
+
+    private fun arity(type: Type): Int =
+            when (type) {
+                is TArr ->
+                    1 + arity(type.range)
+
+                else ->
+                    0
             }
 
 
