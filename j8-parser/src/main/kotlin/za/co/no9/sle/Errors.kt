@@ -87,5 +87,6 @@ data class UnificationMismatch(
         val t2s: List<Type>) : Error()
 
 data class UnknownType(
-        val name: String) : Error()
+        override val location: Location,
+        val name: String) : LocationError(location)
 

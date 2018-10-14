@@ -5,5 +5,5 @@ singleton x =
 [
   UnboundVariable(location=[(2, 5) (2, 8)], name=Cons)
   UnboundVariable(location=[(2, 12) (2, 14)], name=Nil)
-  UnknownType(name=:Error:)
+  UnknownType(location=[(0, 0) (0, 0)], name=:Error:)
 ]

@@ -247,10 +247,10 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
                         unifies(t1, type)
                     } else {
                         if (t1 is TCon && !environment.containsType(t1.name)) {
-                            errors.add(UnknownType(t1.name))
+                            errors.add(UnknownType(t1.location, t1.name))
                             Pair(nullSubstitution, noConstraints)
                         } else if (t2 is TCon && !environment.containsType(t2.name)) {
-                            errors.add(UnknownType(t2.name))
+                            errors.add(UnknownType(t2.location, t2.name))
                             Pair(nullSubstitution, noConstraints)
 
                         } else {
