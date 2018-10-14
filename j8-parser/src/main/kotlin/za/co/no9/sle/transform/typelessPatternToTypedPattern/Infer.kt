@@ -236,17 +236,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         env.typeBindings[type.name]
 
                 if (scheme == null) {
-                    val emptyLocation =
-                            Location(Position(0, 0))
-
-                    // TODO Pass in the type's actual position rather than creating an emptyLocation
-                    errors.add(UnknownTypeReference(emptyLocation, type.name))
+                    errors.add(UnknownTypeReference(type.location, type.name))
                 } else if (type.arguments.size != scheme.parameters.size) {
-                    val emptyLocation =
-                            Location(Position(0, 0))
-
-                    // TODO Pass in the type's actual position rather than creating an emptyLocation
-                    errors.add(IncorrectNumberOfSchemeArguments(emptyLocation, type.name, scheme.parameters.size, type.arguments.size))
+                    errors.add(IncorrectNumberOfSchemeArguments(type.location, type.name, scheme.parameters.size, type.arguments.size))
                 }
             }
 
@@ -333,7 +325,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessPattern.LambdaExpression -> {
                     val tv =
-                            varPump.fresh()
+                            varPump.fresh(expression.location)
 
                     val currentEnv = env
 
@@ -355,7 +347,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             infer(expression.operand)
 
                     val tv =
-                            varPump.fresh()
+                            varPump.fresh(expression.location)
 
                     unify(t1.type, TArr(t2.type, tv))
 
@@ -367,7 +359,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             infer(expression.operator)
 
                     val tr =
-                            varPump.fresh()
+                            varPump.fresh(expression.location)
 
                     CaseExpression(expression.location, tr, tp, expression.items.map {
                         val itemPattern =
@@ -406,7 +398,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                 is za.co.no9.sle.ast.typelessPattern.IdReferencePattern -> {
                     val idType =
-                            varPump.fresh()
+                            varPump.fresh(pattern.location)
 
                     env = env.newValue(pattern.name, Scheme(emptyList(), idType))
 

@@ -4,5 +4,5 @@ type List a =
   | Cons a (ListA a)
 -- errors
 [
-  UnknownTypeReference(location=[(0, 0) (0, 0)], name=ListA)
+  UnknownTypeReference(location=[(3, 13) (3, 19)], name=ListA)
 ]

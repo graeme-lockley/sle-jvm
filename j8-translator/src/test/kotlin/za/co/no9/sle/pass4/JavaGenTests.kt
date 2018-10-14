@@ -2,6 +2,7 @@ package za.co.no9.sle.pass4
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.homeLocation
 import za.co.no9.sle.map
 import za.co.no9.sle.right
 import za.co.no9.sle.transform.typedPatternToTypedCore.parseWithDetail
@@ -36,7 +37,7 @@ class JavaGenTests : StringSpec({
     "Compile test/TypeReference.sle" {
         stuff("TypeReference",
                 initialEnvironment
-                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(1), TArr(TVar(1), typeBool))))
+                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
         )
     }
 

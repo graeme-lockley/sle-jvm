@@ -1,14 +1,20 @@
 package za.co.no9.sle.typing
 
+import za.co.no9.sle.Location
+import za.co.no9.sle.homeLocation
 
-sealed class Type {
+
+sealed class Type(open val location: Location) {
     abstract fun apply(s: Substitution): Type
 
     abstract fun ftv(): Set<Var>
 }
 
 
-data class TVar(val variable: Var) : Type() {
+data class TVar(
+        override val location: Location,
+        val variable: Var) : Type(location) {
+
     override fun apply(s: Substitution) =
             s[variable] ?: this
 
@@ -20,12 +26,16 @@ data class TVar(val variable: Var) : Type() {
 }
 
 
-data class TCon(val name: String, val arguments: List<Type> = emptyList()) : Type() {
+data class TCon(
+        override val location: Location,
+        val name: String,
+        val arguments: List<Type> = emptyList()) : Type(location) {
+
     override fun apply(s: Substitution) =
             if (arguments.isEmpty())
                 this
             else
-                TCon(name, arguments.map { it.apply(s) })
+                TCon(location, name, arguments.map { it.apply(s) })
 
     override fun ftv() =
             arguments.fold(emptySet<Var>()) { ftvs, type -> ftvs + type.ftv() }
@@ -38,9 +48,15 @@ data class TCon(val name: String, val arguments: List<Type> = emptyList()) : Typ
 }
 
 
-data class TArr(val domain: Type, val range: Type) : Type() {
+data class TArr(
+        override val location: Location,
+        val domain: Type,
+        val range: Type) : Type(location) {
+
+    constructor(domain: Type, range: Type) : this(domain.location + range.location, domain, range)
+
     override fun apply(s: Substitution) =
-            TArr(domain.apply(s), range.apply(s))
+            TArr(location, domain.apply(s), range.apply(s))
 
     override fun ftv() =
             domain.ftv().plus(range.ftv())
@@ -56,18 +72,18 @@ data class TArr(val domain: Type, val range: Type) : Type() {
 
 
 val typeError =
-        TCon(":Error:")
+        TCon(homeLocation, ":Error:")
 
 val typeUnit =
-        TCon("()")
+        TCon(homeLocation, "()")
 
 val typeInt =
-        TCon("Int")
+        TCon(homeLocation, "Int")
 
 val typeBool =
-        TCon("Bool")
+        TCon(homeLocation, "Bool")
 
 val typeString =
-        TCon("String")
+        TCon(homeLocation, "String")
 
 

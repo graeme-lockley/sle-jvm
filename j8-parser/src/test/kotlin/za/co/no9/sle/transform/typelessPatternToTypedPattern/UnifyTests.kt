@@ -35,7 +35,7 @@ class UnifyTests : StringSpec({
     "type var and constant type result in a single substitution" {
         val constraints =
                 Constraints(listOf(
-                        Constraint(TVar(1), typeInt)))
+                        Constraint(TVar(homeLocation, 1), typeInt)))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 Int")
@@ -45,7 +45,7 @@ class UnifyTests : StringSpec({
     "constant type and type var result in a single substitution" {
         val constraints =
                 Constraints(listOf(
-                        Constraint(typeInt, TVar(1))))
+                        Constraint(typeInt, TVar(homeLocation, 1))))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 Int")
@@ -55,7 +55,7 @@ class UnifyTests : StringSpec({
     "constant function type and type var result in a single substitution" {
         val constraints =
                 Constraints(listOf(
-                        Constraint(TArr(typeInt, typeString), TArr(TVar(2), TVar(1)))))
+                        Constraint(TArr(typeInt, typeString), TArr(TVar(homeLocation, 2), TVar(homeLocation, 1)))))
 
         unifiesAsString(constraints)
                 .shouldBe("'1 String, '2 Int")

@@ -10,5 +10,5 @@ factorial n =
         n * factorial (n - 1)
 -- errors
 [
-  UnknownTypeReference(location=[(0, 0) (0, 0)], name=SomeInt)
+  UnknownTypeReference(location=[(2, 5) (2, 11)], name=SomeInt)
 ]

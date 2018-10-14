@@ -82,13 +82,13 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
             when (ast) {
                 is za.co.no9.sle.ast.typeless.TypeDeclaration -> {
                     val substitution =
-                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(index)) }
+                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
 
                     val parameters =
                             ast.arguments.mapIndexed { index, _ -> index }
 
                     val scheme =
-                            Scheme(parameters, TCon(ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
+                            Scheme(parameters, TCon(ast.name.location, ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
 
                     declarations + TypeDeclaration(
                             ast.location,
@@ -207,10 +207,10 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
                 typeUnit
 
             is TVarReference ->
-                substitution[type.name] ?: TCon(type.name)
+                substitution[type.name] ?: TCon(type.location, type.name)
 
             is TConstReference ->
-                TCon(type.name.name, type.arguments.map { astToType(it, substitution) })
+                TCon(type.location, type.name.name, type.arguments.map { astToType(it, substitution) })
 
             is TArrow ->
                 TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
@@ -236,7 +236,7 @@ private fun typeToScheme(ttype: TType?): Scheme? {
 
                     if (varRef == null) {
                         val newVarRef =
-                                pump.fresh()
+                                pump.fresh(ttype.location)
 
                         substitution[ttype.name] = newVarRef
 
@@ -247,7 +247,7 @@ private fun typeToScheme(ttype: TType?): Scheme? {
                 }
 
                 is TConstReference ->
-                    TCon(ttype.name.name, ttype.arguments.map { map(it) })
+                    TCon(ttype.location, ttype.name.name, ttype.arguments.map { map(it) })
 
                 is TArrow ->
                     TArr(map(ttype.domain), map(ttype.range))

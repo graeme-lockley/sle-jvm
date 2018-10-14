@@ -4,5 +4,5 @@ type List a =
   | Cons a List
 -- errors
 [
-  IncorrectNumberOfSchemeArguments(location=[(0, 0) (0, 0)], name=List, expected=1, actual=0)
+  IncorrectNumberOfSchemeArguments(location=[(3, 12) (3, 15)], name=List, expected=1, actual=0)
 ]

@@ -2,6 +2,7 @@ package za.co.no9.sle.pass4
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.homeLocation
 import za.co.no9.sle.typing.*
 
 
@@ -23,6 +24,6 @@ class JavaTypeTests : StringSpec({
     }
 
     "Bool -> '10" {
-        javaType(TArr(typeBool, TVar(10))).shouldBe("Function<Boolean, Object>")
+        javaType(TArr(typeBool, TVar(homeLocation, 10))).shouldBe("Function<Boolean, Object>")
     }
 })

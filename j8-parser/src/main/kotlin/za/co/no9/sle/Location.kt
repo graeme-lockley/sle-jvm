@@ -1,5 +1,6 @@
 package za.co.no9.sle
 
+
 data class Location(
         val start: Position,
         val end: Position) {
@@ -17,3 +18,7 @@ data class Location(
                         if (start > location.start) location.start else start,
                         if (end < location.end) location.end else end)
 }
+
+
+val homeLocation =
+        Location(Position(0, 0))

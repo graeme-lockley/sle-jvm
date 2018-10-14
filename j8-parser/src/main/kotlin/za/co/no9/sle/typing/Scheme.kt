@@ -16,7 +16,7 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
 
     fun instantiate(varPump: VarPump): Type {
         val asP =
-                parameters.map { varPump.fresh() }
+                parameters.map { varPump.fresh(type.location) }
 
         val substitution =
                 Substitution(parameters.zip(asP).toMap())
@@ -26,7 +26,7 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
 
     fun normalize(): Scheme {
         val subs =
-                Substitution(parameters.foldIndexed(emptyMap()) { a, b, c -> b.plus(Pair(c, TVar(a))) })
+                Substitution(parameters.foldIndexed(emptyMap()) { a, b, c -> b.plus(Pair(c, TVar(type.location, a))) })
 
         return Scheme(
                 parameters.mapIndexed { index, _ -> index },
@@ -51,7 +51,7 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
             type.ftv().toList()
 
     val substitutionParameters =
-            typeFtv.map { TVar(it).apply(substitution) }
+            typeFtv.map { TVar(type.location, it).apply(substitution) }
 
     val typeSubstitution =
             typeFtv.zip(substitutionParameters).map { Substitution(it.first, it.second) }.fold(nullSubstitution) { s, m -> s + m }
