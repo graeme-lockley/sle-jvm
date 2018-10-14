@@ -11,3 +11,5 @@
 # Enhancements
 
 * Add location to scheme and type - this will enable better error reporting
+
+* Allow type aliases to have type parameters
