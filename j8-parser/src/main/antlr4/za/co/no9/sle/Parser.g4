@@ -9,114 +9,127 @@ grammar Parser;
 
 
 module
-    : declaration*
+    : declaration* EOF
     ;
 
 
 declaration
     : 'typealias' UpperID '=' type
-        # TypeAliasDeclaration
     | 'type' UpperID LowerID* '=' typeConstructor ( '|' typeConstructor )*
-        # TypeDeclaration
     | LowerID ':' type
-        # LetSignature
     | LowerID+ '=' expression
-        # LetDeclaration
     | LowerID+ ( '|' expression '=' expression)+
-        # LetGuardDeclaration
     ;
 
 
 typeConstructor
-    : UpperID ( {notStartOfLine()}? type) *
+    : UpperID type*
     ;
 
 
 expression
-    : 'case' expression 'of' caseItem+
-        # CaseExpression
-    | expression op=('*' | '/') expression
-        # MultiplicativeExpression
-    | expression op=('+' | '-') expression
-        # AdditiveExpression
-    | expression op=('==' | '!=' | '<=' | '<' | '>=' | '>') expression
-        # RelationalOpExpression
-    | expression op='&&' expression
-        # BooleanAndExpression
-    | expression op='||' expression
-        # BooleanOrExpression
-    | '\\' LowerID+ '->' expression
-        # LambdaExpression
-    | 'if' expression 'then' expression 'else' expression
-        # IfExpression
-    | term ( {notStartOfLine()}? term )*
-        # CallExpression
+    : caseExpression
     ;
 
+caseExpression
+    : 'case' expression 'of' caseItem+
+    | multiplicativeExpression
+    ;
 
 caseItem
     : pattern '->' expression
     ;
 
+multiplicativeExpression
+    : additiveExpression ('*' | '/') additiveExpression
+    | additiveExpression
+    ;
+
+additiveExpression
+    : relationOpExpression ('+' | '-') relationOpExpression
+    | relationOpExpression
+    ;
+
+relationOpExpression
+    : booleanAndExpression ('==' | '!=' | '<=' | '<' | '>=' | '>') booleanAndExpression
+    | booleanAndExpression
+    ;
+
+booleanAndExpression
+    : booleanOrExpression '&&' booleanOrExpression
+    | booleanOrExpression
+    ;
+
+booleanOrExpression
+    : lambdaExpression '||' lambdaExpression
+    | lambdaExpression
+    ;
+
+lambdaExpression
+    : '\\' LowerID+ '->' expression
+    | ifExpression
+    ;
+
+ifExpression
+    : 'if' expression 'then' expression 'else' expression
+    | callExpression
+    ;
+
+callExpression
+    : term+
+    ;
+
 term
     : '(' expression ')'
-        # ParenExpression
     | ConstantInt
-        # ConstantIntExpression
     | 'True'
-        # TrueExpression
     | 'False'
-        # FalseExpression
     | ConstantString
-        # ConstantStringExpression
     | '!' expression
-        # NotExpression
     | LowerID
-        # LowerIDExpression
     | UpperID
-        # UpperIDExpression
-    | '(' ')'
-        # UnitValueExpression
+    | '()'
     ;
+
 
 pattern
-    : ConstantInt
-        # ConstantIntPattern
-    | 'True'
-        # TruePattern
-    | 'False'
-        # FalsePattern
-    | ConstantString
-        # ConstantStringPattern
-    | '(' ')'
-        # UnitPattern
-    | LowerID
-        # LowerIDPattern
-    | UpperID pattern*
-        # UpperIDPattern
-    | '(' pattern ')'
-        # ParentPattern
+    : constructorPattern
     ;
+
+constructorPattern
+    : UpperID constructorArgumentPattern*
+    | termPattern
+    ;
+
+constructorArgumentPattern
+    : UpperID
+    | termPattern
+    ;
+
+termPattern
+    : ConstantInt
+    | 'True'
+    | 'False'
+    | ConstantString
+    | '()'
+    | LowerID
+    | '(' pattern ')'
+    ;
+
 
 type
-    : LowerID
-        # LowerIDType
-    | UpperID
-        # UpperIDType
-    | '(' typeArgument ')'
-        # TypeArgumentType
-    | <assoc=right> type '->' type
-        # ArrowType
-    | '(' ')'
-        # UnitType
+    : adtType ( '->' type )+
     ;
 
+adtType
+    : UpperID adtType*
+    | termType
+    ;
 
-typeArgument
-    : UpperID ( {notStartOfLine()}? type )*
-        # ParameterTypeArgument
-    | type
-        # RecursiveTypeArgument
+termType
+    : LowerID
+    | '(' type ')'
+    | '(' ')'
     ;
 
 
