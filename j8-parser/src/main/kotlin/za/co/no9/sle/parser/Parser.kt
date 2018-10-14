@@ -463,7 +463,44 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parsePattern(): Pattern {
+    fun parsePattern(): Pattern =
+            parseConstructorPattern()
+
+
+    fun parseConstructorPattern(): Pattern =
+            when {
+                isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" -> {
+                    val upperIDSymbol =
+                            lexer.next()
+
+                    val parameters =
+                            mutableListOf<Pattern>()
+
+                    while (lexer.column > 1 && isFirstPattern()) {
+                        parameters.add(parseConstructorArgumentPattern())
+                    }
+
+                    ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
+                }
+
+                else ->
+                    parseTermPattern()
+            }
+
+
+    fun parseConstructorArgumentPattern(): Pattern =
+            when {
+                isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" -> {
+                    val upperIDSymbol =
+                            lexer.next()
+
+                    ConstructorReferencePattern(upperIDSymbol.location, upperIDSymbol.text, emptyList())
+                }
+                else -> parsePattern()
+            }
+
+
+    fun parseTermPattern(): Pattern {
         when {
             isToken(Token.ConstantInt) -> {
                 val constantIntSymbol =
@@ -526,34 +563,8 @@ class Parser(private val lexer: Lexer) {
                 return IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
             }
 
-            isToken(Token.UpperID) -> {
-                val upperIDSymbol =
-                        lexer.next()
-
-                val parameters =
-                        mutableListOf<Pattern>()
-
-                while (lexer.column > 1 && isFirstPattern()) {
-                    parameters.add(parseConstructorArgument())
-                }
-
-                return ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
-            }
-
             else ->
                 throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
-        }
-    }
-
-
-    fun parseConstructorArgument(): Pattern {
-        if (isToken(Token.UpperID)  && lexer.text != "True" && lexer.text != "False") {
-            val upperIDSymbol =
-                    lexer.next()
-
-            return ConstructorReferencePattern(upperIDSymbol.location, upperIDSymbol.text, emptyList())
-        } else {
-            return parsePattern()
         }
     }
 
