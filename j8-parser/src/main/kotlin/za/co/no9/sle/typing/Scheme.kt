@@ -23,6 +23,26 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
 
         return type.apply(substitution)
     }
+
+    fun normalize(): Scheme {
+        val subs =
+                Substitution(parameters.foldIndexed(emptyMap()) { a, b, c -> b.plus(Pair(c, TVar(a))) })
+
+        return Scheme(
+                parameters.mapIndexed { index, _ -> index },
+                type.apply(subs)
+        )
+    }
+
+    fun isCompatibleWith(other: Scheme): Boolean {
+        val normalizedThis =
+                this.normalize()
+
+        val noramlizedOther =
+                other.normalize()
+
+        return normalizedThis.toString() == noramlizedOther.toString()
+    }
 }
 
 

@@ -28,79 +28,165 @@ fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints, enviro
 }
 
 
-fun Module.apply(substitution: Substitution): Module =
-        Module(this.location, this.declarations.map {
-            when (it) {
-                is LetDeclaration ->
-                    it.apply(substitution)
+fun Module.apply(aliases: Aliases, substitution: Substitution): Either<Errors, Module> {
+    val applyContext =
+            ApplyContext(aliases)
 
-                is TypeAliasDeclaration ->
-                    it
+    val module =
+            applyContext.apply(this, substitution)
 
-                is TypeDeclaration ->
-                    it
+    return if (applyContext.errors.isEmpty())
+        value(module)
+    else
+        error(applyContext.errors)
+}
+
+
+fun LetDeclaration.apply(aliases: Aliases, substitution: Substitution): Either<Errors, LetDeclaration> {
+    val applyContext =
+            ApplyContext(aliases)
+
+    val module =
+            applyContext.apply(this, substitution)
+
+    return if (applyContext.errors.isEmpty())
+        value(module)
+    else
+        error(applyContext.errors)
+}
+
+
+private class ApplyContext(private val aliases: Aliases) {
+    val errors =
+            mutableSetOf<Error>()
+
+
+    fun apply(module: Module, substitution: Substitution): Module =
+            Module(module.location, module.declarations.map {
+                when (it) {
+                    is LetDeclaration ->
+                        apply(it, substitution)
+
+                    is TypeAliasDeclaration ->
+                        it
+
+                    is TypeDeclaration ->
+                        it
+                }
+            })
+
+
+    fun apply(letDeclaration: LetDeclaration, substitution: Substitution): LetDeclaration {
+        val appliedExpression =
+                apply(letDeclaration.expression, substitution)
+
+        val other =
+                generalise(appliedExpression.type).normalize()
+
+        if (!letDeclaration.scheme.expandAliases(aliases).isCompatibleWith(other.expandAliases(aliases))) {
+            errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.name.name, letDeclaration.scheme, other))
+        }
+
+        return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.name, appliedExpression)
+    }
+
+
+    private fun Scheme.expandAliases(aliases: Aliases): Scheme =
+            Scheme(parameters, type.expandAliases(aliases))
+
+
+    private fun Type.expandAliases(aliases: Aliases): Type =
+            when (this) {
+                is TVar ->
+                    this
+
+                is TCon -> {
+                    val alias =
+                            aliases[name]
+
+                    when {
+                        alias == null ->
+                            this
+
+                        arguments.size != alias.parameters.size -> {
+                            val emptyLocation =
+                                    Location(Position(0, 0))
+
+                            // TODO Pass in the type's actual position rather than creating an emptyLocation
+                            errors.add(IncorrectNumberOfAliasArguments(emptyLocation, name, alias.parameters.size, arguments.size))
+                            this
+                        }
+
+                        else -> {
+                            val substitutionMap =
+                                    alias.parameters.zip(arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
+
+                            alias.type.apply(Substitution(substitutionMap)).expandAliases(aliases)
+                        }
+                    }
+                }
+
+                is TArr ->
+                    TArr(domain.expandAliases(aliases), range.expandAliases(aliases))
             }
-        })
 
 
-fun LetDeclaration.apply(substitution: Substitution): LetDeclaration =
-        LetDeclaration(this.location, this.scheme, this.name, this.expression.apply(substitution))
+    private fun apply(expression: Expression, substitution: Substitution): Expression =
+            when (expression) {
+                is Unit ->
+                    expression
+
+                is ConstantBool ->
+                    expression
+
+                is ConstantInt ->
+                    expression
+
+                is ConstantString ->
+                    expression
+
+                is IdReference ->
+                    IdReference(expression.location, expression.type.apply(substitution), expression.name)
+
+                is IfExpression ->
+                    IfExpression(expression.location, expression.type.apply(substitution), apply(expression.guardExpression, substitution), apply(expression.thenExpression, substitution), apply(expression.elseExpression, substitution))
+
+                is LambdaExpression ->
+                    LambdaExpression(expression.location, expression.type.apply(substitution), expression.argument, apply(expression.expression, substitution))
+
+                is CallExpression ->
+                    CallExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), apply(expression.operand, substitution))
+
+                is CaseExpression ->
+                    CaseExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), expression.items.map { apply(it, substitution) })
+            }
 
 
-private fun Expression.apply(substitution: Substitution): Expression =
-        when (this) {
-            is Unit ->
-                this
-
-            is ConstantBool ->
-                this
-
-            is ConstantInt ->
-                this
-
-            is ConstantString ->
-                this
-
-            is IdReference ->
-                IdReference(location, type.apply(substitution), name)
-
-            is IfExpression ->
-                IfExpression(location, type.apply(substitution), guardExpression.apply(substitution), thenExpression.apply(substitution), elseExpression.apply(substitution))
-
-            is LambdaExpression ->
-                LambdaExpression(location, type.apply(substitution), argument, expression.apply(substitution))
-
-            is CallExpression ->
-                CallExpression(location, type.apply(substitution), operator.apply(substitution), operand.apply(substitution))
-
-            is CaseExpression ->
-                CaseExpression(location, type.apply(substitution), operator.apply(substitution), items.map { it.apply(substitution) })
-        }
+    private fun apply(caseItem: CaseItem, substitution: Substitution): CaseItem =
+            CaseItem(caseItem.location, apply(caseItem.pattern, substitution), apply(caseItem.expression, substitution))
 
 
-private fun CaseItem.apply(substitution: Substitution): CaseItem =
-        CaseItem(location, pattern.apply(substitution), expression.apply(substitution))
+    private fun apply(pattern: Pattern, substitution: Substitution): Pattern =
+            when (pattern) {
+                is ConstantIntPattern ->
+                    pattern
 
+                is ConstantBoolPattern ->
+                    pattern
 
-private fun Pattern.apply(substitution: Substitution): Pattern =
-        when (this) {
-            is ConstantIntPattern ->
-                this
-            is ConstantBoolPattern ->
-                this
+                is ConstantStringPattern ->
+                    pattern
 
-            is ConstantStringPattern ->
-                this
+                is ConstantUnitPattern ->
+                    pattern
 
-            is ConstantUnitPattern ->
-                this
+                is IdReferencePattern ->
+                    IdReferencePattern(pattern.location, pattern.type.apply(substitution), pattern.name)
 
-            is IdReferencePattern ->
-                IdReferencePattern(location, type.apply(substitution), name)
-
-            is ConstructorReferencePattern ->
-                ConstructorReferencePattern(location, type.apply(substitution), name, parameters.map { it.apply(substitution) })
-        }
+                is ConstructorReferencePattern ->
+                    ConstructorReferencePattern(pattern.location, pattern.type.apply(substitution), pattern.name, pattern.parameters.map { apply(it, substitution) })
+            }
+}
 
 
 private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints, private val environment: Environment) {

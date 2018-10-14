@@ -1,0 +1,22 @@
+-- Validate that a function invocation correctly unifies against the function signature
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+f : (a -> a -> b) -> a -> List b -> List b
+f g a b =
+    case b of
+        Cons x xs ->
+            Cons (g a a) xs
+-- constraints
+[
+  '6 -> List '6 -> List '6 : '4 -> '5 -> List '6
+  '0 : '1 -> '8
+  '8 : '1 -> '9
+  '7 -> List '7 -> List '7 : '9 -> '10
+  '10 : '5 -> '11
+  '2 : List '6
+  '3 : '11
+  ('12 -> '12 -> '13) -> '12 -> List '13 -> List '13 : '0 -> '1 -> '2 -> '3
+]

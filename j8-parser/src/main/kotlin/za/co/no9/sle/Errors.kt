@@ -1,5 +1,6 @@
 package za.co.no9.sle
 
+import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
 
 
@@ -59,11 +60,23 @@ data class IncorrectNumberOfSchemeArguments(
         val expected: Int,
         val actual: Int) : LocationError(location)
 
+data class IncorrectNumberOfAliasArguments(
+        override val location: Location,
+        val name: String,
+        val expected: Int,
+        val actual: Int) : LocationError(location)
+
 data class IncorrectNumberOfConstructorArguments(
         override val location: Location,
         val name: String,
         val expected: Int,
         val actual: Int) : LocationError(location)
+
+data class IncompatibleDeclarationSignature(
+        override val location: Location,
+        val name: String,
+        val expected: Scheme,
+        val inferred: Scheme) : LocationError(location)
 
 data class UnificationFail(
         val t1: Type,

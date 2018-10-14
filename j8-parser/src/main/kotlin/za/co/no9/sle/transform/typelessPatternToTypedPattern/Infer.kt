@@ -160,15 +160,16 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                                 val declaration =
                                         if (substitution != null) {
-                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e).apply(substitution)
+                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e).apply(aliases, substitution)
                                         } else {
-                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e)
+                                            value(LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e))
                                         }
 
+                                errors.addAll(declaration.left() ?: listOf())
 
                                 env = env.newValue(d.name.name, scheme)
 
-                                ds + declaration
+                                declaration.fold({ ds }, { ds + it })
                             } else {
                                 val type =
                                         dScheme.instantiate(varPump)
