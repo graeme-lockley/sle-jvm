@@ -386,7 +386,7 @@ class Parser(private val lexer: Lexer) {
 
     fun parseType(): TType {
         val bType =
-                parseBType()
+                parseADTType()
 
         return if (isOperator("->")) {
             matchOperator("->")
@@ -401,7 +401,7 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parseBType(): TType =
+    fun parseADTType(): TType =
             when {
                 isToken(Token.UpperID) -> {
                     val upperID =
@@ -410,24 +410,26 @@ class Parser(private val lexer: Lexer) {
                     val arguments =
                             mutableListOf<TType>()
 
-                    while (lexer.column > 1 && isFirstBType()) {
-                        arguments.add(parseBType())
+                    while (lexer.column > 1 && isFirstADTType()) {
+                        arguments.add(parseADTType())
                     }
 
                     TConstReference(upperID.location + locationFrom(arguments), upperID, arguments)
                 }
-                else -> parseCType()
+
+                else ->
+                    parseTermType()
             }
 
 
-    fun isFirstBType(): Boolean =
+    fun isFirstADTType(): Boolean =
             isToken(Token.LowerID) ||
                     isToken(Token.UpperID) ||
                     isOperator("(") ||
                     isOperator("()")
 
 
-    fun parseCType(): TType {
+    fun parseTermType(): TType {
         when {
             isToken(Token.LowerID) -> {
                 val lowerID =
