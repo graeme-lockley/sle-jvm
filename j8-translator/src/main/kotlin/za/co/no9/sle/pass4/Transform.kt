@@ -11,9 +11,9 @@ import com.github.javaparser.ast.expr.*
 import com.github.javaparser.ast.stmt.BlockStmt
 import com.github.javaparser.ast.stmt.ReturnStmt
 import com.github.javaparser.ast.type.ClassOrInterfaceType
-import za.co.no9.sle.ast.typedCore.*
-import za.co.no9.sle.ast.typedCore.Expression
-import za.co.no9.sle.ast.typedCore.Unit
+import za.co.no9.sle.ast.core.*
+import za.co.no9.sle.ast.core.Expression
+import za.co.no9.sle.ast.core.Unit
 import za.co.no9.sle.typing.*
 
 

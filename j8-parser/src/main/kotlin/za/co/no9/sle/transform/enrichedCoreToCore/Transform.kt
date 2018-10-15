@@ -2,8 +2,8 @@ package za.co.no9.sle.transform.enrichedCoreToCore
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
-import za.co.no9.sle.ast.typedCore.*
-import za.co.no9.sle.ast.typedCore.Unit
+import za.co.no9.sle.ast.core.*
+import za.co.no9.sle.ast.core.Unit
 import za.co.no9.sle.map
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.Environment
