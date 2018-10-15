@@ -91,7 +91,7 @@ data class IfExpression(
 data class LambdaExpression(
         override val location: Location,
         override val type: Type,
-        val argument: ID,
+        val argument: Pattern,
         val expression: Expression) : Expression(location, type)
 
 data class CallExpression(
@@ -105,3 +105,38 @@ data class Bar(
         override val type: Type,
         val left: Expression,
         val right: Expression) : Expression(location, type)
+
+
+sealed class Pattern(
+        override val location: Location,
+        open val type: Type) : Node(location)
+
+data class ConstantIntPattern(
+        override val location: Location,
+        override val type: Type,
+        val value: Int) : Pattern(location, type)
+
+data class ConstantBoolPattern(
+        override val location: Location,
+        override val type: Type,
+        val value: Boolean) : Pattern(location, type)
+
+data class ConstantStringPattern(
+        override val location: Location,
+        override val type: Type,
+        val value: String) : Pattern(location, type)
+
+data class ConstantUnitPattern(
+        override val location: Location,
+        override val type: Type) : Pattern(location, type)
+
+data class IdReferencePattern(
+        override val location: Location,
+        override val type: Type,
+        val name: String) : Pattern(location, type)
+
+data class ConstructorReferencePattern(
+        override val location: Location,
+        override val type: Type,
+        val name: String,
+        val parameters: List<Pattern>) : Pattern(location, type)

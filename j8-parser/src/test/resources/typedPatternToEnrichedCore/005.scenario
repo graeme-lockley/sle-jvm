@@ -59,8 +59,11 @@ Module:
         expression:
           LambdaExpression:
             argument:
-              ID:
+              IdReferencePattern:
                 name: x
+                type:
+                  TVar:
+                    variable: 3
             expression:
               CallExpression:
                 operand:
@@ -164,8 +167,11 @@ Module:
         expression:
           LambdaExpression:
             argument:
-              ID:
+              IdReferencePattern:
                 name: x
+                type:
+                  TVar:
+                    variable: 10
             expression:
               CallExpression:
                 operand:

@@ -12,8 +12,12 @@ Module:
         expression:
           LambdaExpression:
             argument:
-              ID:
+              IdReferencePattern:
                 name: n
+                type:
+                  TCon:
+                    arguments: []
+                    name: Int
             expression:
               IfExpression:
                 elseExpression:

@@ -8,6 +8,8 @@ import za.co.no9.sle.map
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.Type
 
 
 data class Detail(
@@ -70,13 +72,23 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
                 IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
 
             is za.co.no9.sle.ast.typedPattern.LambdaExpression ->
-                LambdaExpression(expression.location, expression.type, transform(expression.argument), transform(expression.expression))
+                LambdaExpression(expression.location, expression.type, IdReferencePattern(expression.argument.location, domain(expression.type), expression.argument.name), transform(expression.expression))
 
             is za.co.no9.sle.ast.typedPattern.CallExpression ->
                 CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
             is za.co.no9.sle.ast.typedPattern.CaseExpression ->
                 TODO()
+        }
+
+
+private fun domain(type: Type): Type =
+        when (type) {
+            is TArr ->
+                type.domain
+
+            else ->
+                type
         }
 
 

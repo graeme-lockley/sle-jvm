@@ -87,9 +87,19 @@ private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Ex
         }
 
 
-private fun transform(name: za.co.no9.sle.ast.enrichedCore.ID): ID =
-        ID(name.location, name.name)
+private fun transform(pattern: za.co.no9.sle.ast.enrichedCore.Pattern): ID =
+        when (pattern) {
+            is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
+                ID(pattern.location, pattern.name)
+
+            else ->
+                TODO("transform enrichedCore to Core: $pattern")
+        }
 
 
 private fun transform(constructor: za.co.no9.sle.ast.enrichedCore.Constructor): Constructor =
         Constructor(constructor.location, transform(constructor.name), constructor.arguments)
+
+
+private fun transform(name: za.co.no9.sle.ast.enrichedCore.ID): ID =
+        ID(name.location, name.name)
