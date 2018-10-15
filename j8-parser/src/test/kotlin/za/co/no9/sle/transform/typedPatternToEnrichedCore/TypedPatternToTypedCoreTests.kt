@@ -1,4 +1,4 @@
-package za.co.no9.sle.transform.typedPatternToTypedCore
+package za.co.no9.sle.transform.typedPatternToEnrichedCore
 
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
@@ -7,8 +7,8 @@ import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
 
-class TypedPatternToTypedCoreTests : FunSpec({
-    runner(this, "typedPatternToTypedCore", RunnerConsumer())
+class TypedPatternToEnrichedCoreTests : FunSpec({
+    runner(this, "typedPatternToEnrichedCore", RunnerConsumer())
 })
 
 
@@ -65,12 +65,12 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
         }
 
 
-        val coreAST =
-                fileContent["coreAST"]
+        val enrichedAST =
+                fileContent["enrichedAST"]
 
-        if (coreAST != null) {
+        if (enrichedAST != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.coreModule.shouldBeEqual(coreAST)
+            parseWithDetail.right()!!.enrichedModule.shouldBeEqual(enrichedAST)
         }
 
 

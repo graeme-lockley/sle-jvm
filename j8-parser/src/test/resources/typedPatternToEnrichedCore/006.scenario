@@ -12,7 +12,7 @@ repeat n e
 
 singleton x =
     repeat 1 x
--- coreAST
+-- enrichedAST
 Module:
   declarations: [
       TypeDeclaration:

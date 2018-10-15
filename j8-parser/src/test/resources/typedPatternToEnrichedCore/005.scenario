@@ -15,7 +15,7 @@ intList =
 
 boolList =
     duplicate True
--- coreAST
+-- enrichedAST
 Module:
   declarations: [
       TypeDeclaration:

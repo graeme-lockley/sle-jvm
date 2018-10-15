@@ -1,9 +1,11 @@
--- A let guard declaration
+-- Inference and substitution of factorial
 factorial : Int -> Int
-factorial n
-    | n == 0 = 1
-    | otherwise = n * factorial (n - 1)
--- coreAST
+factorial n =
+    if n == 0 then
+        1
+    else
+        n * factorial (n - 1)
+-- enrichedAST
 Module:
   declarations: [
       LetDeclaration:

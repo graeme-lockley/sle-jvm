@@ -5,7 +5,7 @@ calculate =
 
 value =
     calculate ()
--- coreAST
+-- enrichedAST
 Module:
   declarations: [
       LetDeclaration:

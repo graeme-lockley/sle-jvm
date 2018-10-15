@@ -42,7 +42,7 @@ Module:
                   TVar:
                     variable: 0
     ]
--- coreAST
+-- enrichedAST
 Module:
   declarations: [
       LetDeclaration:
