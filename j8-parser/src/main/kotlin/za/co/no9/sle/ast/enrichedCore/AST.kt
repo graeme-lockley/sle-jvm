@@ -68,6 +68,14 @@ data class ConstantString(
         override val type: Type,
         val value: String) : Expression(location, type)
 
+data class FAIL(
+        override val location: Location,
+        override val type: Type): Expression(location, type)
+
+data class ERROR(
+        override val location: Location,
+        override val type: Type): Expression(location, type)
+
 data class IdReference(
         override val location: Location,
         override val type: Type,
@@ -91,3 +99,9 @@ data class CallExpression(
         override val type: Type,
         val operator: Expression,
         val operand: Expression) : Expression(location, type)
+
+data class Bar(
+        override val location: Location,
+        override val type: Type,
+        val left: Expression,
+        val right: Expression) : Expression(location, type)

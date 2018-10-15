@@ -64,6 +64,12 @@ private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Ex
             is za.co.no9.sle.ast.enrichedCore.ConstantString ->
                 ConstantString(expression.location, expression.type, expression.value)
 
+            is za.co.no9.sle.ast.enrichedCore.FAIL ->
+                TODO("FAIL")
+
+            is za.co.no9.sle.ast.enrichedCore.ERROR ->
+                TODO("ERROR")
+
             is za.co.no9.sle.ast.enrichedCore.IdReference ->
                 IdReference(expression.location, expression.type, expression.name)
 
@@ -75,6 +81,9 @@ private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Ex
 
             is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                 CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+
+            is za.co.no9.sle.ast.enrichedCore.Bar ->
+                TODO("Bar")
         }
 
 
