@@ -51,6 +51,7 @@ private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): 
                 TypeDeclaration(declaration.location, transform(declaration.name), declaration.scheme, declaration.constructors.map { transform(it) })
         }
 
+
 private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Expression =
         when (expression) {
             is za.co.no9.sle.ast.typedPattern.Unit ->
@@ -77,8 +78,47 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
             is za.co.no9.sle.ast.typedPattern.CallExpression ->
                 CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
-            is za.co.no9.sle.ast.typedPattern.CaseExpression ->
-                TODO()
+            is za.co.no9.sle.ast.typedPattern.CaseExpression -> {
+                val operator =
+                        transform(expression.operator)
+
+                val caseItemType =
+                        TArr(operator.type, expression.type)
+
+                fun transform(caseItem: za.co.no9.sle.ast.typedPattern.CaseItem): Expression {
+                    return CallExpression(caseItem.location, expression.type,
+                            LambdaExpression(caseItem.location, caseItemType, transform(caseItem.pattern), transform(caseItem.expression)),
+                            IdReference(expression.location, operator.type, "\$case"))
+                }
+
+                CallExpression(expression.location, expression.type,
+                        LambdaExpression(expression.location, TArr(operator.type, expression.type), IdReferencePattern(expression.location, expression.type, "\$case"),
+                                expression.items.drop(1).fold(transform(expression.items[0])) { a, b -> Bar(a.location + b.location, caseItemType, a, transform(b)) }),
+                        operator
+                )
+            }
+        }
+
+
+private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern): Pattern =
+        when (pattern) {
+            is za.co.no9.sle.ast.typedPattern.ConstantIntPattern ->
+                ConstantIntPattern(pattern.location, pattern.type, pattern.value)
+
+            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
+                ConstantBoolPattern(pattern.location, pattern.type, pattern.value)
+
+            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
+                ConstantStringPattern(pattern.location, pattern.type, pattern.value)
+
+            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern ->
+                ConstantUnitPattern(pattern.location, pattern.type)
+
+            is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
+                IdReferencePattern(pattern.location, pattern.type, pattern.name)
+
+            is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern ->
+                ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, pattern.parameters.map { transform(it) })
         }
 
 

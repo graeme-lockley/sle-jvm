@@ -1,0 +1,354 @@
+-- Translate case into lambda
+type Tuple a b =
+    Tuple a b
+
+first t =
+    case t of
+        Tuple x y -> x
+
+second t =
+    case t of
+        Tuple x y -> y
+-- enrichedAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                  ]
+                name: Tuple
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              IdReferencePattern:
+                name: t
+                type:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 2
+                        TVar:
+                          variable: 3
+                      ]
+                    name: Tuple
+            expression:
+              CallExpression:
+                operand:
+                  IdReference:
+                    name: t
+                    type:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 2
+                            TVar:
+                              variable: 3
+                          ]
+                        name: Tuple
+                operator:
+                  LambdaExpression:
+                    argument:
+                      IdReferencePattern:
+                        name: $case
+                        type:
+                          TVar:
+                            variable: 2
+                    expression:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: $case
+                            type:
+                              TCon:
+                                arguments: [
+                                    TVar:
+                                      variable: 2
+                                    TVar:
+                                      variable: 3
+                                  ]
+                                name: Tuple
+                        operator:
+                          LambdaExpression:
+                            argument:
+                              ConstructorReferencePattern:
+                                name: Tuple
+                                parameters: [
+                                    IdReferencePattern:
+                                      name: x
+                                      type:
+                                        TVar:
+                                          variable: 2
+                                    IdReferencePattern:
+                                      name: y
+                                      type:
+                                        TVar:
+                                          variable: 3
+                                  ]
+                                type:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 2
+                                        TVar:
+                                          variable: 3
+                                      ]
+                                    name: Tuple
+                            expression:
+                              IdReference:
+                                name: x
+                                type:
+                                  TVar:
+                                    variable: 2
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 2
+                                        TVar:
+                                          variable: 3
+                                      ]
+                                    name: Tuple
+                                range:
+                                  TVar:
+                                    variable: 2
+                        type:
+                          TVar:
+                            variable: 2
+                    type:
+                      TArr:
+                        domain:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 2
+                                TVar:
+                                  variable: 3
+                              ]
+                            name: Tuple
+                        range:
+                          TVar:
+                            variable: 2
+                type:
+                  TVar:
+                    variable: 2
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 2
+                        TVar:
+                          variable: 3
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 2
+        name:
+          ID:
+            name: first
+        scheme:
+          Scheme:
+            parameters: [
+                2
+                3
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 2
+                        TVar:
+                          variable: 3
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 2
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              IdReferencePattern:
+                name: t
+                type:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 8
+                        TVar:
+                          variable: 9
+                      ]
+                    name: Tuple
+            expression:
+              CallExpression:
+                operand:
+                  IdReference:
+                    name: t
+                    type:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 8
+                            TVar:
+                              variable: 9
+                          ]
+                        name: Tuple
+                operator:
+                  LambdaExpression:
+                    argument:
+                      IdReferencePattern:
+                        name: $case
+                        type:
+                          TVar:
+                            variable: 9
+                    expression:
+                      CallExpression:
+                        operand:
+                          IdReference:
+                            name: $case
+                            type:
+                              TCon:
+                                arguments: [
+                                    TVar:
+                                      variable: 8
+                                    TVar:
+                                      variable: 9
+                                  ]
+                                name: Tuple
+                        operator:
+                          LambdaExpression:
+                            argument:
+                              ConstructorReferencePattern:
+                                name: Tuple
+                                parameters: [
+                                    IdReferencePattern:
+                                      name: x
+                                      type:
+                                        TVar:
+                                          variable: 8
+                                    IdReferencePattern:
+                                      name: y
+                                      type:
+                                        TVar:
+                                          variable: 9
+                                  ]
+                                type:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 8
+                                        TVar:
+                                          variable: 9
+                                      ]
+                                    name: Tuple
+                            expression:
+                              IdReference:
+                                name: y
+                                type:
+                                  TVar:
+                                    variable: 9
+                            type:
+                              TArr:
+                                domain:
+                                  TCon:
+                                    arguments: [
+                                        TVar:
+                                          variable: 8
+                                        TVar:
+                                          variable: 9
+                                      ]
+                                    name: Tuple
+                                range:
+                                  TVar:
+                                    variable: 9
+                        type:
+                          TVar:
+                            variable: 9
+                    type:
+                      TArr:
+                        domain:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 8
+                                TVar:
+                                  variable: 9
+                              ]
+                            name: Tuple
+                        range:
+                          TVar:
+                            variable: 9
+                type:
+                  TVar:
+                    variable: 9
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 8
+                        TVar:
+                          variable: 9
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 9
+        name:
+          ID:
+            name: second
+        scheme:
+          Scheme:
+            parameters: [
+                8
+                9
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 8
+                        TVar:
+                          variable: 9
+                      ]
+                    name: Tuple
+                range:
+                  TVar:
+                    variable: 9
+    ]
