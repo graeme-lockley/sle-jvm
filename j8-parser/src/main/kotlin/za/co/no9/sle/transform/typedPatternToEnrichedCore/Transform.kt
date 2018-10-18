@@ -167,9 +167,9 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
             is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
                 state.addComparison(pattern.location, pattern.type, ConstantBool(pattern.location, pattern.type, pattern.value))
 
-//            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
-//                ConstantStringPattern(pattern.location, pattern.type, pattern.value)
-//
+            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
+                state.addComparison(pattern.location, pattern.type, ConstantString(pattern.location, pattern.type, pattern.value))
+
 //            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern ->
 //                ConstantUnitPattern(pattern.location, pattern.type)
 
