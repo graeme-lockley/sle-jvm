@@ -1,4 +1,4 @@
--- Translate case with constants into lambda
+-- Translate case with constant int into lambda
 numToString v =
     case v of
         0 -> "0"
