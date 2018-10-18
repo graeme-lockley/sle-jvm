@@ -111,24 +111,24 @@ sealed class Pattern(
         override val location: Location,
         open val type: Type) : Node(location)
 
-data class ConstantIntPattern(
-        override val location: Location,
-        override val type: Type,
-        val value: Int) : Pattern(location, type)
-
-data class ConstantBoolPattern(
-        override val location: Location,
-        override val type: Type,
-        val value: Boolean) : Pattern(location, type)
-
-data class ConstantStringPattern(
-        override val location: Location,
-        override val type: Type,
-        val value: String) : Pattern(location, type)
-
-data class ConstantUnitPattern(
-        override val location: Location,
-        override val type: Type) : Pattern(location, type)
+//data class ConstantIntPattern(
+//        override val location: Location,
+//        override val type: Type,
+//        val value: Int) : Pattern(location, type)
+//
+//data class ConstantBoolPattern(
+//        override val location: Location,
+//        override val type: Type,
+//        val value: Boolean) : Pattern(location, type)
+//
+//data class ConstantStringPattern(
+//        override val location: Location,
+//        override val type: Type,
+//        val value: String) : Pattern(location, type)
+//
+//data class ConstantUnitPattern(
+//        override val location: Location,
+//        override val type: Type) : Pattern(location, type)
 
 data class IdReferencePattern(
         override val location: Location,

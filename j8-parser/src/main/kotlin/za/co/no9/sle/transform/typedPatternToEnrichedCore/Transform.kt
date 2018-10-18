@@ -6,10 +6,7 @@ import za.co.no9.sle.ast.enrichedCore.*
 import za.co.no9.sle.ast.enrichedCore.Unit
 import za.co.no9.sle.map
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
-import za.co.no9.sle.typing.Environment
-import za.co.no9.sle.typing.Substitution
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.Type
+import za.co.no9.sle.typing.*
 
 
 data class Detail(
@@ -86,8 +83,18 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
                         TArr(operator.type, expression.type)
 
                 fun transform(caseItem: za.co.no9.sle.ast.typedPattern.CaseItem): Expression {
+                    val patternTransformation =
+                            transform(caseItem.pattern, PatternTransformState())
+
+                    val caseItemExpression: Expression =
+                            if (patternTransformation.state.expression == null) {
+                                transform(caseItem.expression)
+                            } else {
+                                IfExpression(caseItem.location, caseItem.expression.type, patternTransformation.state.expression, transform(caseItem.expression), FAIL(caseItem.location, caseItem.expression.type))
+                            }
+
                     return CallExpression(caseItem.location, expression.type,
-                            LambdaExpression(caseItem.location, caseItemType, transform(caseItem.pattern), transform(caseItem.expression)),
+                            LambdaExpression(caseItem.location, caseItemType, patternTransformation.result, caseItemExpression),
                             IdReference(expression.location, operator.type, "\$case"))
                 }
 
@@ -102,26 +109,85 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
             }
         }
 
+private class PatternTransformState(val count: Int = 0, val expression: Expression? = null) {
+    fun newID(): PatternTransformResult<String> {
+        val id =
+                "\$v$count"
 
-private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern): Pattern =
+        return PatternTransformResult(id, PatternTransformState(count + 1, expression))
+    }
+
+    fun addExpression(expression: Expression): PatternTransformState =
+            if (this.expression == null)
+                PatternTransformState(count, expression)
+            else
+                PatternTransformState(count, CallExpression(
+                        expression.location,
+                        typeBool,
+                        CallExpression(
+                                expression.location + this.expression.location,
+                                TArr(typeBool, typeBool),
+                                IdReference(expression.location, TArr(typeBool, TArr(typeBool, typeBool)), "(&&)"),
+                                this.expression),
+                        expression
+
+                ))
+}
+
+
+private class PatternTransformResult<T>(val result: T, val state: PatternTransformState)
+
+
+private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: PatternTransformState): PatternTransformResult<Pattern> =
         when (pattern) {
-            is za.co.no9.sle.ast.typedPattern.ConstantIntPattern ->
-                ConstantIntPattern(pattern.location, pattern.type, pattern.value)
+            is za.co.no9.sle.ast.typedPattern.ConstantIntPattern -> {
+                val id =
+                        state.newID()
 
-            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
-                ConstantBoolPattern(pattern.location, pattern.type, pattern.value)
+                val finalState =
+                        id.state.addExpression(
+                                CallExpression(
+                                        pattern.location,
+                                        typeBool,
+                                        CallExpression(
+                                                pattern.location,
+                                                TArr(pattern.type, typeBool),
+                                                IdReference(pattern.location, TArr(pattern.type, TArr(pattern.type, typeBool)), "(==)"),
+                                                ConstantInt(pattern.location, pattern.type, pattern.value)),
+                                        IdReference(pattern.location, pattern.type, id.result)))
 
-            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
-                ConstantStringPattern(pattern.location, pattern.type, pattern.value)
+                PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, id.result), finalState)
+            }
 
-            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern ->
-                ConstantUnitPattern(pattern.location, pattern.type)
+//            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
+//                ConstantBoolPattern(pattern.location, pattern.type, pattern.value)
+//
+//            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
+//                ConstantStringPattern(pattern.location, pattern.type, pattern.value)
+//
+//            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern ->
+//                ConstantUnitPattern(pattern.location, pattern.type)
 
             is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
-                IdReferencePattern(pattern.location, pattern.type, pattern.name)
+                PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, pattern.name), state)
 
-            is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern ->
-                ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, pattern.parameters.map { transform(it) })
+            is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern -> {
+                val initialState =
+                        PatternTransformResult(emptyList<Pattern>(), state)
+
+                val parameters =
+                        pattern.parameters.fold(initialState) { a, b ->
+                            val transformResult =
+                                    transform(b, a.state)
+
+                            PatternTransformResult(a.result + transformResult.result, transformResult.state)
+                        }
+
+                PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
+            }
+
+            else ->
+                TODO()
         }
 
 
