@@ -112,7 +112,7 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
 
 
 private class PatternTransformState(val count: Int = 0, val expression: Expression? = null) {
-    private fun newID(): PatternTransformResult<String> {
+    fun newID(): PatternTransformResult<String> {
         val id =
                 "\$v$count"
 
@@ -170,8 +170,12 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
             is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
                 state.addComparison(pattern.location, pattern.type, ConstantString(pattern.location, pattern.type, pattern.value))
 
-//            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern ->
-//                ConstantUnitPattern(pattern.location, pattern.type)
+            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern -> {
+                val id =
+                        state.newID()
+
+                PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, id.result), id.state)
+            }
 
             is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
                 PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, pattern.name), state)
@@ -190,11 +194,7 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
 
                 PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
             }
-
-            else ->
-                TODO()
         }
-
 
 
 private fun domain(type: Type): Type =
