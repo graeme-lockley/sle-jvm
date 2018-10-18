@@ -159,9 +159,26 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
                 PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, id.result), finalState)
             }
 
-//            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
-//                ConstantBoolPattern(pattern.location, pattern.type, pattern.value)
-//
+            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
+            {
+                val id =
+                        state.newID()
+
+                val finalState =
+                        id.state.addExpression(
+                                CallExpression(
+                                        pattern.location,
+                                        typeBool,
+                                        CallExpression(
+                                                pattern.location,
+                                                TArr(pattern.type, typeBool),
+                                                IdReference(pattern.location, TArr(pattern.type, TArr(pattern.type, typeBool)), "(==)"),
+                                                ConstantBool(pattern.location, pattern.type, pattern.value)),
+                                        IdReference(pattern.location, pattern.type, id.result)))
+
+                PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, id.result), finalState)
+            }
+
 //            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
 //                ConstantStringPattern(pattern.location, pattern.type, pattern.value)
 //
