@@ -294,7 +294,7 @@ Module:
                     name: Int
         name:
           ID:
-            name: numToString
+            name: boolToNum
         scheme:
           Scheme:
             parameters: []
