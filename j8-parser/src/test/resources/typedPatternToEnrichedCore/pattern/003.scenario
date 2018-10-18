@@ -1,5 +1,5 @@
 -- Translate case with constant boolean into lambda
-numToString v =
+boolToNum v =
     case v of
         True -> 1
         False -> 0
