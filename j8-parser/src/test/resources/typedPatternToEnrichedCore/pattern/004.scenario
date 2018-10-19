@@ -34,7 +34,7 @@ Module:
                         type:
                           TCon:
                             arguments: []
-                            name: Int
+                            name: String
                     expression:
                       Bar:
                         left:

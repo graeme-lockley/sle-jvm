@@ -33,7 +33,7 @@ Module:
                         type:
                           TCon:
                             arguments: []
-                            name: Int
+                            name: Bool
                     expression:
                       Bar:
                         left:

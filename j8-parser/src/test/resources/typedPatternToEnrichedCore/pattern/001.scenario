@@ -78,8 +78,14 @@ Module:
                       IdReferencePattern:
                         name: $case
                         type:
-                          TVar:
-                            variable: 2
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 2
+                                TVar:
+                                  variable: 3
+                              ]
+                            name: Tuple
                     expression:
                       Bar:
                         left:
@@ -253,8 +259,14 @@ Module:
                       IdReferencePattern:
                         name: $case
                         type:
-                          TVar:
-                            variable: 9
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 8
+                                TVar:
+                                  variable: 9
+                              ]
+                            name: Tuple
                     expression:
                       Bar:
                         left:

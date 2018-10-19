@@ -32,7 +32,7 @@ Module:
                         type:
                           TCon:
                             arguments: []
-                            name: Int
+                            name: ()
                     expression:
                       Bar:
                         left:
