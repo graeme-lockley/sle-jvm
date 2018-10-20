@@ -4,328 +4,54 @@ stringToNum v =
         "Hello" -> 1
         "World" -> 2
         otherwise -> 0
--- enrichedAST
-Module:
-  declarations: [
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: v
-                type:
-                  TCon:
-                    arguments: []
-                    name: String
-            expression:
-              CallExpression:
-                operand:
-                  IdReference:
-                    name: v
-                    type:
-                      TCon:
-                        arguments: []
-                        name: String
-                operator:
-                  LambdaExpression:
-                    argument:
-                      IdReferencePattern:
-                        name: $case
-                        type:
-                          TCon:
-                            arguments: []
-                            name: String
-                    expression:
-                      Bar:
-                        expressions: [
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name: $case
-                                  type:
-                                    TCon:
-                                      arguments: []
-                                      name: String
-                              operator:
-                                LambdaExpression:
-                                  argument:
-                                    IdReferencePattern:
-                                      name: $v0
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                  expression:
-                                    IfExpression:
-                                      elseExpression:
-                                        FAIL:
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Int
-                                      guardExpression:
-                                        CallExpression:
-                                          operand:
-                                            IdReference:
-                                              name: $v0
-                                              type:
-                                                TCon:
-                                                  arguments: []
-                                                  name: String
-                                          operator:
-                                            CallExpression:
-                                              operand:
-                                                ConstantString:
-                                                  type:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: String
-                                                  value: Hello
-                                              operator:
-                                                IdReference:
-                                                  name: (==)
-                                                  type:
-                                                    TArr:
-                                                      domain:
-                                                        TCon:
-                                                          arguments: []
-                                                          name: String
-                                                      range:
-                                                        TArr:
-                                                          domain:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: String
-                                                          range:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: Bool
-                                              type:
-                                                TArr:
-                                                  domain:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: String
-                                                  range:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Bool
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Bool
-                                      thenExpression:
-                                        ConstantInt:
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Int
-                                          value: 1
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                                  type:
-                                    TArr:
-                                      domain:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                      range:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                              type:
-                                TCon:
-                                  arguments: []
-                                  name: Int
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name: $case
-                                  type:
-                                    TCon:
-                                      arguments: []
-                                      name: String
-                              operator:
-                                LambdaExpression:
-                                  argument:
-                                    IdReferencePattern:
-                                      name: $v0
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                  expression:
-                                    IfExpression:
-                                      elseExpression:
-                                        FAIL:
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Int
-                                      guardExpression:
-                                        CallExpression:
-                                          operand:
-                                            IdReference:
-                                              name: $v0
-                                              type:
-                                                TCon:
-                                                  arguments: []
-                                                  name: String
-                                          operator:
-                                            CallExpression:
-                                              operand:
-                                                ConstantString:
-                                                  type:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: String
-                                                  value: World
-                                              operator:
-                                                IdReference:
-                                                  name: (==)
-                                                  type:
-                                                    TArr:
-                                                      domain:
-                                                        TCon:
-                                                          arguments: []
-                                                          name: String
-                                                      range:
-                                                        TArr:
-                                                          domain:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: String
-                                                          range:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: Bool
-                                              type:
-                                                TArr:
-                                                  domain:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: String
-                                                  range:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Bool
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Bool
-                                      thenExpression:
-                                        ConstantInt:
-                                          type:
-                                            TCon:
-                                              arguments: []
-                                              name: Int
-                                          value: 2
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                                  type:
-                                    TArr:
-                                      domain:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                      range:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                              type:
-                                TCon:
-                                  arguments: []
-                                  name: Int
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name: $case
-                                  type:
-                                    TCon:
-                                      arguments: []
-                                      name: String
-                              operator:
-                                LambdaExpression:
-                                  argument:
-                                    IdReferencePattern:
-                                      name: otherwise
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                  expression:
-                                    ConstantInt:
-                                      type:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                                      value: 0
-                                  type:
-                                    TArr:
-                                      domain:
-                                        TCon:
-                                          arguments: []
-                                          name: String
-                                      range:
-                                        TCon:
-                                          arguments: []
-                                          name: Int
-                              type:
-                                TCon:
-                                  arguments: []
-                                  name: Int
-                            ERROR:
-                              type:
-                                TCon:
-                                  arguments: []
-                                  name: Int
-                          ]
-                        type:
-                          TCon:
-                            arguments: []
-                            name: Int
-                    type:
-                      TArr:
-                        domain:
-                          TCon:
-                            arguments: []
-                            name: String
-                        range:
-                          TCon:
-                            arguments: []
-                            name: Int
-                type:
-                  TCon:
-                    arguments: []
-                    name: Int
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
-                    name: String
-                range:
-                  TCon:
-                    arguments: []
-                    name: Int
-        name:
-          ID:
-            name: stringToNum
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
-                    name: String
-                range:
-                  TCon:
-                    arguments: []
-                    name: Int
-    ]
+-- enrichedASTpp
+stringToNum : <> String -> Int
+stringToNum =
+  (LAMBDA v ->
+    (CALL
+      (LAMBDA $case ->
+        (BAR
+          (CALL
+            (LAMBDA $v0 ->
+              (IF
+                (CALL
+                  (CALL
+                    (==)
+                    "Hello"
+                  )
+                  $v0
+                )
+                1
+                FAIL
+              )
+            )
+            $case
+          )
+          (CALL
+            (LAMBDA $v0 ->
+              (IF
+                (CALL
+                  (CALL
+                    (==)
+                    "World"
+                  )
+                  $v0
+                )
+                2
+                FAIL
+              )
+            )
+            $case
+          )
+          (CALL
+            (LAMBDA otherwise ->
+              0
+            )
+            $case
+          )
+          ERROR
+        )
+      )
+      v
+    )
+  )
