@@ -103,8 +103,7 @@ data class CallExpression(
 data class Bar(
         override val location: Location,
         override val type: Type,
-        val left: Expression,
-        val right: Expression) : Expression(location, type)
+        val expressions: List<Expression>) : Expression(location, type)
 
 
 sealed class Pattern(

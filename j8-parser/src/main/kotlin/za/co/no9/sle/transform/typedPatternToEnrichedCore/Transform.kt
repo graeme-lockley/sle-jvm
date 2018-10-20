@@ -104,7 +104,7 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
 
                 CallExpression(expression.location, expression.type,
                         LambdaExpression(expression.location, TArr(operator.type, expression.type), IdReferencePattern(expression.location, operator.type, "\$case"),
-                                expression.items.foldRight(initial) { a, b -> Bar(a.location + b.location, caseItemType, transform(a), b) }),
+                                Bar(expression.location, expression.type, expression.items.map { b -> transform(b) } + initial)),
                         operator
                 )
             }
