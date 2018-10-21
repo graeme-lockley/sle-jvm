@@ -7,6 +7,28 @@ type List a =
   | Cons a (List a)
 
 
+singleton x =
+    Cons x Nil
+
+
+repeat : Int -> a -> List a
+repeat n e
+    | n == 0 = Nil
+    | otherwise = Cons e (repeat (n - 1) e)
+
+
+range : Int -> Int -> List Int
+range m n
+    | m > n = Nil
+    | otherwise = Cons m (range (m + 1) n)
+
+
+isEmpty l =
+    case l of
+        Nil -> True
+        Cons x xs -> False
+
+
 head l =
     case l of
         Nil -> Nothing
