@@ -1,48 +1,47 @@
 package samples.operators
 
-import io.kotlintest.matchers.boolean.shouldBeFalse
-import io.kotlintest.matchers.boolean.shouldBeTrue
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 class BooleanOperatorsTests : StringSpec({
     "and True True returns true" {
         BooleanOperators.and.apply(true).apply(true)
-                .shouldBeTrue()
+                .shouldBe(true)
     }
 
     "and False True returns false" {
         BooleanOperators.and.apply(false).apply(true)
-                .shouldBeFalse()
+                .shouldBe(false)
     }
 
     "and True False returns false" {
         BooleanOperators.and.apply(true).apply(false)
-                .shouldBeFalse()
+                .shouldBe(false)
     }
 
     "and False False returns false" {
         BooleanOperators.and.apply(false).apply(false)
-                .shouldBeFalse()
+                .shouldBe(false)
     }
 
 
     "or True True returns true" {
         BooleanOperators.or.apply(true).apply(true)
-                .shouldBeTrue()
+                .shouldBe(true)
     }
 
     "or False True returns true" {
         BooleanOperators.or.apply(false).apply(true)
-                .shouldBeTrue()
+                .shouldBe(true)
     }
 
     "or True False returns true" {
         BooleanOperators.or.apply(true).apply(false)
-                .shouldBeTrue()
+                .shouldBe(true)
     }
 
     "or False False returns false" {
         BooleanOperators.or.apply(false).apply(false)
-                .shouldBeFalse()
+                .shouldBe(false)
     }
 })

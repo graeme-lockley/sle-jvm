@@ -4,11 +4,11 @@ import java.util.function.Function;
 
 
 public class Builtin {
-    public static final Function<Boolean, Function<Boolean, Boolean>> AMPERSAND_AMPERSAND =
-            a -> b -> a && b;
+    public static final Function<Object, Function<Object, Boolean>> AMPERSAND_AMPERSAND =
+            a -> b -> ((boolean) a) && ((boolean) b);
 
-    public static final Function<Boolean, Function<Boolean, Boolean>> BAR_BAR =
-            a -> b -> a || b;
+    public static final Function<Object, Function<Object, Boolean>> BAR_BAR =
+            a -> b -> ((boolean) a) || ((boolean) b);
 
     public static final Function<Object, Function<Object, Boolean>> EQUAL_EQUAL =
             a -> (Function<Object, Boolean>) a::equals;
@@ -42,12 +42,15 @@ public class Builtin {
                             : a instanceof Boolean && b instanceof Boolean ? ((Boolean) a).compareTo((Boolean) b) >= 0
                             : a instanceof Unit && b instanceof Unit;
 
-    public static final Function<Integer, Function<Integer, Integer>> STAR =
-            a -> b -> a * b;
+    public static final Function<Object, Function<Object, Object>> PLUS =
+            a -> b -> ((int) a) + ((int) b);
 
-    public static final Function<Integer, Function<Integer, Integer>> SLASH =
-            a -> b -> a / b;
+    public static final Function<Object, Function<Object, Object>> STAR =
+            a -> b -> ((int) a) * ((int) b);
 
-    public static final Function<Integer, Function<Integer, Integer>> MINUS =
-            a -> b -> a - b;
+    public static final Function<Object, Function<Object, Object>> SLASH =
+            a -> b -> ((int) a) / ((int) b);
+
+    public static final Function<Object, Function<Object, Object>> MINUS =
+            a -> b -> ((int) a) - ((int) b);
 }

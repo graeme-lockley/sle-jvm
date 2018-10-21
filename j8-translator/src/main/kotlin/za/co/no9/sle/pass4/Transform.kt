@@ -6,11 +6,12 @@ import com.github.javaparser.ast.NodeList
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import com.github.javaparser.ast.body.MethodDeclaration
 import com.github.javaparser.ast.body.Parameter
+import com.github.javaparser.ast.body.VariableDeclarator
 import com.github.javaparser.ast.comments.JavadocComment
 import com.github.javaparser.ast.expr.*
-import com.github.javaparser.ast.stmt.BlockStmt
-import com.github.javaparser.ast.stmt.ReturnStmt
+import com.github.javaparser.ast.stmt.*
 import com.github.javaparser.ast.type.ClassOrInterfaceType
+import com.github.javaparser.ast.type.PrimitiveType
 import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Expression
 import za.co.no9.sle.ast.core.Unit
@@ -26,6 +27,7 @@ private val RefMapping = mapOf(
         Pair("(<=)", "LESS_EQUAL"),
         Pair("(>)", "GREATER"),
         Pair("(>=)", "GREATER_EQUAL"),
+        Pair("(+)", "PLUS"),
         Pair("(-)", "MINUS"),
         Pair("(*)", "STAR"),
         Pair("(/)", "SLASH")
@@ -155,17 +157,17 @@ fun javaType(type: Type): String =
         when (type) {
             is TCon ->
                 when {
-                    type.name == "Int" ->
-                        "Integer"
-
-                    type.name == "Bool" ->
-                        "Boolean"
-
-                    type.name == "String" ->
-                        "String"
-
-                    type.name == "()" ->
-                        "za.co.no9.sle.runtime.Unit"
+//                    type.name == "Int" ->
+//                        "Integer"
+//
+//                    type.name == "Bool" ->
+//                        "Boolean"
+//
+//                    type.name == "String" ->
+//                        "String"
+//
+//                    type.name == "()" ->
+//                        "za.co.no9.sle.runtime.Unit"
 
                     else ->
                         "Object"
@@ -242,7 +244,54 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
                         "apply",
                         NodeList.nodeList(javaExpression(expression.operand)))
 
-            is CaseExpression ->
-                TODO()
+            is CaseExpression -> {
+                val selectorName =
+                        expression.variable
+
+                val fullSelectorName =
+                        "\$$selectorName"
+
+                val entries =
+                        NodeList(expression.clauses.map {
+                            SwitchEntryStmt(NameExpr("${it.constructorName}$"),
+                                    NodeList(
+                                            if (it.variables.isEmpty())
+                                                ReturnStmt().setExpression(javaExpression(it.expression)) as Statement
+                                            else
+                                                BlockStmt(NodeList(ExpressionStmt(VariableDeclarationExpr().setVariables(NodeList(it.variables.mapIndexed { a, b ->
+                                                    VariableDeclarator(com.github.javaparser.ast.type.ClassOrInterfaceType().setName("java.lang.Object"), b, ArrayAccessExpr(NameExpr(fullSelectorName), IntegerLiteralExpr(a + 1)))
+                                                }))))).addStatement(ReturnStmt().setExpression(javaExpression(it.expression))) as Statement
+                                    )
+                            )
+                        }  + listOf(
+                                SwitchEntryStmt().addStatement("throw new RuntimeException(\"No case expression: \" + " + fullSelectorName + ");")
+                        ))
+
+                val getMethod =
+                        MethodDeclaration()
+                                .setName("get")
+                                .setType("java.lang.Object")
+                                .setModifier(Modifier.PUBLIC, true)
+                                .setParameters(NodeList.nodeList())
+                                .setBody(BlockStmt(NodeList(
+                                        ExpressionStmt(VariableDeclarationExpr()
+                                                .setVariables(NodeList(VariableDeclarator(com.github.javaparser.ast.type.ClassOrInterfaceType().setName("java.lang.Object[]"), fullSelectorName, CastExpr(com.github.javaparser.ast.type.ClassOrInterfaceType().setName("java.lang.Object[]"), NameExpr(selectorName)))))),
+                                        SwitchStmt()
+                                                .setSelector(
+                                                        CastExpr(
+                                                                PrimitiveType.intType(),
+                                                                ArrayAccessExpr(
+                                                                        NameExpr(fullSelectorName),
+                                                                        IntegerLiteralExpr(0))))
+                                                .setEntries(
+                                                        entries
+                                                ))))
+
+                MethodCallExpr(ObjectCreationExpr()
+                        .setType(ClassOrInterfaceType().setName("java.util.function.Supplier").setTypeArguments(com.github.javaparser.ast.type.ClassOrInterfaceType().setName("java.lang.Object")))
+                        .setAnonymousClassBody(NodeList.nodeList(getMethod)),
+                        "get",
+                        NodeList())
+            }
         }
 

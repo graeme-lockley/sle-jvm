@@ -5,6 +5,25 @@ import static za.co.no9.sle.runtime.Builtin.*;
 
 public class ListType {
 
+    public static final int Nothing$ = 0;
+
+    /**
+     * Nothing: <0> Maybe '0
+     */
+    public static final Object Nothing = new Object[] { Nothing$ };
+
+    public static final int Just$ = 1;
+
+    /**
+     * Just: <0> '0 -> Maybe '0
+     */
+    public static final Function<Object, Object> Just = new Function<Object, Object>() {
+
+        public Object apply(Object v0) {
+            return new Object[] { Just$, v0 };
+        }
+    };
+
     public static final int Nil$ = 0;
 
     /**
@@ -68,4 +87,102 @@ public class ListType {
      * doubleBooleanList: <> List Bool
      */
     public static final Object doubleBooleanList = double.apply(true).apply(false);
+
+    /**
+     * head: <0> List '0 -> Maybe '0
+     */
+    public static final Function<Object, Object> head = new Function<Object, Object>() {
+
+        public Object apply(Object l) {
+            return new Function<Object, Object>() {
+
+                public Object apply(Object $case) {
+                    return new java.util.function.Supplier<java.lang.Object>() {
+
+                        public java.lang.Object get() {
+                            java.lang.Object[] $$case = (java.lang.Object[]) $case;
+                            switch((int) $$case[0]) {
+                                case Nil$:
+                                    return Nothing;
+                                case Cons$:
+                                    {
+                                        java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
+                                        return Just.apply($$0);
+                                    }
+                                default:
+                                    throw new RuntimeException("No case expression: " + $$case);
+                            }
+                        }
+                    }.get();
+                }
+            }.apply(l);
+        }
+    };
+
+    /**
+     * tail: <0> List '0 -> Maybe List '0
+     */
+    public static final Function<Object, Object> tail = new Function<Object, Object>() {
+
+        public Object apply(Object l) {
+            return new Function<Object, Object>() {
+
+                public Object apply(Object $case) {
+                    return new java.util.function.Supplier<java.lang.Object>() {
+
+                        public java.lang.Object get() {
+                            java.lang.Object[] $$case = (java.lang.Object[]) $case;
+                            switch((int) $$case[0]) {
+                                case Nil$:
+                                    return Nothing;
+                                case Cons$:
+                                    {
+                                        java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
+                                        return Just.apply($$1);
+                                    }
+                                default:
+                                    throw new RuntimeException("No case expression: " + $$case);
+                            }
+                        }
+                    }.get();
+                }
+            }.apply(l);
+        }
+    };
+
+    /**
+     * map: <0, 1> ('0 -> '1) -> List '0 -> List '1
+     */
+    public static final Function<Function<Object, Object>, Function<Object, Object>> map = new Function<Function<Object, Object>, Function<Object, Object>>() {
+
+        public Function<Object, Object> apply(Function<Object, Object> f) {
+            return new Function<Object, Object>() {
+
+                public Object apply(Object l) {
+                    return new Function<Object, Object>() {
+
+                        public Object apply(Object $case) {
+                            return new java.util.function.Supplier<java.lang.Object>() {
+
+                                public java.lang.Object get() {
+                                    java.lang.Object[] $$case = (java.lang.Object[]) $case;
+                                    switch((int) $$case[0]) {
+                                        case Nil$:
+                                            return Nil;
+                                        case Cons$:
+                                            {
+                                                java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
+                                                return Cons.apply(f.apply($$0)).apply(map.apply(f).apply($$1));
+                                            }
+                                        default:
+                                            throw new RuntimeException("No case expression: " + $$case);
+                                    }
+                                }
+                            }.get();
+                        }
+                    }.apply(l);
+                }
+            };
+        }
+    };
 }
