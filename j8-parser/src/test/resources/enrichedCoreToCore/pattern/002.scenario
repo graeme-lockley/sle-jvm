@@ -1,0 +1,48 @@
+-- A simple mapping of numbers into a string
+numToString n =
+    case n of
+        0 -> "0"
+        1 -> "1"
+        2 -> "two"
+        n -> "many"
+-- coreASTpp
+numToString : <> Int -> String
+numToString =
+  (LAMBDA n ->
+    (CALL
+      (LAMBDA $case ->
+        (IF
+          (CALL
+            (CALL
+              (==)
+              0
+            )
+            $case
+          )
+          "0"
+          (IF
+            (CALL
+              (CALL
+                (==)
+                1
+              )
+              $case
+            )
+            "1"
+            (IF
+              (CALL
+                (CALL
+                  (==)
+                  2
+                )
+                $case
+              )
+              "two"
+              "many"
+            )
+          )
+        )
+      )
+      n
+    )
+  )
