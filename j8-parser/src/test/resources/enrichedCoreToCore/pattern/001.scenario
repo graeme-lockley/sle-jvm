@@ -1,0 +1,69 @@
+-- An implementation of head and tail
+type Option a =
+    Nothing
+  | Just a
+
+
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+head l =
+    case l of
+        Nil -> Nothing
+        Cons x xs -> Just x
+
+tail l =
+    case l of
+        Nil -> Nothing
+        Cons x xs -> Just xs
+-- coreASTpp
+type Option =
+  Nothing
+| Just '0
+
+
+type List =
+  Nil
+| Cons '0 List '0
+
+
+head : <0> List '0 -> Option '0
+head =
+  (LAMBDA l ->
+    (CALL
+      (LAMBDA $case ->
+        (CASE $case
+          Nil =>
+            Nothing
+          Cons $$0 $$1 =>
+            (CALL
+              Just
+              $$0
+            )
+        )
+      )
+      l
+    )
+  )
+
+
+tail : <0> List '0 -> Option List '0
+tail =
+  (LAMBDA l ->
+    (CALL
+      (LAMBDA $case ->
+        (CASE $case
+          Nil =>
+            Nothing
+          Cons $$0 $$1 =>
+            (CALL
+              Just
+              $$1
+            )
+        )
+      )
+      l
+    )
+  )

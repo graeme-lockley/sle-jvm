@@ -99,7 +99,6 @@ data class CaseExpression(
         val clauses: List<CaseExpressionClause>) : Expression(location, type)
 
 data class CaseExpressionClause(
-        override val location: Location,
         val constructorName: String,
         val variables: List<String>,
-        val expression: Expression): Node(location)
+        val expression: Expression)
