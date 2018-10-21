@@ -3,6 +3,7 @@ package za.co.no9.sle.transform.enrichedCoreToCore
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.*
+import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
@@ -74,6 +75,15 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
         }
 
 
+        val coreASTpp =
+                fileContent["coreASTpp"]
+
+        if (coreASTpp != null) {
+            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
+            parseWithDetail.right()!!.coreModule.asString().shouldBeEqual(coreASTpp)
+        }
+
+
         val errors =
                 fileContent["errors"]
 
@@ -85,3 +95,62 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 }
 
 
+fun Module.asString(): String =
+        this.declarations.map { it.asString() }.joinToString("\n")
+
+fun Declaration.asString(): String =
+        when (this) {
+            is LetDeclaration ->
+                "${name.name} : ${scheme.normalize()}\n${name.name} =\n${expression.asString(2)}\n"
+
+            is TypeAliasDeclaration ->
+                "typealias ${name.name} =\n  $scheme\n"
+
+            is TypeDeclaration ->
+                "type ${name.name} =\n  " + constructors.map { it.asString() }.joinToString("| ") + "\n"
+        }
+
+
+fun Constructor.asString(): String =
+        "${name.name}${arguments.joinToString("") { " " + it.toString() }}\n"
+
+
+fun Expression.asString(indent: Int = 0): String =
+        when (this) {
+            is za.co.no9.sle.ast.core.Unit ->
+                "${spaces(indent)}()\n"
+
+            is ConstantBool ->
+                spaces(indent) + value.toString() + "\n"
+
+            is ConstantInt ->
+                spaces(indent) + value.toString() + "\n"
+
+            is ConstantString ->
+                "${spaces(indent)}\"$value\"\n"
+
+//            is FAIL ->
+//                "${spaces(indent)}FAIL\n"
+
+//            is ERROR ->
+//                "${spaces(indent)}ERROR\n"
+
+            is IdReference ->
+                spaces(indent) + name + "\n"
+
+            is IfExpression ->
+                "${spaces(indent)}(IF\n" +
+                        guardExpression.asString(indent + 2) +
+                        thenExpression.asString(indent + 2) +
+                        elseExpression.asString(indent + 2) +
+                        "${spaces(indent)})\n"
+
+            is LambdaExpression ->
+                "${spaces(indent)}(LAMBDA ${argument.name} ->\n${expression.asString(indent + 2)}${spaces(indent)})\n"
+
+            is CallExpression ->
+                "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
+
+//            is Bar ->
+//                "${spaces(indent)}(BAR\n${expressions.map{it.asString(indent + 2)}.joinToString("")}${spaces(indent)})\n"
+        }

@@ -2,83 +2,9 @@
 id : a -> a
 id x =
     x
--- ast
-Module:
-  declarations: [
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              ID:
-                name: x
-            expression:
-              IdReference:
-                name: x
-                type:
-                  TVar:
-                    variable: 0
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 0
-                range:
-                  TVar:
-                    variable: 0
-        name:
-          ID:
-            name: id
-        scheme:
-          Scheme:
-            parameters: [
-                0
-              ]
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 0
-                range:
-                  TVar:
-                    variable: 0
-    ]
--- coreAST
-Module:
-  declarations: [
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              ID:
-                name: x
-            expression:
-              IdReference:
-                name: x
-                type:
-                  TVar:
-                    variable: 0
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 0
-                range:
-                  TVar:
-                    variable: 0
-        name:
-          ID:
-            name: id
-        scheme:
-          Scheme:
-            parameters: [
-                0
-              ]
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 0
-                range:
-                  TVar:
-                    variable: 0
-    ]
+-- coreASTpp
+id : <0> '0 -> '0
+id =
+  (LAMBDA x ->
+    x
+  )
