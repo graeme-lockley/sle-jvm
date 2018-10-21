@@ -1,0 +1,55 @@
+-- An implementation of remove0s
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+remove0s : List Int -> List Int
+remove0s l =
+    case l of
+        Nil -> Nil
+        Cons 0 xs -> remove0s xs
+        Cons x xs -> Cons x (remove0s xs)
+-- coreASTpp
+type List =
+  Nil
+| Cons '0 List '0
+
+
+remove0s : <> List Int -> List Int
+remove0s =
+  (LAMBDA l ->
+    (CALL
+      (LAMBDA $case ->
+        (CASE $case
+          Nil =>
+            Nil
+          Cons $$0 $$1 =>
+            (IF
+              (CALL
+                (CALL
+                  (==)
+                  0
+                )
+                $$0
+              )
+              (CALL
+                remove0s
+                $$1
+              )
+              (CALL
+                (CALL
+                  Cons
+                  x
+                )
+                (CALL
+                  remove0s
+                  $$1
+                )
+              )
+            )
+        )
+      )
+      l
+    )
+  )
