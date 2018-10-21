@@ -10,7 +10,6 @@ class ListTests : StringSpec({
     val singletonList =
             List.Cons.apply(1).apply(List.Nil)
 
-
     val dualList =
             List.Cons.apply(1).apply(List.Cons.apply(2).apply(List.Nil))
 
