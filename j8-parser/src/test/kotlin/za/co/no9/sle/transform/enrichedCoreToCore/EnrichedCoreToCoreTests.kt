@@ -153,4 +153,10 @@ fun Expression.asString(indent: Int = 0): String =
 
 //            is Bar ->
 //                "${spaces(indent)}(BAR\n${expressions.map{it.asString(indent + 2)}.joinToString("")}${spaces(indent)})\n"
+
+            is CaseExpression ->
+                "${spaces(indent)}(CASE $variable\n${clauses.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"
         }
+
+fun CaseExpressionClause.asString(indent: Int): String =
+        "${spaces(indent)}$constructorName${variables.joinToString("") { " $it" }} => \n${expression.asString(indent + 2)}"

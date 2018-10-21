@@ -91,3 +91,15 @@ data class CallExpression(
         override val type: Type,
         val operator: Expression,
         val operand: Expression) : Expression(location, type)
+
+data class CaseExpression(
+        override val location: Location,
+        override val type: Type,
+        val variable: String,
+        val clauses: List<CaseExpressionClause>) : Expression(location, type)
+
+data class CaseExpressionClause(
+        override val location: Location,
+        val constructorName: String,
+        val variables: List<String>,
+        val expression: Expression): Node(location)

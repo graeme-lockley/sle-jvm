@@ -241,5 +241,8 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
                         javaExpression(expression.operator),
                         "apply",
                         NodeList.nodeList(javaExpression(expression.operand)))
+
+            is CaseExpression ->
+                TODO()
         }
 
