@@ -57,7 +57,7 @@ private fun translateLetDeclarations(module: Module, classDeclaration: ClassOrIn
     for (declaration in module.declarations) {
         when (declaration) {
             is LetDeclaration -> {
-                classDeclaration.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme}"))
+                classDeclaration.addOrphanComment(JavadocComment("${declaration.name.name}: ${declaration.scheme.normalize()}"))
 
                 classDeclaration.addFieldWithInitializer(
                         javaType(declaration.scheme.type),
@@ -91,7 +91,7 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclarat
         val constructorType =
                 constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
 
-        classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType)}"))
+        classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType).normalize()}"))
 
         classDeclaration.addFieldWithInitializer(
                 javaType(constructorType),

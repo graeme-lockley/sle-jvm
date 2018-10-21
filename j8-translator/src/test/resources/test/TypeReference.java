@@ -6,7 +6,7 @@ import static za.co.no9.sle.runtime.Builtin.*;
 public class TypeReference {
 
     /**
-     * equal: <1> '1 -> '1 -> Bool
+     * equal: <0> '0 -> '0 -> Bool
      */
     public static final Function<Object, Function<Object, Boolean>> equal = new Function<Object, Function<Object, Boolean>>() {
 

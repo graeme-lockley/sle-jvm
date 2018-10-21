@@ -30,7 +30,7 @@ public class ListType {
     };
 
     /**
-     * singleton: <3> '3 -> List '3
+     * singleton: <0> '0 -> List '0
      */
     public static final Function<Object, Object> singleton = new Function<Object, Object>() {
 
@@ -40,7 +40,7 @@ public class ListType {
     };
 
     /**
-     * double: <6> '6 -> '6 -> List '6
+     * double: <0> '0 -> '0 -> List '0
      */
     public static final Function<Object, Function<Object, Object>> double = new Function<Object, Function<Object, Object>>() {
 
