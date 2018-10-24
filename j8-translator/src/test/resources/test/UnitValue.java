@@ -8,9 +8,9 @@ public class UnitValue {
     /**
      * calculate: <> () -> Int
      */
-    public static final Function<za.co.no9.sle.runtime.Unit, Integer> calculate = new Function<za.co.no9.sle.runtime.Unit, Integer>() {
+    public static final Function<Object, Object> calculate = new Function<Object, Object>() {
 
-        public Integer apply(za.co.no9.sle.runtime.Unit n) {
+        public Object apply(Object n) {
             return 100;
         }
     };
@@ -18,5 +18,5 @@ public class UnitValue {
     /**
      * value: <> Int
      */
-    public static final Integer value = calculate.apply(za.co.no9.sle.runtime.Unit.INSTANCE);
+    public static final Object value = calculate.apply(za.co.no9.sle.runtime.Unit.INSTANCE);
 }

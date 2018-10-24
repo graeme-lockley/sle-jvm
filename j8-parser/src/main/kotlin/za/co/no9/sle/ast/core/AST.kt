@@ -102,3 +102,12 @@ data class CaseExpressionClause(
         val constructorName: String,
         val variables: List<String>,
         val expression: Expression)
+
+data class FAIL(
+        override val location: Location,
+        override val type: Type): Expression(location, type)
+
+data class ERROR(
+        override val location: Location,
+        override val type: Type): Expression(location, type)
+

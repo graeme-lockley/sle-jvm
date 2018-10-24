@@ -24,27 +24,27 @@ class JavaGenTests : StringSpec({
 
     }
 
-//    "Compile test/First.sle" {
-//        stuff("First",
-//                initialEnvironment
-//                        .newValue("(==)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
-//                        .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-//                        .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-//        )
-//    }
-//
-//
-//    "Compile test/TypeReference.sle" {
-//        stuff("TypeReference",
-//                initialEnvironment
-//                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-//        )
-//    }
-//
-//
-//    "Compile test/UnitValue.sle" {
-//        stuff("UnitValue", initialEnvironment)
-//    }
+    "Compile test/First.sle" {
+        stuff("First",
+                initialEnvironment
+                        .newValue("(==)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
+                        .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                        .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+        )
+    }
+
+
+    "Compile test/TypeReference.sle" {
+        stuff("TypeReference",
+                initialEnvironment
+                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
+        )
+    }
+
+
+    "Compile test/UnitValue.sle" {
+        stuff("UnitValue", initialEnvironment)
+    }
 
 
     "Compile test/ListType.sle" {

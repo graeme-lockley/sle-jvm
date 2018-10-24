@@ -156,22 +156,7 @@ private fun constructorExpression(declaration: TypeDeclaration, constructor: Con
 fun javaType(type: Type): String =
         when (type) {
             is TCon ->
-                when {
-//                    type.name == "Int" ->
-//                        "Integer"
-//
-//                    type.name == "Bool" ->
-//                        "Boolean"
-//
-//                    type.name == "String" ->
-//                        "String"
-//
-//                    type.name == "()" ->
-//                        "za.co.no9.sle.runtime.Unit"
-
-                    else ->
-                        "Object"
-                }
+                "Object"
 
             is TVar ->
                 "Object"
@@ -204,6 +189,12 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
 
             is ConstantString ->
                 StringLiteralExpr(expression.value)
+
+            is ERROR ->
+                TODO()
+
+            is FAIL ->
+                TODO()
 
             is IdReference -> {
                 val refMappingName =
@@ -264,7 +255,7 @@ private fun javaExpression(expression: Expression): com.github.javaparser.ast.ex
                                     )
                             )
                         }  + listOf(
-                                SwitchEntryStmt().addStatement("throw new RuntimeException(\"No case expression: \" + " + fullSelectorName + ");")
+                                SwitchEntryStmt().addStatement("throw new RuntimeException(\"No case expression: \" + $fullSelectorName);")
                         ))
 
                 val getMethod =

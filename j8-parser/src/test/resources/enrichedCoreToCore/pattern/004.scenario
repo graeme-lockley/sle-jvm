@@ -1,0 +1,44 @@
+-- An implementation of head that combines variable and constructor pattern matching
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+type Maybe a =
+    Nothing
+  | Just a
+
+
+head l =
+    case l of
+        Cons x xs -> Just x
+        x -> Nothing
+-- coreASTpp
+type List =
+  Nil
+| Cons '0 List '0
+
+
+type Maybe =
+  Nothing
+| Just '0
+
+
+head : <0> List '0 -> Maybe '0
+head =
+  (LAMBDA l ->
+    (CALL
+      (LAMBDA $case ->
+        (CASE $case
+          Cons $$0 $$1 =>
+            (CALL
+              Just
+              $$0
+            )
+          Nil =>
+            Nothing
+        )
+      )
+      l
+    )
+  )

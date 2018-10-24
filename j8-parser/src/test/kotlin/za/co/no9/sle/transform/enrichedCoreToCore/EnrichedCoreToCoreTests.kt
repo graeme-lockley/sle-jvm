@@ -129,11 +129,11 @@ fun Expression.asString(indent: Int = 0): String =
             is ConstantString ->
                 "${spaces(indent)}\"$value\"\n"
 
-//            is FAIL ->
-//                "${spaces(indent)}FAIL\n"
+            is FAIL ->
+                "${spaces(indent)}FAIL\n"
 
-//            is ERROR ->
-//                "${spaces(indent)}ERROR\n"
+            is ERROR ->
+                "${spaces(indent)}ERROR\n"
 
             is IdReference ->
                 spaces(indent) + name + "\n"

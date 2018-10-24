@@ -10,6 +10,16 @@ import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
 
 
+private typealias Patterns =
+        List<za.co.no9.sle.ast.enrichedCore.Pattern>
+
+private typealias Q =
+        Pair<Patterns, za.co.no9.sle.ast.enrichedCore.Expression>
+
+private typealias Qs =
+        List<Q>
+
+
 data class Detail(
         val constraints: Constraints,
         val substitution: Substitution,
@@ -35,129 +45,142 @@ fun parse(text: String, environment: Environment): Either<Errors, Module> {
 
 
 private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Module =
-        Module(module.location, module.declarations.map { transform(it) })
+        Transform().transform(module)
 
 
-private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.Declaration): Declaration =
-        when (declaration) {
-            is za.co.no9.sle.ast.enrichedCore.LetDeclaration ->
-                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expression))
+private class Transform(private var counter: Int = 0) {
+    var constructors: Map<String, List<String>> =
+            emptyMap()
 
-            is za.co.no9.sle.ast.enrichedCore.TypeAliasDeclaration ->
-                TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
 
-            is za.co.no9.sle.ast.enrichedCore.TypeDeclaration ->
-                TypeDeclaration(declaration.location, transform(declaration.name), declaration.scheme, declaration.constructors.map { transform(it) })
+    fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Module {
+        constructors = module.declarations.fold(emptyMap()) { a, b ->
+            if (b is za.co.no9.sle.ast.enrichedCore.TypeDeclaration) {
+                val x =
+                        b.constructors.map { it.name.name }
+
+                val y =
+                        x.map { Pair(it, x) }
+
+
+                a + y
+            } else
+                a
         }
 
+        return Module(module.location, module.declarations.map { transform(it) })
+    }
 
-private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Expression =
-        when (expression) {
-            is za.co.no9.sle.ast.enrichedCore.Unit ->
-                Unit(expression.location, expression.type)
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
-                ConstantBool(expression.location, expression.type, expression.value)
+    private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.Declaration): Declaration =
+            when (declaration) {
+                is za.co.no9.sle.ast.enrichedCore.LetDeclaration ->
+                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expression))
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
-                ConstantInt(expression.location, expression.type, expression.value)
+                is za.co.no9.sle.ast.enrichedCore.TypeAliasDeclaration ->
+                    TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantString ->
-                ConstantString(expression.location, expression.type, expression.value)
+                is za.co.no9.sle.ast.enrichedCore.TypeDeclaration ->
+                    TypeDeclaration(declaration.location, transform(declaration.name), declaration.scheme, declaration.constructors.map { transform(it) })
+            }
 
-            is za.co.no9.sle.ast.enrichedCore.FAIL ->
-                TODO("FAIL")
 
-            is za.co.no9.sle.ast.enrichedCore.ERROR ->
-                TODO("ERROR")
+    private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Expression =
+            when (expression) {
+                is za.co.no9.sle.ast.enrichedCore.Unit ->
+                    Unit(expression.location, expression.type)
 
-            is za.co.no9.sle.ast.enrichedCore.IdReference ->
-                IdReference(expression.location, expression.type, expression.name)
+                is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
+                    ConstantBool(expression.location, expression.type, expression.value)
 
-            is za.co.no9.sle.ast.enrichedCore.IfExpression ->
-                IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
+                is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
+                    ConstantInt(expression.location, expression.type, expression.value)
 
-            is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
-                LambdaExpression(expression.location, expression.type, transform(expression.argument), transform(expression.expression))
+                is za.co.no9.sle.ast.enrichedCore.ConstantString ->
+                    ConstantString(expression.location, expression.type, expression.value)
 
-            is za.co.no9.sle.ast.enrichedCore.CallExpression ->
-                CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+                is za.co.no9.sle.ast.enrichedCore.FAIL ->
+                    FAIL(expression.location, expression.type)
 
-            is za.co.no9.sle.ast.enrichedCore.Bar -> {
-                fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
-                        when (e) {
-                            is za.co.no9.sle.ast.enrichedCore.CallExpression -> {
-                                val operand =
-                                        e.operand
+                is za.co.no9.sle.ast.enrichedCore.ERROR ->
+                    ERROR(expression.location, expression.type)
 
-                                if (operand is za.co.no9.sle.ast.enrichedCore.IdReference)
-                                    listOf(operand.name) + extractNames(e.operator)
-                                else
+                is za.co.no9.sle.ast.enrichedCore.IdReference ->
+                    IdReference(expression.location, expression.type, expression.name)
+
+                is za.co.no9.sle.ast.enrichedCore.IfExpression ->
+                    IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
+
+                is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
+                    LambdaExpression(expression.location, expression.type, transform(expression.argument), transform(expression.expression))
+
+                is za.co.no9.sle.ast.enrichedCore.CallExpression ->
+                    CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+
+                is za.co.no9.sle.ast.enrichedCore.Bar -> {
+                    fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
+                            when (e) {
+                                is za.co.no9.sle.ast.enrichedCore.CallExpression -> {
+                                    val operand =
+                                            e.operand
+
+                                    if (operand is za.co.no9.sle.ast.enrichedCore.IdReference)
+                                        listOf(operand.name) + extractNames(e.operator)
+                                    else
+                                        listOf()
+                                }
+
+                                else ->
                                     listOf()
                             }
 
-                            else ->
-                                listOf()
-                        }
+                    val names =
+                            extractNames(expression.expressions[0])
 
-                val names =
-                        extractNames(expression.expressions[0])
-
-                fun createQ(e: za.co.no9.sle.ast.enrichedCore.Expression): Q {
-                    fun dropNCalls(n: Int, exp: za.co.no9.sle.ast.enrichedCore.Expression): za.co.no9.sle.ast.enrichedCore.Expression =
-                            if (n == 0)
-                                exp
-                            else if (exp is za.co.no9.sle.ast.enrichedCore.CallExpression)
-                                if (exp.operand is za.co.no9.sle.ast.enrichedCore.IdReference)
-                                    dropNCalls(n - 1, exp.operator)
+                    fun createQ(e: za.co.no9.sle.ast.enrichedCore.Expression): Q {
+                        fun dropNCalls(n: Int, exp: za.co.no9.sle.ast.enrichedCore.Expression): za.co.no9.sle.ast.enrichedCore.Expression =
+                                if (n == 0)
+                                    exp
+                                else if (exp is za.co.no9.sle.ast.enrichedCore.CallExpression)
+                                    if (exp.operand is za.co.no9.sle.ast.enrichedCore.IdReference)
+                                        dropNCalls(n - 1, exp.operator)
+                                    else
+                                        throw Error("Error: n > 0 and $exp is not an IdReference")
                                 else
-                                    throw Error("Error: n > 0 and $exp is not an IdReference")
-                            else
-                                throw Error("Error: n == 0 and $exp not a CallExpression")
+                                    throw Error("Error: n == 0 and $exp not a CallExpression")
 
-                    fun extractPatterns(n: Int, exp: za.co.no9.sle.ast.enrichedCore.Expression): Q {
-                        var currentE =
-                                exp
+                        fun extractPatterns(n: Int, exp: za.co.no9.sle.ast.enrichedCore.Expression): Q {
+                            var currentE =
+                                    exp
 
-                        val patterns =
-                                mutableListOf<za.co.no9.sle.ast.enrichedCore.Pattern>()
+                            val patterns =
+                                    mutableListOf<za.co.no9.sle.ast.enrichedCore.Pattern>()
 
-                        for (i in 1 .. n) {
-                            if (currentE is za.co.no9.sle.ast.enrichedCore.LambdaExpression) {
-                                patterns.add(currentE.argument)
-                                currentE = currentE.expression
-                            } else {
-                                throw Error("Expected $n lambdas during pattern extraction: $exp")
+                            for (i in 1..n) {
+                                if (currentE is za.co.no9.sle.ast.enrichedCore.LambdaExpression) {
+                                    patterns.add(currentE.argument)
+                                    currentE = currentE.expression
+                                } else {
+                                    throw Error("Expected $n lambdas during pattern extraction: $exp")
+                                }
                             }
+
+                            return Pair(patterns, currentE)
                         }
 
-                        return Pair(patterns, currentE)
+                        return extractPatterns(names.size, dropNCalls(names.size, e))
                     }
 
-                    return extractPatterns(names.size, dropNCalls(names.size, e))
+                    match(names, expression.expressions.filter { !isError(it) }.map { createQ(it) }, transform(expression.expressions.filter { isError(it) }[0]))
                 }
-
-                Match().match(names, expression.expressions.filter { !isError(it) }.map { createQ(it) }, expression.expressions.filter { isError(it) }[0])
             }
-        }
 
 
-typealias Patterns =
-        List<za.co.no9.sle.ast.enrichedCore.Pattern>
-
-typealias Q =
-        Pair<Patterns, za.co.no9.sle.ast.enrichedCore.Expression>
-
-typealias Qs =
-        List<Q>
+    private fun isError(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
+            e is za.co.no9.sle.ast.enrichedCore.ERROR
 
 
-private fun isError(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
-        e is za.co.no9.sle.ast.enrichedCore.ERROR
-
-
-class Match(private var counter: Int = 0) {
-    fun variable(): String {
+    private fun variable(): String {
         val variable =
                 "$$$counter"
 
@@ -167,7 +190,7 @@ class Match(private var counter: Int = 0) {
     }
 
 
-    fun variables(n: Int): List<String> {
+    private fun variables(n: Int): List<String> {
         val result =
                 mutableListOf<String>()
 
@@ -178,34 +201,55 @@ class Match(private var counter: Int = 0) {
     }
 
 
-    fun match(us: List<String>, qs: Qs, e: za.co.no9.sle.ast.enrichedCore.Expression): Expression =
+    fun match(us: List<String>, qs: Qs, e: Expression): Expression =
             if (us.isEmpty()) {
-                transform(combineExpressionWithFail(qs.map { it.second }, e))
+                combineExpressionWithFail(qs.map { it.second }, e)
             } else {
                 val firstFirstPattern =
                         qs[0].first[0]
 
                 if (firstFirstPattern is za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern) {
-                    CaseExpression(e.location, e.type, us[0], qs.groupBy { (it.first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern).name }.map {
-                        val constructorName =
-                                it.key
+                    val splitList =
+                            qs.splitWhile { it.first[0] is za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern }
 
-                        val constructorQs =
-                                it.value
+                    val remainderOfClauses =
+                            if (splitList.second.isEmpty())
+                                e
+                            else
+                                match(us, splitList.second, e)
 
-                        val constructor =
-                                constructorQs[0].first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern
+                    val clausesGroupedByConstructorName =
+                            splitList.first.groupBy { (it.first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern).name }
 
-                        val names =
-                                variables(constructor.parameters.size)
+                    val clausesConstructorNames =
+                            clausesGroupedByConstructorName.keys.toList()
 
-                        CaseExpressionClause(constructorName, names, match(names + us.drop(1), constructorQs.map {
-                            val constructorReferencePattern =
-                                    it.first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern
+                    val constructorNamesNotInGroup =
+                            constructors[clausesConstructorNames[0]]!! - clausesConstructorNames
 
-                            Pair(constructorReferencePattern.parameters + it.first.drop(1), it.second)
-                        }, e))
-                    })
+                    val clauses =
+                            clausesGroupedByConstructorName.map {
+                                val constructorName =
+                                        it.key
+
+                                val constructorQs =
+                                        it.value
+
+                                val constructor =
+                                        constructorQs[0].first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern
+
+                                val names =
+                                        variables(constructor.parameters.size)
+
+                                CaseExpressionClause(constructorName, names, match(names + us.drop(1), constructorQs.map {
+                                    val constructorReferencePattern =
+                                            it.first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern
+
+                                    Pair(constructorReferencePattern.parameters + it.first.drop(1), it.second)
+                                }, remainderOfClauses))
+                            } + constructorNamesNotInGroup.map { CaseExpressionClause(it, listOf(), remainderOfClauses) }
+
+                    CaseExpression(e.location, e.type, us[0], clauses)
                 } else {
                     val variableName =
                             (firstFirstPattern as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name
@@ -215,148 +259,159 @@ class Match(private var counter: Int = 0) {
                     }, e)
                 }
             }
-}
 
 
-private fun combineExpressionWithFail(expressions: List<za.co.no9.sle.ast.enrichedCore.Expression>, e: za.co.no9.sle.ast.enrichedCore.Expression): za.co.no9.sle.ast.enrichedCore.Expression =
-        when {
-            expressions.isEmpty() ->
-                e
-
-            canFail(expressions[0]) ->
-                replaceFailWith(expressions[0], combineExpressionWithFail(expressions.drop(1), e))
-
-            else ->
-                expressions[0]
-        }
-
-
-private fun replaceFailWith(haystack: za.co.no9.sle.ast.enrichedCore.Expression, needle: za.co.no9.sle.ast.enrichedCore.Expression): za.co.no9.sle.ast.enrichedCore.Expression =
-        when (haystack) {
-            is za.co.no9.sle.ast.enrichedCore.Unit ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantString ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.FAIL ->
-                needle
-
-            is za.co.no9.sle.ast.enrichedCore.ERROR ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.IdReference ->
-                haystack
-
-            is za.co.no9.sle.ast.enrichedCore.IfExpression ->
-                za.co.no9.sle.ast.enrichedCore.IfExpression(haystack.location, haystack.type, replaceFailWith(haystack.guardExpression, needle), replaceFailWith(haystack.thenExpression, needle), replaceFailWith(haystack.elseExpression, needle))
-
-            is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
-                za.co.no9.sle.ast.enrichedCore.LambdaExpression(haystack.location, haystack.type, haystack.argument, replaceFailWith(haystack.expression, needle))
-
-            is za.co.no9.sle.ast.enrichedCore.CallExpression ->
-                za.co.no9.sle.ast.enrichedCore.CallExpression(haystack.location, haystack.type, replaceFailWith(haystack.operator, needle), replaceFailWith(haystack.operand, needle))
-
-            is za.co.no9.sle.ast.enrichedCore.Bar ->
-                za.co.no9.sle.ast.enrichedCore.Bar(haystack.location, haystack.type, haystack.expressions.map { replaceFailWith(it, needle) })
-        }
-
-
-private fun substitute(e: za.co.no9.sle.ast.enrichedCore.Expression, old: String, new: String): za.co.no9.sle.ast.enrichedCore.Expression =
-        when (e) {
-            is za.co.no9.sle.ast.enrichedCore.Unit ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.ConstantString ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.FAIL ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.ERROR ->
-                e
-
-            is za.co.no9.sle.ast.enrichedCore.IdReference ->
-                if (e.name == old)
-                    za.co.no9.sle.ast.enrichedCore.IdReference(e.location, e.type, new)
-                else
+    private fun combineExpressionWithFail(expressions: List<za.co.no9.sle.ast.enrichedCore.Expression>, e: Expression): Expression =
+            when {
+                expressions.isEmpty() ->
                     e
 
-            is za.co.no9.sle.ast.enrichedCore.IfExpression ->
-                za.co.no9.sle.ast.enrichedCore.IfExpression(e.location, e.type, substitute(e.guardExpression, old, new), substitute(e.thenExpression, old, new), substitute(e.elseExpression, old, new))
+                canFail(expressions[0]) ->
+                    replaceFailWith(transform(expressions[0]), combineExpressionWithFail(expressions.drop(1), e))
 
-            is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
-                za.co.no9.sle.ast.enrichedCore.LambdaExpression(e.location, e.type, e.argument, substitute(e.expression, old, new))
-
-            is za.co.no9.sle.ast.enrichedCore.CallExpression ->
-                za.co.no9.sle.ast.enrichedCore.CallExpression(e.location, e.type, substitute(e.operator, old, new), substitute(e.operand, old, new))
-
-            is za.co.no9.sle.ast.enrichedCore.Bar ->
-                za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
-        }
+                else ->
+                    transform(expressions[0])
+            }
 
 
-private fun canFail(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
-        when (e) {
-            is za.co.no9.sle.ast.enrichedCore.Unit ->
-                false
+    private fun replaceFailWith(haystack: Expression, needle: Expression): Expression =
+            when (haystack) {
+                is Unit ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
-                false
+                is ConstantBool ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
-                false
+                is ConstantInt ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.ConstantString ->
-                false
+                is ConstantString ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.FAIL ->
-                true
-            is za.co.no9.sle.ast.enrichedCore.ERROR ->
-                true
+                is FAIL ->
+                    needle
 
-            is za.co.no9.sle.ast.enrichedCore.IdReference ->
-                false
+                is ERROR ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.IfExpression ->
-                canFail(e.guardExpression) || canFail(e.thenExpression) || canFail(e.elseExpression)
+                is IdReference ->
+                    haystack
 
-            is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
-                canFail(e.expression)
+                is IfExpression ->
+                    IfExpression(haystack.location, haystack.type, replaceFailWith(haystack.guardExpression, needle), replaceFailWith(haystack.thenExpression, needle), replaceFailWith(haystack.elseExpression, needle))
 
-            is za.co.no9.sle.ast.enrichedCore.CallExpression ->
-                canFail(e.operator) || canFail(e.operand)
+                is LambdaExpression ->
+                    LambdaExpression(haystack.location, haystack.type, haystack.argument, replaceFailWith(haystack.expression, needle))
 
-            is za.co.no9.sle.ast.enrichedCore.Bar ->
-                e.expressions.fold(false) { a, b -> a || canFail(b) }
-        }
+                is CallExpression ->
+                    CallExpression(haystack.location, haystack.type, replaceFailWith(haystack.operator, needle), replaceFailWith(haystack.operand, needle))
 
-
-private fun transform(pattern: za.co.no9.sle.ast.enrichedCore.Pattern): ID =
-        when (pattern) {
-            is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
-                ID(pattern.location, pattern.name)
-
-            else ->
-                TODO("transform enrichedCore to Core: $pattern")
-        }
+                is CaseExpression ->
+                    CaseExpression(haystack.location, haystack.type, haystack.variable, haystack.clauses.map { CaseExpressionClause(it.constructorName, it.variables, replaceFailWith(it.expression, needle)) })
+            }
 
 
-private fun transform(constructor: za.co.no9.sle.ast.enrichedCore.Constructor): Constructor =
-        Constructor(constructor.location, transform(constructor.name), constructor.arguments)
+    private fun substitute(e: za.co.no9.sle.ast.enrichedCore.Expression, old: String, new: String): za.co.no9.sle.ast.enrichedCore.Expression =
+            when (e) {
+                is za.co.no9.sle.ast.enrichedCore.Unit ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantString ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.FAIL ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.ERROR ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.IdReference ->
+                    if (e.name == old)
+                        za.co.no9.sle.ast.enrichedCore.IdReference(e.location, e.type, new)
+                    else
+                        e
+
+                is za.co.no9.sle.ast.enrichedCore.IfExpression ->
+                    za.co.no9.sle.ast.enrichedCore.IfExpression(e.location, e.type, substitute(e.guardExpression, old, new), substitute(e.thenExpression, old, new), substitute(e.elseExpression, old, new))
+
+                is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
+                    za.co.no9.sle.ast.enrichedCore.LambdaExpression(e.location, e.type, e.argument, substitute(e.expression, old, new))
+
+                is za.co.no9.sle.ast.enrichedCore.CallExpression ->
+                    za.co.no9.sle.ast.enrichedCore.CallExpression(e.location, e.type, substitute(e.operator, old, new), substitute(e.operand, old, new))
+
+                is za.co.no9.sle.ast.enrichedCore.Bar ->
+                    za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
+            }
 
 
-private fun transform(name: za.co.no9.sle.ast.enrichedCore.ID): ID =
-        ID(name.location, name.name)
+    private fun canFail(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
+            when (e) {
+                is za.co.no9.sle.ast.enrichedCore.Unit ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantBool ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantInt ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantString ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.FAIL ->
+                    true
+                is za.co.no9.sle.ast.enrichedCore.ERROR ->
+                    true
+
+                is za.co.no9.sle.ast.enrichedCore.IdReference ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.IfExpression ->
+                    canFail(e.guardExpression) || canFail(e.thenExpression) || canFail(e.elseExpression)
+
+                is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
+                    canFail(e.expression)
+
+                is za.co.no9.sle.ast.enrichedCore.CallExpression ->
+                    canFail(e.operator) || canFail(e.operand)
+
+                is za.co.no9.sle.ast.enrichedCore.Bar ->
+                    e.expressions.fold(false) { a, b -> a || canFail(b) }
+            }
+
+
+    private fun transform(pattern: za.co.no9.sle.ast.enrichedCore.Pattern): ID =
+            when (pattern) {
+                is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
+                    ID(pattern.location, pattern.name)
+
+                else ->
+                    TODO("transform enrichedCore to Core: $pattern")
+            }
+
+
+    private fun transform(constructor: za.co.no9.sle.ast.enrichedCore.Constructor): Constructor =
+            Constructor(constructor.location, transform(constructor.name), constructor.arguments)
+
+
+    private fun transform(name: za.co.no9.sle.ast.enrichedCore.ID): ID =
+            ID(name.location, name.name)
+
+
+    private fun <T> List<T>.splitWhile(predicate: (T) -> Boolean): Pair<List<T>, List<T>> {
+        val takeList =
+                this.takeWhile(predicate)
+
+        val restList =
+                this.drop(takeList.size)
+
+        return Pair(takeList, restList)
+    }
+}

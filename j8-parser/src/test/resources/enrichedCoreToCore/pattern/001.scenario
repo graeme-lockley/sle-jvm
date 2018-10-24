@@ -57,10 +57,10 @@ tail =
         (CASE $case
           Nil =>
             Nothing
-          Cons $$0 $$1 =>
+          Cons $$2 $$3 =>
             (CALL
               Just
-              $$1
+              $$3
             )
         )
       )

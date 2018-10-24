@@ -137,8 +137,8 @@ public class ListType {
                                     return Nothing;
                                 case Cons$:
                                     {
-                                        java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
-                                        return Just.apply($$1);
+                                        java.lang.Object $$2 = $$case[1], $$3 = $$case[2];
+                                        return Just.apply($$3);
                                     }
                                 default:
                                     throw new RuntimeException("No case expression: " + $$case);
@@ -171,8 +171,8 @@ public class ListType {
                                             return Nil;
                                         case Cons$:
                                             {
-                                                java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
-                                                return Cons.apply(f.apply($$0)).apply(map.apply(f).apply($$1));
+                                                java.lang.Object $$4 = $$case[1], $$5 = $$case[2];
+                                                return Cons.apply(f.apply($$4)).apply(map.apply(f).apply($$5));
                                             }
                                         default:
                                             throw new RuntimeException("No case expression: " + $$case);
