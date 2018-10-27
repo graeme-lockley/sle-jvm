@@ -48,5 +48,21 @@ map f l =
         Cons x xs -> Cons (f x) (map f xs)
 
 
+removedups : List Int -> List Int
+removedups l =
+    case l of
+        Cons x (Cons y ys) ->
+            if (x == y) then
+                removedups (Cons y ys)
+            else
+                Cons x (removedups (Cons y ys) )
+
+        Cons x xs ->
+            Cons x (removedups xs)
+
+        Nil ->
+            Nil
+
+
 plus5 n =
     n + 5

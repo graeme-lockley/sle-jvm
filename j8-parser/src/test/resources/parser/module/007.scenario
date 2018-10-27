@@ -1,0 +1,31 @@
+-- Scenario that doesn't compile
+removedups x =
+    (removedups (Cons x))
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            ID:
+              name: x
+          ]
+        expression:
+          CallExpression:
+            operands: [
+                CallExpression:
+                  operands: [
+                      IdReference:
+                        name: x
+                    ]
+                  operator:
+                    ConstructorReference:
+                      name: Cons
+              ]
+            operator:
+              IdReference:
+                name: removedups
+        name:
+          ID:
+            name: removedups
+    ]
+

@@ -36,8 +36,11 @@ val keywords =
                 Pair("typealias", Token.TYPEALIAS)
         )
 
+val singleOperatorCharacters =
+        setOf('(', ')')
+
 val operatorCharacters =
-        setOf('-', '=', '|', '(', ')', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':')
+        setOf('-', '=', '|', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':')
 
 
 data class Symbol(val token: Token, val location: Location, val text: String) {
@@ -209,6 +212,26 @@ class Lexer(val input: String) {
 
                     currentSymbol =
                             Symbol(Token.ConstantString, Location(startPosition, endPosition), text)
+                }
+
+                singleOperatorCharacters.contains(currentCh) -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    val endPosition =
+                            position()
+
+                    val endIndex =
+                            currentIndex
+
+                    val text =
+                            input.substring(startIndex, endIndex + 1)
+
+                    currentSymbol =
+                            Symbol(Token.ConstantOperator, Location(startPosition, endPosition), text)
                 }
 
                 operatorCharacters.contains(currentCh) -> {

@@ -146,8 +146,7 @@ class Parser(private val lexer: Lexer) {
         while (lexer.column > 2 && (
                         isToken(Token.LowerID) ||
                                 isToken(Token.UpperID) ||
-                                isOperator("(") ||
-                                isOperator("()"))) {
+                                isOperator("("))) {
             arguments.add(parseType())
         }
 
@@ -346,21 +345,26 @@ class Parser(private val lexer: Lexer) {
                 }
 
                 isOperator("(") -> {
-                    lexer.next()
-
-                    val expression =
-                            parseExpression(leftEdge)
-
-                    matchOperator(")")
-
-                    expression
-                }
-
-                isOperator("()") -> {
-                    val unit =
+                    val openParen =
                             lexer.next()
 
-                    Unit(unit.location)
+                    if (lexer.text == "removedups") {
+                        println(lexer)
+                    }
+
+                    if (isOperator(")")) {
+                        val closeParen =
+                                lexer.next()
+
+                        Unit(openParen.location + closeParen.location)
+                    } else {
+                        val expression =
+                                parseExpression(leftEdge)
+
+                        matchOperator(")")
+
+                        expression
+                    }
                 }
 
                 isToken(Token.UpperID) -> {
@@ -380,8 +384,7 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.ConstantString) ||
                     isOperator("!") ||
                     isToken(Token.LowerID) ||
-                    isToken(Token.UpperID) ||
-                    isOperator("()")
+                    isToken(Token.UpperID)
 
 
     fun parseType(): TType {
@@ -425,8 +428,7 @@ class Parser(private val lexer: Lexer) {
     fun isFirstADTType(): Boolean =
             isToken(Token.LowerID) ||
                     isToken(Token.UpperID) ||
-                    isOperator("(") ||
-                    isOperator("()")
+                    isOperator("(")
 
 
     fun parseTermType(): TType {
@@ -439,21 +441,22 @@ class Parser(private val lexer: Lexer) {
             }
 
             isOperator("(") -> {
-                matchOperator("(")
+                val openParenSymbol =
+                        matchOperator("(")
 
-                val type =
-                        parseType()
+                return if (isOperator(")")) {
+                    val closeParenSymbol =
+                            matchOperator(")")
 
-                matchOperator(")")
+                    TUnit(openParenSymbol.location + closeParenSymbol.location)
+                } else {
+                    val type =
+                            parseType()
 
-                return type
-            }
+                    matchOperator(")")
 
-            isOperator("()") -> {
-                val unitType =
-                        lexer.next()
-
-                return TUnit(unitType.location)
+                    type
+                }
             }
 
             else -> {
@@ -537,23 +540,23 @@ class Parser(private val lexer: Lexer) {
                 return ConstantStringPattern(constantStringSymbol.location, text)
             }
 
-            isOperator("()") -> {
-                val unitSymbol =
+            isOperator("(") -> {
+                val openParenSymbol =
                         lexer.next()
 
-                return ConstantUnitPattern(unitSymbol.location)
+                return if (isOperator(")")) {
+                    val closeParenSymbol =
+                            lexer.next()
 
-            }
+                    ConstantUnitPattern(openParenSymbol.location + closeParenSymbol.location)
+                } else {
+                    val pattern =
+                            parsePattern()
 
-            isOperator("(") -> {
-                lexer.next()
+                    matchOperator(")")
 
-                val pattern =
-                        parsePattern()
-
-                matchOperator(")")
-
-                return pattern
+                    pattern
+                }
             }
 
             isToken(Token.LowerID) -> {
@@ -574,7 +577,6 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.ConstantString) ||
                     isToken(Token.UpperID) ||
                     isToken(Token.LowerID) ||
-                    isOperator("()") ||
                     isOperator("(")
 
 
@@ -594,7 +596,7 @@ class Parser(private val lexer: Lexer) {
         if (isOperator(text)) {
             return lexer.next()
         } else {
-            throw syntaxError("Expected '='")
+            throw syntaxError("Expected '$text'")
         }
     }
 

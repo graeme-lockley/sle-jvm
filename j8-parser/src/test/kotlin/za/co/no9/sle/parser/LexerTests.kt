@@ -45,10 +45,10 @@ class LexerTests : StringSpec({
 
     "() ! != == <= < -> -> [ConstantOperator, ..., ConstantOperator]" {
         Lexer("() ! != == <= < ->").tokens()
-                .shouldBe(listOf(Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator))
+                .shouldBe(listOf(Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator))
 
         Lexer("() ! != == <= < ->").tokenTexts()
-                .shouldBe(listOf("()", "!", "!=", "==", "<=", "<", "->"))
+                .shouldBe(listOf("(", ")", "!", "!=", "==", "<=", "<", "->"))
     }
 
     "\\a -> [ConstantOperator, LowerID]" {
