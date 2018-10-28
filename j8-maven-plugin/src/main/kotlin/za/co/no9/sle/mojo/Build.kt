@@ -107,6 +107,45 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                             is UnificationMismatch ->
                                 log.error("Unification Mismatch: $sourceName: ${it.t1s}: ${it.t2s}")
+
+                            is UnknownTypeReference ->
+                                log.error("Unknown Type Reference: $sourceName: ${it.location}: ${it.name}")
+
+                            is UnknownConstructorReference ->
+                                log.error("Unknown Constructor Reference: $sourceName: ${it.location}: ${it.name}")
+
+                            is DuplicateTypeDeclaration ->
+                                log.error("Duplicate Type Declaration: $sourceName: ${it.location}: ${it.name}")
+
+                            is DuplicateTypeAliasDeclaration ->
+                                log.error("Duplicate Type Alias Declaration: $sourceName: ${it.location}: ${it.name}")
+
+                            is DuplicateConstructorDeclaration ->
+                                log.error("Duplicate Constructor Declaration: $sourceName: ${it.location}: ${it.name}")
+
+                            is LetSignatureWithoutDeclaration ->
+                                log.error("Let Signature Without Declaration: $sourceName: ${it.location}: ${it.name}")
+
+                            is IncorrectNumberOfSchemeArguments ->
+                                log.error("Incorrect Number of Scheme Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+
+                            is IncorrectNumberOfAliasArguments ->
+                                log.error("Incorrect Number of Alias Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+
+                            is IncorrectNumberOfConstructorArguments ->
+                                log.error("Incorrect Number of Constructor Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+
+                            is IncompatibleDeclarationSignature ->
+                                log.error("Incompatible Declaration Signature: $sourceName: ${it.location}: ${it.name}: inferred ${it.inferred}: expected ${it.expected}")
+
+                            is UnknownType ->
+                                log.error("Unknown Type: $sourceName: ${it.location}: ${it.name}")
+
+                            is NonExhaustivePattern ->
+                                log.error("Non Exhaustive Pattern: $sourceName: ${it.location}")
+
+                            else ->
+                                log.error("Unknown Error: $it")
                         }
                     }
 
