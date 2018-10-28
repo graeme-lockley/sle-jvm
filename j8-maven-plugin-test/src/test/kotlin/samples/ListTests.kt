@@ -1,12 +1,11 @@
 package samples
 
+import io.kotlintest.matchers.collections.shouldBeEmpty
+import io.kotlintest.matchers.collections.shouldNotBeEmpty
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 class ListTests : StringSpec({
-    val emptyList =
-            List.Nil
-
     val singletonList =
             List.Cons.apply(1).apply(List.Nil)
 
@@ -15,7 +14,7 @@ class ListTests : StringSpec({
 
 
     "head [] == Nothing" {
-        List.head.apply(emptyList)
+        List.head.apply(List.Nil)
                 .shouldBe(List.Nothing)
     }
 
@@ -26,15 +25,33 @@ class ListTests : StringSpec({
 
     "tail [1] == Just Nil" {
         List.tail.apply(singletonList)
-                .shouldBe(List.Just.apply(emptyList))
+                .shouldBe(List.Just.apply(List.Nil))
     }
 
     "map plus5 [1, 2] == [6, 7]" {
         val result =
-                List.map.apply(List.plus5).apply(dualList) as Array<*>
+                List.map.apply(List.plus5).apply(dualList)
+                        as Array<*>
 
-        result[0].shouldBe(TypeDefinition.`Cons$`)
-        result[1].shouldBe(6)
-        result[2].shouldBe(arrayOf(List.`Cons$`, 7, List.Nil))
+        listEquals(result, listOf(6, 7))
+    }
+
+    "removedups (duplicate (range 1 3)) == [1, 2, 3]" {
+        val result =
+                List.removedups.apply(List.duplicate.apply(List.range.apply(1).apply(3)))
+                        as Array<*>
+
+        listEquals(result, listOf(1, 2, 3))
     }
 })
+
+
+fun <T> listEquals(actual: Array<*>, expected: kotlin.collections.List<T>) {
+    if ((actual[0] as Int) == List.`Nil$`)
+        expected.shouldBeEmpty()
+    else {
+        expected.shouldNotBeEmpty()
+        actual[1].shouldBe(expected[0])
+        listEquals(actual[2] as Array<*>, expected.drop(1))
+    }
+}

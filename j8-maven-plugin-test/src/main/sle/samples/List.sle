@@ -64,5 +64,12 @@ removedups l =
             Nil
 
 
+duplicate : List a -> List a
+duplicate l =
+    case l of
+        Nil -> Nil
+        Cons x xs -> Cons x (Cons x (duplicate xs))
+
+
 plus5 n =
     n + 5
