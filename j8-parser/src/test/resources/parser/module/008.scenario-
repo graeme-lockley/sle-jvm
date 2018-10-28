@@ -1,0 +1,109 @@
+-- A map declaration defined as equations
+map : (A -> B) -> List A -> List B
+map f Nil = Nil
+map f (Cons x xs) = Cons (f x) (map f xs)
+-- ast
+Module:
+  declarations: [
+      LetSignature:
+        name:
+          ID:
+            name: map
+        type:
+          TArrow:
+            domain:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: []
+                    name:
+                      ID:
+                        name: A
+                range:
+                  TConstReference:
+                    arguments: []
+                    name:
+                      ID:
+                        name: B
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TConstReference:
+                          arguments: []
+                          name:
+                            ID:
+                              name: A
+                      ]
+                    name:
+                      ID:
+                        name: List
+                range:
+                  TConstReference:
+                    arguments: [
+                        TConstReference:
+                          arguments: []
+                          name:
+                            ID:
+                              name: B
+                      ]
+                    name:
+                      ID:
+                        name: List
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: f
+            ConstructorReferencePattern:
+              name: Nil
+              parameters: []
+          ]
+        expression:
+          ConstructorReference:
+            name: Nil
+        name:
+          ID:
+            name: map
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: f
+            ConstructorReferencePattern:
+              name: Cons
+              parameters: [
+                  IdReferencePattern:
+                    name: x
+                  IdReferencePattern:
+                    name: xs
+                ]
+          ]
+        expression:
+          CallExpression:
+            operands: [
+                CallExpression:
+                  operands: [
+                      IdReference:
+                        name: x
+                    ]
+                  operator:
+                    IdReference:
+                      name: f
+                CallExpression:
+                  operands: [
+                      IdReference:
+                        name: f
+                      IdReference:
+                        name: xs
+                    ]
+                  operator:
+                    IdReference:
+                      name: map
+              ]
+            operator:
+              ConstructorReference:
+                name: Cons
+        name:
+          ID:
+            name: map
+    ]

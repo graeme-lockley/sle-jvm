@@ -152,7 +152,7 @@ private class ApplyContext(private val aliases: Aliases) {
                     IfExpression(expression.location, expression.type.apply(substitution), apply(expression.guardExpression, substitution), apply(expression.thenExpression, substitution), apply(expression.elseExpression, substitution))
 
                 is LambdaExpression ->
-                    LambdaExpression(expression.location, expression.type.apply(substitution), expression.argument, apply(expression.expression, substitution))
+                    LambdaExpression(expression.location, expression.type.apply(substitution), apply(expression.argument, substitution), apply(expression.expression, substitution))
 
                 is CallExpression ->
                     CallExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), apply(expression.operand, substitution))

@@ -6,6 +6,7 @@ import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.typing.*
+import kotlin.math.exp
 
 
 fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
@@ -336,7 +337,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                     env = currentEnv
 
-                    LambdaExpression(expression.location, TArr(tv, t.type), ID(expression.argument.location, expression.argument.name), t)
+                    LambdaExpression(expression.location, TArr(tv, t.type), IdReferencePattern(expression.argument.location, tv, expression.argument.name), t)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.CallExpression -> {

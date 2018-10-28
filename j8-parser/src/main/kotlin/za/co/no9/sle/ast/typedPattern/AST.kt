@@ -83,7 +83,7 @@ data class IfExpression(
 data class LambdaExpression(
         override val location: Location,
         override val type: Type,
-        val argument: ID,
+        val argument: Pattern,
         val expression: Expression) : Expression(location, type)
 
 data class CallExpression(

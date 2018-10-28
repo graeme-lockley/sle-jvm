@@ -70,8 +70,21 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
             is za.co.no9.sle.ast.typedPattern.IfExpression ->
                 IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
 
-            is za.co.no9.sle.ast.typedPattern.LambdaExpression ->
-                LambdaExpression(expression.location, expression.type, IdReferencePattern(expression.argument.location, domain(expression.type), expression.argument.name), transform(expression.expression))
+            is za.co.no9.sle.ast.typedPattern.LambdaExpression -> {
+                val patternTransformation =
+                        transform(expression.argument, PatternTransformState())
+
+                if (patternTransformation.state.expression == null) {
+                    LambdaExpression(expression.location, expression.type, patternTransformation.result, transform(expression.expression))
+                } else {
+                    IfExpression(
+                            expression.location,
+                            expression.expression.type,
+                            patternTransformation.state.expression,
+                            LambdaExpression(expression.location, expression.type, patternTransformation.result, transform(expression.expression)),
+                            FAIL(expression.location, expression.expression.type))
+                }
+            }
 
             is za.co.no9.sle.ast.typedPattern.CallExpression ->
                 CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
