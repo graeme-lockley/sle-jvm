@@ -1,10 +1,8 @@
 package za.co.no9.sle.transform.enrichedCoreToCore
 
-import za.co.no9.sle.Either
-import za.co.no9.sle.Errors
+import za.co.no9.sle.*
 import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Unit
-import za.co.no9.sle.map
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
@@ -33,24 +31,39 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Deta
     val typePatternDetail =
             za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(text, environment)
 
-    return typePatternDetail.map {
-        Detail(it.constraints, it.substitution, it.unresolvedModule, it.resolvedModule, it.enrichedModule, transform(it.enrichedModule))
+    return typePatternDetail.andThen { detail ->
+        val coreModule =
+                transform(detail.enrichedModule)
+
+        coreModule.map { Detail(detail.constraints, detail.substitution, detail.unresolvedModule, detail.resolvedModule, detail.enrichedModule, it) }
     }
 }
 
 
-fun parse(text: String, environment: Environment): Either<Errors, Module> {
-    return za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(text, environment).map { transform(it) }
+fun parse(text: String, environment: Environment): Either<Errors, Module> =
+        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(text, environment).andThen { transform(it) }
+
+
+private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
+    val transform =
+            Transform()
+
+    val m =
+            transform.transform(module)
+
+    return if (transform.errors.isEmpty())
+        value(m)
+    else
+        error(transform.errors)
 }
-
-
-private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Module =
-        Transform().transform(module)
 
 
 private class Transform(private var counter: Int = 0) {
     var constructors: Map<String, List<String>> =
             emptyMap()
+
+    val errors =
+            mutableSetOf<za.co.no9.sle.Error>()
 
 
     fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Module {
@@ -171,8 +184,37 @@ private class Transform(private var counter: Int = 0) {
                         return extractPatterns(names.size, dropNCalls(names.size, e))
                     }
 
-                    match(names, expression.expressions.filter { !isError(it) }.map { createQ(it) }, transform(expression.expressions.filter { isError(it) }[0]))
+                    val result =
+                            match(names, expression.expressions.filter { !isError(it) }.map { createQ(it) }, transform(expression.expressions.filter { isError(it) }[0]))
+
+                    if (hasError(result)) {
+                        errors.add(NonExhaustivePattern(expression.location))
+                    }
+
+                    result
                 }
+            }
+
+
+    private fun hasError(e: Expression): Boolean =
+            when (e) {
+                is IfExpression ->
+                    hasError(e.guardExpression) || hasError(e.thenExpression) || hasError(e.elseExpression)
+
+                is LambdaExpression ->
+                    hasError(e.expression)
+
+                is CallExpression ->
+                    hasError(e.operand) || hasError(e.operator)
+
+                is CaseExpression ->
+                    e.clauses.fold(false) { a, b -> a || hasError(b.expression) }
+
+                is ERROR ->
+                    true
+
+                else ->
+                    false
             }
 
 

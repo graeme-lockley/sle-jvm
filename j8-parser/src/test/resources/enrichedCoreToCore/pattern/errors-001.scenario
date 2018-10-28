@@ -1,0 +1,18 @@
+-- A partial implementation of head and tail
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+head l =
+    case l of
+        Cons x xs -> x
+
+tail l =
+    case l of
+        Cons x xs -> xs
+-- errors
+[
+  NonExhaustivePattern(location=[(7, 5) (8, 22)])
+  NonExhaustivePattern(location=[(11, 5) (12, 23)])
+]

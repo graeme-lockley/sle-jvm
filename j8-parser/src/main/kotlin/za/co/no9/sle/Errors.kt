@@ -90,3 +90,6 @@ data class UnknownType(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class NonExhaustivePattern(
+        override val location: Location) : LocationError(location)
+
