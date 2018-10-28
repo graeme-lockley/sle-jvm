@@ -348,10 +348,6 @@ class Parser(private val lexer: Lexer) {
                     val openParen =
                             lexer.next()
 
-                    if (lexer.text == "removedups") {
-                        println(lexer)
-                    }
-
                     if (isOperator(")")) {
                         val closeParen =
                                 lexer.next()
