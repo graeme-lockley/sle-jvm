@@ -476,7 +476,7 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<Pattern>()
 
                     while (lexer.column > 1 && isFirstPattern()) {
-                        parameters.add(parseConstructorArgumentPattern())
+                        parameters.add(parseArgumentPattern())
                     }
 
                     ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
@@ -487,7 +487,7 @@ class Parser(private val lexer: Lexer) {
             }
 
 
-    fun parseConstructorArgumentPattern(): Pattern =
+    fun parseArgumentPattern(): Pattern =
             when {
                 isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" -> {
                     val upperIDSymbol =
