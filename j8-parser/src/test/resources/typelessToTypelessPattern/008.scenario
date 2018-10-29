@@ -8,35 +8,35 @@ lambdaExpression =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expression:
-        LambdaExpression:
-          argument:
-            ID:
-              name: x
-          expression:
-            LambdaExpression:
-              argument:
-                ID:
-                  name: y
-              expression:
-                LambdaExpression:
-                  argument:
-                    ID:
-                      name: z
-                  expression:
-                    IfExpression:
-                      elseExpression:
-                        IdReference:
-                          name: z
-                      guardExpression:
-                        IdReference:
-                          name: x
-                      thenExpression:
-                        IdReference:
-                          name: y
-      name:
-        ID:
-          name: lambdaExpression
-      scheme: null
-  ]
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              IdReferencePattern:
+                name: x
+            expression:
+              LambdaExpression:
+                argument:
+                  IdReferencePattern:
+                    name: y
+                expression:
+                  LambdaExpression:
+                    argument:
+                      IdReferencePattern:
+                        name: z
+                    expression:
+                      IfExpression:
+                        elseExpression:
+                          IdReference:
+                            name: z
+                        guardExpression:
+                          IdReference:
+                            name: x
+                        thenExpression:
+                          IdReference:
+                            name: y
+        name:
+          ID:
+            name: lambdaExpression
+        scheme: null
+    ]

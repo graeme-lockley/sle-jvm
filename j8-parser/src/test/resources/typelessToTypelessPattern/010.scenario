@@ -4,27 +4,27 @@ call a b =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expression:
-        LambdaExpression:
-          argument:
-            ID:
-              name: a
-          expression:
-            LambdaExpression:
-              argument:
-                ID:
-                  name: b
-              expression:
-                CallExpression:
-                  operand:
-                    IdReference:
-                      name: b
-                  operator:
-                    IdReference:
-                      name: a
-      name:
-        ID:
-          name: call
-      scheme: null
-  ]
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              IdReferencePattern:
+                name: a
+            expression:
+              LambdaExpression:
+                argument:
+                  IdReferencePattern:
+                    name: b
+                expression:
+                  CallExpression:
+                    operand:
+                      IdReference:
+                        name: b
+                    operator:
+                      IdReference:
+                        name: a
+        name:
+          ID:
+            name: call
+        scheme: null
+    ]

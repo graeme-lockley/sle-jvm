@@ -4,22 +4,22 @@ negate x =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expression:
-        LambdaExpression:
-          argument:
-            ID:
-              name: x
-          expression:
-            CallExpression:
-              operand:
-                IdReference:
-                  name: x
-              operator:
-                IdReference:
-                  name: (!)
-      name:
-        ID:
-          name: negate
-      scheme: null
-  ]
+      LetDeclaration:
+        expression:
+          LambdaExpression:
+            argument:
+              IdReferencePattern:
+                name: x
+            expression:
+              CallExpression:
+                operand:
+                  IdReference:
+                    name: x
+                operator:
+                  IdReference:
+                    name: (!)
+        name:
+          ID:
+            name: negate
+        scheme: null
+    ]

@@ -325,19 +325,17 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.LambdaExpression -> {
-                    val tv =
-                            varPump.fresh(expression.location)
-
                     val currentEnv = env
 
-                    env = env.newValue(expression.argument.name, Scheme(emptyList(), tv))
+                    val tp =
+                            infer(expression.argument)
 
                     val t =
                             infer(expression.expression)
 
                     env = currentEnv
 
-                    LambdaExpression(expression.location, TArr(tv, t.type), IdReferencePattern(expression.argument.location, tv, expression.argument.name), t)
+                    LambdaExpression(expression.location, TArr(tp.type, t.type), tp, t)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.CallExpression -> {

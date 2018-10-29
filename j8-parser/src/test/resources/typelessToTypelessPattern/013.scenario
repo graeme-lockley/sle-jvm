@@ -26,7 +26,7 @@ Module:
                     arguments: [
                         TVar:
                           variable: 0
-                    ]
+                      ]
                     name: List
                 ]
               name:
@@ -52,7 +52,7 @@ Module:
         expression:
           LambdaExpression:
             argument:
-              ID:
+              IdReferencePattern:
                 name: x
             expression:
               CallExpression:
@@ -75,7 +75,7 @@ Module:
         expression:
           LambdaExpression:
             argument:
-              ID:
+              IdReferencePattern:
                 name: x
             expression:
               CallExpression:

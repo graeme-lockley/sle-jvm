@@ -10,7 +10,7 @@ import za.co.no9.sle.shouldBeEqual
 import java.util.function.Consumer
 
 
-class TypelessToTypelessCoreTests : FunSpec({
+class TypelessToTypelessPatternTests : FunSpec({
     runner(this, "typelessToTypelessPattern", RunnerConsumer())
 })
 
