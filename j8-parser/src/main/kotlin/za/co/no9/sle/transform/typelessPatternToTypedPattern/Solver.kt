@@ -109,11 +109,7 @@ private class ApplyContext(private val aliases: Aliases) {
                             this
 
                         arguments.size != alias.parameters.size -> {
-                            val emptyLocation =
-                                    Location(Position(0, 0))
-
-                            // TODO Pass in the type's actual position rather than creating an emptyLocation
-                            errors.add(IncorrectNumberOfAliasArguments(emptyLocation, name, alias.parameters.size, arguments.size))
+                            errors.add(IncorrectNumberOfAliasArguments(this.location, name, alias.parameters.size, arguments.size))
                             this
                         }
 
