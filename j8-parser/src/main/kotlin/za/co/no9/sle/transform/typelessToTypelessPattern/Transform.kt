@@ -160,7 +160,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
 
             is za.co.no9.sle.ast.typeless.LambdaExpression ->
-                ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(za.co.no9.sle.ast.typeless.IdReferencePattern(name.location, name.name)), expression) }
+                ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
 
             is BinaryOpExpression -> {
                 val operator =

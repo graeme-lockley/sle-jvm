@@ -232,12 +232,12 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val arguments =
-                            mutableListOf<ID>()
+                            mutableListOf<Pattern>()
 
-                    arguments.add(matchToken(Token.LowerID, "lower ID").toID())
+                    arguments.add(parseArgumentPattern())
 
-                    while (isToken(Token.LowerID)) {
-                        arguments.add(matchToken(Token.LowerID, "lower ID").toID())
+                    while (isFirstArgumentPattern()) {
+                        arguments.add(parseArgumentPattern())
                     }
 
                     matchOperator("->")
@@ -497,6 +497,10 @@ class Parser(private val lexer: Lexer) {
                 }
                 else -> parsePattern()
             }
+
+
+    fun isFirstArgumentPattern(): Boolean =
+            isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" || isFirstPattern()
 
 
     fun parseTermPattern(): Pattern {

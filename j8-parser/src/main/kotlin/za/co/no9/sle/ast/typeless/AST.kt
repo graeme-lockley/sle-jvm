@@ -97,7 +97,7 @@ data class IfExpression(
 
 data class LambdaExpression(
         override val location: Location,
-        val arguments: List<ID>,
+        val arguments: List<Pattern>,
         val expression: Expression) : Expression(location)
 
 data class BinaryOpExpression(

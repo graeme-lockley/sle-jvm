@@ -42,9 +42,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -66,9 +66,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -90,9 +90,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -114,9 +114,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -138,9 +138,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -162,9 +162,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -186,9 +186,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -210,9 +210,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -234,9 +234,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -258,9 +258,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -282,9 +282,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
@@ -306,9 +306,9 @@ Module:
       expression:
         LambdaExpression:
           arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
           expression:
