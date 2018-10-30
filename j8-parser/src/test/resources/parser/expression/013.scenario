@@ -6,7 +6,7 @@ Module:
   declarations: [
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: x
           ]
         expression:

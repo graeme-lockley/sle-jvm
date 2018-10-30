@@ -9,11 +9,11 @@ Module:
   declarations: [
     LetDeclaration:
       arguments: [
-        ID:
+        IdReferencePattern:
           name: a
-        ID:
+        IdReferencePattern:
           name: b
-        ID:
+        IdReferencePattern:
           name: c
       ]
       expression:

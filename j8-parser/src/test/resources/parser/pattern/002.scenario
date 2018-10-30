@@ -16,9 +16,9 @@ Module:
   declarations: [
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: a
-            ID:
+            IdReferencePattern:
               name: b
           ]
         expression:

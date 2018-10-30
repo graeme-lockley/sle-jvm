@@ -126,11 +126,11 @@ Module:
                             name: List
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: f
-            ID:
+            IdReferencePattern:
               name: a
-            ID:
+            IdReferencePattern:
               name: b
           ]
         expression:

@@ -68,7 +68,7 @@ Module:
                 name: a
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: t
           ]
         expression:
@@ -116,7 +116,7 @@ Module:
                 name: b
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: t
           ]
         expression:
@@ -182,9 +182,9 @@ Module:
                         name: Tuple
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: f
-            ID:
+            IdReferencePattern:
               name: t
           ]
         expression:
@@ -264,9 +264,9 @@ Module:
                         name: Tuple
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: f
-            ID:
+            IdReferencePattern:
               name: t
           ]
         expression:

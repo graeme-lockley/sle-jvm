@@ -103,7 +103,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
 
                 is za.co.no9.sle.ast.typeless.LetDeclaration ->
 //                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
-                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(za.co.no9.sle.ast.typeless.IdReferencePattern(name.location, name.name)), expression) })
+                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) })
 
                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
                     declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(ast.type)!!)
@@ -119,7 +119,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                                     ) { a, b ->
                                         IfExpression(ast.location, astToCoreAST(a.first), astToCoreAST(a.second), b)
                                     }
-                            ) { name, expression -> LambdaExpression(ast.location, transform(za.co.no9.sle.ast.typeless.IdReferencePattern(name.location, name.name)), expression) })
+                            ) { name, expression -> LambdaExpression(ast.location, transform(name), expression) })
             }
         })
     }

@@ -38,7 +38,7 @@ Module:
                 name: IntToInt
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: a
           ]
         expression:

@@ -33,9 +33,9 @@ Module:
                         name: Int
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: x
-            ID:
+            IdReferencePattern:
               name: y
           ]
         expression:

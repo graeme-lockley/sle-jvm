@@ -92,10 +92,10 @@ class Parser(private val lexer: Lexer) {
                     return LetSignature(id.location + type.location, id, type)
                 } else if (isToken(Token.LowerID) || isOperator("=") || isOperator("|")) {
                     val arguments =
-                            mutableListOf<ID>()
+                            mutableListOf<Pattern>()
 
-                    while (isToken(Token.LowerID)) {
-                        arguments.add(lexer.next().toID())
+                    while (isFirstArgumentPattern()) {
+                        arguments.add(parseArgumentPattern())
                     }
 
                     if (isOperator("|")) {

@@ -9,9 +9,9 @@ Module:
   declarations: [
     LetDeclaration:
       arguments: [
-        ID:
+        IdReferencePattern:
           name: x
-        ID:
+        IdReferencePattern:
           name: y
       ]
       expression:
@@ -30,9 +30,9 @@ Module:
           name: add
     LetDeclaration:
       arguments: [
-        ID:
+        IdReferencePattern:
           name: a
-        ID:
+        IdReferencePattern:
           name: b
       ]
       expression:

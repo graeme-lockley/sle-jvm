@@ -44,7 +44,7 @@ Module:
             name: List
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: x
           ]
         expression:
@@ -63,7 +63,7 @@ Module:
             name: singleton
       LetDeclaration:
         arguments: [
-            ID:
+            IdReferencePattern:
               name: x
           ]
         expression:
