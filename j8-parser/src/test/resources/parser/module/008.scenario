@@ -1,7 +1,11 @@
 -- A map declaration defined as equations
-map : (A -> B) -> List A -> List B
-map f Nil = Nil
-map f (Cons x xs) = Cons (f x) (map f xs)
+map : (a -> b) -> List a -> List b
+
+map f Nil =
+    Nil
+
+map f (Cons x xs) =
+    Cons (f x) (map f xs)
 -- ast
 Module:
   declarations: [
@@ -14,27 +18,18 @@ Module:
             domain:
               TArrow:
                 domain:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: A
+                  TVarReference:
+                    name: a
                 range:
-                  TConstReference:
-                    arguments: []
-                    name:
-                      ID:
-                        name: B
+                  TVarReference:
+                    name: b
             range:
               TArrow:
                 domain:
                   TConstReference:
                     arguments: [
-                        TConstReference:
-                          arguments: []
-                          name:
-                            ID:
-                              name: A
+                        TVarReference:
+                          name: a
                       ]
                     name:
                       ID:
@@ -42,11 +37,8 @@ Module:
                 range:
                   TConstReference:
                     arguments: [
-                        TConstReference:
-                          arguments: []
-                          name:
-                            ID:
-                              name: B
+                        TVarReference:
+                          name: b
                       ]
                     name:
                       ID:
