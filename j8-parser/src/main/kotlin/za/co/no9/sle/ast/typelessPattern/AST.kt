@@ -21,7 +21,7 @@ data class LetDeclaration(
         override val location: Location,
         val name: ID,
         val scheme: Scheme?,
-        val expression: Expression) : Declaration(location)
+        val expressions: List<Expression>) : Declaration(location)
 
 data class TypeAliasDeclaration(
         override val location: Location,

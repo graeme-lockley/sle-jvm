@@ -10,100 +10,64 @@ map f (Cons x xs) =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: f
-            expression:
-              LambdaExpression:
-                argument:
-                  ConstructorReferencePattern:
-                    name: Nil
-                    parameters: []
-                expression:
-                  ConstructorReference:
-                    name: Nil
-        name:
-          ID:
-            name: map
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-              ]
-            type:
-              TArr:
-                domain:
-                  TArr:
-                    domain:
-                      TVar:
-                        variable: 0
-                    range:
-                      TVar:
-                        variable: 1
-                range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 0
-                          ]
-                        name: List
-                    range:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 1
-                          ]
-                        name: List
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: f
-            expression:
-              LambdaExpression:
-                argument:
-                  ConstructorReferencePattern:
-                    name: Cons
-                    parameters: [
-                        IdReferencePattern:
-                          name: x
-                        IdReferencePattern:
-                          name: xs
-                      ]
-                expression:
-                  CallExpression:
-                    operand:
-                      CallExpression:
-                        operand:
-                          IdReference:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Nil
+                      parameters: []
+                  expression:
+                    ConstructorReference:
+                      name: Nil
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Cons
+                      parameters: [
+                          IdReferencePattern:
+                            name: x
+                          IdReferencePattern:
                             name: xs
-                        operator:
-                          CallExpression:
-                            operand:
-                              IdReference:
-                                name: f
-                            operator:
-                              IdReference:
-                                name: map
-                    operator:
-                      CallExpression:
-                        operand:
-                          CallExpression:
-                            operand:
-                              IdReference:
-                                name: x
-                            operator:
-                              IdReference:
-                                name: f
-                        operator:
-                          ConstructorReference:
-                            name: Cons
+                        ]
+                  expression:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: xs
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: f
+                              operator:
+                                IdReference:
+                                  name: map
+                      operator:
+                        CallExpression:
+                          operand:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: x
+                              operator:
+                                IdReference:
+                                  name: f
+                          operator:
+                            ConstructorReference:
+                              name: Cons
+          ]
         name:
           ID:
             name: map

@@ -8,32 +8,33 @@ ifExpression x y z=
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: y
-                expression:
-                  LambdaExpression:
-                    argument:
-                      IdReferencePattern:
-                        name: z
-                    expression:
-                      IfExpression:
-                        elseExpression:
-                          IdReference:
-                            name: z
-                        guardExpression:
-                          IdReference:
-                            name: x
-                        thenExpression:
-                          IdReference:
-                            name: y
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: y
+                  expression:
+                    LambdaExpression:
+                      argument:
+                        IdReferencePattern:
+                          name: z
+                      expression:
+                        IfExpression:
+                          elseExpression:
+                            IdReference:
+                              name: z
+                          guardExpression:
+                            IdReference:
+                              name: x
+                          thenExpression:
+                            IdReference:
+                              name: y
+          ]
         name:
           ID:
             name: ifExpression

@@ -5,9 +5,10 @@ false =
 Module:
   declarations: [
     LetDeclaration:
-      expression:
-        ConstantBool:
-          value: false
+      expressions: [
+          ConstantBool:
+            value: false
+        ]
       name:
         ID:
           name: false

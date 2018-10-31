@@ -133,7 +133,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     when (d) {
                         is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                             val e =
-                                    infer(d.expression)
+                                    infer(d.expressions[0])
 
                             val dScheme =
                                     d.scheme

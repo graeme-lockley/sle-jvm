@@ -5,19 +5,20 @@ negate x =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-            expression:
-              CallExpression:
-                operand:
-                  IdReference:
-                    name: x
-                operator:
-                  IdReference:
-                    name: (!)
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: x
+                  operator:
+                    IdReference:
+                      name: (!)
+          ]
         name:
           ID:
             name: negate

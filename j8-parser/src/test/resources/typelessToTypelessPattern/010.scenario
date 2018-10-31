@@ -5,24 +5,25 @@ call a b =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: a
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: b
-                expression:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: b
-                    operator:
-                      IdReference:
-                        name: a
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: b
+                      operator:
+                        IdReference:
+                          name: a
+          ]
         name:
           ID:
             name: call

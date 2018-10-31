@@ -16,35 +16,36 @@ data class Module(
 
 
 sealed class Declaration(
-        location: Location) : Node(location)
+        location: Location,
+        open val name: ID) : Node(location)
 
 data class LetSignature(
         override val location: Location,
-        val name: ID,
-        val type: TType) : Declaration(location)
+        override val name: ID,
+        val type: TType) : Declaration(location, name)
 
 data class LetDeclaration(
         override val location: Location,
-        val name: ID,
+        override val name: ID,
         val arguments: List<Pattern>,
-        val expression: Expression) : Declaration(location)
+        val expression: Expression) : Declaration(location, name)
 
 data class LetGuardDeclaration(
         override val location: Location,
-        val name: ID,
+        override val name: ID,
         val arguments: List<Pattern>,
-        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location)
+        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location, name)
 
 data class TypeAliasDeclaration(
         override val location: Location,
-        val name: ID,
-        val type: TType) : Declaration(location)
+        override val name: ID,
+        val type: TType) : Declaration(location, name)
 
 data class TypeDeclaration(
         override val location: Location,
-        val name: ID,
+        override val name: ID,
         val arguments: List<ID>,
-        val constructors: List<TypeConstructor>) : Declaration(location)
+        val constructors: List<TypeConstructor>) : Declaration(location, name)
 
 data class TypeConstructor(
         override val location: Location,

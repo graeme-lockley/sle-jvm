@@ -15,69 +15,70 @@ nested a b =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: a
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: b
-                expression:
-                  CaseExpression:
-                    items: [
-                        CaseItem:
-                          expression:
-                            CaseExpression:
-                              items: [
-                                  CaseItem:
-                                    expression:
-                                      ConstructorReference:
-                                        name: Nil
-                                    pattern:
-                                      ConstructorReferencePattern:
-                                        name: Nil
-                                        parameters: []
-                                  CaseItem:
-                                    expression:
-                                      IdReference:
-                                        name: bt
-                                    pattern:
-                                      ConstructorReferencePattern:
-                                        name: Cons
-                                        parameters: [
-                                            IdReferencePattern:
-                                              name: bh
-                                            IdReferencePattern:
-                                              name: bt
-                                          ]
-                                ]
-                              operator:
-                                IdReference:
-                                  name: b
-                          pattern:
-                            ConstructorReferencePattern:
-                              name: Nil
-                              parameters: []
-                        CaseItem:
-                          expression:
-                            IdReference:
-                              name: at
-                          pattern:
-                            ConstructorReferencePattern:
-                              name: Cons
-                              parameters: [
-                                  IdReferencePattern:
-                                    name: ah
-                                  IdReferencePattern:
-                                    name: at
-                                ]
-                      ]
-                    operator:
-                      IdReference:
-                        name: a
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                  expression:
+                    CaseExpression:
+                      items: [
+                          CaseItem:
+                            expression:
+                              CaseExpression:
+                                items: [
+                                    CaseItem:
+                                      expression:
+                                        ConstructorReference:
+                                          name: Nil
+                                      pattern:
+                                        ConstructorReferencePattern:
+                                          name: Nil
+                                          parameters: []
+                                    CaseItem:
+                                      expression:
+                                        IdReference:
+                                          name: bt
+                                      pattern:
+                                        ConstructorReferencePattern:
+                                          name: Cons
+                                          parameters: [
+                                              IdReferencePattern:
+                                                name: bh
+                                              IdReferencePattern:
+                                                name: bt
+                                            ]
+                                  ]
+                                operator:
+                                  IdReference:
+                                    name: b
+                            pattern:
+                              ConstructorReferencePattern:
+                                name: Nil
+                                parameters: []
+                          CaseItem:
+                            expression:
+                              IdReference:
+                                name: at
+                            pattern:
+                              ConstructorReferencePattern:
+                                name: Cons
+                                parameters: [
+                                    IdReferencePattern:
+                                      name: ah
+                                    IdReferencePattern:
+                                      name: at
+                                  ]
+                        ]
+                      operator:
+                        IdReference:
+                          name: a
+          ]
         name:
           ID:
             name: nested

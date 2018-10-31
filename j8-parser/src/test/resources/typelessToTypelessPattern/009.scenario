@@ -5,29 +5,30 @@ binaryOpExpression a b =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: a
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: b
-                expression:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: b
-                    operator:
-                      CallExpression:
-                        operand:
-                          IdReference:
-                            name: a
-                        operator:
-                          IdReference:
-                            name: (+)
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: b
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: a
+                          operator:
+                            IdReference:
+                              name: (+)
+          ]
         name:
           ID:
             name: binaryOpExpression

@@ -49,57 +49,59 @@ Module:
                   ]
                 name: List
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-            expression:
-              CallExpression:
-                operand:
-                  ConstructorReference:
-                    name: Nil
-                operator:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: x
-                    operator:
-                      ConstructorReference:
-                        name: Cons
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+              expression:
+                CallExpression:
+                  operand:
+                    ConstructorReference:
+                      name: Nil
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: x
+                      operator:
+                        ConstructorReference:
+                          name: Cons
+          ]
         name:
           ID:
             name: singleton
         scheme: null
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-            expression:
-              CallExpression:
-                operand:
-                  CallExpression:
-                    operand:
-                      ConstructorReference:
-                        name: Nil
-                    operator:
-                      CallExpression:
-                        operand:
-                          IdReference:
-                            name: x
-                        operator:
-                          ConstructorReference:
-                            name: Cons
-                operator:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: x
-                    operator:
-                      ConstructorReference:
-                        name: Cons
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+              expression:
+                CallExpression:
+                  operand:
+                    CallExpression:
+                      operand:
+                        ConstructorReference:
+                          name: Nil
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: x
+                          operator:
+                            ConstructorReference:
+                              name: Cons
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: x
+                      operator:
+                        ConstructorReference:
+                          name: Cons
+          ]
         name:
           ID:
             name: duplicate

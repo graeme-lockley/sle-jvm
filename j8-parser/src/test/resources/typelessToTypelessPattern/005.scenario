@@ -5,9 +5,10 @@ value =
 Module:
   declarations: [
     LetDeclaration:
-      expression:
-        ConstantString:
-          value: Hello World
+      expressions: [
+          ConstantString:
+            value: Hello World
+        ]
       name:
         ID:
           name: value

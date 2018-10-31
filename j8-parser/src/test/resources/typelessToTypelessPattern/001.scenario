@@ -6,29 +6,30 @@ add x y =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: y
-                expression:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: y
-                    operator:
-                      CallExpression:
-                        operand:
-                          IdReference:
-                            name: x
-                        operator:
-                          IdReference:
-                            name: (+)
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: y
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: y
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: x
+                          operator:
+                            IdReference:
+                              name: (+)
+          ]
         name:
           ID:
             name: add

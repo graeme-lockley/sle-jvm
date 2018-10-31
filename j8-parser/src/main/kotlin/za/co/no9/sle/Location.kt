@@ -22,3 +22,4 @@ data class Location(
 
 val homeLocation =
         Location(Position(0, 0))
+

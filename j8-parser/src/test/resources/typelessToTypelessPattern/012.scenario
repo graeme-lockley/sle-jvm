@@ -9,9 +9,10 @@ value =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          ConstantInt:
-            value: 100
+        expressions: [
+            ConstantInt:
+              value: 100
+          ]
         name:
           ID:
             name: calculate
@@ -29,13 +30,14 @@ Module:
                     arguments: []
                     name: Int
       LetDeclaration:
-        expression:
-          CallExpression:
-            operand:
-              Unit:
-            operator:
-              IdReference:
-                name: calculate
+        expressions: [
+            CallExpression:
+              operand:
+                Unit:
+              operator:
+                IdReference:
+                  name: calculate
+          ]
         name:
           ID:
             name: value

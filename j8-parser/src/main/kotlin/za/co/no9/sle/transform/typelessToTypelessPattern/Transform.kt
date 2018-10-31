@@ -78,50 +78,68 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
             }
 
     return letSignatureDict.map {
-        Module(ast.location, ast.declarations.fold(emptyList()) { declarations, ast ->
-            when (ast) {
-                is za.co.no9.sle.ast.typeless.TypeDeclaration -> {
-                    val substitution =
-                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
+        val typeAndAliasDeclarations =
+                ast.declarations
+                        .filter { ast -> ast is za.co.no9.sle.ast.typeless.TypeDeclaration || ast is za.co.no9.sle.ast.typeless.TypeAliasDeclaration }
+                        .map { ast ->
+                            when (ast) {
+                                is za.co.no9.sle.ast.typeless.TypeDeclaration -> {
+                                    val substitution =
+                                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
 
-                    val parameters =
-                            ast.arguments.mapIndexed { index, _ -> index }
+                                    val parameters =
+                                            ast.arguments.mapIndexed { index, _ -> index }
 
-                    val scheme =
-                            Scheme(parameters, TCon(ast.name.location, ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
+                                    val scheme =
+                                            Scheme(parameters, TCon(ast.name.location, ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
 
-                    declarations + TypeDeclaration(
-                            ast.location,
-                            astToCoreAST(ast.name),
-                            scheme,
-                            ast.constructors.map { constructor -> Constructor(constructor.location, astToCoreAST(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
-                    )
-                }
+                                    TypeDeclaration(
+                                            ast.location,
+                                            astToCoreAST(ast.name),
+                                            scheme,
+                                            ast.constructors.map { constructor -> Constructor(constructor.location, astToCoreAST(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
+                                    )
+                                }
 
-                is LetSignature ->
-                    declarations
+                                is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
+                                    TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(ast.type)!!)
 
-                is za.co.no9.sle.ast.typeless.LetDeclaration ->
-//                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, astToCoreAST(name), expression) })
-                    declarations + LetDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(it[ast.name.name]?.type), ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) })
+                                else ->
+                                    throw Exception("Illegal outcome")
+                            }
 
-                is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                    declarations + TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(ast.type)!!)
+                        }
 
-                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                    declarations + LetDeclaration(
-                            ast.location,
-                            astToCoreAST(ast.name),
-                            typeToScheme(it[ast.name.name]?.type),
-                            ast.arguments.foldRight(
-                                    ast.guardedExpressions.dropLast(1).foldRight(
-                                            astToCoreAST(ast.guardedExpressions.last().second)
-                                    ) { a, b ->
-                                        IfExpression(ast.location, astToCoreAST(a.first), astToCoreAST(a.second), b)
-                                    }
-                            ) { name, expression -> LambdaExpression(ast.location, transform(name), expression) })
-            }
-        })
+        val letDeclarations =
+                ast.declarations
+                        .filter { ast -> ast is za.co.no9.sle.ast.typeless.LetDeclaration || ast is za.co.no9.sle.ast.typeless.LetGuardDeclaration }
+                        .groupBy { ast -> ast.name.name }
+                        .map { asts ->
+                            LetDeclaration(
+                                    locationFrom(asts.value)!!,
+                                    astToCoreAST(asts.value[0].name),
+                                    typeToScheme(it[asts.key]?.type),
+                                    asts.value.map { letDeclaration ->
+                                        when (letDeclaration) {
+                                            is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                                                letDeclaration.arguments.foldRight(astToCoreAST(letDeclaration.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
+
+                                            is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                                                letDeclaration.arguments.foldRight(
+                                                        letDeclaration.guardedExpressions.dropLast(1).foldRight(
+                                                                astToCoreAST(letDeclaration.guardedExpressions.last().second)
+                                                        ) { a, b ->
+                                                            IfExpression(ast.location, astToCoreAST(a.first), astToCoreAST(a.second), b)
+                                                        }
+                                                ) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
+                                            else ->
+                                                throw Exception("Illegal outcome")
+
+                                        }
+                                    })
+                        }
+
+        Module(ast.location, typeAndAliasDeclarations + letDeclarations)
     }
 }
 
@@ -267,3 +285,20 @@ private fun typeToScheme(ttype: TType?): Scheme? {
         }
     }
 }
+
+private fun locationFrom(nodes: List<za.co.no9.sle.ast.typeless.Node>): Location? =
+        when {
+            nodes.isEmpty() ->
+                null
+
+            else -> {
+                var current =
+                        nodes[0].location
+
+                for (node in nodes) {
+                    current += node.location
+                }
+
+                current
+            }
+        }

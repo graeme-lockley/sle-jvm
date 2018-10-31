@@ -56,31 +56,32 @@ Module:
                   ]
                 name: Tuple
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: t
-            expression:
-              CaseExpression:
-                items: [
-                    CaseItem:
-                      expression:
-                        IdReference:
-                          name: a
-                      pattern:
-                        ConstructorReferencePattern:
-                          name: Tuple
-                          parameters: [
-                              IdReferencePattern:
-                                name: a
-                              IdReferencePattern:
-                                name: b
-                            ]
-                  ]
-                operator:
-                  IdReference:
-                    name: t
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: t
+              expression:
+                CaseExpression:
+                  items: [
+                      CaseItem:
+                        expression:
+                          IdReference:
+                            name: a
+                        pattern:
+                          ConstructorReferencePattern:
+                            name: Tuple
+                            parameters: [
+                                IdReferencePattern:
+                                  name: a
+                                IdReferencePattern:
+                                  name: b
+                              ]
+                    ]
+                  operator:
+                    IdReference:
+                      name: t
+          ]
         name:
           ID:
             name: first
@@ -105,31 +106,32 @@ Module:
                   TVar:
                     variable: 0
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: t
-            expression:
-              CaseExpression:
-                items: [
-                    CaseItem:
-                      expression:
-                        IdReference:
-                          name: b
-                      pattern:
-                        ConstructorReferencePattern:
-                          name: Tuple
-                          parameters: [
-                              IdReferencePattern:
-                                name: a
-                              IdReferencePattern:
-                                name: b
-                            ]
-                  ]
-                operator:
-                  IdReference:
-                    name: t
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: t
+              expression:
+                CaseExpression:
+                  items: [
+                      CaseItem:
+                        expression:
+                          IdReference:
+                            name: b
+                        pattern:
+                          ConstructorReferencePattern:
+                            name: Tuple
+                            parameters: [
+                                IdReferencePattern:
+                                  name: a
+                                IdReferencePattern:
+                                  name: b
+                              ]
+                    ]
+                  operator:
+                    IdReference:
+                      name: t
+          ]
         name:
           ID:
             name: second
@@ -154,51 +156,52 @@ Module:
                   TVar:
                     variable: 1
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: f
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: t
-                expression:
-                  CaseExpression:
-                    items: [
-                        CaseItem:
-                          expression:
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name: b
-                              operator:
-                                CallExpression:
-                                  operand:
-                                    CallExpression:
-                                      operand:
-                                        IdReference:
-                                          name: a
-                                      operator:
-                                        IdReference:
-                                          name: f
-                                  operator:
-                                    ConstructorReference:
-                                      name: Tuple
-                          pattern:
-                            ConstructorReferencePattern:
-                              name: Tuple
-                              parameters: [
-                                  IdReferencePattern:
-                                    name: a
-                                  IdReferencePattern:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: t
+                  expression:
+                    CaseExpression:
+                      items: [
+                          CaseItem:
+                            expression:
+                              CallExpression:
+                                operand:
+                                  IdReference:
                                     name: b
-                                ]
-                      ]
-                    operator:
-                      IdReference:
-                        name: t
+                                operator:
+                                  CallExpression:
+                                    operand:
+                                      CallExpression:
+                                        operand:
+                                          IdReference:
+                                            name: a
+                                        operator:
+                                          IdReference:
+                                            name: f
+                                    operator:
+                                      ConstructorReference:
+                                        name: Tuple
+                            pattern:
+                              ConstructorReferencePattern:
+                                name: Tuple
+                                parameters: [
+                                    IdReferencePattern:
+                                      name: a
+                                    IdReferencePattern:
+                                      name: b
+                                  ]
+                        ]
+                      operator:
+                        IdReference:
+                          name: t
+          ]
         name:
           ID:
             name: mapFirst
@@ -240,51 +243,52 @@ Module:
                           ]
                         name: Tuple
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: f
-            expression:
-              LambdaExpression:
-                argument:
-                  IdReferencePattern:
-                    name: t
-                expression:
-                  CaseExpression:
-                    items: [
-                        CaseItem:
-                          expression:
-                            CallExpression:
-                              operand:
-                                CallExpression:
-                                  operand:
-                                    IdReference:
-                                      name: b
-                                  operator:
-                                    IdReference:
-                                      name: f
-                              operator:
-                                CallExpression:
-                                  operand:
-                                    IdReference:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: t
+                  expression:
+                    CaseExpression:
+                      items: [
+                          CaseItem:
+                            expression:
+                              CallExpression:
+                                operand:
+                                  CallExpression:
+                                    operand:
+                                      IdReference:
+                                        name: b
+                                    operator:
+                                      IdReference:
+                                        name: f
+                                operator:
+                                  CallExpression:
+                                    operand:
+                                      IdReference:
+                                        name: a
+                                    operator:
+                                      ConstructorReference:
+                                        name: Tuple
+                            pattern:
+                              ConstructorReferencePattern:
+                                name: Tuple
+                                parameters: [
+                                    IdReferencePattern:
                                       name: a
-                                  operator:
-                                    ConstructorReference:
-                                      name: Tuple
-                          pattern:
-                            ConstructorReferencePattern:
-                              name: Tuple
-                              parameters: [
-                                  IdReferencePattern:
-                                    name: a
-                                  IdReferencePattern:
-                                    name: b
-                                ]
-                      ]
-                    operator:
-                      IdReference:
-                        name: t
+                                    IdReferencePattern:
+                                      name: b
+                                  ]
+                        ]
+                      operator:
+                        IdReference:
+                          name: t
+          ]
         name:
           ID:
             name: mapSecond
