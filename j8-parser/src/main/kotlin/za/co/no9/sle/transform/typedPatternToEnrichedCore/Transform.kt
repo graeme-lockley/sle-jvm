@@ -40,7 +40,7 @@ private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =
 private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =
         when (declaration) {
             is za.co.no9.sle.ast.typedPattern.LetDeclaration ->
-                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expression))
+                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expressions[0]))
 
             is za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration ->
                 TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)

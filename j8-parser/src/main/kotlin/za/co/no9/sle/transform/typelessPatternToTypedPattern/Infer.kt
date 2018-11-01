@@ -6,7 +6,6 @@ import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.typing.*
-import kotlin.math.exp
 
 
 fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
@@ -132,13 +131,17 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                 module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
                     when (d) {
                         is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                            val e =
-                                    infer(d.expressions[0])
+                            val es =
+                                    d.expressions.map { infer(it) }
 
                             val dScheme =
                                     d.scheme
 
                             if (dScheme == null) {
+                            for (e in es.drop(1)) {
+                                unify(es[0].type, e.type)
+                            }
+
                                 val unifiesResult =
                                         unifies(varPump, aliases, constraints, env)
 
@@ -154,16 +157,16 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                                 val scheme =
                                         if (substitution != null) {
-                                            generalise(e.type, substitution)
+                                            generalise(es[0].type, substitution)
                                         } else {
-                                            generalise(e.type)
+                                            generalise(es[0].type)
                                         }
 
                                 val declaration =
                                         if (substitution != null) {
-                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e).apply(aliases, substitution)
+                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es).apply(aliases, substitution)
                                         } else {
-                                            value(LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), e))
+                                            value(LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es))
                                         }
 
                                 errors.addAll(declaration.left() ?: listOf())
@@ -175,9 +178,11 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                 val type =
                                         dScheme.instantiate(varPump)
 
-                                unify(type, e.type)
+                                for (e in es) {
+                                    unify(type, e.type)
+                                }
 
-                                ds + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), e)
+                                ds + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), es)
                             }
                         }
 

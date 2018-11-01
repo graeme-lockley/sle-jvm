@@ -1,0 +1,24 @@
+-- A map declaration defined as equations
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+map : (a -> b) -> List a -> List b
+
+map f Nil =
+    Nil
+
+map f (Cons x xs) =
+    Cons (f x) (map f xs)
+-- constraints
+[
+  '6 -> List '6 -> List '6 : '4 -> '5 -> List '6
+  '3 : '4 -> '8
+  '7 -> List '7 -> List '7 : '8 -> '9
+  ('10 -> '11) -> List '10 -> List '11 : '3 -> '12
+  '12 : '5 -> '13
+  '9 : '13 -> '14
+  ('15 -> '16) -> List '15 -> List '16 : '0 -> List '1 -> List '2
+  ('15 -> '16) -> List '15 -> List '16 : '3 -> List '6 -> '14
+]

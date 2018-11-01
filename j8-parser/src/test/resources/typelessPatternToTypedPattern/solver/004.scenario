@@ -6,28 +6,29 @@ id x =
 Module:
   declarations: [
       LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-                type:
-                  TVar:
-                    variable: 0
-            expression:
-              IdReference:
-                name: x
-                type:
-                  TVar:
-                    variable: 0
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 0
-                range:
-                  TVar:
-                    variable: 0
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+                  type:
+                    TVar:
+                      variable: 0
+              expression:
+                IdReference:
+                  name: x
+                  type:
+                    TVar:
+                      variable: 0
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 0
+                  range:
+                    TVar:
+                      variable: 0
+          ]
         name:
           ID:
             name: id

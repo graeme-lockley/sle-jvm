@@ -77,17 +77,21 @@ private class ApplyContext(private val aliases: Aliases) {
 
 
     fun apply(letDeclaration: LetDeclaration, substitution: Substitution): LetDeclaration {
-        val appliedExpression =
-                apply(letDeclaration.expression, substitution)
+        val appliedExpressions =
+                letDeclaration.expressions.map { apply(it, substitution) }
 
-        val other =
-                generalise(appliedExpression.type).normalize()
+        val schemes =
+                appliedExpressions.map { generalise(it.type).normalize() }
 
-        if (!letDeclaration.scheme.expandAliases(aliases).isCompatibleWith(other.expandAliases(aliases))) {
-            errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.name.name, letDeclaration.scheme, other))
+        val letDeclarationSchemeExpandedAliases =
+                letDeclaration.scheme.expandAliases(aliases)
+        for (scheme in schemes) {
+            if (!letDeclarationSchemeExpandedAliases.isCompatibleWith(scheme.expandAliases(aliases))) {
+                errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.name.name, letDeclaration.scheme, scheme))
+            }
         }
 
-        return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.name, appliedExpression)
+        return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.name, appliedExpressions)
     }
 
 
