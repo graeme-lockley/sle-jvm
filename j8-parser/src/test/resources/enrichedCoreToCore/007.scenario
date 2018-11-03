@@ -1,0 +1,47 @@
+-- A map declaration defined as equations
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+map : (a -> b) -> List a -> List b
+
+map f Nil =
+    Nil
+
+map f (Cons x xs) =
+    Cons (f x) (map f xs)
+-- coreASTpp
+type List =
+  Nil
+| Cons '0 List '0
+
+
+map : <0, 1> ('0 -> '1) -> List '0 -> List '1
+map =
+  (LAMBDA $v0 ->
+    (LAMBDA $v1 ->
+      (CASE $v0
+        Nil =>
+          Nil
+        Cons $$0 $$1 =>
+          (CALL
+            (CALL
+              Cons
+              (CALL
+                $v1
+                $$0
+              )
+            )
+            (CALL
+              (CALL
+                map
+                $v1
+              )
+              $$1
+            )
+          )
+      )
+    )
+  )
+

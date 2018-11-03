@@ -40,15 +40,7 @@ private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =
 private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =
         when (declaration) {
             is za.co.no9.sle.ast.typedPattern.LetDeclaration ->
-                if (declaration.expressions.size == 1)
-                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expressions[0]))
-                else {
-                    val declarationType =
-                            declaration.expressions[0].type
-
-                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), Bar(declaration.location, declarationType,
-                            declaration.expressions.map { transform(it) } + ERROR(declaration.location, declarationType)))
-                }
+                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expressions))
 
             is za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration ->
                 TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
@@ -56,6 +48,72 @@ private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): 
             is za.co.no9.sle.ast.typedPattern.TypeDeclaration ->
                 TypeDeclaration(declaration.location, transform(declaration.name), declaration.scheme, declaration.constructors.map { transform(it) })
         }
+
+
+private fun transform(expressions: List<za.co.no9.sle.ast.typedPattern.Expression>): Expression =
+        if (expressions.size == 1) {
+            transform(expressions[0])
+        } else {
+            extractLambdas(expressions)
+        }
+
+
+private fun extractLambdas(expressions: List<za.co.no9.sle.ast.typedPattern.Expression>): Expression {
+    val numberOfLambdas =
+            lambdaDepth(expressions)
+
+    fun variableName(count: Int) =
+            "\$v$count"
+
+    fun wrapExpressionWithCall(expression: Expression, count: Int, type: Type): Expression =
+            if (count == numberOfLambdas)
+                expression
+            else
+                wrapExpressionWithCall(
+                        CallExpression(expression.location, range(type),
+                                expression,
+                                IdReference(expression.location, domain(type), variableName(count))),
+                        count + 1,
+                        range(type))
+
+
+    fun assembleExpression(expression: Expression, count: Int, type: Type): Expression =
+            if (count == numberOfLambdas)
+                expression
+            else
+                LambdaExpression(
+                        expression.location,
+                        type,
+                        IdReferencePattern(expression.location, domain(type), variableName(count)),
+                        assembleExpression(expression, count + 1, range(type))
+                )
+
+    val declarationType =
+            expressions[0].type
+
+    val location =
+            expressions.drop(1).fold(expressions[0].location) { a, b -> a + b.location }
+
+    return assembleExpression(
+            Bar(
+                    location,
+                    declarationType,
+                    expressions.map { wrapExpressionWithCall(transform(it), 0, declarationType) } + ERROR(location, declarationType)),
+            0,
+            declarationType)
+}
+
+
+private fun lambdaDepth(expressions: List<za.co.no9.sle.ast.typedPattern.Expression>): Int {
+    val allLambdas =
+            expressions.fold(true) { a, b -> a && b is za.co.no9.sle.ast.typedPattern.LambdaExpression }
+
+    return if (allLambdas) {
+        1 + lambdaDepth(expressions.map { (it as za.co.no9.sle.ast.typedPattern.LambdaExpression).expression })
+    } else {
+        0
+    }
+}
 
 
 private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Expression =
@@ -222,6 +280,16 @@ private fun domain(type: Type): Type =
         when (type) {
             is TArr ->
                 type.domain
+
+            else ->
+                type
+        }
+
+
+private fun range(type: Type): Type =
+        when (type) {
+            is TArr ->
+                type.range
 
             else ->
                 type
