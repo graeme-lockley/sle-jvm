@@ -184,8 +184,12 @@ private class Transform(private var counter: Int = 0) {
                         return extractPatterns(names.size, dropNCalls(names.size, e))
                     }
 
+
+                    val qs
+                            = expression.expressions.filter { !isError(it) }.map { createQ(it) }
+
                     val result =
-                            match(names, expression.expressions.filter { !isError(it) }.map { createQ(it) }, transform(expression.expressions.filter { isError(it) }[0]))
+                            match(names, qs, transform(expression.expressions.filter { isError(it) }[0]))
 
                     if (hasError(result)) {
                         errors.add(NonExhaustivePattern(expression.location))
