@@ -143,12 +143,16 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
                 if (patternTransformation.state.expression == null) {
                     LambdaExpression(expression.location, expression.type, patternTransformation.result, transform(expression.expression))
                 } else {
-                    IfExpression(
+                    LambdaExpression(
                             expression.location,
-                            expression.expression.type,
-                            patternTransformation.state.expression,
-                            LambdaExpression(expression.location, expression.type, patternTransformation.result, transform(expression.expression)),
-                            FAIL(expression.location, expression.expression.type))
+                            expression.type,
+                            patternTransformation.result,
+                            IfExpression(
+                                    expression.location,
+                                    expression.expression.type,
+                                    patternTransformation.state.expression,
+                                    transform(expression.expression),
+                                    FAIL(expression.location, expression.expression.type)))
                 }
             }
 
