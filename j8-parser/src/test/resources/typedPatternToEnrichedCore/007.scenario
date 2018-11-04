@@ -1,0 +1,49 @@
+-- A equation declaration which transforms out into if-then-else
+factorial : Int -> Int
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+-- enrichedASTpp
+factorial : <> Int -> Int
+factorial =
+  (LAMBDA $v0 ->
+    (BAR
+      (CALL
+        (IF
+          (CALL
+            (CALL
+              (==)
+              0
+            )
+            $v0
+          )
+          (LAMBDA $v0 ->
+            1
+          )
+          FAIL
+        )
+        $v0
+      )
+      (CALL
+        (LAMBDA n ->
+          (CALL
+            (CALL
+              (*)
+              n
+            )
+            (CALL
+              factorial
+              (CALL
+                (CALL
+                  (-)
+                  n
+                )
+                1
+              )
+            )
+          )
+        )
+        $v0
+      )
+      ERROR
+    )
+  )
