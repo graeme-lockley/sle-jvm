@@ -47,4 +47,34 @@ factorial =
       ERROR
     )
   )
-
+-- coreASTpp
+factorial : <> Int -> Int
+factorial =
+  (LAMBDA $v0 ->
+    (IF
+      (CALL
+        (CALL
+          (==)
+          0
+        )
+        $v0
+      )
+      1
+      (CALL
+        (CALL
+          (*)
+          $v0
+        )
+        (CALL
+          factorial
+          (CALL
+            (CALL
+              (-)
+              $v0
+            )
+            1
+          )
+        )
+      )
+    )
+  )

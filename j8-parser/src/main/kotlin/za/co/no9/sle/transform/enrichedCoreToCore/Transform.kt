@@ -185,8 +185,7 @@ private class Transform(private var counter: Int = 0) {
                     }
 
 
-                    val qs
-                            = expression.expressions.filter { !isError(it) }.map { createQ(it) }
+                    val qs = expression.expressions.filter { !isError(it) }.map { createQ(it) }
 
                     val result =
                             match(names, qs, transform(expression.expressions.filter { isError(it) }[0]))
@@ -297,10 +296,10 @@ private class Transform(private var counter: Int = 0) {
 
                     CaseExpression(e.location, e.type, us[0], clauses)
                 } else {
-                    val variableName =
-                            (firstFirstPattern as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name
-
                     match(us.drop(1), qs.map {
+                        val variableName =
+                                (it.first[0] as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name
+
                         Pair(it.first.drop(1), substitute(it.second, variableName, us[0]))
                     }, e)
                 }

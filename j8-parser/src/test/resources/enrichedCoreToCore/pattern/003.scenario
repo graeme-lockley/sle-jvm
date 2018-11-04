@@ -40,7 +40,7 @@ remove0s =
               (CALL
                 (CALL
                   Cons
-                  x
+                  $$0
                 )
                 (CALL
                   remove0s
