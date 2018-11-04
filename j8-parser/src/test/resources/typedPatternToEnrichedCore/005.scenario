@@ -15,415 +15,55 @@ intList =
 
 boolList =
     duplicate True
--- enrichedAST
-Module:
-  declarations: [
-      TypeDeclaration:
-        constructors: [
-            Constructor:
-              arguments: []
-              name:
-                ID:
-                  name: Nil
-            Constructor:
-              arguments: [
-                  TVar:
-                    variable: 0
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 0
-                      ]
-                    name: List
-                ]
-              name:
-                ID:
-                  name: Cons
-          ]
-        name:
-          ID:
-            name: List
-        scheme:
-          Scheme:
-            parameters: [
-                0
-              ]
-            type:
-              TCon:
-                arguments: [
-                    TVar:
-                      variable: 0
-                  ]
-                name: List
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-                type:
-                  TVar:
-                    variable: 3
-            expression:
-              CallExpression:
-                operand:
-                  IdReference:
-                    name: Nil
-                    type:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 3
-                          ]
-                        name: List
-                operator:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: x
-                        type:
-                          TVar:
-                            variable: 3
-                    operator:
-                      IdReference:
-                        name: Cons
-                        type:
-                          TArr:
-                            domain:
-                              TVar:
-                                variable: 3
-                            range:
-                              TArr:
-                                domain:
-                                  TCon:
-                                    arguments: [
-                                        TVar:
-                                          variable: 3
-                                      ]
-                                    name: List
-                                range:
-                                  TCon:
-                                    arguments: [
-                                        TVar:
-                                          variable: 3
-                                      ]
-                                    name: List
-                    type:
-                      TArr:
-                        domain:
-                          TCon:
-                            arguments: [
-                                TVar:
-                                  variable: 3
-                              ]
-                            name: List
-                        range:
-                          TCon:
-                            arguments: [
-                                TVar:
-                                  variable: 3
-                              ]
-                            name: List
-                type:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 3
-                      ]
-                    name: List
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 3
-                range:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 3
-                      ]
-                    name: List
-        name:
-          ID:
-            name: singleton
-        scheme:
-          Scheme:
-            parameters: [
-                3
-              ]
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 3
-                range:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 3
-                      ]
-                    name: List
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: x
-                type:
-                  TVar:
-                    variable: 10
-            expression:
-              CallExpression:
-                operand:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: Nil
-                        type:
-                          TCon:
-                            arguments: [
-                                TVar:
-                                  variable: 10
-                              ]
-                            name: List
-                    operator:
-                      CallExpression:
-                        operand:
-                          IdReference:
-                            name: x
-                            type:
-                              TVar:
-                                variable: 10
-                        operator:
-                          IdReference:
-                            name: Cons
-                            type:
-                              TArr:
-                                domain:
-                                  TVar:
-                                    variable: 10
-                                range:
-                                  TArr:
-                                    domain:
-                                      TCon:
-                                        arguments: [
-                                            TVar:
-                                              variable: 10
-                                          ]
-                                        name: List
-                                    range:
-                                      TCon:
-                                        arguments: [
-                                            TVar:
-                                              variable: 10
-                                          ]
-                                        name: List
-                        type:
-                          TArr:
-                            domain:
-                              TCon:
-                                arguments: [
-                                    TVar:
-                                      variable: 10
-                                  ]
-                                name: List
-                            range:
-                              TCon:
-                                arguments: [
-                                    TVar:
-                                      variable: 10
-                                  ]
-                                name: List
-                    type:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 10
-                          ]
-                        name: List
-                operator:
-                  CallExpression:
-                    operand:
-                      IdReference:
-                        name: x
-                        type:
-                          TVar:
-                            variable: 10
-                    operator:
-                      IdReference:
-                        name: Cons
-                        type:
-                          TArr:
-                            domain:
-                              TVar:
-                                variable: 10
-                            range:
-                              TArr:
-                                domain:
-                                  TCon:
-                                    arguments: [
-                                        TVar:
-                                          variable: 10
-                                      ]
-                                    name: List
-                                range:
-                                  TCon:
-                                    arguments: [
-                                        TVar:
-                                          variable: 10
-                                      ]
-                                    name: List
-                    type:
-                      TArr:
-                        domain:
-                          TCon:
-                            arguments: [
-                                TVar:
-                                  variable: 10
-                              ]
-                            name: List
-                        range:
-                          TCon:
-                            arguments: [
-                                TVar:
-                                  variable: 10
-                              ]
-                            name: List
-                type:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 10
-                      ]
-                    name: List
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 10
-                range:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 10
-                      ]
-                    name: List
-        name:
-          ID:
-            name: duplicate
-        scheme:
-          Scheme:
-            parameters: [
-                10
-              ]
-            type:
-              TArr:
-                domain:
-                  TVar:
-                    variable: 10
-                range:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 10
-                      ]
-                    name: List
-      LetDeclaration:
-        expression:
-          CallExpression:
-            operand:
-              ConstantInt:
-                type:
-                  TCon:
-                    arguments: []
-                    name: Int
-                value: 10
-            operator:
-              IdReference:
-                name: singleton
-                type:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: []
-                        name: Int
-                    range:
-                      TCon:
-                        arguments: [
-                            TCon:
-                              arguments: []
-                              name: Int
-                          ]
-                        name: List
-            type:
-              TCon:
-                arguments: [
-                    TCon:
-                      arguments: []
-                      name: Int
-                  ]
-                name: List
-        name:
-          ID:
-            name: intList
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TCon:
-                arguments: [
-                    TCon:
-                      arguments: []
-                      name: Int
-                  ]
-                name: List
-      LetDeclaration:
-        expression:
-          CallExpression:
-            operand:
-              ConstantBool:
-                type:
-                  TCon:
-                    arguments: []
-                    name: Bool
-                value: true
-            operator:
-              IdReference:
-                name: duplicate
-                type:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: []
-                        name: Bool
-                    range:
-                      TCon:
-                        arguments: [
-                            TCon:
-                              arguments: []
-                              name: Bool
-                          ]
-                        name: List
-            type:
-              TCon:
-                arguments: [
-                    TCon:
-                      arguments: []
-                      name: Bool
-                  ]
-                name: List
-        name:
-          ID:
-            name: boolList
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TCon:
-                arguments: [
-                    TCon:
-                      arguments: []
-                      name: Bool
-                  ]
-                name: List
-    ]
+-- enrichedASTpp
+type List =
+  Nil
+| Cons '0 List '0
+
+
+singleton : <0> '0 -> List '0
+singleton =
+  (LAMBDA x ->
+    (CALL
+      (CALL
+        Cons
+        x
+      )
+      Nil
+    )
+  )
+
+
+duplicate : <0> '0 -> List '0
+duplicate =
+  (LAMBDA x ->
+    (CALL
+      (CALL
+        Cons
+        x
+      )
+      (CALL
+        (CALL
+          Cons
+          x
+        )
+        Nil
+      )
+    )
+  )
+
+
+intList : <> List Int
+intList =
+  (CALL
+    singleton
+    10
+  )
+
+
+boolList : <> List Bool
+boolList =
+  (CALL
+    duplicate
+    true
+  )

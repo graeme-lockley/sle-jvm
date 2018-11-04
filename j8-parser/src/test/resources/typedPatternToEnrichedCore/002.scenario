@@ -5,86 +5,18 @@ calculate =
 
 value =
     calculate ()
--- enrichedAST
-Module:
-  declarations: [
-      LetDeclaration:
-        expression:
-          LambdaExpression:
-            argument:
-              IdReferencePattern:
-                name: n
-                type:
-                  TCon:
-                    arguments: []
-                    name: ()
-            expression:
-              ConstantInt:
-                type:
-                  TCon:
-                    arguments: []
-                    name: Int
-                value: 100
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
-                    name: ()
-                range:
-                  TCon:
-                    arguments: []
-                    name: Int
-        name:
-          ID:
-            name: calculate
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
-                    name: ()
-                range:
-                  TCon:
-                    arguments: []
-                    name: Int
-      LetDeclaration:
-        expression:
-          CallExpression:
-            operand:
-              Unit:
-                type:
-                  TCon:
-                    arguments: []
-                    name: ()
-            operator:
-              IdReference:
-                name: calculate
-                type:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: []
-                        name: ()
-                    range:
-                      TCon:
-                        arguments: []
-                        name: Int
-            type:
-              TCon:
-                arguments: []
-                name: Int
-        name:
-          ID:
-            name: value
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TCon:
-                arguments: []
-                name: Int
-    ]
+-- enrichedASTpp
+calculate : <> () -> Int
+calculate =
+  (LAMBDA n ->
+    100
+  )
+
+
+value : <> Int
+value =
+  (CALL
+    calculate
+    ()
+  )
+
