@@ -61,9 +61,6 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>${kotlin.version}</version>
 
-                <configuration>
-                    <experimentalCoroutines>enable</experimentalCoroutines>
-                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
