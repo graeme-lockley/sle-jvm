@@ -19,9 +19,8 @@ class JavaGenTests : StringSpec({
                         .map { translateToJava(it.coreModule, "test", name) }
                         .map { it.toString() }
 
-        this.javaClass.getResource("/test/$name.java").readText()
-                .shouldBe(result.right())
-
+        result.right().shouldBe(
+                this.javaClass.getResource("/test/$name.java").readText())
     }
 
     "Compile test/First.sle" {
