@@ -5,9 +5,15 @@ import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 
 class FirstTests : StringSpec({
-    "Factorial 5" {
+    "Factorial 5 == 120" {
         First.factorial.apply(5)
                 .shouldBe(120)
+    }
+
+
+    "Factorial 5 == Factorial2 5" {
+        First.factorial.apply(5)
+                .shouldBe(First.factorial2.apply(5))
     }
 
 

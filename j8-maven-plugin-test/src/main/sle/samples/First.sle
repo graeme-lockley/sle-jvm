@@ -4,5 +4,10 @@ factorial n
     | otherwise = n * factorial (n - 1)
 
 
+factorial2 : Int -> Int
+factorial2 0 = 1
+factorial2 n = n * factorial2 (n - 1)
+
+
 divide a b =
     a / b
