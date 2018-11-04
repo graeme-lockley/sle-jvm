@@ -90,7 +90,7 @@ class Parser(private val lexer: Lexer) {
                             parseType()
 
                     return LetSignature(id.location + type.location, id, type)
-                } else if (isToken(Token.LowerID) || isOperator("=") || isOperator("|")) {
+                } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
                     val arguments =
                             mutableListOf<Pattern>()
 

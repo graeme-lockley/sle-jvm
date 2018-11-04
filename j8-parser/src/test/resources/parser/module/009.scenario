@@ -1,0 +1,76 @@
+-- A length declaration over lists equations
+length : List a -> Int
+
+length Nil =
+    0
+
+length (Cons x xs) =
+    1 + (length xs)
+-- ast
+Module:
+  declarations: [
+      LetSignature:
+        name:
+          ID:
+            name: length
+        type:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                  ]
+                name:
+                  ID:
+                    name: List
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  ID:
+                    name: Int
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name: Nil
+              parameters: []
+          ]
+        expression:
+          ConstantInt:
+            value: 0
+        name:
+          ID:
+            name: length
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name: Cons
+              parameters: [
+                  IdReferencePattern:
+                    name: x
+                  IdReferencePattern:
+                    name: xs
+                ]
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              ConstantInt:
+                value: 1
+            operator:
+              ID:
+                name: +
+            right:
+              CallExpression:
+                operands: [
+                    IdReference:
+                      name: xs
+                  ]
+                operator:
+                  IdReference:
+                    name: length
+        name:
+          ID:
+            name: length
+    ]
