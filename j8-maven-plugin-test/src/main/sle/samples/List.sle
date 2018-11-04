@@ -23,22 +23,16 @@ range m n
     | otherwise = Cons m (range (m + 1) n)
 
 
-isEmpty l =
-    case l of
-        Nil -> True
-        Cons x xs -> False
+isEmpty Nil = True
+isEmpty xs = False
 
 
-head l =
-    case l of
-        Nil -> Nothing
-        Cons x xs -> Just x
+head Nil = Nothing
+head (Cons x xs) = Just x
 
 
-tail l =
-    case l of
-        Nil -> Nothing
-        Cons x xs -> Just xs
+tail Nil = Nothing
+tail (Cons x xs) = Just xs
 
 
 map : (a -> b) -> List a -> List b
@@ -49,26 +43,22 @@ map f l =
 
 
 removedups : List Int -> List Int
-removedups l =
-    case l of
-        Cons x (Cons y ys) ->
+removedups (Cons x (Cons y ys)) =
             if (x == y) then
                 removedups (Cons y ys)
             else
                 Cons x (removedups (Cons y ys) )
 
-        Cons x xs ->
-            Cons x (removedups xs)
+removedups (Cons x xs) =
+    Cons x (removedups xs)
 
-        Nil ->
-            Nil
+removedups Nil =
+    Nil
 
 
 duplicate : List a -> List a
-duplicate l =
-    case l of
-        Nil -> Nil
-        Cons x xs -> Cons x (Cons x (duplicate xs))
+duplicate Nil = Nil
+duplicate (Cons x xs) = Cons x (Cons x (duplicate xs))
 
 
 plus5 n =
