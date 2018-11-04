@@ -27,20 +27,14 @@ doubleBooleanList =
     double True False
 
 
-head l =
-    case l of
-        Nil -> Nothing
-        Cons x xs -> Just x
+head Nil = Nothing
+head (Cons x xs) = Just x
 
 
-tail l =
-    case l of
-        Nil -> Nothing
-        Cons x xs -> Just xs
+tail Nil = Nothing
+tail (Cons x xs) = Just xs
 
 
 map : (a -> b) -> List a -> List b
-map f l =
-    case l of
-        Nil -> Nil
-        Cons x xs -> Cons (f x) (map f xs)
+map f Nil = Nil
+map f (Cons x xs) = Cons (f x) (map f xs)

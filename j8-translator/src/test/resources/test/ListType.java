@@ -93,29 +93,24 @@ public class ListType {
      */
     public static final Function<Object, Object> head = new Function<Object, Object>() {
 
-        public Object apply(Object l) {
-            return new Function<Object, Object>() {
+        public Object apply(Object $v0) {
+            return new java.util.function.Supplier<java.lang.Object>() {
 
-                public Object apply(Object $case) {
-                    return new java.util.function.Supplier<java.lang.Object>() {
-
-                        public java.lang.Object get() {
-                            java.lang.Object[] $$case = (java.lang.Object[]) $case;
-                            switch((int) $$case[0]) {
-                                case Nil$:
-                                    return Nothing;
-                                case Cons$:
-                                    {
-                                        java.lang.Object $$0 = $$case[1], $$1 = $$case[2];
-                                        return Just.apply($$0);
-                                    }
-                                default:
-                                    throw new RuntimeException("No case expression: " + $$case);
+                public java.lang.Object get() {
+                    java.lang.Object[] $$v0 = (java.lang.Object[]) $v0;
+                    switch((int) $$v0[0]) {
+                        case Nil$:
+                            return Nothing;
+                        case Cons$:
+                            {
+                                java.lang.Object $$0 = $$v0[1], $$1 = $$v0[2];
+                                return Just.apply($$0);
                             }
-                        }
-                    }.get();
+                        default:
+                            throw new RuntimeException("No case expression: " + $$v0);
+                    }
                 }
-            }.apply(l);
+            }.get();
         }
     };
 
@@ -124,29 +119,24 @@ public class ListType {
      */
     public static final Function<Object, Object> tail = new Function<Object, Object>() {
 
-        public Object apply(Object l) {
-            return new Function<Object, Object>() {
+        public Object apply(Object $v0) {
+            return new java.util.function.Supplier<java.lang.Object>() {
 
-                public Object apply(Object $case) {
-                    return new java.util.function.Supplier<java.lang.Object>() {
-
-                        public java.lang.Object get() {
-                            java.lang.Object[] $$case = (java.lang.Object[]) $case;
-                            switch((int) $$case[0]) {
-                                case Nil$:
-                                    return Nothing;
-                                case Cons$:
-                                    {
-                                        java.lang.Object $$2 = $$case[1], $$3 = $$case[2];
-                                        return Just.apply($$3);
-                                    }
-                                default:
-                                    throw new RuntimeException("No case expression: " + $$case);
+                public java.lang.Object get() {
+                    java.lang.Object[] $$v0 = (java.lang.Object[]) $v0;
+                    switch((int) $$v0[0]) {
+                        case Nil$:
+                            return Nothing;
+                        case Cons$:
+                            {
+                                java.lang.Object $$2 = $$v0[1], $$3 = $$v0[2];
+                                return Just.apply($$3);
                             }
-                        }
-                    }.get();
+                        default:
+                            throw new RuntimeException("No case expression: " + $$v0);
+                    }
                 }
-            }.apply(l);
+            }.get();
         }
     };
 
@@ -155,32 +145,27 @@ public class ListType {
      */
     public static final Function<Function<Object, Object>, Function<Object, Object>> map = new Function<Function<Object, Object>, Function<Object, Object>>() {
 
-        public Function<Object, Object> apply(Function<Object, Object> f) {
+        public Function<Object, Object> apply(Function<Object, Object> $v0) {
             return new Function<Object, Object>() {
 
-                public Object apply(Object l) {
-                    return new Function<Object, Object>() {
+                public Object apply(Object $v1) {
+                    return new java.util.function.Supplier<java.lang.Object>() {
 
-                        public Object apply(Object $case) {
-                            return new java.util.function.Supplier<java.lang.Object>() {
-
-                                public java.lang.Object get() {
-                                    java.lang.Object[] $$case = (java.lang.Object[]) $case;
-                                    switch((int) $$case[0]) {
-                                        case Nil$:
-                                            return Nil;
-                                        case Cons$:
-                                            {
-                                                java.lang.Object $$4 = $$case[1], $$5 = $$case[2];
-                                                return Cons.apply(f.apply($$4)).apply(map.apply(f).apply($$5));
-                                            }
-                                        default:
-                                            throw new RuntimeException("No case expression: " + $$case);
+                        public java.lang.Object get() {
+                            java.lang.Object[] $$v0 = (java.lang.Object[]) $v0;
+                            switch((int) $$v0[0]) {
+                                case Nil$:
+                                    return Nil;
+                                case Cons$:
+                                    {
+                                        java.lang.Object $$4 = $$v0[1], $$5 = $$v0[2];
+                                        return Cons.apply($v1.apply($$4)).apply(map.apply($v1).apply($$5));
                                     }
-                                }
-                            }.get();
+                                default:
+                                    throw new RuntimeException("No case expression: " + $$v0);
+                            }
                         }
-                    }.apply(l);
+                    }.get();
                 }
             };
         }
