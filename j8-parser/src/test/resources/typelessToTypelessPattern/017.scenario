@@ -1,0 +1,66 @@
+-- A factorial declaration defined as equations
+factorial : Int -> Int
+factorial 0 = 1
+factorial n = n * (factorial (n - 1))
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstantIntPattern:
+                  value: 0
+              expression:
+                ConstantInt:
+                  value: 1
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: n
+              expression:
+                CallExpression:
+                  operand:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            ConstantInt:
+                              value: 1
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: n
+                              operator:
+                                IdReference:
+                                  name: (-)
+                      operator:
+                        IdReference:
+                          name: factorial
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: n
+                      operator:
+                        IdReference:
+                          name: (*)
+          ]
+        name:
+          ID:
+            name: factorial
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: Int
+    ]
