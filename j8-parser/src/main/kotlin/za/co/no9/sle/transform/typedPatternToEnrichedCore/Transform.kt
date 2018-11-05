@@ -72,7 +72,7 @@ private fun extractLambdas(expressions: List<za.co.no9.sle.ast.typedPattern.Expr
                 wrapExpressionWithCall(
                         CallExpression(expression.location, range(type),
                                 expression,
-                                IdReference(expression.location, domain(type), variableName(count))),
+                                IdReference(expression.location, domain(type), variableName(numberOfLambdas - count - 1))),
                         count + 1,
                         range(type))
 

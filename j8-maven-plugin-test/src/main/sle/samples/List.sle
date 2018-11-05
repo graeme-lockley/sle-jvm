@@ -36,10 +36,8 @@ tail (Cons x xs) = Just xs
 
 
 map : (a -> b) -> List a -> List b
-map f l =
-    case l of
-        Nil -> Nil
-        Cons x xs -> Cons (f x) (map f xs)
+map f Nil = Nil
+map f (Cons x xs) = Cons (f x) (map f xs)
 
 
 removedups : List Int -> List Int

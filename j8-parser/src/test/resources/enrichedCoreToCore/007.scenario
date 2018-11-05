@@ -21,7 +21,7 @@ map : <0, 1> ('0 -> '1) -> List '0 -> List '1
 map =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->
-      (CASE $v0
+      (CASE $v1
         Nil =>
           Nil
         Cons $$0 $$1 =>
@@ -29,14 +29,14 @@ map =
             (CALL
               Cons
               (CALL
-                $v1
+                $v0
                 $$0
               )
             )
             (CALL
               (CALL
                 map
-                $v1
+                $v0
               )
               $$1
             )

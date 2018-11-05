@@ -1,0 +1,66 @@
+-- A equation declaration for map
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+map : (a -> b) -> List a -> List b
+
+map f Nil =
+    Nil
+
+map f (Cons x xs) =
+    Cons (f x) (map f xs)
+-- enrichedASTpp
+type List =
+  Nil
+| Cons '0 List '0
+
+
+map : <0, 1> ('0 -> '1) -> List '0 -> List '1
+map =
+  (LAMBDA $v0 ->
+    (LAMBDA $v1 ->
+      (BAR
+        (CALL
+          (CALL
+            (LAMBDA f ->
+              (LAMBDA Nil ->
+                Nil
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        (CALL
+          (CALL
+            (LAMBDA f ->
+              (LAMBDA Cons '4 List '4 ->
+                (CALL
+                  (CALL
+                    Cons
+                    (CALL
+                      f
+                      x
+                    )
+                  )
+                  (CALL
+                    (CALL
+                      map
+                      f
+                    )
+                    xs
+                  )
+                )
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        ERROR
+      )
+    )
+  )
+

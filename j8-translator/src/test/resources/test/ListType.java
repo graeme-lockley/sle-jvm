@@ -152,17 +152,17 @@ public class ListType {
                     return new java.util.function.Supplier<java.lang.Object>() {
 
                         public java.lang.Object get() {
-                            java.lang.Object[] $$v0 = (java.lang.Object[]) $v0;
-                            switch((int) $$v0[0]) {
+                            java.lang.Object[] $$v1 = (java.lang.Object[]) $v1;
+                            switch((int) $$v1[0]) {
                                 case Nil$:
                                     return Nil;
                                 case Cons$:
                                     {
-                                        java.lang.Object $$4 = $$v0[1], $$5 = $$v0[2];
-                                        return Cons.apply($v1.apply($$4)).apply(map.apply($v1).apply($$5));
+                                        java.lang.Object $$4 = $$v1[1], $$5 = $$v1[2];
+                                        return Cons.apply($v0.apply($$4)).apply(map.apply($v0).apply($$5));
                                     }
                                 default:
-                                    throw new RuntimeException("No case expression: " + $$v0);
+                                    throw new RuntimeException("No case expression: " + $$v1);
                             }
                         }
                     }.get();
