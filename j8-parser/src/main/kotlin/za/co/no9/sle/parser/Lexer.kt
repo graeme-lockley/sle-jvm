@@ -16,9 +16,13 @@ enum class Token {
     LowerID,
     UpperID,
 
+    AS,
     CASE,
     ELSE,
+    EXPORT,
+    EXPOSING,
     IF,
+    IMPORT,
     OF,
     THEN,
     TYPE,
@@ -27,9 +31,13 @@ enum class Token {
 
 val keywords =
         mapOf(
+                Pair("as", Token.AS),
                 Pair("case", Token.CASE),
                 Pair("else", Token.ELSE),
+                Pair("export", Token.EXPORT),
+                Pair("exposing", Token.EXPOSING),
                 Pair("if", Token.IF),
+                Pair("import", Token.IMPORT),
                 Pair("of", Token.OF),
                 Pair("then", Token.THEN),
                 Pair("type", Token.TYPE),
