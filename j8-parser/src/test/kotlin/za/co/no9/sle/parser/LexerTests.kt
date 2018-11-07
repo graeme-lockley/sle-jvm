@@ -69,6 +69,14 @@ class LexerTests : StringSpec({
         symbols[1].location
                 .shouldBe(Location(Position(1, 11), Position(1, 14)))
     }
+
+    "file:../Data/Lis\\ \\\\ Hello should be ImportURN" {
+        Lexer("file:../Data/Lis\\ \\\\ Hello").tokens()
+                .shouldBe(listOf(Token.ImportURN, Token.UpperID))
+
+        Lexer("file:../Data/Lis\\ \\\\ Hello").tokenTexts()
+                .shouldBe(listOf("file:../Data/Lis\\ \\\\", "Hello"))
+    }
 })
 
 

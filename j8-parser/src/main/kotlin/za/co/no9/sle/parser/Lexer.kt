@@ -12,6 +12,7 @@ enum class Token {
     ConstantInt,
     ConstantOperator,
     ConstantString,
+    ImportURN,
 
     LowerID,
     UpperID,
@@ -49,6 +50,9 @@ val singleOperatorCharacters =
 
 val operatorCharacters =
         setOf('-', '=', '|', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':')
+
+const val EOS =
+        0.toChar()
 
 
 data class Symbol(val token: Token, val location: Location, val text: String) {
@@ -136,8 +140,34 @@ class Lexer(val input: String) {
                     val text =
                             input.substring(startIndex, endIndex + 1)
 
-                    currentSymbol =
-                            Symbol(keywords.getOrDefault(text, Token.LowerID), Location(startPosition, endPosition), text)
+                    if (nextCh == ':' && (text == "file" || text == "github")) {
+                        nextCharacter()
+                        while (true) {
+                            if (nextCh == EOS || nextCh.isWhitespace()) {
+                                break
+                            } else if (nextCh == '\\') {
+                                nextCharacter()
+                                nextCharacter()
+                            } else {
+                                nextCharacter()
+                            }
+                        }
+
+                        val newEndPosition =
+                                position()
+
+                        val newEndIndex =
+                                currentIndex
+
+                        val newText =
+                                input.substring(startIndex, newEndIndex + 1)
+
+                        currentSymbol =
+                                Symbol(Token.ImportURN, Location(startPosition, newEndPosition), newText)
+                    } else {
+                        currentSymbol =
+                                Symbol(keywords.getOrDefault(text, Token.LowerID), Location(startPosition, endPosition), text)
+                    }
                 }
 
                 currentCh in 'A'..'Z' -> {
@@ -283,6 +313,8 @@ class Lexer(val input: String) {
             } else if (currentCh != '\r'){
                 currentColumn += 1
             }
+        } else {
+            currentCh = EOS
         }
     }
 
