@@ -1,8 +1,6 @@
 # Primary Features
 
-* Add case construct with patterns
-
-* Add support for patterns on let declarations
+* Add import and exports
 
 * Add where
 
@@ -10,6 +8,6 @@
 
 # Enhancements
 
-* Add location to scheme and type - this will enable better error reporting
+* Allow let declaration guards
 
 * Allow type aliases to have type parameters
