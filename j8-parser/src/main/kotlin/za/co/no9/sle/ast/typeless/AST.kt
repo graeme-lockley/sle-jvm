@@ -12,7 +12,21 @@ sealed class Node(
 
 data class Module(
         override val location: Location,
+        val exports: List<Export>,
         val declarations: List<Declaration>) : Node(location)
+
+
+sealed class Export(
+        location: Location) : Node(location)
+
+data class LetExport(
+        override val location: Location,
+        val name: ID) : Export(location)
+
+data class TypeExport(
+        override val location: Location,
+        val name: ID,
+        val withConstructors: Boolean) : Export(location)
 
 
 sealed class Declaration(
