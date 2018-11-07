@@ -152,18 +152,7 @@ class Lexer(val input: String) {
                                 nextCharacter()
                             }
                         }
-
-                        val newEndPosition =
-                                position()
-
-                        val newEndIndex =
-                                currentIndex
-
-                        val newText =
-                                input.substring(startIndex, newEndIndex + 1)
-
-                        currentSymbol =
-                                Symbol(Token.ImportURN, Location(startPosition, newEndPosition), newText)
+                        markEnd(startIndex, startPosition, Token.ImportURN)
                     } else {
                         currentSymbol =
                                 Symbol(keywords.getOrDefault(text, Token.LowerID), Location(startPosition, endPosition), text)
@@ -183,18 +172,7 @@ class Lexer(val input: String) {
                     while (nextCh == '\'') {
                         nextCharacter()
                     }
-
-                    val endPosition =
-                            position()
-
-                    val endIndex =
-                            currentIndex
-
-                    val text =
-                            input.substring(startIndex, endIndex + 1)
-
-                    currentSymbol =
-                            Symbol(Token.UpperID, Location(startPosition, endPosition), text)
+                    markEnd(startIndex, startPosition, Token.UpperID)
                 }
 
                 currentCh in '0'..'9' -> {
@@ -207,17 +185,7 @@ class Lexer(val input: String) {
                     while (nextCh.isDigit()) {
                         nextCharacter()
                     }
-                    val endPosition =
-                            position()
-
-                    val endIndex =
-                            currentIndex
-
-                    val text =
-                            input.substring(startIndex, endIndex + 1)
-
-                    currentSymbol =
-                            Symbol(Token.ConstantInt, Location(startPosition, endPosition), text)
+                    markEnd(startIndex, startPosition, Token.ConstantInt)
                 }
 
                 currentCh == '"' -> {
@@ -238,39 +206,11 @@ class Lexer(val input: String) {
                             nextCharacter()
                         }
                     }
-
-                    val endPosition =
-                            position()
-
-                    val endIndex =
-                            currentIndex
-
-                    val text =
-                            input.substring(startIndex, endIndex + 1)
-
-                    currentSymbol =
-                            Symbol(Token.ConstantString, Location(startPosition, endPosition), text)
+                    markEnd(startIndex, startPosition, Token.ConstantString)
                 }
 
-                singleOperatorCharacters.contains(currentCh) -> {
-                    val startPosition =
-                            position()
-
-                    val startIndex =
-                            currentIndex
-
-                    val endPosition =
-                            position()
-
-                    val endIndex =
-                            currentIndex
-
-                    val text =
-                            input.substring(startIndex, endIndex + 1)
-
-                    currentSymbol =
-                            Symbol(Token.ConstantOperator, Location(startPosition, endPosition), text)
-                }
+                singleOperatorCharacters.contains(currentCh) ->
+                    markEnd(currentIndex, position(), Token.ConstantOperator)
 
                 operatorCharacters.contains(currentCh) -> {
                     val startPosition =
@@ -282,22 +222,28 @@ class Lexer(val input: String) {
                     while (operatorCharacters.contains(nextCh)) {
                         nextCharacter()
                     }
-                    val endPosition =
-                            position()
 
-                    val endIndex =
-                            currentIndex
-
-                    val text =
-                            input.substring(startIndex, endIndex + 1)
-
-                    currentSymbol =
-                            Symbol(Token.ConstantOperator, Location(startPosition, endPosition), text)
+                    markEnd(startIndex, startPosition, Token.ConstantOperator)
                 }
             }
         } catch (e: StringIndexOutOfBoundsException) {
             currentSymbol = Symbol(Token.EOF, location(), "")
         }
+    }
+
+
+    private fun markEnd(startIndex: Int, startPosition: Position, token: Token) {
+        val endPosition =
+                position()
+
+        val endIndex =
+                currentIndex
+
+        val text =
+                input.substring(startIndex, endIndex + 1)
+
+        currentSymbol =
+                Symbol(token, Location(startPosition, endPosition), text)
     }
 
 
