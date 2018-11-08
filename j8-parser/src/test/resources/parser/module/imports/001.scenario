@@ -1,0 +1,137 @@
+-- Multiple export
+export plus, minus, List(...), Maybe
+
+type List a =
+    Nil
+  | Cons a (List a)
+
+type Maybe a =
+    Nothing
+  | Just a
+
+
+plus x y =
+    x + y
+
+minus x y =
+    x - y
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      ID:
+                        name: List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nothing
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                ]
+              name:
+                ID:
+                  name: Just
+          ]
+        name:
+          ID:
+            name: Maybe
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: x
+            IdReferencePattern:
+              name: y
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              IdReference:
+                name: x
+            operator:
+              ID:
+                name: +
+            right:
+              IdReference:
+                name: y
+        name:
+          ID:
+            name: plus
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: x
+            IdReferencePattern:
+              name: y
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              IdReference:
+                name: x
+            operator:
+              ID:
+                name: -
+            right:
+              IdReference:
+                name: y
+        name:
+          ID:
+            name: minus
+    ]
+  exports: [
+      LetExport:
+        name:
+          ID:
+            name: plus
+      LetExport:
+        name:
+          ID:
+            name: minus
+      TypeExport:
+        name:
+          ID:
+            name: List
+        withConstructors: true
+      TypeExport:
+        name:
+          ID:
+            name: Maybe
+        withConstructors: false
+    ]

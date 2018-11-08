@@ -25,12 +25,64 @@ class Parser(private val lexer: Lexer) {
         val moduleDeclarations =
                 mutableListOf<Declaration>()
 
+        val exports =
+                if (lexer.token == Token.EXPORT)
+                    parseExport()
+                else
+                    listOf()
+
         while (lexer.token != Token.EOF) {
             moduleDeclarations.add(parseDeclaration())
         }
 
-        return Module(locationFrom(moduleDeclarations)!!, listOf(), moduleDeclarations)
+        return Module(locationFrom(moduleDeclarations)!!, exports, moduleDeclarations)
     }
+
+
+    fun parseExport(): List<Export> {
+        val exports =
+                mutableListOf<Export>()
+
+        matchToken(Token.EXPORT, "export expected")
+
+        exports.add(parseExportedName())
+        while (isOperator(",")) {
+            matchOperator(",")
+            exports.add(parseExportedName())
+        }
+
+        return exports
+    }
+
+
+    fun parseExportedName(): Export =
+            when {
+                isToken(Token.LowerID) -> {
+                    val lowerID =
+                            lexer.next().toID()
+
+                    LetExport(lowerID.location, lowerID)
+                }
+
+                isToken(Token.UpperID) -> {
+                    val upperID =
+                            lexer.next().toID()
+
+                    if (isOperator("(")) {
+                        matchOperator("(")
+
+                        matchOperator("...")
+                        matchOperator(")")
+
+                        TypeExport(upperID.location, upperID, true)
+                    } else {
+                        TypeExport(upperID.location, upperID, false)
+                    }
+                }
+
+                else ->
+                    throw syntaxError("Expected UpperID or LowerID")
+            }
 
 
     fun parseDeclaration(): Declaration {
