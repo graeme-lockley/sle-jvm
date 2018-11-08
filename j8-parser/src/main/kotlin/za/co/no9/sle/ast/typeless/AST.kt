@@ -13,6 +13,7 @@ sealed class Node(
 data class Module(
         override val location: Location,
         val exports: List<Export>,
+        val imports: List<Imports>,
         val declarations: List<Declaration>) : Node(location)
 
 
@@ -24,6 +25,25 @@ data class LetExport(
         val name: ID) : Export(location)
 
 data class TypeExport(
+        override val location: Location,
+        val name: ID,
+        val withConstructors: Boolean) : Export(location)
+
+
+data class Imports(
+        override val location: Location,
+        val urn: ID,
+        val declarations: List<Import>) : Node(location)
+
+
+sealed class Import(
+        location: Location) : Node(location)
+
+data class LetImport(
+        override val location: Location,
+        val name: ID) : Export(location)
+
+data class TypeImport(
         override val location: Location,
         val name: ID,
         val withConstructors: Boolean) : Export(location)

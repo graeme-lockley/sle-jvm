@@ -35,7 +35,7 @@ class Parser(private val lexer: Lexer) {
             moduleDeclarations.add(parseDeclaration())
         }
 
-        return Module(locationFrom(moduleDeclarations)!!, exports, moduleDeclarations)
+        return Module(locationFrom(moduleDeclarations)!!, exports, listOf(), moduleDeclarations)
     }
 
 
