@@ -72,9 +72,11 @@ class Parser(private val lexer: Lexer) {
                         matchOperator("(")
 
                         matchOperator("...")
-                        matchOperator(")")
 
-                        TypeExport(upperID.location, upperID, true)
+                        val closeParenthesis =
+                                matchOperator(")")
+
+                        TypeExport(upperID.location + closeParenthesis.location, upperID, true)
                     } else {
                         TypeExport(upperID.location, upperID, false)
                     }
