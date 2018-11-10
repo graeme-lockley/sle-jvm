@@ -14,3 +14,5 @@ Module:
           name: true
       scheme: null
   ]
+  exports: []
+  imports: []

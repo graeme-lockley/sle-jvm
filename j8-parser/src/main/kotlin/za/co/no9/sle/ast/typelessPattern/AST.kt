@@ -1,6 +1,7 @@
 package za.co.no9.sle.ast.typelessPattern
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.URN
 import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
 
@@ -11,7 +12,42 @@ sealed class Node(
 
 data class Module(
         override val location: Location,
+        val exports: List<Export>,
+        val imports: List<Import>,
         val declarations: List<Declaration>) : Node(location)
+
+
+sealed class Export(
+        location: Location) : Node(location)
+
+data class LetExport(
+        override val location: Location,
+        val name: ID) : Export(location)
+
+data class TypeExport(
+        override val location: Location,
+        val name: ID,
+        val withConstructors: Boolean) : Export(location)
+
+
+data class Import(
+        override val location: Location,
+        val urn: URN,
+        val asName: ID,
+        val namedDeclarations: List<NamedDeclaration>) : Node(location)
+
+
+sealed class NamedDeclaration(
+        location: Location) : Node(location)
+
+data class LetNamedDeclaration(
+        override val location: Location,
+        val name: ID) : NamedDeclaration(location)
+
+data class TypeNamedDeclaration(
+        override val location: Location,
+        val name: ID,
+        val withConstructors: Boolean) : NamedDeclaration(location)
 
 
 sealed class Declaration(

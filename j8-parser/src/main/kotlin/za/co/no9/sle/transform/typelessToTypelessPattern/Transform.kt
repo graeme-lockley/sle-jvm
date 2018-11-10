@@ -139,7 +139,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                                     })
                         }
 
-        Module(ast.location, typeAndAliasDeclarations + letDeclarations)
+        Module(ast.location, emptyList(), emptyList(), typeAndAliasDeclarations + letDeclarations)
     }
 }
 

@@ -107,3 +107,5 @@ Module:
             name: duplicate
         scheme: null
     ]
+  exports: []
+  imports: []
