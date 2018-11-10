@@ -31,11 +31,14 @@ class Parser(private val lexer: Lexer) {
                 else
                     listOf()
 
+        val imports =
+                parseImports()
+
         while (lexer.token != Token.EOF) {
             moduleDeclarations.add(parseDeclaration())
         }
 
-        return Module(locationFrom(moduleDeclarations)!!, exports, listOf(), moduleDeclarations)
+        return Module(homeLocation + locationFrom(moduleDeclarations) + locationFrom(exports) + locationFrom(imports), exports, imports, moduleDeclarations)
     }
 
 
@@ -47,7 +50,7 @@ class Parser(private val lexer: Lexer) {
 
         exports.add(parseExportedName())
         while (isOperator(",")) {
-            matchOperator(",")
+            skip()
             exports.add(parseExportedName())
         }
 
@@ -69,7 +72,7 @@ class Parser(private val lexer: Lexer) {
                             lexer.next().toID()
 
                     if (isOperator("(")) {
-                        matchOperator("(")
+                        skip()
 
                         matchOperator("...")
 
@@ -80,6 +83,93 @@ class Parser(private val lexer: Lexer) {
                     } else {
                         TypeExport(upperID.location, upperID, false)
                     }
+                }
+
+                else ->
+                    throw syntaxError("Expected UpperID or LowerID")
+            }
+
+
+    fun parseImports(): List<Import> {
+        val imports =
+                mutableListOf<Import>()
+
+        while (lexer.token == Token.IMPORT) {
+            imports.add(parseImport())
+        }
+
+        return imports
+    }
+
+
+    fun parseImport(): Import {
+        val importToken =
+                matchToken(Token.IMPORT, "Expected import")
+
+        val importURN =
+                matchToken(Token.ImportURN, "Expected a import URN").toID()
+
+        var lastLocation =
+                importURN.location
+
+        val asName = if (isToken(Token.AS)) {
+            skip()
+            val result =
+                    matchToken(Token.UpperID, "Expected UpperID").toID()
+
+            lastLocation =
+                    result.location
+
+            result
+        } else
+            null
+
+        val declarations = if (isToken(Token.EXPOSING)) {
+            val result =
+                    mutableListOf<NamedDeclaration>()
+
+            skip()
+            matchOperator("(")
+
+            result.add(parseImportName())
+            while (isOperator(",")) {
+                skip()
+                result.add(parseImportName())
+            }
+            lastLocation =
+                    matchOperator(")").location
+
+            result
+        } else
+            listOf<NamedDeclaration>()
+
+
+        return Import(importToken.location + lastLocation, importURN, asName, declarations)
+    }
+
+
+    fun parseImportName(): NamedDeclaration =
+            when {
+                isToken(Token.LowerID) -> {
+                    val lowerID =
+                            lexer.next()
+
+                    LetNamedDeclaration(lowerID.location, lowerID.toID())
+                }
+
+                isToken(Token.UpperID) -> {
+                    val upperID =
+                            lexer.next().toID()
+
+                    if (isOperator("(")) {
+                        lexer.next()
+                        matchOperator("...")
+                        val closingParenthesis =
+                                matchOperator(")")
+
+                        TypeNamedDeclaration(upperID.location + closingParenthesis.location, upperID, true)
+                    } else
+                        TypeNamedDeclaration(upperID.location, upperID, false)
                 }
 
                 else ->
@@ -662,6 +752,10 @@ class Parser(private val lexer: Lexer) {
             throw syntaxError("Expected $text")
         }
     }
+
+
+    private fun skip() =
+            lexer.next()
 
 
     private fun syntaxError(text: String): Exception {

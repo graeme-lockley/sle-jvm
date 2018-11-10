@@ -1,0 +1,78 @@
+-- Variety of import styles
+import file:../Data/List
+import file:../Data/List as List
+import file:../Data/List exposing (map, length, Maybe, List(...))
+import file:../Data/List as List exposing (map, length, Maybe, List(...))
+
+-- ast
+Module:
+  declarations: []
+  exports: []
+  imports: [
+      Import:
+        asName: null
+        namedDeclarations: []
+        urn:
+          ID:
+            name: file:../Data/List
+      Import:
+        asName:
+          ID:
+            name: List
+        namedDeclarations: []
+        urn:
+          ID:
+            name: file:../Data/List
+      Import:
+        asName: null
+        namedDeclarations: [
+            LetNamedDeclaration:
+              name:
+                ID:
+                  name: map
+            LetNamedDeclaration:
+              name:
+                ID:
+                  name: length
+            TypeNamedDeclaration:
+              name:
+                ID:
+                  name: Maybe
+              withConstructors: false
+            TypeNamedDeclaration:
+              name:
+                ID:
+                  name: List
+              withConstructors: true
+          ]
+        urn:
+          ID:
+            name: file:../Data/List
+      Import:
+        asName:
+          ID:
+            name: List
+        namedDeclarations: [
+            LetNamedDeclaration:
+              name:
+                ID:
+                  name: map
+            LetNamedDeclaration:
+              name:
+                ID:
+                  name: length
+            TypeNamedDeclaration:
+              name:
+                ID:
+                  name: Maybe
+              withConstructors: false
+            TypeNamedDeclaration:
+              name:
+                ID:
+                  name: List
+              withConstructors: true
+          ]
+        urn:
+          ID:
+            name: file:../Data/List
+    ]
