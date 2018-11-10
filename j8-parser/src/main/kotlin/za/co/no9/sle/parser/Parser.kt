@@ -129,15 +129,15 @@ class Parser(private val lexer: Lexer) {
                     mutableListOf<NamedDeclaration>()
 
             skip()
-            matchOperator("(")
 
             result.add(parseImportName())
             while (isOperator(",")) {
                 skip()
                 result.add(parseImportName())
             }
+
             lastLocation =
-                    matchOperator(")").location
+                    result.last().location
 
             result
         } else
