@@ -3,6 +3,9 @@ package za.co.no9.sle
 
 data class URN(val source: String, val name: String, val version: String?) {
     constructor(input: String) : this(extractSource(input), extractName(input), extractVersion(input))
+
+    fun impliedName(): String =
+            name.takeLastWhile { it.isLetterOrDigit() || it == '_' }
 }
 
 
