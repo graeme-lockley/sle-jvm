@@ -1,0 +1,147 @@
+-- A collection of list extension functions with import and export
+export find
+
+import github:Data.List:1.2.1
+import github:Data.Maybe exposing Maybe(...)
+
+
+find : (a -> Bool) -> List a -> Maybe a
+find p Nil = Nothing
+find p (Cons x xs) =
+    if p x then
+        Just x
+    else
+        find p xs
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: p
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Nil
+                      parameters: []
+                  expression:
+                    ConstructorReference:
+                      name: Nothing
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: p
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Cons
+                      parameters: [
+                          IdReferencePattern:
+                            name: x
+                          IdReferencePattern:
+                            name: xs
+                        ]
+                  expression:
+                    IfExpression:
+                      elseExpression:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: xs
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: p
+                              operator:
+                                IdReference:
+                                  name: find
+                      guardExpression:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: x
+                          operator:
+                            IdReference:
+                              name: p
+                      thenExpression:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: x
+                          operator:
+                            ConstructorReference:
+                              name: Just
+          ]
+        name:
+          ID:
+            name: find
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TVar:
+                        variable: 0
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Bool
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 0
+                          ]
+                        name: List
+                    range:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 0
+                          ]
+                        name: Maybe
+    ]
+  exports: [
+      LetExport:
+        name:
+          ID:
+            name: find
+    ]
+  imports: [
+      Import:
+        asName:
+          ID:
+            name: List
+        namedDeclarations: []
+        urn:
+          URN:
+            name: Data.List
+            source: github
+            version: 1.2.1
+      Import:
+        asName: null
+        namedDeclarations: [
+            TypeNamedDeclaration:
+              name:
+                ID:
+                  name: Maybe
+              withConstructors: true
+          ]
+        urn:
+          URN:
+            name: Data.Maybe
+            source: github
+            version: null
+    ]

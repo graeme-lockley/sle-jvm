@@ -19,12 +19,17 @@ import za.co.no9.sle.ast.typelessPattern.ID
 import za.co.no9.sle.ast.typelessPattern.IdReference
 import za.co.no9.sle.ast.typelessPattern.IdReferencePattern
 import za.co.no9.sle.ast.typelessPattern.IfExpression
+import za.co.no9.sle.ast.typelessPattern.Import
 import za.co.no9.sle.ast.typelessPattern.LambdaExpression
 import za.co.no9.sle.ast.typelessPattern.LetDeclaration
+import za.co.no9.sle.ast.typelessPattern.LetExport
+import za.co.no9.sle.ast.typelessPattern.LetNamedDeclaration
 import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
+import za.co.no9.sle.ast.typelessPattern.TypeExport
+import za.co.no9.sle.ast.typelessPattern.TypeNamedDeclaration
 import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
@@ -37,6 +42,22 @@ fun parse(text: String): Either<Errors, Module> =
 
 
 fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
+    val exports =
+            ast.exports.map {
+                when (it) {
+                    is za.co.no9.sle.ast.typeless.LetExport ->
+                        LetExport(it.location, astToCoreAST(it.name))
+
+                    is za.co.no9.sle.ast.typeless.TypeExport ->
+                        TypeExport(it.location, astToCoreAST(it.name), it.withConstructors)
+                }
+            }
+
+
+    val imports =
+            ast.imports.map { astToCoreAST(it) }
+
+
     val letDeclarationNames =
             ast.declarations.fold(emptySet<String>()) { names, declaration ->
                 when (declaration) {
@@ -139,8 +160,33 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
                                     })
                         }
 
-        Module(ast.location, emptyList(), emptyList(), typeAndAliasDeclarations + letDeclarations)
+        Module(ast.location, exports, imports, typeAndAliasDeclarations + letDeclarations)
     }
+}
+
+
+fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
+    val urn =
+            URN(import.urn.name)
+
+    val asName =
+            if (import.asName == null)
+                if (import.namedDeclarations.isEmpty())
+                    ID(import.urn.location, urn.impliedName())
+                else
+                    null
+            else
+                astToCoreAST(import.asName)
+
+    return Import(import.location, urn, asName, import.namedDeclarations.map {
+        when (it) {
+            is za.co.no9.sle.ast.typeless.LetNamedDeclaration ->
+                LetNamedDeclaration(it.location, astToCoreAST(it.name))
+
+            is za.co.no9.sle.ast.typeless.TypeNamedDeclaration ->
+                TypeNamedDeclaration(it.location, astToCoreAST(it.name), it.withConstructors)
+        }
+    })
 }
 
 
