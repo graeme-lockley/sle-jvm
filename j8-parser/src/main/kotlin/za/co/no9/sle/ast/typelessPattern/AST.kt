@@ -33,7 +33,7 @@ data class TypeExport(
 data class Import(
         override val location: Location,
         val urn: URN,
-        val asName: ID,
+        val asName: ID?,
         val namedDeclarations: List<NamedDeclaration>) : Node(location)
 
 
