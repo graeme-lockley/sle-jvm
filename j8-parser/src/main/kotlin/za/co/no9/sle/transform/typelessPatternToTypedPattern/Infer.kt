@@ -181,9 +181,29 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                     }
                 }
 
+        val exports =
+                module.exports.map {
+                    when (it) {
+                        is za.co.no9.sle.ast.typelessPattern.LetExport -> {
+                            val scheme =
+                                    env.value(it.name.name)
+
+                            if (scheme == null) {
+                                errors.add(UnboundVariable(it.name.location, it.name.name))
+                                ValueNameDeclaration(it.name.name, generalise(typeError))
+                            } else {
+                                ValueNameDeclaration(it.name.name, scheme)
+                            }
+                        }
+
+                        is za.co.no9.sle.ast.typelessPattern.TypeExport ->
+                            TODO()
+                    }
+                }
+
         return Module(
                 module.location,
-                emptyList(),
+                exports,
                 declarations)
     }
 

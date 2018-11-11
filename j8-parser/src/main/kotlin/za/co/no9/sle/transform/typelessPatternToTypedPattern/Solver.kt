@@ -58,18 +58,28 @@ private class ApplyContext(private val environment: Environment) {
 
 
     fun apply(module: Module, substitution: Substitution): Module =
-            Module(module.location, emptyList(), module.declarations.map {
-                when (it) {
-                    is LetDeclaration ->
-                        apply(it, substitution)
+            Module(
+                    module.location,
+                    module.exports.map { apply(it, substitution) },
+                    module.declarations.map {
+                        when (it) {
+                            is LetDeclaration ->
+                                apply(it, substitution)
 
-                    is TypeAliasDeclaration ->
-                        it
+                            is TypeAliasDeclaration ->
+                                it
 
-                    is TypeDeclaration ->
-                        it
-                }
-            })
+                            is TypeDeclaration ->
+                                it
+                        }
+                    })
+
+
+    fun apply(nameDeclaration: NameDeclaration, substitution: Substitution): NameDeclaration =
+            when (nameDeclaration) {
+                is ValueNameDeclaration ->
+                    ValueNameDeclaration(nameDeclaration.name, nameDeclaration.schema.apply(substitution))
+            }
 
 
     fun apply(letDeclaration: LetDeclaration, substitution: Substitution): LetDeclaration {
