@@ -209,9 +209,11 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                 typeBinding is AliasBinding ->
                                     AliasNameDeclaration(it.name.name, typeBinding.scheme)
 
+                                typeBinding is ADTBinding ->
+                                    ADTNameDeclaration(it.name.name, typeBinding.scheme)
+
                                 else ->
                                     TODO()
-
                             }
                         }
                     }

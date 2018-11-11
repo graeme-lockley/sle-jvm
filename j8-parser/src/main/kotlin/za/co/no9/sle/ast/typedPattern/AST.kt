@@ -26,6 +26,10 @@ data class AliasNameDeclaration(
         override val name: String,
         val scheme: Scheme) : NameDeclaration(name)
 
+data class ADTNameDeclaration(
+        override val name: String,
+        val scheme: Scheme) : NameDeclaration(name)
+
 
 sealed class Declaration(
         location: Location) : Node(location)

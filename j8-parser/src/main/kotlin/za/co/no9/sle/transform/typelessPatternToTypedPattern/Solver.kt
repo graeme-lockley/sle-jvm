@@ -82,6 +82,9 @@ private class ApplyContext(private val environment: Environment) {
 
                 is AliasNameDeclaration ->
                     AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
+
+                is ADTNameDeclaration ->
+                    ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
             }
 
 
