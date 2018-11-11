@@ -28,9 +28,8 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Deta
 }
 
 
-fun parse(text: String, environment: Environment): Either<Errors, Module> {
-    return za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(text, environment).map { transform(it.module) }
-}
+fun parse(text: String, environment: Environment): Either<Errors, Module> =
+        za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(text, environment).map { transform(it.module) }
 
 
 private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =
