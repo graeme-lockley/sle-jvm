@@ -30,6 +30,15 @@ data class ADTNameDeclaration(
         override val name: String,
         val scheme: Scheme) : NameDeclaration(name)
 
+data class FullADTNameDeclaration(
+        override val name: String,
+        val scheme: Scheme,
+        val constructors: List<ConstructorNameDeclaration>) : NameDeclaration(name)
+
+data class ConstructorNameDeclaration(
+        val name: String,
+        val scheme: Scheme)
+
 
 sealed class Declaration(
         location: Location) : Node(location)

@@ -210,7 +210,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                     AliasNameDeclaration(it.name.name, typeBinding.scheme)
 
                                 typeBinding is ADTBinding ->
-                                    ADTNameDeclaration(it.name.name, typeBinding.scheme)
+                                    if (it.withConstructors)
+                                        FullADTNameDeclaration(it.name.name, typeBinding.scheme, emptyList())
+                                    else
+                                        ADTNameDeclaration(it.name.name, typeBinding.scheme)
 
                                 else ->
                                     TODO()

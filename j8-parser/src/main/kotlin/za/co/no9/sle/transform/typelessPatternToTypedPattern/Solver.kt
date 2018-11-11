@@ -85,6 +85,14 @@ private class ApplyContext(private val environment: Environment) {
 
                 is ADTNameDeclaration ->
                     ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
+
+                is FullADTNameDeclaration ->
+                    FullADTNameDeclaration(
+                            nameDeclaration.name,
+                            nameDeclaration.scheme.expandAliases(environment).normalize(),
+                            nameDeclaration.constructors.map {
+                                ConstructorNameDeclaration(it.name, it.scheme.expandAliases(environment).normalize())
+                            })
             }
 
 
