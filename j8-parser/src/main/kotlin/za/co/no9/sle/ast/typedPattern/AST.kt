@@ -11,7 +11,16 @@ sealed class Node(
 
 data class Module(
         override val location: Location,
+        val exports: List<NameDeclaration>,
         val declarations: List<Declaration>) : Node(location)
+
+
+sealed class NameDeclaration(
+        open val name: String)
+
+data class ValueNameDeclaration(
+        override val name: String,
+        val schema: Scheme) : NameDeclaration(name)
 
 
 sealed class Declaration(

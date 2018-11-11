@@ -183,6 +183,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
         return Module(
                 module.location,
+                emptyList(),
                 declarations)
     }
 
