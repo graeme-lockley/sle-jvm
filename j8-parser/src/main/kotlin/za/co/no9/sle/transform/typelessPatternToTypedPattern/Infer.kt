@@ -68,7 +68,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
                     } else {
-                        e.newType(d.name.name, d.scheme)
+                        e.newType(d.name.name, AliasBinding(d.scheme))
                     }
                 }
 
@@ -87,7 +87,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
                         newEnv
                     } else {
-                        newEnv.newType(d.name.name, d.scheme)
+                        newEnv.newType(d.name.name, ADTBinding(d.scheme))
                     }
                 }
             }
@@ -138,9 +138,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                     d.scheme
 
                             if (dScheme == null) {
-                            for (e in es.drop(1)) {
-                                unify(es[0].type, e.type)
-                            }
+                                for (e in es.drop(1)) {
+                                    unify(es[0].type, e.type)
+                                }
 
                                 val unifiesResult =
                                         unifies(varPump, aliases, constraints, env)
@@ -239,7 +239,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         when (type) {
             is TCon -> {
                 val scheme =
-                        env.typeBindings[type.name]
+                        env.typeBindings[type.name]?.scheme
 
                 if (scheme == null) {
                     errors.add(UnknownTypeReference(type.location, type.name))
