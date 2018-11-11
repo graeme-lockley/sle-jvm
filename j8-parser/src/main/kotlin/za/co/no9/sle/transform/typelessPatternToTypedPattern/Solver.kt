@@ -10,10 +10,6 @@ private typealias Unifier =
         Pair<Substitution, Constraints>
 
 
-typealias Aliases =
-        Map<String, Scheme>
-
-
 fun unifies(varPump: VarPump, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
     val context =
             SolverContext(varPump, constraints, environment)
