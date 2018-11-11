@@ -1,0 +1,10 @@
+-- Attempt to export an undefined name
+export adds
+
+add : Int -> Int -> Int
+add =
+    \a b -> a + b
+-- errors
+[
+    UnboundVariable(location=[(1, 8) (1, 11)], name=adds)
+]
