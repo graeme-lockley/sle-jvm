@@ -196,8 +196,24 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             }
                         }
 
-                        is za.co.no9.sle.ast.typelessPattern.TypeExport ->
-                            TODO()
+                        is za.co.no9.sle.ast.typelessPattern.TypeExport -> {
+                            val typeBinding =
+                                    env.type(it.name.name)
+
+                            when {
+                                typeBinding == null -> {
+                                    errors.add(UnknownTypeReference(it.name.location, it.name.name))
+                                    AliasNameDeclaration(it.name.name, generalise(typeError))
+                                }
+
+                                typeBinding is AliasBinding ->
+                                    AliasNameDeclaration(it.name.name, typeBinding.scheme)
+
+                                else ->
+                                    TODO()
+
+                            }
+                        }
                     }
                 }
 

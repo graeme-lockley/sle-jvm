@@ -144,7 +144,7 @@ Module:
   exports: [
       ValueNameDeclaration:
         name: add
-        schema:
+        scheme:
           Scheme:
             parameters: []
             type:

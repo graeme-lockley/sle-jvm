@@ -78,7 +78,10 @@ private class ApplyContext(private val environment: Environment) {
     fun apply(nameDeclaration: NameDeclaration, substitution: Substitution): NameDeclaration =
             when (nameDeclaration) {
                 is ValueNameDeclaration ->
-                    ValueNameDeclaration(nameDeclaration.name, nameDeclaration.schema.apply(substitution).expandAliases(environment).normalize())
+                    ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.apply(substitution).expandAliases(environment).normalize())
+
+                is AliasNameDeclaration ->
+                    AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
             }
 
 

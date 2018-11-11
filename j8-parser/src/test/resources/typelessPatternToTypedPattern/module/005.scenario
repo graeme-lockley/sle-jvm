@@ -1,0 +1,71 @@
+-- A type alias declaration export
+export IntIntMap
+
+
+typealias IntMap =
+    Int -> Int
+
+
+typealias IntIntMap =
+    Int -> IntMap
+-- typeAST
+Module:
+  declarations: [
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: IntMap
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: Int
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: IntIntMap
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TCon:
+                    arguments: []
+                    name: IntMap
+    ]
+  exports: [
+      AliasNameDeclaration:
+        name: IntIntMap
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Int
+    ]

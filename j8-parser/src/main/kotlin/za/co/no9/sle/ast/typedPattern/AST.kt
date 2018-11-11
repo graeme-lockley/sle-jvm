@@ -20,7 +20,11 @@ sealed class NameDeclaration(
 
 data class ValueNameDeclaration(
         override val name: String,
-        val schema: Scheme) : NameDeclaration(name)
+        val scheme: Scheme) : NameDeclaration(name)
+
+data class AliasNameDeclaration(
+        override val name: String,
+        val scheme: Scheme) : NameDeclaration(name)
 
 
 sealed class Declaration(
