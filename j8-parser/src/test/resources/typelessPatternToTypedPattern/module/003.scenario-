@@ -1,0 +1,7 @@
+-- A let declaration export
+export add
+
+add : Int -> Int -> Int
+add a b =
+    a + b
+-- typeAST
