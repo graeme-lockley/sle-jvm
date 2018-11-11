@@ -4,7 +4,6 @@ import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.andThen
 import za.co.no9.sle.ast.typedPattern.Module
-import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.map
 import za.co.no9.sle.transform.typelessToTypelessPattern.parse
 import za.co.no9.sle.typing.Environment
@@ -13,40 +12,42 @@ import za.co.no9.sle.typing.VarPump
 
 
 data class InferenceDetail(
+        val environment: Environment,
         val constraints: Constraints,
         val substitution: Substitution,
         val unresolvedModule: Module,
         val resolvedModule: Module)
 
 
-fun parseWithDetail(text: String, environment: Environment): Either<Errors, InferenceDetail> {
+private data class Tuple4<out A, out B, out C, out D>(
+         val v1: A,
+         val v2: B,
+         val v3: C,
+         val v4: D)
+
+
+fun parseWithDetail(text: String, __env: Environment): Either<Errors, InferenceDetail> {
     val varPump =
             VarPump()
 
-    fun aliases(module: Module): Aliases =
-            module.declarations
-                    .filter { it is TypeAliasDeclaration }
-                    .map { it as TypeAliasDeclaration }
-                    .fold(emptyMap()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
-
     return parse(text)
-            .andThen { infer(varPump, it, environment) }
-            .andThen { (unresolvedModule, constraints) ->
-                unifies(varPump, aliases(unresolvedModule), constraints, environment).map { Triple(unresolvedModule, constraints, it) }
-            }.andThen { (unresolvedModule, constraints, substitution) ->
+            .andThen { infer(varPump, it, __env) }
+            .andThen { (unresolvedModule, constraints, environment) ->
+                unifies(varPump, constraints, environment).map { Tuple4(unresolvedModule, constraints, it, environment) }
+            }.andThen { (unresolvedModule, constraints, substitution, environment) ->
                 val resolveModule =
-                        unresolvedModule.apply(aliases(unresolvedModule), substitution)
+                        unresolvedModule.apply(environment, substitution)
 
-                resolveModule.map { InferenceDetail(constraints, substitution, unresolvedModule, it) }
+                resolveModule.map { InferenceDetail(environment, constraints, substitution, unresolvedModule, it) }
             }
 }
 
 
-fun parse(text: String, environment: Environment): Either<Errors, Module> {
+fun parse(text: String, environment: Environment): Either<Errors, InferResult> {
     val varPump =
             VarPump()
 
 
     return parse(text)
-            .andThen { infer2(varPump, it, environment) }
+            .andThen { infer(varPump, it, environment) }
 }

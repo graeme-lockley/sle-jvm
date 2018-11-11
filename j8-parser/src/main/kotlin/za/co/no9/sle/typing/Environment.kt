@@ -5,6 +5,9 @@ data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typ
     fun value(name: String): Scheme? =
             valueBindings[name]
 
+    fun type(name: String): TypeBinding? =
+            typeBindings[name]
+
     fun newValue(name: String, scheme: Scheme): Environment =
             Environment(this.valueBindings + Pair(name, scheme), this.typeBindings)
 

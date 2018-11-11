@@ -8,7 +8,10 @@ import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.typing.*
 
 
-fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Pair<Module, Constraints>> {
+data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
+
+
+fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
             InferContext(varPump, env)
 
@@ -16,21 +19,7 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, en
             context.infer(module)
 
     return if (context.errors.isEmpty())
-        value(Pair(m, context.constraints))
-    else
-        error(context.errors)
-}
-
-
-fun infer2(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, Module> {
-    val context =
-            InferContext(varPump, env)
-
-    val m =
-            context.infer(module)
-
-    return if (context.errors.isEmpty())
-        value(m)
+        value(InferResult(m, context.constraints, context.env))
     else
         error(context.errors)
 }
@@ -93,13 +82,6 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
             }
         }
 
-        val aliases =
-                module.declarations
-                        .filter { it is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration }
-                        .map { it as za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration }
-                        .fold(emptyMap<String, Scheme>()) { aliases, alias -> aliases + Pair(alias.name.name, alias.scheme) }
-
-
         for (declaration in module.declarations) {
             when (declaration) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
@@ -143,7 +125,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                 }
 
                                 val unifiesResult =
-                                        unifies(varPump, aliases, constraints, env)
+                                        unifies(varPump, constraints, env)
 
                                 val unifyErrors =
                                         unifiesResult.left()
@@ -164,7 +146,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                                 val declaration =
                                         if (substitution != null) {
-                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es).apply(aliases, substitution)
+                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es).apply(env, substitution)
                                         } else {
                                             value(LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es))
                                         }

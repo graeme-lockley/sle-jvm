@@ -29,7 +29,7 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Deta
 
 
 fun parse(text: String, environment: Environment): Either<Errors, Module> {
-    return za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(text, environment).map { transform(it) }
+    return za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(text, environment).map { transform(it.module) }
 }
 
 

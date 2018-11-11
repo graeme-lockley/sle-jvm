@@ -14,9 +14,9 @@ typealias Aliases =
         Map<String, Scheme>
 
 
-fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
+fun unifies(varPump: VarPump, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
     val context =
-            SolverContext(varPump, aliases, constraints, environment)
+            SolverContext(varPump, constraints, environment)
 
     val subst =
             context.solve()
@@ -28,9 +28,9 @@ fun unifies(varPump: VarPump, aliases: Aliases, constraints: Constraints, enviro
 }
 
 
-fun Module.apply(aliases: Aliases, substitution: Substitution): Either<Errors, Module> {
+fun Module.apply(environment: Environment, substitution: Substitution): Either<Errors, Module> {
     val applyContext =
-            ApplyContext(aliases)
+            ApplyContext(environment)
 
     val module =
             applyContext.apply(this, substitution)
@@ -42,9 +42,9 @@ fun Module.apply(aliases: Aliases, substitution: Substitution): Either<Errors, M
 }
 
 
-fun LetDeclaration.apply(aliases: Aliases, substitution: Substitution): Either<Errors, LetDeclaration> {
+fun LetDeclaration.apply(environment: Environment, substitution: Substitution): Either<Errors, LetDeclaration> {
     val applyContext =
-            ApplyContext(aliases)
+            ApplyContext(environment)
 
     val module =
             applyContext.apply(this, substitution)
@@ -56,7 +56,7 @@ fun LetDeclaration.apply(aliases: Aliases, substitution: Substitution): Either<E
 }
 
 
-private class ApplyContext(private val aliases: Aliases) {
+private class ApplyContext(private val environment: Environment) {
     val errors =
             mutableSetOf<Error>()
 
@@ -84,9 +84,9 @@ private class ApplyContext(private val aliases: Aliases) {
                 appliedExpressions.map { generalise(it.type).normalize() }
 
         val letDeclarationSchemeExpandedAliases =
-                letDeclaration.scheme.expandAliases(aliases)
+                letDeclaration.scheme.expandAliases(environment)
         for (scheme in schemes) {
-            if (!letDeclarationSchemeExpandedAliases.isCompatibleWith(scheme.expandAliases(aliases))) {
+            if (!letDeclarationSchemeExpandedAliases.isCompatibleWith(scheme.expandAliases(environment))) {
                 errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.name.name, letDeclaration.scheme, scheme))
             }
         }
@@ -95,18 +95,18 @@ private class ApplyContext(private val aliases: Aliases) {
     }
 
 
-    private fun Scheme.expandAliases(aliases: Aliases): Scheme =
-            Scheme(parameters, type.expandAliases(aliases))
+    private fun Scheme.expandAliases(environment: Environment): Scheme =
+            Scheme(parameters, type.expandAliases(environment))
 
 
-    private fun Type.expandAliases(aliases: Aliases): Type =
+    private fun Type.expandAliases(environment: Environment): Type =
             when (this) {
                 is TVar ->
                     this
 
                 is TCon -> {
                     val alias =
-                            aliases[name]
+                            environment.alias(name)?.scheme
 
                     when {
                         alias == null ->
@@ -121,13 +121,13 @@ private class ApplyContext(private val aliases: Aliases) {
                             val substitutionMap =
                                     alias.parameters.zip(arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
 
-                            alias.type.apply(Substitution(substitutionMap)).expandAliases(aliases)
+                            alias.type.apply(Substitution(substitutionMap)).expandAliases(environment)
                         }
                     }
                 }
 
                 is TArr ->
-                    TArr(domain.expandAliases(aliases), range.expandAliases(aliases))
+                    TArr(domain.expandAliases(environment), range.expandAliases(environment))
             }
 
 
@@ -189,7 +189,7 @@ private class ApplyContext(private val aliases: Aliases) {
 }
 
 
-private class SolverContext(private var varPump: VarPump, private var aliases: Aliases, private var constraints: Constraints, private val environment: Environment) {
+private class SolverContext(private var varPump: VarPump, private var constraints: Constraints, private val environment: Environment) {
     val errors =
             mutableSetOf<Error>()
 
@@ -235,14 +235,14 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
 
                 else -> {
-                    if (t1 is TCon && aliases.containsKey(t1.name)) {
+                    if (t1 is TCon && environment.isAlias(t1.name)) {
                         val type =
-                                aliases[t1.name]!!.instantiate(varPump)
+                                environment.instantiateAlias(t1.name, varPump)!!
 
                         unifies(type, t2)
-                    } else if (t2 is TCon && aliases.containsKey(t2.name)) {
+                    } else if (t2 is TCon && environment.isAlias(t2.name)) {
                         val type =
-                                aliases[t2.name]!!.instantiate(varPump)
+                                environment.instantiateAlias(t2.name, varPump)!!
 
                         unifies(t1, type)
                     } else {
@@ -292,3 +292,22 @@ private class SolverContext(private var varPump: VarPump, private var aliases: A
                 }
             }
 }
+
+
+private fun Environment.alias(name: String): AliasBinding? {
+    val binding =
+            this.type(name)
+
+    return if (binding != null && binding is AliasBinding)
+        binding
+    else
+        null
+}
+
+
+private fun Environment.isAlias(name: String): Boolean =
+        this.alias(name) != null
+
+
+private fun Environment.instantiateAlias(name: String, varPump: VarPump): Type? =
+        this.alias(name)?.scheme?.instantiate(varPump)
