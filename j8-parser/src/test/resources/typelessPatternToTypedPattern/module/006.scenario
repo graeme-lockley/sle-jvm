@@ -11,6 +11,8 @@ length : List a -> Int
 length Nil = 0
 length (Cons x xs) = 1 + length xs
 -- typeAST
+Module:
+  declarations: [
       TypeDeclaration:
         constructors: [
             Constructor:
