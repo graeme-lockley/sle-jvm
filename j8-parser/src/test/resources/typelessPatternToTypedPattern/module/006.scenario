@@ -1,4 +1,4 @@
--- A let declaration export
+-- An ADT declaration export without constructors
 export length, List
 
 
