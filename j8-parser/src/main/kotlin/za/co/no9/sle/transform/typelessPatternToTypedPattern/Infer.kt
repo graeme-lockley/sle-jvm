@@ -399,8 +399,8 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         errors.add(UnknownConstructorReference(pattern.location, pattern.name))
                         ConstantUnitPattern(pattern.location, typeUnit)
                     } else {
-                        if (arity(constructor.type) != pattern.parameters.size) {
-                            errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, arity(constructor.type), pattern.parameters.size))
+                        if (constructor.type.arity() != pattern.parameters.size) {
+                            errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, constructor.type.arity(), pattern.parameters.size))
                         }
 
                         val parameters =
@@ -410,7 +410,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                                 constructor.instantiate(varPump)
 
                         val returnType =
-                                last(constructorType)
+                                constructorType.last()
 
                         if (parameters.isNotEmpty()) {
                             val signature =
@@ -425,27 +425,29 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
             }
 
 
-    private fun last(type: Type): Type =
-            when (type) {
-                is TArr ->
-                    last(type.range)
-
-                else ->
-                    type
-            }
-
-
-    private fun arity(type: Type): Int =
-            when (type) {
-                is TArr ->
-                    1 + arity(type.range)
-
-                else ->
-                    0
-            }
-
-
     private fun unify(t1: Type, t2: Type) {
         constraints += Constraint(t1, t2)
     }
 }
+
+
+private fun Type.arity(): Int =
+        when (this) {
+            is TArr ->
+                1 + this.range.arity()
+
+            else ->
+                0
+        }
+
+
+private fun Type.last(): Type =
+        when (this) {
+            is TArr ->
+                this.range.last()
+
+            else ->
+                this
+        }
+
+
