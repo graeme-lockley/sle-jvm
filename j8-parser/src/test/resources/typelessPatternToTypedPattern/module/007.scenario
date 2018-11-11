@@ -1,5 +1,5 @@
 -- An ADT declaration export with constructors
-export length, List(...)
+export length, List(..)
 
 
 type List a =

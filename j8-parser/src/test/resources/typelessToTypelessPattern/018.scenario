@@ -2,7 +2,7 @@
 export find
 
 import github:Data.List:1.2.1
-import github:Data.Maybe exposing Maybe(...)
+import github:Data.Maybe exposing Maybe(..)
 
 
 find : (a -> Bool) -> List a -> Maybe a

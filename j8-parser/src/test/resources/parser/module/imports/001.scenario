@@ -1,5 +1,5 @@
 -- Multiple export
-export plus, minus, List(...), Maybe
+export plus, minus, List(..), Maybe
 
 type List a =
     Nil

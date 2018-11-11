@@ -74,7 +74,7 @@ class Parser(private val lexer: Lexer) {
                     if (isOperator("(")) {
                         skip()
 
-                        matchOperator("...")
+                        matchOperator("..")
 
                         val closeParenthesis =
                                 matchOperator(")")
@@ -163,7 +163,7 @@ class Parser(private val lexer: Lexer) {
 
                     if (isOperator("(")) {
                         lexer.next()
-                        matchOperator("...")
+                        matchOperator("..")
                         val closingParenthesis =
                                 matchOperator(")")
 
