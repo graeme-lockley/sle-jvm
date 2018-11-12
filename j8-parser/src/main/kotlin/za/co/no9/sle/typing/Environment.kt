@@ -22,13 +22,18 @@ data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typ
 }
 
 
-sealed class TypeBinding(open val scheme: Scheme)
+sealed class TypeBinding(
+        open val scheme: Scheme)
 
-data class BuiltinBinding(override val scheme: Scheme) : TypeBinding(scheme)
+data class BuiltinBinding(
+        override val scheme: Scheme) : TypeBinding(scheme)
 
-data class AliasBinding(override val scheme: Scheme) : TypeBinding(scheme)
+data class AliasBinding(
+        override val scheme: Scheme) : TypeBinding(scheme)
 
-data class ADTBinding(override val scheme: Scheme) : TypeBinding(scheme)
+data class ADTBinding(
+        override val scheme: Scheme,
+        val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
 
 
 val emptyEnvironment =

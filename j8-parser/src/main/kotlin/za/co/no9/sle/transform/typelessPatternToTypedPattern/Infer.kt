@@ -76,7 +76,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                         errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
                         newEnv
                     } else {
-                        newEnv.newType(d.name.name, ADTBinding(d.scheme))
+                        newEnv.newType(d.name.name, ADTBinding(d.scheme, d.constructors.map {
+                            Pair(it.name.name, newEnv.value(it.name.name)!!)
+                        }))
                     }
                 }
             }
@@ -209,7 +211,12 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                                 typeBinding is ADTBinding ->
                                     if (it.withConstructors)
-                                        FullADTNameDeclaration(it.name.name, typeBinding.scheme, emptyList())
+                                        FullADTNameDeclaration(
+                                                it.name.name,
+                                                typeBinding.scheme,
+                                                typeBinding.constructors.map { pair ->
+                                                    ConstructorNameDeclaration(pair.first, pair.second)
+                                                })
                                     else
                                         ADTNameDeclaration(it.name.name, typeBinding.scheme)
 

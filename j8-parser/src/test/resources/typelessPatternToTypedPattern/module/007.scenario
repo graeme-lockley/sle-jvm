@@ -245,7 +245,50 @@ Module:
                     arguments: []
                     name: Int
       FullADTNameDeclaration:
-        constructors: []
+        constructors: [
+            ConstructorNameDeclaration:
+              name: Nil
+              scheme:
+                Scheme:
+                  parameters: [
+                      0
+                    ]
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 0
+                        ]
+                      name: List
+            ConstructorNameDeclaration:
+              name: Cons
+              scheme:
+                Scheme:
+                  parameters: [
+                      0
+                    ]
+                  type:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 0
+                      range:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 0
+                                ]
+                              name: List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 0
+                                ]
+                              name: List
+          ]
         name: List
         scheme:
           Scheme:
