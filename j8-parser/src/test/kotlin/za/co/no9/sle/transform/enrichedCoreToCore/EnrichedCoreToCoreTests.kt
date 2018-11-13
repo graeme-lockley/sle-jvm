@@ -151,9 +151,6 @@ fun Expression.asString(indent: Int = 0): String =
             is CallExpression ->
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
-//            is Bar ->
-//                "${spaces(indent)}(BAR\n${expressions.map{it.asString(indent + 2)}.joinToString("")}${spaces(indent)})\n"
-
             is CaseExpression ->
                 "${spaces(indent)}(CASE $variable\n${clauses.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"
         }
