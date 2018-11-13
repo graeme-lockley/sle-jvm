@@ -96,7 +96,31 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 
 
 fun Module.asString(): String =
-        this.declarations.map { it.asString() }.joinToString("\n")
+        this.exports.asString() +
+                this.declarations.joinToString("\n") { it.asString() }
+
+fun List<NameDeclaration>.asString(): String =
+        if (this.isEmpty())
+            ""
+        else
+            this.joinToString("") { it.asString() } + "\n"
+
+
+fun NameDeclaration.asString(): String =
+        when (this) {
+            is ValueNameDeclaration ->
+                "export value ${this.name}: ${this.scheme}\n"
+
+            is AliasNameDeclaration ->
+                "export alias ${this.name}: ${this.scheme}\n"
+
+            is ADTNameDeclaration ->
+                "export adt ${this.name}: ${this.scheme}\n"
+
+            is FullADTNameDeclaration ->
+                "export full ${this.name}: ${this.scheme}\n${this.constructors.joinToString("\n") { "  ${it.name}: ${it.scheme}" }}\n"
+        }
+
 
 fun Declaration.asString(): String =
         when (this) {
@@ -107,7 +131,7 @@ fun Declaration.asString(): String =
                 "typealias ${name.name} =\n  $scheme\n"
 
             is TypeDeclaration ->
-                "type ${name.name} =\n  " + constructors.map { it.asString() }.joinToString("| ") + "\n"
+                "type ${name.name} =\n  " + constructors.joinToString("| ") { it.asString() } + "\n"
         }
 
 

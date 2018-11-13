@@ -97,14 +97,14 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 
 fun Module.asString(): String =
         this.exports.asString() +
-                this.declarations.map { it.asString() }.joinToString("\n")
+                this.declarations.joinToString("\n") { it.asString() }
 
 
 fun List<NameDeclaration>.asString(): String =
         if (this.isEmpty())
             ""
         else
-            this.map { it.asString() }.joinToString("") + "\n"
+            this.joinToString("") { it.asString() } + "\n"
 
 
 fun NameDeclaration.asString(): String =
@@ -119,7 +119,7 @@ fun NameDeclaration.asString(): String =
                 "export adt ${this.name}: ${this.scheme}\n"
 
             is FullADTNameDeclaration ->
-                "export full ${this.name}: ${this.scheme}\n${this.constructors.map { "  ${it.name}: ${it.scheme}" }.joinToString("\n")}\n"
+                "export full ${this.name}: ${this.scheme}\n${this.constructors.joinToString("\n") { "  ${it.name}: ${it.scheme}" }}\n"
         }
 
 
@@ -132,7 +132,7 @@ fun Declaration.asString(): String =
                 "typealias ${name.name} =\n  $scheme\n"
 
             is TypeDeclaration ->
-                "type ${name.name} =\n  " + constructors.map { it.asString() }.joinToString("| ") + "\n"
+                "type ${name.name} =\n  " + constructors.joinToString("| ") { it.asString() } + "\n"
         }
 
 
@@ -177,7 +177,7 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
             is Bar ->
-                "${spaces(indent)}(BAR\n${expressions.map { it.asString(indent + 2) }.joinToString("")}${spaces(indent)})\n"
+                "${spaces(indent)}(BAR\n${expressions.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"
         }
 
 

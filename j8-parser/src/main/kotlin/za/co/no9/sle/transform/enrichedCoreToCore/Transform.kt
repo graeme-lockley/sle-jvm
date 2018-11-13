@@ -81,8 +81,21 @@ private class Transform(private var counter: Int = 0) {
                 a
         }
 
-        return Module(module.location, module.declarations.map { transform(it) })
+        return Module(module.location, module.exports.map{transform(it)}, module.declarations.map { transform(it) })
     }
+
+
+    private fun transform(nameDeclaration: za.co.no9.sle.ast.enrichedCore.NameDeclaration): NameDeclaration =
+            when(nameDeclaration) {
+                is za.co.no9.sle.ast.enrichedCore.ValueNameDeclaration ->
+                    ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+                is za.co.no9.sle.ast.enrichedCore.AliasNameDeclaration ->
+                    AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+                is za.co.no9.sle.ast.enrichedCore.ADTNameDeclaration ->
+                    ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+                is za.co.no9.sle.ast.enrichedCore.FullADTNameDeclaration ->
+                    FullADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme, nameDeclaration.constructors.map { ConstructorNameDeclaration(it.name, it.scheme) })
+            }
 
 
     private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.Declaration): Declaration =
