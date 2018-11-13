@@ -1,0 +1,93 @@
+-- Export of a full ADT, ADT, alias and a value
+export List(..), Maybe, find, IntMap
+
+
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+type Maybe a =
+    Nothing
+  | Just a
+
+
+typealias IntMap =
+    Int -> Int
+
+
+find : (a -> Bool) -> List a -> Maybe a
+find p Nil = Nothing
+find p (Cons x xs) =
+    if p x then
+        Just x
+    else
+        find p xs
+-- enrichedASTpp
+export full List: <0> List '0
+  Nil: <0> List '0
+  Cons: <0> '0 -> List '0 -> List '0
+export adt Maybe: <0> Maybe '0
+export value find: <0> ('0 -> Bool) -> List '0 -> Maybe '0
+export alias IntMap: <> Int -> Int
+
+type List =
+  Nil
+| Cons '0 List '0
+
+
+type Maybe =
+  Nothing
+| Just '0
+
+
+typealias IntMap =
+  <> Int -> Int
+
+find : <0> ('0 -> Bool) -> List '0 -> Maybe '0
+find =
+  (LAMBDA $v0 ->
+    (LAMBDA $v1 ->
+      (BAR
+        (CALL
+          (CALL
+            (LAMBDA p ->
+              (LAMBDA Nil ->
+                Nothing
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        (CALL
+          (CALL
+            (LAMBDA p ->
+              (LAMBDA Cons '4 List '4 ->
+                (IF
+                  (CALL
+                    p
+                    x
+                  )
+                  (CALL
+                    Just
+                    x
+                  )
+                  (CALL
+                    (CALL
+                      find
+                      p
+                    )
+                    xs
+                  )
+                )
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        ERROR
+      )
+    )
+  )

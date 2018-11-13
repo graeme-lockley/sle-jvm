@@ -96,7 +96,32 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 
 
 fun Module.asString(): String =
-        this.declarations.map { it.asString() }.joinToString("\n")
+        this.exports.asString() +
+                this.declarations.map { it.asString() }.joinToString("\n")
+
+
+fun List<NameDeclaration>.asString(): String =
+        if (this.isEmpty())
+            ""
+        else
+            this.map { it.asString() }.joinToString("") + "\n"
+
+
+fun NameDeclaration.asString(): String =
+        when (this) {
+            is ValueNameDeclaration ->
+                "export value ${this.name}: ${this.scheme}\n"
+
+            is AliasNameDeclaration ->
+                "export alias ${this.name}: ${this.scheme}\n"
+
+            is ADTNameDeclaration ->
+                "export adt ${this.name}: ${this.scheme}\n"
+
+            is FullADTNameDeclaration ->
+                "export full ${this.name}: ${this.scheme}\n${this.constructors.map { "  ${it.name}: ${it.scheme}" }.joinToString("\n")}\n"
+        }
+
 
 fun Declaration.asString(): String =
         when (this) {
@@ -152,7 +177,7 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
             is Bar ->
-                "${spaces(indent)}(BAR\n${expressions.map{it.asString(indent + 2)}.joinToString("")}${spaces(indent)})\n"
+                "${spaces(indent)}(BAR\n${expressions.map { it.asString(indent + 2) }.joinToString("")}${spaces(indent)})\n"
         }
 
 

@@ -33,8 +33,23 @@ fun parse(text: String, environment: Environment): Either<Errors, Module> =
 
 
 private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =
-        Module(module.location, module.declarations.map { transform(it) })
+        Module(module.location, module.exports.map { transform(it) }, module.declarations.map { transform(it) })
 
+
+private fun transform(nameDeclaration: za.co.no9.sle.ast.typedPattern.NameDeclaration): NameDeclaration =
+        when (nameDeclaration) {
+            is za.co.no9.sle.ast.typedPattern.ValueNameDeclaration ->
+                ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
+            is za.co.no9.sle.ast.typedPattern.AliasNameDeclaration ->
+                AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
+            is za.co.no9.sle.ast.typedPattern.ADTNameDeclaration ->
+                ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
+            is za.co.no9.sle.ast.typedPattern.FullADTNameDeclaration ->
+                FullADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme, nameDeclaration.constructors.map { ConstructorNameDeclaration(it.name, it.scheme) })
+        }
 
 private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =
         when (declaration) {
