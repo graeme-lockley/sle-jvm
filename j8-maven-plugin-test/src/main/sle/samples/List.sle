@@ -1,3 +1,5 @@
+export List(..), Maybe(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate
+
 type Maybe a =
     Nothing
   | Just a

@@ -1,8 +1,10 @@
 package za.co.no9.sle.mojo
 
+import com.google.gson.Gson
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
+import za.co.no9.sle.pass4.toJsonString
 import za.co.no9.sle.pass4.translateToJava
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
@@ -12,7 +14,6 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
     if (!sourceFile.isDirectory) {
         log.error("Source $sourceFile is not a valid directory")
         return
-
     }
 
     targetFile.mkdirs()
@@ -48,6 +49,9 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                 val targetFileName =
                         it.second
 
+                val exportFileName =
+                        File(it.second.absolutePath.dropLast(4) + "json")
+
                 val sourceFileName =
                         it.first
 
@@ -76,9 +80,15 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                 val className =
                         sourceFileName.nameWithoutExtension
 
-                val output =
+                val parseDetail =
                         parseWithDetail(sourceFileName.readText(), environment)
+
+                val compiledFile =
+                        parseDetail
                                 .map { translateToJava(it.coreModule, packageName, className) }
+
+                val output =
+                        compiledFile
                                 .map { it.toString() }
 
                 val errors =
@@ -87,6 +97,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                 if (errors == null) {
                     targetFileName.parentFile.mkdirs()
                     targetFileName.writeText(output.right() ?: "")
+                    exportFileName.writeText(toJsonString(parseDetail.right()!!.coreModule.exports))
                 } else {
                     errors.forEach {
                         when (it) {
