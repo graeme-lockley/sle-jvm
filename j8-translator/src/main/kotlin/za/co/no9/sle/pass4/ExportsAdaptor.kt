@@ -1,21 +1,13 @@
 package za.co.no9.sle.pass4
 
-import com.google.gson.GsonBuilder
 import za.co.no9.sle.ast.core.*
-
-private val gson =
-        GsonBuilder().setPrettyPrinting().create()
-
-
-fun toJsonString(nameDeclarations: List<NameDeclaration>): String =
-        gson.toJson(toClass(nameDeclarations))
+import za.co.no9.sle.repository.*
+import za.co.no9.sle.repository.Constructor
+import za.co.no9.sle.repository.Declaration
+import za.co.no9.sle.repository.LetDeclaration
 
 
-fun fromJsonString(input: String): List<NameDeclaration> =
-        emptyList()
-
-
-private fun toClass(nameDeclarations: List<NameDeclaration>): Export =
+fun toClass(nameDeclarations: List<NameDeclaration>): Export =
         Export(nameDeclarations.map { toClass(it) })
 
 
@@ -50,35 +42,3 @@ private fun toClass(type: za.co.no9.sle.typing.Type): Type =
                 Arrow(toClass(type.domain), toClass(type.range))
         }
 
-private data class Export(
-        val declarations: List<Declaration>)
-
-private sealed class Declaration
-
-private data class LetDeclaration(
-        val name: String,
-        val scheme: Scheme) : Declaration()
-
-private data class AliasDeclaration(
-        val alias: String,
-        val scheme: Scheme) : Declaration()
-
-private data class ADTDeclaration(
-        val adt: String,
-        val scheme: Scheme,
-        val constructors: List<Constructor>) : Declaration()
-
-private data class Constructor(
-        val name: String,
-        val scheme: Scheme)
-
-
-private data class Scheme(val parameters: List<Int>, val type: Type)
-
-private sealed class Type
-
-private data class Variable(val variable: Int) : Type()
-
-private data class Constant(val constant: String, val arguments: List<Type>) : Type()
-
-private data class Arrow(val domain: Type, val range: Type) : Type()

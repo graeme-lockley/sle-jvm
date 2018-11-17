@@ -1,11 +1,11 @@
 package za.co.no9.sle.mojo
 
-import com.google.gson.Gson
 import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
-import za.co.no9.sle.pass4.toJsonString
+import za.co.no9.sle.pass4.toClass
 import za.co.no9.sle.pass4.translateToJava
+import za.co.no9.sle.repository.toJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
 import java.io.File
@@ -97,7 +97,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                 if (errors == null) {
                     targetFileName.parentFile.mkdirs()
                     targetFileName.writeText(output.right() ?: "")
-                    exportFileName.writeText(toJsonString(parseDetail.right()!!.coreModule.exports))
+                    exportFileName.writeText(toJsonString(toClass(parseDetail.right()!!.coreModule.exports)))
                 } else {
                     errors.forEach {
                         when (it) {
