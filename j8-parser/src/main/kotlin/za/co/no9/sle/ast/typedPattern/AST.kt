@@ -1,6 +1,7 @@
 package za.co.no9.sle.ast.typedPattern
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.URN
 import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
 
@@ -12,6 +13,7 @@ sealed class Node(
 data class Module(
         override val location: Location,
         val exports: List<NameDeclaration>,
+        val imports: List<Import>,
         val declarations: List<Declaration>) : Node(location)
 
 
@@ -36,6 +38,40 @@ data class FullADTNameDeclaration(
         val constructors: List<ConstructorNameDeclaration>) : NameDeclaration(name)
 
 data class ConstructorNameDeclaration(
+        val name: String,
+        val scheme: Scheme)
+
+
+
+data class Import(
+        override val location: Location,
+        val resourceName: String,
+        val asName: ID,
+        val namedDeclarations: List<ImportDeclaration>) : Node(location)
+
+sealed class ImportDeclaration(
+        location: Location) : Node(location)
+
+data class ValueImportDeclaration(
+        override val location: Location,
+        val name: ID,
+        val scheme: Scheme) : ImportDeclaration(location)
+
+data class AliasImportDeclaration(
+        override val location: Location,
+        val name: ID,
+        val scheme: Scheme) : ImportDeclaration(location)
+
+data class ADTImportDeclaration(
+        override val location: Location,
+        val name: ID) : ImportDeclaration(location)
+
+data class FullADTImportDeclaration(
+        override val location: Location,
+        val name: ID,
+        val constructors: List<ConstructorImportDeclaration>) : ImportDeclaration(location)
+
+data class ConstructorImportDeclaration(
         val name: String,
         val scheme: Scheme)
 
