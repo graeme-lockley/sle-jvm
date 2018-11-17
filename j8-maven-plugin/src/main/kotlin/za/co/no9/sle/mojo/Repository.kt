@@ -28,21 +28,24 @@ class Repository(
         val inputFilePath =
                 inputFile.parentFile.absolutePath
 
-        fun splitPath(path: String): List<String> {
-            val input =
-                    path.trim(File.separatorChar)
+        val innerPath =
+                if (inputFilePath.startsWith(sourcePrefixName))
+                    splitPath(inputFilePath.drop(sourcePrefixName.length))
+                else
+                    splitPath(inputFilePath)
 
-            return if (input.isBlank())
-                emptyList()
-            else
-                input.split(File.separatorChar)
-        }
+        return ExportDetail(listOf("file") + innerPath, inputFile.nameWithoutExtension)
+    }
 
 
-        return if (inputFilePath.startsWith(sourcePrefixName))
-            ExportDetail(listOf("file") + splitPath(inputFilePath.drop(sourcePrefixName.length)), inputFile.nameWithoutExtension)
+    private fun splitPath(path: String): List<String> {
+        val input =
+                path.trim(File.separatorChar)
+
+        return if (input.isBlank())
+            emptyList()
         else
-            ExportDetail(listOf("file") + splitPath(inputFilePath), inputFile.nameWithoutExtension)
+            input.split(File.separatorChar)
     }
 
 
