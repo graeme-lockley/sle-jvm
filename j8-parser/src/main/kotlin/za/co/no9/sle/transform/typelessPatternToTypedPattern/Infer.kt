@@ -36,6 +36,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
     fun infer(module: za.co.no9.sle.ast.typelessPattern.Module): Module {
         reportDuplicateLetDeclarationNames(module)
 
+        val imports =
+                resolveImports(module.imports)
+
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
@@ -200,16 +203,16 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             val typeBinding =
                                     env.type(it.name.name)
 
-                            when {
-                                typeBinding == null -> {
+                            when (typeBinding) {
+                                null -> {
                                     errors.add(UnknownTypeReference(it.name.location, it.name.name))
                                     AliasExportDeclaration(it.name.name, generalise(typeError))
                                 }
 
-                                typeBinding is AliasBinding ->
+                                is AliasBinding ->
                                     AliasExportDeclaration(it.name.name, typeBinding.scheme)
 
-                                typeBinding is ADTBinding ->
+                                is ADTBinding ->
                                     if (it.withConstructors)
                                         FullADTExportDeclaration(
                                                 it.name.name,
@@ -230,7 +233,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         return Module(
                 module.location,
                 exports,
-                emptyList(),
+                imports,
                 declarations)
     }
 
@@ -477,6 +480,10 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         constraints += Constraint(t1, t2)
     }
 }
+
+
+private fun resolveImports(imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> =
+        emptyList()
 
 
 private fun Type.arity(): Int =
