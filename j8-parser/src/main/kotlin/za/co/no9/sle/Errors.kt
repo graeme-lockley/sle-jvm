@@ -93,3 +93,7 @@ data class UnknownType(
 data class NonExhaustivePattern(
         override val location: Location) : LocationError(location)
 
+
+data class WriteFileError(
+        val e: Exception): Error()
+
