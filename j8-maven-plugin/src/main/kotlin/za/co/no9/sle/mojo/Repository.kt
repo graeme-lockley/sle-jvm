@@ -11,8 +11,7 @@ import java.io.File
 
 class Repository(
         private val sourcePrefix: File,
-        private val targetRoot: File) : za.co.no9.sle.repository.Repository {
-
+        private val targetRoot: File) : za.co.no9.sle.repository.Repository<ExportDetail> {
     override fun import(name: String): Either<Errors, Export> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -20,6 +19,31 @@ class Repository(
 
     override fun export(source: Source, inputFile: File, value: Export): Errors =
             write(source, inputFile, "json", toJsonString(value))
+
+
+    override fun exportDetail(source: Source, inputFile: File): ExportDetail {
+        val sourcePrefixName =
+                sourcePrefix.absolutePath
+
+        val inputFilePath =
+                inputFile.parentFile.absolutePath
+
+        fun splitPath(path: String): List<String> {
+            val input =
+                    path.trim(File.separatorChar)
+
+            return if (input.isBlank())
+                emptyList()
+            else
+                input.split(File.separatorChar)
+        }
+
+
+        return if (inputFilePath.startsWith(sourcePrefixName))
+            ExportDetail(listOf("file") + splitPath(inputFilePath.drop(sourcePrefixName.length)), inputFile.nameWithoutExtension)
+        else
+            ExportDetail(listOf("file") + splitPath(inputFilePath), inputFile.nameWithoutExtension)
+    }
 
 
     private fun write(source: Source, inputFile: File, extension: String, value: String): Errors {
@@ -38,18 +62,12 @@ class Repository(
 
 
     fun targetFileName(source: Source, inputFile: File, extension: String): File {
-        val separator =
-                File.separator
+        val exportDetail =
+                exportDetail(source, inputFile)
 
-        val sourcePrefixName =
-                sourcePrefix.absolutePath
-
-        val inputFilePath =
-                inputFile.parentFile.absolutePath
-
-        return if (inputFilePath.startsWith(sourcePrefixName))
-            File("$targetRoot${separator}file$separator${inputFilePath.drop(sourcePrefixName.length)}$separator${inputFile.nameWithoutExtension}.$extension")
-        else
-            File("$targetRoot${separator}file$separator$inputFilePath$separator${inputFile.nameWithoutExtension}.$extension")
+        return File(File(targetRoot, exportDetail.packageName.joinToString(File.separator)), exportDetail.className + "." + extension)
     }
 }
+
+
+data class ExportDetail(val packageName: List<String>, val className: String)

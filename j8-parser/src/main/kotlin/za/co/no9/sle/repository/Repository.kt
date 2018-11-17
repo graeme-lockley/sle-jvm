@@ -5,10 +5,12 @@ import za.co.no9.sle.Errors
 import java.io.File
 
 
-interface Repository {
+interface Repository<T> {
     fun import(name: String): Either<Errors, Export>
 
     fun export(source: Source, inputFile: File, value: Export): Errors
+
+    fun exportDetail(source: Source, inputFile: File): T
 }
 
 
