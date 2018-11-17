@@ -36,19 +36,19 @@ private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =
         Module(module.location, module.exports.map { transform(it) }, module.declarations.map { transform(it) })
 
 
-private fun transform(nameDeclaration: za.co.no9.sle.ast.typedPattern.NameDeclaration): NameDeclaration =
-        when (nameDeclaration) {
-            is za.co.no9.sle.ast.typedPattern.ValueNameDeclaration ->
-                ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+private fun transform(exportDeclaration: za.co.no9.sle.ast.typedPattern.ExportDeclaration): NameDeclaration =
+        when (exportDeclaration) {
+            is za.co.no9.sle.ast.typedPattern.ValueExportDeclaration ->
+                ValueNameDeclaration(exportDeclaration.name, exportDeclaration.scheme)
 
-            is za.co.no9.sle.ast.typedPattern.AliasNameDeclaration ->
-                AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+            is za.co.no9.sle.ast.typedPattern.AliasExportDeclaration ->
+                AliasNameDeclaration(exportDeclaration.name, exportDeclaration.scheme)
 
-            is za.co.no9.sle.ast.typedPattern.ADTNameDeclaration ->
-                ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+            is za.co.no9.sle.ast.typedPattern.ADTExportDeclaration ->
+                ADTNameDeclaration(exportDeclaration.name, exportDeclaration.scheme)
 
-            is za.co.no9.sle.ast.typedPattern.FullADTNameDeclaration ->
-                FullADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme, nameDeclaration.constructors.map { ConstructorNameDeclaration(it.name, it.scheme) })
+            is za.co.no9.sle.ast.typedPattern.FullADTExportDeclaration ->
+                FullADTNameDeclaration(exportDeclaration.name, exportDeclaration.scheme, exportDeclaration.constructors.map { ConstructorNameDeclaration(it.name, it.scheme) })
         }
 
 private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =

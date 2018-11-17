@@ -128,7 +128,7 @@ Module:
                         name: Int
     ]
   exports: [
-      ValueNameDeclaration:
+      ValueExportDeclaration:
         name: add
         scheme:
           Scheme:

@@ -224,7 +224,7 @@ Module:
                     name: Int
     ]
   exports: [
-      ValueNameDeclaration:
+      ValueExportDeclaration:
         name: length
         scheme:
           Scheme:
@@ -244,7 +244,7 @@ Module:
                   TCon:
                     arguments: []
                     name: Int
-      FullADTNameDeclaration:
+      FullADTExportDeclaration:
         constructors: [
             ConstructorNameDeclaration:
               name: Nil

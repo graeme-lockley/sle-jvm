@@ -142,7 +142,7 @@ Module:
                 name: IntMap
     ]
   exports: [
-      ValueNameDeclaration:
+      ValueExportDeclaration:
         name: add
         scheme:
           Scheme:

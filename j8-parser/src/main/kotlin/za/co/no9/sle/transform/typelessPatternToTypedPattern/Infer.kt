@@ -190,9 +190,9 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 
                             if (scheme == null) {
                                 errors.add(UnboundVariable(it.name.location, it.name.name))
-                                ValueNameDeclaration(it.name.name, generalise(typeError))
+                                ValueExportDeclaration(it.name.name, generalise(typeError))
                             } else {
-                                ValueNameDeclaration(it.name.name, scheme)
+                                ValueExportDeclaration(it.name.name, scheme)
                             }
                         }
 
@@ -203,22 +203,22 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
                             when {
                                 typeBinding == null -> {
                                     errors.add(UnknownTypeReference(it.name.location, it.name.name))
-                                    AliasNameDeclaration(it.name.name, generalise(typeError))
+                                    AliasExportDeclaration(it.name.name, generalise(typeError))
                                 }
 
                                 typeBinding is AliasBinding ->
-                                    AliasNameDeclaration(it.name.name, typeBinding.scheme)
+                                    AliasExportDeclaration(it.name.name, typeBinding.scheme)
 
                                 typeBinding is ADTBinding ->
                                     if (it.withConstructors)
-                                        FullADTNameDeclaration(
+                                        FullADTExportDeclaration(
                                                 it.name.name,
                                                 typeBinding.scheme,
                                                 typeBinding.constructors.map { pair ->
                                                     ConstructorNameDeclaration(pair.first, pair.second)
                                                 })
                                     else
-                                        ADTNameDeclaration(it.name.name, typeBinding.scheme)
+                                        ADTExportDeclaration(it.name.name, typeBinding.scheme)
 
                                 else ->
                                     TODO()

@@ -47,7 +47,7 @@ Module:
                     name: IntMap
     ]
   exports: [
-      AliasNameDeclaration:
+      AliasExportDeclaration:
         name: IntIntMap
         scheme:
           Scheme:

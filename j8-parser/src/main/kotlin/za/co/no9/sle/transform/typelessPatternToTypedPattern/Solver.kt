@@ -76,22 +76,22 @@ private class ApplyContext(private val environment: Environment) {
                     })
 
 
-    fun apply(nameDeclaration: NameDeclaration, substitution: Substitution): NameDeclaration =
-            when (nameDeclaration) {
-                is ValueNameDeclaration ->
-                    ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.apply(substitution).expandAliases(environment).normalize())
+    fun apply(exportDeclaration: ExportDeclaration, substitution: Substitution): ExportDeclaration =
+            when (exportDeclaration) {
+                is ValueExportDeclaration ->
+                    ValueExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.apply(substitution).expandAliases(environment).normalize())
 
-                is AliasNameDeclaration ->
-                    AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
+                is AliasExportDeclaration ->
+                    AliasExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.expandAliases(environment).normalize())
 
-                is ADTNameDeclaration ->
-                    ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme.expandAliases(environment).normalize())
+                is ADTExportDeclaration ->
+                    ADTExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.expandAliases(environment).normalize())
 
-                is FullADTNameDeclaration ->
-                    FullADTNameDeclaration(
-                            nameDeclaration.name,
-                            nameDeclaration.scheme.expandAliases(environment).normalize(),
-                            nameDeclaration.constructors.map {
+                is FullADTExportDeclaration ->
+                    FullADTExportDeclaration(
+                            exportDeclaration.name,
+                            exportDeclaration.scheme.expandAliases(environment).normalize(),
+                            exportDeclaration.constructors.map {
                                 ConstructorNameDeclaration(it.name, it.scheme.expandAliases(environment).normalize())
                             })
             }
