@@ -8,9 +8,9 @@ import java.io.File
 interface Repository<T> {
     fun import(name: String): Either<Errors, Export>
 
-    fun export(source: Source, inputFile: File, value: Export): Errors
+//    fun export(source: Source, inputFile: File, value: Export): Errors
 
-    fun exportDetail(source: Source, inputFile: File): T
+    fun item(source: Source, inputFile: File): T
 }
 
 

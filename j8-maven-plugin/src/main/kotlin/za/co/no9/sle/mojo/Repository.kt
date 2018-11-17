@@ -11,17 +11,17 @@ import java.io.File
 
 class Repository(
         private val sourcePrefix: File,
-        private val targetRoot: File) : za.co.no9.sle.repository.Repository<ExportDetail> {
+        val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
     override fun import(name: String): Either<Errors, Export> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
-    override fun export(source: Source, inputFile: File, value: Export): Errors =
-            write(source, inputFile, "json", toJsonString(value))
+//    override fun export(source: Source, inputFile: File, value: Export): Errors =
+//            write(source, inputFile, "json", toJsonString(value))
 
 
-    override fun exportDetail(source: Source, inputFile: File): ExportDetail {
+    override fun item(source: Source, inputFile: File): Item {
         val sourcePrefixName =
                 sourcePrefix.absolutePath
 
@@ -34,7 +34,7 @@ class Repository(
                 else
                     splitPath(inputFilePath)
 
-        return ExportDetail(listOf("file") + innerPath, inputFile.nameWithoutExtension)
+        return Item(this, inputFile, listOf("file") + innerPath, inputFile.nameWithoutExtension)
     }
 
 
@@ -49,28 +49,65 @@ class Repository(
     }
 
 
-    private fun write(source: Source, inputFile: File, extension: String, value: String): Errors {
-        val targetFileName =
-                targetFileName(source, inputFile, extension)
+//    private fun write(source: Source, inputFile: File, extension: String, value: String): Errors {
+//        val targetFileName =
+//                targetFileName(source, inputFile, extension)
+//
+//        return try {
+//            targetFileName.parentFile.mkdirs()
+//            targetFileName.writeText(value)
+//
+//            emptySet()
+//        } catch (e: Exception) {
+//            setOf(WriteFileError(e))
+//        }
+//    }
 
-        return try {
-            targetFileName.parentFile.mkdirs()
-            targetFileName.writeText(value)
 
-            emptySet()
-        } catch (e: Exception) {
-            setOf(WriteFileError(e))
-        }
-    }
-
-
-    fun targetFileName(source: Source, inputFile: File, extension: String): File {
-        val exportDetail =
-                exportDetail(source, inputFile)
-
-        return File(File(targetRoot, exportDetail.packageName.joinToString(File.separator)), exportDetail.className + "." + extension)
-    }
+//    fun targetFileName(source: Source, inputFile: File, extension: String): File {
+//        val exportDetail =
+//                item(source, inputFile)
+//
+//        return File(File(targetRoot, exportDetail.packageName.joinToString(File.separator)), exportDetail.className + "." + extension)
+//    }
 }
 
 
-data class ExportDetail(val packageName: List<String>, val className: String)
+class Item(
+        private val repository: Repository,
+        private val inputFile: File,
+        val packageName: List<String>,
+        val className: String) {
+
+    fun mustCompile(): Boolean {
+        val targetJavaFile =
+                targetJavaFile()
+
+        val targetJsonFile =
+                targetJsonFile()
+
+        return !targetJavaFile.exists() || !targetJsonFile.exists() || source().lastModified() > targetJavaFile.lastModified()
+    }
+
+    fun readText(): String =
+            inputFile.readText()
+
+    fun targetJavaFile(): File =
+            File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.java")
+
+    fun targetJsonFile(): File =
+            File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.json")
+
+    fun source(): File =
+            inputFile
+
+    fun writeJava(output: String) {
+        targetJavaFile().parentFile.mkdirs()
+        targetJavaFile().writeText(output)
+    }
+
+    fun writeJson(output: String) {
+        targetJsonFile().parentFile.mkdirs()
+        targetJsonFile().writeText(output)
+    }
+}

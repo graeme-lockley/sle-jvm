@@ -5,6 +5,7 @@ import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
 import za.co.no9.sle.pass4.toClass
 import za.co.no9.sle.pass4.translateToJava
+import za.co.no9.sle.repository.Source
 import za.co.no9.sle.repository.toJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
@@ -22,6 +23,9 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
         return
     }
 
+    val repository =
+            Repository(sourceFile, targetFile)
+
     val sources: Sequence<File> =
             sourceFile.walk().filter { it.isFile }.filter { it.absolutePath.endsWith(".sle") }
 
@@ -30,8 +34,8 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
     } else {
         val toTranslate =
                 sources.map {
-                    Pair(it, File(targetFile, it.absolutePath.drop(sourceFile.absolutePath.length).dropLast(4) + ".java"))
-                }.filter { !it.second.exists() || it.second.isFile && it.second.lastModified() < it.first.lastModified() }
+                    Pair(it, repository.item(Source.File, it))
+                }.filter { it.second.mustCompile() }
 
         if (toTranslate.count() == 0) {
             log.info("Sources up to date")
@@ -46,17 +50,8 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
             }
 
             toTranslate.forEach {
-                val targetFileName =
+                val item =
                         it.second
-
-                val exportFileName =
-                        File(it.second.absolutePath.dropLast(4) + "json")
-
-                val sourceFileName =
-                        it.first
-
-                val sourceName =
-                        sourceFileName.name
 
                 val environment =
                         initialEnvironment
@@ -75,13 +70,13 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
 
                 val packageName =
-                        sourceFileName.parentFile.absolutePath.drop(sourceFile.absolutePath.length + 1).replace(File.separatorChar, '.', true)
+                        item.packageName.joinToString(".")
 
                 val className =
-                        sourceFileName.nameWithoutExtension
+                        item.className
 
                 val parseDetail =
-                        parseWithDetail(sourceFileName.readText(), environment)
+                        parseWithDetail(item.readText(), environment)
 
                 val compiledFile =
                         parseDetail
@@ -95,10 +90,12 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         output.left()
 
                 if (errors == null) {
-                    targetFileName.parentFile.mkdirs()
-                    targetFileName.writeText(output.right() ?: "")
-                    exportFileName.writeText(toJsonString(toClass(parseDetail.right()!!.coreModule.exports)))
+                    item.writeJava(output.right() ?: "")
+                    item.writeJson(toJsonString(toClass(parseDetail.right()!!.coreModule.exports)))
                 } else {
+                    val sourceName =
+                            it.second.source().absoluteFile
+
                     errors.forEach {
                         when (it) {
                             is SyntaxError ->
