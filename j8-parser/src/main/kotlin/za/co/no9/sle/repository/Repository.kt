@@ -8,8 +8,6 @@ import java.io.File
 interface Repository<T> {
     fun import(name: String): Either<Errors, Export>
 
-//    fun export(source: Source, inputFile: File, value: Export): Errors
-
     fun item(source: Source, inputFile: File): T
 }
 

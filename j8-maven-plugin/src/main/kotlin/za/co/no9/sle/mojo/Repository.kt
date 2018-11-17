@@ -2,10 +2,8 @@ package za.co.no9.sle.mojo
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
-import za.co.no9.sle.WriteFileError
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Source
-import za.co.no9.sle.repository.toJsonString
 import java.io.File
 
 
@@ -15,10 +13,6 @@ class Repository(
     override fun import(name: String): Either<Errors, Export> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-
-
-//    override fun export(source: Source, inputFile: File, value: Export): Errors =
-//            write(source, inputFile, "json", toJsonString(value))
 
 
     override fun item(source: Source, inputFile: File): Item {
@@ -47,29 +41,6 @@ class Repository(
         else
             input.split(File.separatorChar)
     }
-
-
-//    private fun write(source: Source, inputFile: File, extension: String, value: String): Errors {
-//        val targetFileName =
-//                targetFileName(source, inputFile, extension)
-//
-//        return try {
-//            targetFileName.parentFile.mkdirs()
-//            targetFileName.writeText(value)
-//
-//            emptySet()
-//        } catch (e: Exception) {
-//            setOf(WriteFileError(e))
-//        }
-//    }
-
-
-//    fun targetFileName(source: Source, inputFile: File, extension: String): File {
-//        val exportDetail =
-//                item(source, inputFile)
-//
-//        return File(File(targetRoot, exportDetail.packageName.joinToString(File.separator)), exportDetail.className + "." + extension)
-//    }
 }
 
 
@@ -102,12 +73,18 @@ class Item(
             inputFile
 
     fun writeJava(output: String) {
-        targetJavaFile().parentFile.mkdirs()
-        targetJavaFile().writeText(output)
+        val targetJavaFile =
+                targetJavaFile()
+
+        targetJavaFile.parentFile.mkdirs()
+        targetJavaFile.writeText(output)
     }
 
     fun writeJson(output: String) {
-        targetJsonFile().parentFile.mkdirs()
-        targetJsonFile().writeText(output)
+        val targetJsonFile =
+                targetJsonFile()
+
+        targetJsonFile.parentFile.mkdirs()
+        targetJsonFile.writeText(output)
     }
 }
