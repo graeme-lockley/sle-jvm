@@ -10,7 +10,10 @@ import java.util.function.Consumer
 import kotlin.reflect.full.memberProperties
 
 
-fun runner(test: AbstractFunSpec, directory: String, process: Consumer<Map<String, List<String>>>) {
+typealias ConsumerParam =
+        Pair<File, Map<String, List<String>>>
+
+fun runner(test: AbstractFunSpec, directory: String, process: Consumer<ConsumerParam>) {
     val testRoot =
             File(za.co.no9.sle.rootDirectory, directory)
 
@@ -28,7 +31,7 @@ fun runner(test: AbstractFunSpec, directory: String, process: Consumer<Map<Strin
                     namePrefixString.split("/")
 
         test.test((namePrefix + (fileContent["title"] ?: listOf())).joinToString(": ")) {
-            process.accept(fileContent)
+            process.accept(Pair(it, fileContent))
         }
     }
 }

@@ -13,16 +13,19 @@ import java.io.File
 
 class JavaGenTests : StringSpec({
     fun stuff(name: String, environment: Environment) {
+        val inputFile =
+                File(".", "./src/test/resources/test/$name.sle")
+
         val input =
-                this.javaClass.getResource("/test/$name.sle").readText()
+                inputFile.readText()
 
         val result =
-                parseWithDetail(TestRepository(), input, environment)
+                parseWithDetail(TestRepository(), inputFile, input, environment)
                         .map { translateToJava(it.coreModule, "test", name) }
                         .map { it.toString() }
 
         result.right().shouldBe(
-                this.javaClass.getResource("/test/$name.java").readText())
+                File(".", "./src/test/resources/test/$name.java").readText())
     }
 
     "Compile test/First.sle" {
@@ -64,4 +67,8 @@ class TestRepository : Repository<TestItem> {
 }
 
 
-class TestItem : Item
+class TestItem : Item {
+    override fun exports(): Export {
+        TODO()
+    }
+}

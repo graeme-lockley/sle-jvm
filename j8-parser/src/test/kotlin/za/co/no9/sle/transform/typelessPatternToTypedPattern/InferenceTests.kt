@@ -12,7 +12,7 @@ class InferenceTests : FunSpec({
 })
 
 
-private class RunnerConsumer : Consumer<Map<String, List<String>>> {
+private class RunnerConsumer : Consumer<ConsumerParam> {
     private val environment =
             initialEnvironment
                     .newValue("(+)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
@@ -24,9 +24,15 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
                     .newValue("aString", Scheme(listOf(), typeString))
 
 
-    override fun accept(fileContent: Map<String, List<String>>) {
+    override fun accept(param: ConsumerParam) {
+        val sourceFile =
+                param.first
+
+        val fileContent =
+                param.second
+
         val parseWithDetail =
-                parseWithDetail(TestRepository(), fileContent["src"]?.joinToString("\n") ?: "", environment)
+                parseWithDetail(TestRepository(), sourceFile, fileContent["src"]?.joinToString("\n") ?: "", environment)
 
 
         val constraints =

@@ -75,7 +75,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         item.className
 
                 val parseDetail =
-                        parseWithDetail(repository, item.readText(), environment)
+                        parseWithDetail(repository, item.source(), item.readText(), environment)
 
                 val compiledFile =
                         parseDetail

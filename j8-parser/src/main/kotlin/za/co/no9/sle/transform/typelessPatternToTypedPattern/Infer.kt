@@ -8,14 +8,15 @@ import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.typing.*
+import java.io.File
 
 
 data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
 
 
-fun infer(repository: Repository<Item>, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
+fun infer(repository: Repository<Item>, sourceFile: File, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
-            InferContext(repository, varPump, env)
+            InferContext(repository, sourceFile, varPump, env)
 
     val m =
             context.infer(module)
@@ -27,7 +28,7 @@ fun infer(repository: Repository<Item>, varPump: VarPump, module: za.co.no9.sle.
 }
 
 
-private class InferContext(private val repository: Repository<Item>, private val varPump: VarPump, internal var env: Environment) {
+private class InferContext(private val repository: Repository<Item>, private val sourceFile: File, private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -39,7 +40,7 @@ private class InferContext(private val repository: Repository<Item>, private val
         reportDuplicateLetDeclarationNames(module)
 
         val imports =
-                resolveImports(repository, module.imports)
+                resolveImports(repository, sourceFile, module.imports)
 
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
@@ -484,11 +485,34 @@ private class InferContext(private val repository: Repository<Item>, private val
 }
 
 
-private fun resolveImports(repository: Repository<Item>, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
-//    return imports.map { import ->
-//    }
+private fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
+    return imports.map { import ->
+        val importFile =
+                File(sourceFile, import.urn.name)
 
-    return emptyList()
+        val importItem =
+                repository.item(import.urn.source, importFile)
+
+        val exports =
+                importItem.exports()
+
+        val importName =
+                if (import.asName == null)
+                    ID(import.location, import.urn.impliedName())
+                else
+                    ID(import.asName.location, import.asName.name)
+
+        Import(import.location, importName,
+                import.importDeclarations.map { d ->
+                    when (d) {
+                        is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration ->
+                            TODO()
+
+                        is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration ->
+                            TODO()
+                    }
+                })
+    }
 }
 
 

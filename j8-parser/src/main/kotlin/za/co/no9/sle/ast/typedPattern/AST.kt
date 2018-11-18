@@ -44,7 +44,6 @@ data class ConstructorNameDeclaration(
 
 data class Import(
         override val location: Location,
-        val resourceName: String,
         val asName: ID,
         val namedDeclarations: List<ImportDeclaration>) : Node(location)
 

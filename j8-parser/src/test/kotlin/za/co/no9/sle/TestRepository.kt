@@ -16,4 +16,8 @@ class TestRepository : Repository<TestItem> {
 }
 
 
-class TestItem : Item
+class TestItem : Item {
+    override fun exports(): Export {
+        TODO()
+    }
+}

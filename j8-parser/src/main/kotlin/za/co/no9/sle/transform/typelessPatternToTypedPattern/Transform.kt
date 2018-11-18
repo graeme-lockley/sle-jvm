@@ -11,6 +11,7 @@ import za.co.no9.sle.transform.typelessToTypelessPattern.parse
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
 import za.co.no9.sle.typing.VarPump
+import java.io.File
 
 
 data class InferenceDetail(
@@ -28,12 +29,12 @@ private data class Tuple4<out A, out B, out C, out D>(
          val v4: D)
 
 
-fun parseWithDetail(repository: Repository<Item>, text: String, __env: Environment): Either<Errors, InferenceDetail> {
+fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String, __env: Environment): Either<Errors, InferenceDetail> {
     val varPump =
             VarPump()
 
     return parse(text)
-            .andThen { infer(repository, varPump, it, __env) }
+            .andThen { infer(repository, sourceFile, varPump, it, __env) }
             .andThen { (unresolvedModule, constraints, environment) ->
                 unifies(varPump, constraints, environment).map { Tuple4(unresolvedModule, constraints, it, environment) }
             }.andThen { (unresolvedModule, constraints, substitution, environment) ->
@@ -45,11 +46,11 @@ fun parseWithDetail(repository: Repository<Item>, text: String, __env: Environme
 }
 
 
-fun parse(repository: Repository<Item>, text: String, environment: Environment): Either<Errors, InferResult> {
+fun parse(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, InferResult> {
     val varPump =
             VarPump()
 
 
     return parse(text)
-            .andThen { infer(repository, varPump, it, environment) }
+            .andThen { infer(repository, sourceFile, varPump, it, environment) }
 }

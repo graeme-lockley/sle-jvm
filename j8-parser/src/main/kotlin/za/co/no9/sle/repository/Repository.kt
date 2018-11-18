@@ -13,4 +13,6 @@ interface Repository<out T: Item> {
 }
 
 
-interface Item
+interface Item {
+    fun exports(): Export
+}

@@ -49,7 +49,6 @@ class Item(
         private val inputFile: File,
         val packageName: List<String>,
         val className: String) : za.co.no9.sle.repository.Item {
-
     fun mustCompile(): Boolean {
         val targetJavaFile =
                 targetJavaFile()
@@ -68,6 +67,10 @@ class Item(
 
     fun targetJsonFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.json")
+
+    override fun exports(): Export {
+        TODO()
+    }
 
     fun source(): File =
             inputFile

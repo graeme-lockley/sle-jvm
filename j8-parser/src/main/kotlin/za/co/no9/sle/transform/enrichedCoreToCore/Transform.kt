@@ -8,6 +8,7 @@ import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
+import java.io.File
 
 
 private typealias Patterns =
@@ -29,9 +30,9 @@ data class Detail(
         val coreModule: Module)
 
 
-fun parseWithDetail(repository: Repository<Item>, text: String, environment: Environment): Either<Errors, Detail> {
+fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, Detail> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(repository, text, environment)
+            za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(repository, sourceFile, text, environment)
 
     return typePatternDetail.andThen { detail ->
         val coreModule =
@@ -42,8 +43,8 @@ fun parseWithDetail(repository: Repository<Item>, text: String, environment: Env
 }
 
 
-fun parse(repository: Repository<Item>, text: String, environment: Environment): Either<Errors, Module> =
-        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(repository, text, environment).andThen { transform(it) }
+fun parse(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, Module> =
+        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(repository, sourceFile, text, environment).andThen { transform(it) }
 
 
 private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
