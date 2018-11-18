@@ -486,9 +486,12 @@ private class InferContext(private val repository: Repository<Item>, private val
 
 
 private fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
+    val errors =
+            mutableSetOf<Error>()
+
     return imports.map { import ->
         val importFile =
-                File(sourceFile, import.urn.name)
+                File(sourceFile.parentFile, import.urn.name)
 
         val importItem =
                 repository.item(import.urn.source, importFile)
@@ -505,11 +508,62 @@ private fun resolveImports(repository: Repository<Item>, sourceFile: File, impor
         Import(import.location, importName,
                 import.importDeclarations.map { d ->
                     when (d) {
-                        is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration ->
-                            TODO()
+                        is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration -> {
+                            val importDeclaration =
+                                    exports[d.name.name]
 
-                        is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration ->
-                            TODO()
+                            when (importDeclaration) {
+                                null -> {
+                                    errors.add(ValueNotExported(d.name.location, d.name.name))
+                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
+                                }
+
+                                is za.co.no9.sle.repository.LetDeclaration ->
+                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+
+                                else -> {
+                                    errors.add(ValueNotExported(d.name.location, d.name.name))
+                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
+                                }
+                            }
+                        }
+
+                        is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration -> {
+                            val importDeclaration =
+                                    exports[d.name.name]
+
+                            when (importDeclaration) {
+                                null -> {
+                                    errors.add(TypeNotExported(d.name.location, d.name.name))
+                                    AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
+                                }
+
+                                is za.co.no9.sle.repository.LetDeclaration -> {
+                                    errors.add(TypeNotExported(d.name.location, d.name.name))
+                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                }
+
+                                is za.co.no9.sle.repository.AliasDeclaration ->
+                                    if (d.withConstructors) {
+                                        errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
+                                        AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                    } else
+                                        AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+
+                                is za.co.no9.sle.repository.ADTDeclaration ->
+                                    if (d.withConstructors) {
+                                        errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
+                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                    } else
+                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+
+                                is za.co.no9.sle.repository.FullADTDeclaration ->
+                                    if (d.withConstructors) {
+                                        FullADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location), importDeclaration.constructors.map { ConstructorImportDeclaration(it.name, it.scheme.asScheme(d.name.location)) })
+                                    } else
+                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                            }
+                        }
                     }
                 })
     }

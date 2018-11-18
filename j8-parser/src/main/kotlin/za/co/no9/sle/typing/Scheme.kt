@@ -60,3 +60,7 @@ fun generalise(type: Type, substitution: Substitution = nullSubstitution): Schem
 
     return Scheme(type1.ftv().toList(), type1)
 }
+
+
+val errorScheme =
+        Scheme(emptyList(), typeError)

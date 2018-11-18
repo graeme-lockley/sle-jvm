@@ -20,10 +20,10 @@ private fun toClass(nameDeclaration: NameDeclaration): Declaration =
                 AliasDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme))
 
             is ADTNameDeclaration ->
-                ADTDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme), emptyList())
+                ADTDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme))
 
             is FullADTNameDeclaration ->
-                ADTDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
+                FullADTDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
         }
 
 

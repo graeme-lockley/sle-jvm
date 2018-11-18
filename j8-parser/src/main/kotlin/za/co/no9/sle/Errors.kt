@@ -93,7 +93,23 @@ data class UnknownType(
 data class NonExhaustivePattern(
         override val location: Location) : LocationError(location)
 
+data class ValueNotExported(
+        override val location: Location,
+        val name: String): LocationError(location)
 
-data class WriteFileError(
-        val e: Exception): Error()
+data class TypeNotExported(
+        override val location: Location,
+        val name: String): LocationError(location)
+
+data class TypeAliasHasNoConstructors(
+        override val location: Location,
+        val name: String): LocationError(location)
+
+data class ADTHasNoConstructors(
+        override val location: Location,
+        val name: String): LocationError(location)
+
+data class TypeConstructorNotExported(
+        override val location: Location,
+        val name: String): LocationError(location)
 

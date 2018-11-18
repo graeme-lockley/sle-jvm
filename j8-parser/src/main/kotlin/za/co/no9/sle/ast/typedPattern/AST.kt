@@ -62,11 +62,13 @@ data class AliasImportDeclaration(
 
 data class ADTImportDeclaration(
         override val location: Location,
-        val name: ID) : ImportDeclaration(location)
+        val name: ID,
+        val scheme: Scheme) : ImportDeclaration(location)
 
 data class FullADTImportDeclaration(
         override val location: Location,
         val name: ID,
+        val scheme: Scheme,
         val constructors: List<ConstructorImportDeclaration>) : ImportDeclaration(location)
 
 data class ConstructorImportDeclaration(
