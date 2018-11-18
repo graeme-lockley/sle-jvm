@@ -486,9 +486,8 @@ private class InferContext(private val repository: Repository<Item>, private val
 
 private fun resolveImports(repository: Repository<Item>, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
 //    return imports.map { import ->
-//
-//
 //    }
+
     return emptyList()
 }
 

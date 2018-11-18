@@ -2,6 +2,7 @@ package za.co.no9.sle.repository
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
+import za.co.no9.sle.Source
 import java.io.File
 
 
@@ -13,8 +14,3 @@ interface Repository<out T: Item> {
 
 
 interface Item
-
-
-enum class Source {
-    File, Github
-}

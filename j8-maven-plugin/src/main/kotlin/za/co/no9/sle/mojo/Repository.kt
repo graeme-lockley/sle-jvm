@@ -2,8 +2,8 @@ package za.co.no9.sle.mojo
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
+import za.co.no9.sle.Source
 import za.co.no9.sle.repository.Export
-import za.co.no9.sle.repository.Source
 import java.io.File
 
 
@@ -48,7 +48,7 @@ class Item(
         private val repository: Repository,
         private val inputFile: File,
         val packageName: List<String>,
-        val className: String): za.co.no9.sle.repository.Item {
+        val className: String) : za.co.no9.sle.repository.Item {
 
     fun mustCompile(): Boolean {
         val targetJavaFile =

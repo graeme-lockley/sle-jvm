@@ -43,3 +43,9 @@ private fun extractVersion(input: String): String? {
     else
         input.substring(indexOfLastColon + 1)
 }
+
+
+
+enum class Source {
+    File, Github
+}

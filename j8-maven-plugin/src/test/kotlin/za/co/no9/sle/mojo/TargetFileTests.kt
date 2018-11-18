@@ -2,7 +2,7 @@ package za.co.no9.sle.mojo
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.repository.Source
+import za.co.no9.sle.Source
 import java.io.File
 
 class TargetFileTests : StringSpec({
