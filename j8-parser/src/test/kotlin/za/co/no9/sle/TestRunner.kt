@@ -176,6 +176,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                                     "${spaces(indent)}}"
                     }
 
+                is Source ->
+                    "$value"
+
                 else -> dumpString(value, indent)
             }
 
@@ -202,6 +205,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is Map<*, *> ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
+                is Source ->
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
+
                 else -> "${spaces(indent)}$label:\n" +
                         dumpString(value, indent + 2)
             }
@@ -226,6 +232,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
             "${spaces(indent)}${value(o, indent)}\n"
 
         is Map<*, *> ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is Source ->
             "${spaces(indent)}${value(o, indent)}\n"
 
         else ->

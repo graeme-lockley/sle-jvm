@@ -128,7 +128,7 @@ Module:
         urn:
           URN:
             name: Data.List
-            source: github
+            source: Github
             version: 1.2.1
       Import:
         asName: null
@@ -142,6 +142,6 @@ Module:
         urn:
           URN:
             name: Data.Maybe
-            source: github
+            source: Github
             version: null
     ]

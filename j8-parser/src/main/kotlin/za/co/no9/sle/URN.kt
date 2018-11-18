@@ -1,7 +1,7 @@
 package za.co.no9.sle
 
 
-data class URN(val source: String, val name: String, val version: String?) {
+data class URN(val source: Source, val name: String, val version: String?) {
     constructor(input: String) : this(extractSource(input), extractName(input), extractVersion(input))
 
     fun impliedName(): String =
@@ -9,11 +9,20 @@ data class URN(val source: String, val name: String, val version: String?) {
 }
 
 
-private fun extractSource(input: String): String {
+private fun extractSource(input: String): Source {
     val indexOfFirstColon =
             input.indexOf(':')
 
-    return input.substring(0, indexOfFirstColon)
+    return when (input.substring(0, indexOfFirstColon)) {
+        "file" ->
+            Source.File
+
+        "github" ->
+            Source.Github
+
+        else ->
+            Source.File
+    }
 }
 
 
@@ -43,7 +52,6 @@ private fun extractVersion(input: String): String? {
     else
         input.substring(indexOfLastColon + 1)
 }
-
 
 
 enum class Source {
