@@ -5,12 +5,14 @@ import za.co.no9.sle.Errors
 import java.io.File
 
 
-interface Repository<T> {
+interface Repository<out T: Item> {
     fun import(name: String): Either<Errors, Export>
 
     fun item(source: Source, inputFile: File): T
 }
 
+
+interface Item
 
 
 enum class Source {

@@ -6,6 +6,8 @@ import za.co.no9.sle.Location
 import za.co.no9.sle.ast.enrichedCore.*
 import za.co.no9.sle.ast.enrichedCore.Unit
 import za.co.no9.sle.map
+import za.co.no9.sle.repository.Item
+import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.*
 
@@ -18,9 +20,9 @@ data class Detail(
         val enrichedModule: Module)
 
 
-fun parseWithDetail(text: String, environment: Environment): Either<Errors, Detail> {
+fun parseWithDetail(repository: Repository<Item>, text: String, environment: Environment): Either<Errors, Detail> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typelessPatternToTypedPattern.parseWithDetail(text, environment)
+            za.co.no9.sle.transform.typelessPatternToTypedPattern.parseWithDetail(repository, text, environment)
 
     return typePatternDetail.map {
         Detail(it.constraints, it.substitution, it.unresolvedModule, it.resolvedModule, transform(it.resolvedModule))
@@ -28,8 +30,8 @@ fun parseWithDetail(text: String, environment: Environment): Either<Errors, Deta
 }
 
 
-fun parse(text: String, environment: Environment): Either<Errors, Module> =
-        za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(text, environment).map { transform(it.module) }
+fun parse(repository: Repository<Item>, text: String, environment: Environment): Either<Errors, Module> =
+        za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(repository, text, environment).map { transform(it.module) }
 
 
 private fun transform(module: za.co.no9.sle.ast.typedPattern.Module): Module =

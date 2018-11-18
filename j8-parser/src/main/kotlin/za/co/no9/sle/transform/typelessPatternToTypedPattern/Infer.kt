@@ -5,15 +5,17 @@ import za.co.no9.sle.ast.typedPattern.*
 import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
+import za.co.no9.sle.repository.Item
+import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.typing.*
 
 
 data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
 
 
-fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
+fun infer(repository: Repository<Item>, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
-            InferContext(varPump, env)
+            InferContext(repository, varPump, env)
 
     val m =
             context.infer(module)
@@ -25,7 +27,7 @@ fun infer(varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, en
 }
 
 
-private class InferContext(private val varPump: VarPump, internal var env: Environment) {
+private class InferContext(private val repository: Repository<Item>, private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -37,7 +39,7 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
         reportDuplicateLetDeclarationNames(module)
 
         val imports =
-                resolveImports(module.imports)
+                resolveImports(repository, module.imports)
 
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
@@ -482,8 +484,13 @@ private class InferContext(private val varPump: VarPump, internal var env: Envir
 }
 
 
-private fun resolveImports(imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> =
-        emptyList()
+private fun resolveImports(repository: Repository<Item>, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
+//    return imports.map { import ->
+//
+//
+//    }
+    return emptyList()
+}
 
 
 private fun Type.arity(): Int =

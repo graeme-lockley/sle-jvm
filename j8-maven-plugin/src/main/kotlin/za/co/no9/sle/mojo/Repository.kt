@@ -48,7 +48,7 @@ class Item(
         private val repository: Repository,
         private val inputFile: File,
         val packageName: List<String>,
-        val className: String) {
+        val className: String): za.co.no9.sle.repository.Item {
 
     fun mustCompile(): Boolean {
         val targetJavaFile =

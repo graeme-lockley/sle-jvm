@@ -2,11 +2,14 @@ package za.co.no9.sle.pass4
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.homeLocation
-import za.co.no9.sle.map
-import za.co.no9.sle.right
+import za.co.no9.sle.*
+import za.co.no9.sle.repository.Export
+import za.co.no9.sle.repository.Item
+import za.co.no9.sle.repository.Repository
+import za.co.no9.sle.repository.Source
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
+import java.io.File
 
 
 class JavaGenTests : StringSpec({
@@ -15,7 +18,7 @@ class JavaGenTests : StringSpec({
                 this.javaClass.getResource("/test/$name.sle").readText()
 
         val result =
-                parseWithDetail(input, environment)
+                parseWithDetail(TestRepository(), input, environment)
                         .map { translateToJava(it.coreModule, "test", name) }
                         .map { it.toString() }
 
@@ -50,3 +53,16 @@ class JavaGenTests : StringSpec({
         stuff("ListType", initialEnvironment)
     }
 })
+
+
+class TestRepository : Repository<TestItem> {
+    override fun import(name: String): Either<Errors, Export> {
+        TODO()
+    }
+
+    override fun item(source: Source, inputFile: File): TestItem =
+            TestItem()
+}
+
+
+class TestItem : Item

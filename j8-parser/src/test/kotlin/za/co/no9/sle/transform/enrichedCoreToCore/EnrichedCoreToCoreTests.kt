@@ -27,7 +27,7 @@ private class RunnerConsumer : Consumer<Map<String, List<String>>> {
 
     override fun accept(fileContent: Map<String, List<String>>) {
         val parseWithDetail =
-                parseWithDetail(fileContent["src"]?.joinToString("\n") ?: "", environment)
+                parseWithDetail(TestRepository(), fileContent["src"]?.joinToString("\n") ?: "", environment)
 
 
         val constraints =
