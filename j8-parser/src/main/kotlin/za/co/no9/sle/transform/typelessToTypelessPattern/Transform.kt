@@ -23,13 +23,13 @@ import za.co.no9.sle.ast.typelessPattern.Import
 import za.co.no9.sle.ast.typelessPattern.LambdaExpression
 import za.co.no9.sle.ast.typelessPattern.LetDeclaration
 import za.co.no9.sle.ast.typelessPattern.LetExport
-import za.co.no9.sle.ast.typelessPattern.LetNamedDeclaration
+import za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration
 import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeExport
-import za.co.no9.sle.ast.typelessPattern.TypeNamedDeclaration
+import za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration
 import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
@@ -181,10 +181,10 @@ fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
     return Import(import.location, urn, asName, import.namedDeclarations.map {
         when (it) {
             is za.co.no9.sle.ast.typeless.LetNamedDeclaration ->
-                LetNamedDeclaration(it.location, astToCoreAST(it.name))
+                ValueImportDeclaration(it.location, astToCoreAST(it.name))
 
             is za.co.no9.sle.ast.typeless.TypeNamedDeclaration ->
-                TypeNamedDeclaration(it.location, astToCoreAST(it.name), it.withConstructors)
+                TypeImportDeclaration(it.location, astToCoreAST(it.name), it.withConstructors)
         }
     })
 }

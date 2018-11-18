@@ -124,7 +124,7 @@ Module:
         asName:
           ID:
             name: List
-        namedDeclarations: []
+        importDeclarations: []
         urn:
           URN:
             name: Data.List
@@ -132,8 +132,8 @@ Module:
             version: 1.2.1
       Import:
         asName: null
-        namedDeclarations: [
-            TypeNamedDeclaration:
+        importDeclarations: [
+            TypeImportDeclaration:
               name:
                 ID:
                   name: Maybe

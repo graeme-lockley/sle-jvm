@@ -34,20 +34,20 @@ data class Import(
         override val location: Location,
         val urn: URN,
         val asName: ID?,
-        val namedDeclarations: List<NamedDeclaration>) : Node(location)
+        val importDeclarations: List<ImportDeclaration>) : Node(location)
 
 
-sealed class NamedDeclaration(
+sealed class ImportDeclaration(
         location: Location) : Node(location)
 
-data class LetNamedDeclaration(
+data class ValueImportDeclaration(
         override val location: Location,
-        val name: ID) : NamedDeclaration(location)
+        val name: ID) : ImportDeclaration(location)
 
-data class TypeNamedDeclaration(
+data class TypeImportDeclaration(
         override val location: Location,
         val name: ID,
-        val withConstructors: Boolean) : NamedDeclaration(location)
+        val withConstructors: Boolean) : ImportDeclaration(location)
 
 
 sealed class Declaration(
