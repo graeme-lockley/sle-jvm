@@ -31,9 +31,9 @@ class JavaGenTests : StringSpec({
     "Compile test/First.sle" {
         stuff("First",
                 initialEnvironment
-                        .newValue("(==)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool))))
-                        .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                        .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
+                        .newValue("(==)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))))
+                        .newValue("(-)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        .newValue("(*)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
         )
     }
 
@@ -41,7 +41,7 @@ class JavaGenTests : StringSpec({
     "Compile test/TypeReference.sle" {
         stuff("TypeReference",
                 initialEnvironment
-                        .newValue("(==)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
+                        .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
         )
     }
 

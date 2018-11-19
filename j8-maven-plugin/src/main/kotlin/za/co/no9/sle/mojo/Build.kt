@@ -52,21 +52,6 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                 val item =
                         it.second
 
-                val environment =
-                        initialEnvironment
-                                .newValue("(==)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(!=)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(<)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(<=)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(>)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(>=)", Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))))
-                                .newValue("(&&)", Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
-                                .newValue("(||)", Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))))
-                                .newValue("(-)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .newValue("(+)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .newValue("(*)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-                                .newValue("(/)", Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))))
-
 
                 val packageName =
                         item.packageName.joinToString(".")
@@ -162,3 +147,20 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
         }
     }
 }
+
+
+private val environment =
+        initialEnvironment
+                .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(!=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(<)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(<=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(>)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(>=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                .newValue("(&&)", VariableBinding(Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))))
+                .newValue("(||)", VariableBinding(Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))))
+                .newValue("(-)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                .newValue("(+)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                .newValue("(*)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                .newValue("(/)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+

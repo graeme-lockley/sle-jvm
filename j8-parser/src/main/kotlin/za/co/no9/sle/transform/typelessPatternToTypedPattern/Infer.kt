@@ -54,7 +54,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                     if (scheme == null) {
                         e
                     } else {
-                        e.newValue(name, scheme)
+                        e.newValue(name, VariableBinding(scheme))
                     }
                 }
 
@@ -74,7 +74,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
                                     fds
                                 } else {
-                                    fds.newValue(constructor.name.name, Scheme(d.scheme.parameters, constructor.arguments.foldRight(d.scheme.type) { a, b -> TArr(a, b) }))
+                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(d.scheme.parameters, constructor.arguments.foldRight(d.scheme.type) { a, b -> TArr(a, b) })))
                                 }
                             }
 
@@ -83,7 +83,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                         newEnv
                     } else {
                         newEnv.newType(d.name.name, ADTBinding(d.scheme, d.constructors.map {
-                            Pair(it.name.name, newEnv.value(it.name.name)!!)
+                            Pair(it.name.name, newEnv.variable(it.name.name)!!)
                         }))
                     }
                 }
@@ -159,7 +159,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                                 errors.addAll(declaration.left() ?: listOf())
 
-                                env = env.newValue(d.name.name, scheme)
+                                env = env.newValue(d.name.name, VariableBinding(scheme))
 
                                 declaration.fold({ ds }, { ds + it })
                             } else {
@@ -192,7 +192,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                     when (it) {
                         is za.co.no9.sle.ast.typelessPattern.LetExport -> {
                             val scheme =
-                                    env.value(it.name.name)
+                                    env.variable(it.name.name)
 
                             if (scheme == null) {
                                 errors.add(UnboundVariable(it.name.location, it.name.name))
@@ -311,7 +311,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val scheme =
-                            env.value(expression.name)
+                            env.variable(expression.name)
 
                     when (scheme) {
                         null -> {
@@ -331,7 +331,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReference -> {
                     val scheme =
-                            env.value(expression.name)
+                            env.variable(expression.name)
 
                     when (scheme) {
                         null -> {
@@ -440,14 +440,14 @@ private class InferContext(private val repository: Repository<Item>, private val
                     val idType =
                             varPump.fresh(pattern.location)
 
-                    env = env.newValue(pattern.name, Scheme(emptyList(), idType))
+                    env = env.newValue(pattern.name, VariableBinding(Scheme(emptyList(), idType)))
 
                     IdReferencePattern(pattern.location, idType, pattern.name)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern -> {
                     val constructor =
-                            env.valueBindings[pattern.name]
+                            env.variable(pattern.name)
 
                     if (constructor == null) {
                         errors.add(UnknownConstructorReference(pattern.location, pattern.name))

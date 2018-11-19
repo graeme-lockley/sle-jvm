@@ -1,15 +1,28 @@
 package za.co.no9.sle.typing
 
 
-data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typeBindings: Map<String, TypeBinding> = mapOf()) {
-    fun value(name: String): Scheme? =
+data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), val typeBindings: Map<String, TypeBinding> = mapOf()) {
+    fun value(name: String): ValueBinding? =
             valueBindings[name]
+
+    fun variable(name: String): Scheme? {
+        val valueBinding =
+                value(name)
+
+        return when (valueBinding) {
+            is VariableBinding ->
+                valueBinding.scheme
+
+            else ->
+                null
+        }
+    }
 
     fun type(name: String): TypeBinding? =
             typeBindings[name]
 
-    fun newValue(name: String, scheme: Scheme): Environment =
-            Environment(this.valueBindings + Pair(name, scheme), this.typeBindings)
+    fun newValue(name: String, value: ValueBinding): Environment =
+            Environment(this.valueBindings + Pair(name, value), this.typeBindings)
 
     fun newType(name: String, binding: TypeBinding): Environment =
             Environment(this.valueBindings, this.typeBindings + Pair(name, binding))
@@ -20,6 +33,15 @@ data class Environment(val valueBindings: Map<String, Scheme> = mapOf(), val typ
     fun containsType(name: String): Boolean =
             typeBindings.contains(name)
 }
+
+
+sealed class ValueBinding
+
+data class VariableBinding(
+        val scheme: Scheme) : ValueBinding()
+
+data class ImportBinding(
+        val environment: Environment) : ValueBinding()
 
 
 sealed class TypeBinding(
