@@ -1,0 +1,361 @@
+{
+  "declarations": [
+    {
+      "adt": "List",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "constant": "List",
+          "arguments": [
+            {
+              "variable": 0
+            }
+          ]
+        }
+      },
+      "constructors": [
+        {
+          "name": "Nil",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "constant": "List",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cons",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "domain": {
+                "variable": 0
+              },
+              "range": {
+                "domain": {
+                  "constant": "List",
+                  "arguments": [
+                    {
+                      "variable": 0
+                    }
+                  ]
+                },
+                "range": {
+                  "constant": "List",
+                  "arguments": [
+                    {
+                      "variable": 0
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "adt": "Maybe",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "constant": "Maybe",
+          "arguments": [
+            {
+              "variable": 0
+            }
+          ]
+        }
+      },
+      "constructors": [
+        {
+          "name": "Nothing",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "constant": "Maybe",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Just",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "domain": {
+                "variable": 0
+              },
+              "range": {
+                "constant": "Maybe",
+                "arguments": [
+                  {
+                    "variable": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "repeat",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "constant": "Int",
+            "arguments": []
+          },
+          "range": {
+            "domain": {
+              "variable": 0
+            },
+            "range": {
+              "constant": "List",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "range",
+      "scheme": {
+        "parameters": [],
+        "type": {
+          "domain": {
+            "constant": "Int",
+            "arguments": []
+          },
+          "range": {
+            "domain": {
+              "constant": "Int",
+              "arguments": []
+            },
+            "range": {
+              "constant": "List",
+              "arguments": [
+                {
+                  "constant": "Int",
+                  "arguments": []
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "isEmpty",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "constant": "List",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          },
+          "range": {
+            "constant": "Bool",
+            "arguments": []
+          }
+        }
+      }
+    },
+    {
+      "name": "head",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "constant": "List",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          },
+          "range": {
+            "constant": "Maybe",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "tail",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "constant": "List",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          },
+          "range": {
+            "constant": "Maybe",
+            "arguments": [
+              {
+                "constant": "List",
+                "arguments": [
+                  {
+                    "variable": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "map",
+      "scheme": {
+        "parameters": [
+          0,
+          1
+        ],
+        "type": {
+          "domain": {
+            "domain": {
+              "variable": 0
+            },
+            "range": {
+              "variable": 1
+            }
+          },
+          "range": {
+            "domain": {
+              "constant": "List",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            },
+            "range": {
+              "constant": "List",
+              "arguments": [
+                {
+                  "variable": 1
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "removedups",
+      "scheme": {
+        "parameters": [],
+        "type": {
+          "domain": {
+            "constant": "List",
+            "arguments": [
+              {
+                "constant": "Int",
+                "arguments": []
+              }
+            ]
+          },
+          "range": {
+            "constant": "List",
+            "arguments": [
+              {
+                "constant": "Int",
+                "arguments": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "duplicate",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "constant": "List",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          },
+          "range": {
+            "constant": "List",
+            "arguments": [
+              {
+                "variable": 0
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "alias": "IntList",
+      "scheme": {
+        "parameters": [],
+        "type": {
+          "constant": "List",
+          "arguments": [
+            {
+              "constant": "Int",
+              "arguments": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

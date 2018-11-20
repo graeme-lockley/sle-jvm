@@ -1,4 +1,4 @@
-export List(..), Maybe(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate
+export List(..), Maybe(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList
 
 type Maybe a =
     Nothing
@@ -63,3 +63,6 @@ duplicate (Cons x xs) = Cons x (Cons x (duplicate xs))
 
 plus5 n =
     n + 5
+
+typealias IntList =
+    List Int

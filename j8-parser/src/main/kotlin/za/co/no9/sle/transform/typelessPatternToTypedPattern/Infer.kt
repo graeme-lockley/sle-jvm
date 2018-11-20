@@ -42,6 +42,8 @@ private class InferContext(private val repository: Repository<Item>, private val
         val imports =
                 resolveImports(repository, sourceFile, module.imports)
 
+        env = incorporateImportsIntoEnvironment(imports, env)
+
         env = module.declarations.fold(env) { e: Environment, d: Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
@@ -568,6 +570,41 @@ private fun resolveImports(repository: Repository<Item>, sourceFile: File, impor
                 })
     }
 }
+
+
+private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment: Environment): Environment =
+        imports.fold(environment) { env, import ->
+            import.namedDeclarations.fold(env) { e, namedDeclaration ->
+                when (namedDeclaration) {
+                    is ValueImportDeclaration ->
+                        TODO()
+
+                    is AliasImportDeclaration ->
+                        TODO()
+
+                    is ADTImportDeclaration ->
+                        TODO()
+
+                    is FullADTImportDeclaration -> {
+                        val envWithADTDeclaration =
+                                e.newType(namedDeclaration.name.name, ImportADTBinding(namedDeclaration.scheme, namedDeclaration.constructors.map { Pair(it.name, it.scheme) }))
+
+                        val envWithConstructors =
+                                namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
+                                    if (fds.containsValue(constructor.name)) {
+//                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                                        fds
+                                    } else {
+                                        fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
+                                    }
+                                }
+
+
+                        envWithConstructors
+                    }
+                }
+            }
+        }
 
 
 private fun Type.arity(): Int =

@@ -40,6 +40,9 @@ sealed class ValueBinding
 data class VariableBinding(
         val scheme: Scheme) : ValueBinding()
 
+data class ImportVariableBinding(
+        val scheme: Scheme) : ValueBinding()
+
 data class ImportBinding(
         val environment: Environment) : ValueBinding()
 
@@ -53,7 +56,14 @@ data class BuiltinBinding(
 data class AliasBinding(
         override val scheme: Scheme) : TypeBinding(scheme)
 
+data class ImportAliasBinding(
+        override val scheme: Scheme) : TypeBinding(scheme)
+
 data class ADTBinding(
+        override val scheme: Scheme,
+        val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
+
+data class ImportADTBinding(
         override val scheme: Scheme,
         val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
 
