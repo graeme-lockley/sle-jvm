@@ -67,6 +67,9 @@ data class ImportADTBinding(
         override val scheme: Scheme,
         val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
 
+data class OpaqueImportADTBinding(
+        override val scheme: Scheme) : TypeBinding(scheme)
+
 
 val emptyEnvironment =
         Environment()

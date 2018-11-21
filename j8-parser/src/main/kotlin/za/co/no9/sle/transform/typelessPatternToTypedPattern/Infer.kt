@@ -599,7 +599,7 @@ private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment
                         TODO()
 
                     is ADTImportDeclaration ->
-                        TODO()
+                        e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
 
                     is FullADTImportDeclaration -> {
                         val envWithADTDeclaration =
