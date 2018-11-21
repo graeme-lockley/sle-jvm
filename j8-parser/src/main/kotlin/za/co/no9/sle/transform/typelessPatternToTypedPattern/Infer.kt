@@ -312,29 +312,30 @@ private class InferContext(private val repository: Repository<Item>, private val
                     ConstantString(expression.location, typeString, expression.value)
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
-                    val scheme =
+                    val valueBinding =
                             env.value(expression.name)
 
-                    when (scheme) {
-                        is VariableBinding -> {
-                            val type =
-                                    scheme.scheme.instantiate(varPump)
+                    val scheme =
+                            when (valueBinding) {
+                                is VariableBinding ->
+                                    valueBinding.scheme
 
-                            IdReference(expression.location, type, expression.name)
-                        }
+                                is ImportVariableBinding ->
+                                    valueBinding.scheme
 
-                        is ImportVariableBinding -> {
-                            val type =
-                                    scheme.scheme.instantiate(varPump)
+                                else ->
+                                    null
+                            }
 
-                            IdReference(expression.location, type, expression.name)
-                        }
+                    if (scheme == null) {
+                        errors.add(UnboundVariable(expression.location, expression.name))
 
-                        else -> {
-                            errors.add(UnboundVariable(expression.location, expression.name))
+                        IdReference(expression.location, typeError, expression.name)
+                    } else {
+                        val type =
+                                scheme.instantiate(varPump)
 
-                            IdReference(expression.location, typeError, expression.name)
-                        }
+                        IdReference(expression.location, type, expression.name)
                     }
                 }
 
