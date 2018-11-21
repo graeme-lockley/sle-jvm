@@ -127,7 +127,7 @@ private class ApplyContext(private val environment: Environment) {
 
                 is TCon -> {
                     val alias =
-                            environment.alias(name)?.scheme
+                            environment.alias(name)
 
                     when {
                         alias == null ->
@@ -315,14 +315,20 @@ private class SolverContext(private var varPump: VarPump, private var constraint
 }
 
 
-private fun Environment.alias(name: String): AliasBinding? {
+private fun Environment.alias(name: String): Scheme? {
     val binding =
             this.type(name)
 
-    return if (binding != null && binding is AliasBinding)
-        binding
-    else
-        null
+    return when (binding) {
+        is AliasBinding ->
+            binding.scheme
+
+        is ImportAliasBinding ->
+            binding.scheme
+
+        else ->
+            null
+    }
 }
 
 
@@ -331,4 +337,4 @@ private fun Environment.isAlias(name: String): Boolean =
 
 
 private fun Environment.instantiateAlias(name: String, varPump: VarPump): Type? =
-        this.alias(name)?.scheme?.instantiate(varPump)
+        this.alias(name)?.instantiate(varPump)

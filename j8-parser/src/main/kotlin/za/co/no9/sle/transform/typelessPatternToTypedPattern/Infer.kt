@@ -596,7 +596,7 @@ private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment
                     }
 
                     is AliasImportDeclaration ->
-                        TODO()
+                        e.newType(namedDeclaration.name.name, ImportAliasBinding(namedDeclaration.scheme))
 
                     is ADTImportDeclaration ->
                         e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
@@ -609,7 +609,7 @@ private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment
                                 namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
                                     if (fds.containsValue(constructor.name)) {
 //                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
-                                        fds
+                                         fds
                                     } else {
                                         fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
                                     }
