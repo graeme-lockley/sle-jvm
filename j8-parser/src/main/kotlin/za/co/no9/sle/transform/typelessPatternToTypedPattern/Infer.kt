@@ -313,20 +313,27 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val scheme =
-                            env.variable(expression.name)
+                            env.value(expression.name)
 
                     when (scheme) {
-                        null -> {
-                            errors.add(UnboundVariable(expression.location, expression.name))
+                        is VariableBinding -> {
+                            val type =
+                                    scheme.scheme.instantiate(varPump)
 
-                            IdReference(expression.location, typeError, expression.name)
+                            IdReference(expression.location, type, expression.name)
+                        }
+
+                        is ImportVariableBinding -> {
+                            val type =
+                                    scheme.scheme.instantiate(varPump)
+
+                            IdReference(expression.location, type, expression.name)
                         }
 
                         else -> {
-                            val type =
-                                    scheme.instantiate(varPump)
+                            errors.add(UnboundVariable(expression.location, expression.name))
 
-                            IdReference(expression.location, type, expression.name)
+                            IdReference(expression.location, typeError, expression.name)
                         }
                     }
                 }
@@ -576,8 +583,16 @@ private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment
         imports.fold(environment) { env, import ->
             import.namedDeclarations.fold(env) { e, namedDeclaration ->
                 when (namedDeclaration) {
-                    is ValueImportDeclaration ->
-                        TODO()
+                    is ValueImportDeclaration -> {
+                        val valueInEnvironment =
+                                e.value(namedDeclaration.name.name)
+
+                        if (valueInEnvironment == null) {
+                            e.newValue(namedDeclaration.name.name, ImportVariableBinding(namedDeclaration.scheme))
+                        } else {
+                            e
+                        }
+                    }
 
                     is AliasImportDeclaration ->
                         TODO()
