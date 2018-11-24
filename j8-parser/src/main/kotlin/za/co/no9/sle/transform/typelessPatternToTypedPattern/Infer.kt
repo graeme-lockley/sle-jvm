@@ -43,6 +43,8 @@ private class InferContext(private val repository: Repository<Item>, private val
         val resolvedImports =
                 resolveImports(env, repository, sourceFile, module.imports)
 
+        errors.addAll(resolvedImports.errors)
+
         env = module.declarations.fold(resolvedImports.environment) { e: Environment, d: Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
@@ -496,7 +498,7 @@ private fun QualifiedID.asQString(): QString =
         QString(this.qualifier, this.name)
 
 
-private class ResolveImportsResult(val environment: Environment, val error: Errors)
+private class ResolveImportsResult(val environment: Environment, val errors: Errors)
 
 
 private fun resolveImports(environment: Environment, repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
