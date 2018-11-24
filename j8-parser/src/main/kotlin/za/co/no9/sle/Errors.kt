@@ -19,7 +19,7 @@ data class SyntaxError(
 
 data class UnboundVariable(
         override val location: Location,
-        val name: String) : LocationError(location)
+        val name: QString) : LocationError(location)
 
 data class UnknownTypeReference(
         override val location: Location,
@@ -27,7 +27,7 @@ data class UnknownTypeReference(
 
 data class UnknownConstructorReference(
         override val location: Location,
-        val name: String) : LocationError(location)
+        val name: QString) : LocationError(location)
 
 data class DuplicateTypeDeclaration(
         override val location: Location,
@@ -68,7 +68,7 @@ data class IncorrectNumberOfAliasArguments(
 
 data class IncorrectNumberOfConstructorArguments(
         override val location: Location,
-        val name: String,
+        val name: QString,
         val expected: Int,
         val actual: Int) : LocationError(location)
 

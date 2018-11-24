@@ -19,15 +19,24 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: b
+                          name:
+                            QualifiedID:
+                              name: b
+                              qualifier: null
                       operator:
                         CallExpression:
                           operand:
                             IdReference:
-                              name: a
+                              name:
+                                QualifiedID:
+                                  name: a
+                                  qualifier: null
                           operator:
                             IdReference:
-                              name: (+)
+                              name:
+                                QualifiedID:
+                                  name: (+)
+                                  qualifier: null
           ]
         name:
           ID:

@@ -1,9 +1,18 @@
 package za.co.no9.sle.typing
 
+import za.co.no9.sle.QString
+
 
 data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), val typeBindings: Map<String, TypeBinding> = mapOf()) {
     fun value(name: String): ValueBinding? =
             valueBindings[name]
+
+    fun value(name: QString): ValueBinding? =
+            if (name.qualifier == null)
+                valueBindings[name.string]
+            else
+                import(name.qualifier)?.value(name.string)
+
 
     fun variable(name: String): Scheme? {
         val valueBinding =
@@ -17,6 +26,13 @@ data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), v
                 null
         }
     }
+
+    fun variable(name: QString): Scheme? =
+            if (name.qualifier == null)
+                variable(name.string)
+            else
+                import(name.qualifier)?.variable(name.string)
+
 
     fun import(name: String): Environment? {
         val valueBinding =

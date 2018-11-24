@@ -31,21 +31,36 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name: n
+                                  name:
+                                    QualifiedID:
+                                      name: n
+                                      qualifier: null
                               operator:
                                 IdReference:
-                                  name: (-)
+                                  name:
+                                    QualifiedID:
+                                      name: (-)
+                                      qualifier: null
                       operator:
                         IdReference:
-                          name: factorial
+                          name:
+                            QualifiedID:
+                              name: factorial
+                              qualifier: null
                   operator:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: n
+                          name:
+                            QualifiedID:
+                              name: n
+                              qualifier: null
                       operator:
                         IdReference:
-                          name: (*)
+                          name:
+                            QualifiedID:
+                              name: (*)
+                              qualifier: null
           ]
         name:
           ID:

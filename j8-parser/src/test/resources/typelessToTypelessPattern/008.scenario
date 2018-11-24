@@ -28,13 +28,22 @@ Module:
                         IfExpression:
                           elseExpression:
                             IdReference:
-                              name: z
+                              name:
+                                QualifiedID:
+                                  name: z
+                                  qualifier: null
                           guardExpression:
                             IdReference:
-                              name: x
+                              name:
+                                QualifiedID:
+                                  name: x
+                                  qualifier: null
                           thenExpression:
                             IdReference:
-                              name: y
+                              name:
+                                QualifiedID:
+                                  name: y
+                                  qualifier: null
           ]
         name:
           ID:

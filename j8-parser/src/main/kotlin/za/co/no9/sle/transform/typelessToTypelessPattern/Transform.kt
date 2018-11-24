@@ -26,6 +26,7 @@ import za.co.no9.sle.ast.typelessPattern.LetExport
 import za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration
 import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.Pattern
+import za.co.no9.sle.ast.typelessPattern.QualifiedID
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeExport
@@ -194,8 +195,8 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)
 
 
-private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): String =
-        qualifiedID.name
+private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): QualifiedID =
+        QualifiedID(qualifiedID.location, qualifiedID.qualifier, qualifiedID.name)
 
 
 private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
@@ -216,7 +217,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 ConstantString(ast.location, ast.value)
 
             is NotExpression ->
-                CallExpression(ast.location, IdReference(ast.location, "(!)"), transform(ast.expression))
+                CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null,"(!)")), transform(ast.expression))
 
             is za.co.no9.sle.ast.typeless.IdReference ->
                 IdReference(ast.location, transform(ast.name))
@@ -232,7 +233,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
 
             is BinaryOpExpression -> {
                 val operator =
-                        CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), transform(ast.left))
+                        CallExpression(ast.operator.location, IdReference(ast.operator.location, QualifiedID(ast.operator.location, null, "(${ast.operator.name})")), transform(ast.left))
 
                 val operand =
                         transform(ast.right)

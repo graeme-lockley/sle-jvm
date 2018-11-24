@@ -4,6 +4,7 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedPattern.*
 import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
+import za.co.no9.sle.ast.typelessPattern.QualifiedID
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
@@ -197,7 +198,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     env.variable(it.name.name)
 
                             if (scheme == null) {
-                                errors.add(UnboundVariable(it.name.location, it.name.name))
+                                errors.add(UnboundVariable(it.name.location, QString(null, it.name.name)))
                                 ValueExportDeclaration(it.name.name, generalise(typeError))
                             } else {
                                 ValueExportDeclaration(it.name.name, scheme)
@@ -313,7 +314,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val valueBinding =
-                            env.value(expression.name)
+                            env.value(expression.name.asQString())
 
                     val scheme =
                             when (valueBinding) {
@@ -328,33 +329,33 @@ private class InferContext(private val repository: Repository<Item>, private val
                             }
 
                     if (scheme == null) {
-                        errors.add(UnboundVariable(expression.location, expression.name))
+                        errors.add(UnboundVariable(expression.location, expression.name.asQString()))
 
-                        IdReference(expression.location, typeError, expression.name)
+                        IdReference(expression.location, typeError, transform(expression.name))
                     } else {
                         val type =
                                 scheme.instantiate(varPump)
 
-                        IdReference(expression.location, type, expression.name)
+                        IdReference(expression.location, type, transform(expression.name))
                     }
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReference -> {
                     val scheme =
-                            env.variable(expression.name)
+                            env.variable(expression.name.asQString())
 
                     when (scheme) {
                         null -> {
-                            errors.add(UnboundVariable(expression.location, expression.name))
+                            errors.add(UnboundVariable(expression.location, expression.name.asQString()))
 
-                            IdReference(expression.location, typeError, expression.name)
+                            IdReference(expression.location, typeError, transform(expression.name))
                         }
 
                         else -> {
                             val type =
                                     scheme.instantiate(varPump)
 
-                            IdReference(expression.location, type, expression.name)
+                            IdReference(expression.location, type, transform(expression.name))
                         }
                     }
                 }
@@ -457,14 +458,14 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern -> {
                     val constructor =
-                            env.variable(pattern.name)
+                            env.variable(pattern.name.asQString())
 
                     if (constructor == null) {
-                        errors.add(UnknownConstructorReference(pattern.location, pattern.name))
+                        errors.add(UnknownConstructorReference(pattern.location, pattern.name.asQString()))
                         ConstantUnitPattern(pattern.location, typeUnit)
                     } else {
                         if (constructor.type.arity() != pattern.parameters.size) {
-                            errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name, constructor.type.arity(), pattern.parameters.size))
+                            errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name.asQString(), constructor.type.arity(), pattern.parameters.size))
                         }
 
                         val parameters =
@@ -483,7 +484,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             unify(constructorType, signature)
                         }
 
-                        ConstructorReferencePattern(pattern.location, returnType, pattern.name, parameters)
+                        ConstructorReferencePattern(pattern.location, returnType, transform(pattern.name), parameters)
                     }
                 }
             }
@@ -493,6 +494,9 @@ private class InferContext(private val repository: Repository<Item>, private val
         constraints += Constraint(t1, t2)
     }
 }
+
+private fun QualifiedID.asQString(): QString =
+        QString(this.qualifier, this.name)
 
 
 private fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
@@ -621,6 +625,10 @@ private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment
                 }
             }
         }
+
+
+private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): String =
+    qualifiedID.name
 
 
 private fun Type.arity(): Int =

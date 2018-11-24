@@ -36,7 +36,10 @@ Module:
                 Unit:
               operator:
                 IdReference:
-                  name: calculate
+                  name:
+                    QualifiedID:
+                      name: calculate
+                      qualifier: null
           ]
         name:
           ID:

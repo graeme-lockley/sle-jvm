@@ -58,15 +58,24 @@ Module:
                 CallExpression:
                   operand:
                     ConstructorReference:
-                      name: Nil
+                      name:
+                        QualifiedID:
+                          name: Nil
+                          qualifier: null
                   operator:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: x
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
                       operator:
                         ConstructorReference:
-                          name: Cons
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: null
           ]
         name:
           ID:
@@ -84,23 +93,38 @@ Module:
                     CallExpression:
                       operand:
                         ConstructorReference:
-                          name: Nil
+                          name:
+                            QualifiedID:
+                              name: Nil
+                              qualifier: null
                       operator:
                         CallExpression:
                           operand:
                             IdReference:
-                              name: x
+                              name:
+                                QualifiedID:
+                                  name: x
+                                  qualifier: null
                           operator:
                             ConstructorReference:
-                              name: Cons
+                              name:
+                                QualifiedID:
+                                  name: Cons
+                                  qualifier: null
                   operator:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: x
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
                       operator:
                         ConstructorReference:
-                          name: Cons
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: null
           ]
         name:
           ID:
