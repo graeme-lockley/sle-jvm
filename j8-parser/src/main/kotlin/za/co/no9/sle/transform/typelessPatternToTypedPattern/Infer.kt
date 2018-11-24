@@ -497,146 +497,148 @@ private fun QualifiedID.asQString(): QString =
         QString(this.qualifier, this.name)
 
 
-private class ResolveImportsResult(val environment: Environment, val imports: List<Import>)
+private class ResolveImportsResult(val environment: Environment, val imports: List<Import>, val error: Errors)
 
 
 private fun resolveImports(environment: Environment, repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
-    val resolvedImports =
-            resolveImports(repository, sourceFile, imports)
-
-    return ResolveImportsResult(incorporateImportsIntoEnvironment(resolvedImports, environment), resolvedImports)
-}
-
-
-private fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
     val errors =
             mutableSetOf<Error>()
 
-    return imports.map { import ->
-        val importFile =
-                File(sourceFile.parentFile, import.urn.name)
+    fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> =
+            imports.map { import ->
+                val importFile =
+                        File(sourceFile.parentFile, import.urn.name)
 
-        val importItem =
-                repository.item(import.urn.source, importFile)
+                val importItem =
+                        repository.item(import.urn.source, importFile)
 
-        val exports =
-                importItem.exports()
+                val exports =
+                        importItem.exports()
 
-        val importName =
-                if (import.asName == null)
-                    ID(import.location, import.urn.impliedName())
-                else
-                    ID(import.asName.location, import.asName.name)
+                val importName =
+                        if (import.asName == null)
+                            ID(import.location, import.urn.impliedName())
+                        else
+                            ID(import.asName.location, import.asName.name)
 
-        Import(import.location, importName,
-                import.importDeclarations.map { d ->
-                    when (d) {
-                        is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration -> {
-                            val importDeclaration =
-                                    exports[d.name.name]
+                Import(import.location, importName,
+                        import.importDeclarations.map { d ->
+                            when (d) {
+                                is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration -> {
+                                    val importDeclaration =
+                                            exports[d.name.name]
 
-                            when (importDeclaration) {
-                                null -> {
-                                    errors.add(ValueNotExported(d.name.location, d.name.name))
-                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
-                                }
+                                    when (importDeclaration) {
+                                        null -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
+                                        }
 
-                                is za.co.no9.sle.repository.LetDeclaration ->
-                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                        is za.co.no9.sle.repository.LetDeclaration ->
+                                            ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
 
-                                else -> {
-                                    errors.add(ValueNotExported(d.name.location, d.name.name))
-                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
-                                }
-                            }
-                        }
-
-                        is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration -> {
-                            val importDeclaration =
-                                    exports[d.name.name]
-
-                            when (importDeclaration) {
-                                null -> {
-                                    errors.add(TypeNotExported(d.name.location, d.name.name))
-                                    AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
-                                }
-
-                                is za.co.no9.sle.repository.LetDeclaration -> {
-                                    errors.add(TypeNotExported(d.name.location, d.name.name))
-                                    ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-                                }
-
-                                is za.co.no9.sle.repository.AliasDeclaration ->
-                                    if (d.withConstructors) {
-                                        errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
-                                        AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-                                    } else
-                                        AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-
-                                is za.co.no9.sle.repository.ADTDeclaration ->
-                                    if (d.withConstructors) {
-                                        errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
-                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-                                    } else
-                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-
-                                is za.co.no9.sle.repository.FullADTDeclaration ->
-                                    if (d.withConstructors) {
-                                        FullADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location), importDeclaration.constructors.map { ConstructorImportDeclaration(it.name, it.scheme.asScheme(d.name.location)) })
-                                    } else
-                                        ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
-                            }
-                        }
-                    }
-                })
-    }
-}
-
-
-private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment: Environment): Environment =
-        imports.fold(environment) { env, import ->
-            if (import.namedDeclarations.isEmpty())
-                env
-            else
-                import.namedDeclarations.fold(env) { e, namedDeclaration ->
-                    when (namedDeclaration) {
-                        is ValueImportDeclaration -> {
-                            val valueInEnvironment =
-                                    e.value(namedDeclaration.name.name)
-
-                            if (valueInEnvironment == null) {
-                                e.newValue(namedDeclaration.name.name, ImportVariableBinding(namedDeclaration.scheme))
-                            } else {
-                                e
-                            }
-                        }
-
-                        is AliasImportDeclaration ->
-                            e.newType(namedDeclaration.name.name, ImportAliasBinding(namedDeclaration.scheme))
-
-                        is ADTImportDeclaration ->
-                            e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
-
-                        is FullADTImportDeclaration -> {
-                            val envWithADTDeclaration =
-                                    e.newType(namedDeclaration.name.name, ImportADTBinding(namedDeclaration.scheme, namedDeclaration.constructors.map { Pair(it.name, it.scheme) }))
-
-                            val envWithConstructors =
-                                    namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
-                                        if (fds.containsValue(constructor.name)) {
-//                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
-                                            fds
-                                        } else {
-                                            fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
+                                        else -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
                                         }
                                     }
+                                }
+
+                                is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration -> {
+                                    val importDeclaration =
+                                            exports[d.name.name]
+
+                                    when (importDeclaration) {
+                                        null -> {
+                                            errors.add(TypeNotExported(d.name.location, d.name.name))
+                                            AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), errorScheme)
+                                        }
+
+                                        is za.co.no9.sle.repository.LetDeclaration -> {
+                                            errors.add(TypeNotExported(d.name.location, d.name.name))
+                                            ValueImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                        }
+
+                                        is za.co.no9.sle.repository.AliasDeclaration ->
+                                            if (d.withConstructors) {
+                                                errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
+                                                AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                            } else
+                                                AliasImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+
+                                        is za.co.no9.sle.repository.ADTDeclaration ->
+                                            if (d.withConstructors) {
+                                                errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
+                                                ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                            } else
+                                                ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+
+                                        is za.co.no9.sle.repository.FullADTDeclaration ->
+                                            if (d.withConstructors) {
+                                                FullADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location), importDeclaration.constructors.map { ConstructorImportDeclaration(it.name, it.scheme.asScheme(d.name.location)) })
+                                            } else
+                                                ADTImportDeclaration(d.name.location, ID(d.name.location, d.name.name), importDeclaration.scheme.asScheme(d.name.location))
+                                    }
+                                }
+                            }
+                        })
+            }
 
 
-                            envWithConstructors
+    fun incorporateImportsIntoEnvironment(imports: List<Import>, environment: Environment): Environment =
+            imports.fold(environment) { env, import ->
+                if (import.namedDeclarations.isEmpty())
+                    env
+                else
+                    import.namedDeclarations.fold(env) { e, namedDeclaration ->
+                        when (namedDeclaration) {
+                            is ValueImportDeclaration -> {
+                                val valueInEnvironment =
+                                        e.value(namedDeclaration.name.name)
+
+                                if (valueInEnvironment == null) {
+                                    e.newValue(namedDeclaration.name.name, ImportVariableBinding(namedDeclaration.scheme))
+                                } else {
+                                    e
+                                }
+                            }
+
+                            is AliasImportDeclaration ->
+                                e.newType(namedDeclaration.name.name, ImportAliasBinding(namedDeclaration.scheme))
+
+                            is ADTImportDeclaration ->
+                                e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
+
+                            is FullADTImportDeclaration -> {
+                                val envWithADTDeclaration =
+                                        e.newType(namedDeclaration.name.name, ImportADTBinding(namedDeclaration.scheme, namedDeclaration.constructors.map { Pair(it.name, it.scheme) }))
+
+                                val envWithConstructors =
+                                        namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
+                                            if (fds.containsValue(constructor.name)) {
+//                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                                                fds
+                                            } else {
+                                                fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
+                                            }
+                                        }
+
+
+                                envWithConstructors
+                            }
                         }
                     }
-                }
-        }
+            }
+
+
+    val resolvedImports =
+            resolveImports(repository, sourceFile, imports)
+
+    val newEnvironment =
+            incorporateImportsIntoEnvironment(resolvedImports, environment)
+
+    return ResolveImportsResult(newEnvironment, resolvedImports, errors)
+}
 
 
 private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): String =
