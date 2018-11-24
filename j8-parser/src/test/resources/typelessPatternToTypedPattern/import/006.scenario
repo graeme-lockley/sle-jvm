@@ -1,0 +1,311 @@
+-- Use an explicitly imported opaque type
+import file:./List
+
+transform : (Int -> Int) -> List.IntList -> List.IntList
+transform f =
+    List.map f
+
+multiply n =
+    transform (\i -> n * i)
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Int
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: f
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Int
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Int
+                  operator:
+                    IdReference:
+                      name: map
+                      type:
+                        TArr:
+                          domain:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Int
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Int
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                    ]
+                                  name: List
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Int
+                                    ]
+                                  name: List
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Int
+                            ]
+                          name: List
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Int
+                            ]
+                          name: List
+              type:
+                TArr:
+                  domain:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Int
+                            ]
+                          name: List
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Int
+                            ]
+                          name: List
+          ]
+        name:
+          ID:
+            name: transform
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: List.IntList
+                    range:
+                      TCon:
+                        arguments: []
+                        name: List.IntList
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: n
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Int
+              expression:
+                CallExpression:
+                  operand:
+                    LambdaExpression:
+                      argument:
+                        IdReferencePattern:
+                          name: i
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Int
+                      expression:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: i
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Int
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: n
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Int
+                              operator:
+                                IdReference:
+                                  name: (*)
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Int
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Int
+                                          range:
+                                            TCon:
+                                              arguments: []
+                                              name: Int
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Int
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Int
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Int
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Int
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Int
+                  operator:
+                    IdReference:
+                      name: transform
+                      type:
+                        TArr:
+                          domain:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Int
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Int
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: List.IntList
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: List.IntList
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: List.IntList
+                      range:
+                        TCon:
+                          arguments: []
+                          name: List.IntList
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: List.IntList
+                      range:
+                        TCon:
+                          arguments: []
+                          name: List.IntList
+          ]
+        name:
+          ID:
+            name: multiply
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: List.IntList
+                    range:
+                      TCon:
+                        arguments: []
+                        name: List.IntList
+    ]
+  exports: []

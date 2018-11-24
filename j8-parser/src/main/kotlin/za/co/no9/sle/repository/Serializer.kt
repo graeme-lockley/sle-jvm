@@ -1,9 +1,11 @@
 package za.co.no9.sle.repository
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import za.co.no9.sle.Location
+import za.co.no9.sle.QString
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
 import za.co.no9.sle.typing.TVar
@@ -55,7 +57,7 @@ private fun jsonToType(type: JsonObject): Type =
                 Variable(type["variable"].asInt)
 
             type.has("constant") ->
-                Constant(type["constant"].asString, type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                Constant(QString(type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
 
             else ->
                 Arrow(jsonToType(type["domain"].asJsonObject), jsonToType(type["range"].asJsonObject))
@@ -122,7 +124,7 @@ data class Variable(val variable: Int) : Type() {
             TVar(location, variable)
 }
 
-data class Constant(val constant: String, val arguments: List<Type>) : Type() {
+data class Constant(val constant: QString, val arguments: List<Type>) : Type() {
     override fun asType(location: Location): za.co.no9.sle.typing.Type =
             TCon(location, constant, arguments.map { it.asType(location) })
 }

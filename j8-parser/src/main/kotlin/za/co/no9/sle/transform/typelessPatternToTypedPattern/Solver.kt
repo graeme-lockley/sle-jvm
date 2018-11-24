@@ -314,7 +314,7 @@ private class SolverContext(private var varPump: VarPump, private var constraint
 }
 
 
-private fun Environment.alias(name: String): Scheme? {
+private fun Environment.alias(name: QString): Scheme? {
     val binding =
             this.type(name)
 
@@ -331,9 +331,9 @@ private fun Environment.alias(name: String): Scheme? {
 }
 
 
-private fun Environment.isAlias(name: String): Boolean =
+private fun Environment.isAlias(name: QString): Boolean =
         this.alias(name) != null
 
 
-private fun Environment.instantiateAlias(name: String, varPump: VarPump): Type? =
+private fun Environment.instantiateAlias(name: QString, varPump: VarPump): Type? =
         this.alias(name)?.instantiate(varPump)

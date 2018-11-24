@@ -128,6 +128,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is String ->
                     true
 
+                is QString ->
+                    true
+
                 else ->
                     false
             }
@@ -144,6 +147,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                     "$value"
 
                 is String ->
+                    "$value"
+
+                is QString ->
                     "$value"
 
                 is List<*> ->
@@ -199,6 +205,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is String ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
+                is QString ->
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
+
                 is List<*> ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
@@ -223,6 +232,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
             "${spaces(indent)}${value(o, indent)}\n"
 
         is String ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is QString ->
             "${spaces(indent)}${value(o, indent)}\n"
 
         is Boolean ->

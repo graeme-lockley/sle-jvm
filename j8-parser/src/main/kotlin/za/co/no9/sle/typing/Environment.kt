@@ -50,6 +50,22 @@ data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), v
     fun type(name: String): TypeBinding? =
             typeBindings[name]
 
+    fun type(name: QString): TypeBinding? =
+            if (name.qualifier == null)
+                type(name.string)
+            else {
+                val valueBinding =
+                        value(name.qualifier)
+
+                when (valueBinding) {
+                    is ImportBinding ->
+                        valueBinding.environment.type(name.string)
+
+                    else ->
+                        null
+                }
+            }
+
     fun newValue(name: String, value: ValueBinding): Environment =
             Environment(this.valueBindings + Pair(name, value), this.typeBindings)
 
@@ -60,7 +76,10 @@ data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), v
             valueBindings.contains(name)
 
     fun containsType(name: String): Boolean =
-            typeBindings.contains(name)
+            type(name) != null
+
+    fun containsType(name: QString): Boolean =
+            type(name) != null
 }
 
 

@@ -113,7 +113,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                                             ast.arguments.mapIndexed { index, _ -> index }
 
                                     val scheme =
-                                            Scheme(parameters, TCon(ast.name.location, ast.name.name, ast.arguments.map { argument -> substitution[argument.name]!! }))
+                                            Scheme(parameters, TCon(ast.name.location, QString(ast.name.name), ast.arguments.map { argument -> substitution[argument.name]!! }))
 
                                     TypeDeclaration(
                                             ast.location,
@@ -277,10 +277,10 @@ private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap())
                 typeUnit
 
             is TVarReference ->
-                substitution[type.name] ?: TCon(type.location, type.name)
+                substitution[type.name] ?: TCon(type.location, QString(type.name))
 
             is TConstReference ->
-                TCon(type.location, type.name.name, type.arguments.map { transform(it, substitution) })
+                TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
 
             is TArrow ->
                 TArr(transform(type.domain, substitution), transform(type.range, substitution))
@@ -317,7 +317,7 @@ private fun typeToScheme(ttype: TType?): Scheme? {
                 }
 
                 is TConstReference ->
-                    TCon(ttype.location, ttype.name.name, ttype.arguments.map { map(it) })
+                    TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
 
                 is TArrow ->
                     TArr(map(ttype.domain), map(ttype.range))

@@ -23,7 +23,7 @@ data class UnboundVariable(
 
 data class UnknownTypeReference(
         override val location: Location,
-        val name: String) : LocationError(location)
+        val name: QString) : LocationError(location)
 
 data class UnknownConstructorReference(
         override val location: Location,
@@ -56,13 +56,13 @@ data class LetSignatureWithoutDeclaration(
 
 data class IncorrectNumberOfSchemeArguments(
         override val location: Location,
-        val name: String,
+        val name: QString,
         val expected: Int,
         val actual: Int) : LocationError(location)
 
 data class IncorrectNumberOfAliasArguments(
         override val location: Location,
-        val name: String,
+        val name: QString,
         val expected: Int,
         val actual: Int) : LocationError(location)
 
@@ -88,7 +88,7 @@ data class UnificationMismatch(
 
 data class UnknownType(
         override val location: Location,
-        val name: String) : LocationError(location)
+        val name: QString) : LocationError(location)
 
 data class NonExhaustivePattern(
         override val location: Location) : LocationError(location)

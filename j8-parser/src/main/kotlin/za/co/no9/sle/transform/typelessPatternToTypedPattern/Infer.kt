@@ -211,7 +211,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                             when (typeBinding) {
                                 null -> {
-                                    errors.add(UnknownTypeReference(it.name.location, it.name.name))
+                                    errors.add(UnknownTypeReference(it.name.location, QString(it.name.name)))
                                     AliasExportDeclaration(it.name.name, generalise(typeError))
                                 }
 
@@ -277,7 +277,7 @@ private class InferContext(private val repository: Repository<Item>, private val
         when (type) {
             is TCon -> {
                 val scheme =
-                        env.typeBindings[type.name]?.scheme
+                        env.type(type.name)?.scheme
 
                 if (scheme == null) {
                     errors.add(UnknownTypeReference(type.location, type.name))

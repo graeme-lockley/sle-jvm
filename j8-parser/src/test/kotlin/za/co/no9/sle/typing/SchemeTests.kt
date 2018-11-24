@@ -2,6 +2,7 @@ package za.co.no9.sle.typing
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.QString
 import za.co.no9.sle.homeLocation
 
 
@@ -32,9 +33,9 @@ class SchemeTests : StringSpec({
                 Substitution(mapOf(
                         Pair(0, TVar(homeLocation, 3)),
                         Pair(1, TVar(homeLocation, 3)),
-                        Pair(2, TArr(TCon(homeLocation, "List", listOf(TVar(homeLocation, 3))), TCon(homeLocation, "List", listOf(TVar(homeLocation, 3))))),
-                        Pair(4, TCon(homeLocation, "List", listOf(TVar(homeLocation, 3))))
-                        ))).shouldBe(Scheme(listOf(3), TArr(TVar(homeLocation, 3), TCon(homeLocation, "List", listOf(TVar(homeLocation, 3))))))
+                        Pair(2, TArr(TCon(homeLocation, QString("List"), listOf(TVar(homeLocation, 3))), TCon(homeLocation, QString("List"), listOf(TVar(homeLocation, 3))))),
+                        Pair(4, TCon(homeLocation, QString("List"), listOf(TVar(homeLocation, 3))))
+                        ))).shouldBe(Scheme(listOf(3), TArr(TVar(homeLocation, 3), TCon(homeLocation, QString("List"), listOf(TVar(homeLocation, 3))))))
     }
 
     "given <1> '1 -> '1 should instantiate to " {

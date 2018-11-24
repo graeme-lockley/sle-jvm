@@ -1,6 +1,7 @@
 package za.co.no9.sle.typing
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.QString
 import za.co.no9.sle.homeLocation
 
 
@@ -28,7 +29,7 @@ data class TVar(
 
 data class TCon(
         override val location: Location,
-        val name: String,
+        val name: QString,
         val arguments: List<Type> = emptyList()) : Type(location) {
 
     override fun apply(s: Substitution) =
@@ -42,7 +43,7 @@ data class TCon(
 
     override fun toString(): String =
             if (arguments.isEmpty())
-                name
+                name.toString()
             else
                 "$name ${arguments.map { it.toString() }.joinToString(" ")}"
 }
@@ -72,18 +73,18 @@ data class TArr(
 
 
 val typeError =
-        TCon(homeLocation, ":Error:")
+        TCon(homeLocation, QString(":Error:"))
 
 val typeUnit =
-        TCon(homeLocation, "()")
+        TCon(homeLocation, QString("()"))
 
 val typeInt =
-        TCon(homeLocation, "Int")
+        TCon(homeLocation, QString("Int"))
 
 val typeBool =
-        TCon(homeLocation, "Bool")
+        TCon(homeLocation, QString("Bool"))
 
 val typeString =
-        TCon(homeLocation, "String")
+        TCon(homeLocation, QString("String"))
 
 
