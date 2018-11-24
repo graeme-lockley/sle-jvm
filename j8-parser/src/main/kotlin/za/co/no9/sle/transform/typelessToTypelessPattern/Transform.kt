@@ -41,7 +41,7 @@ fun parse(text: String): Either<Errors, Module> =
                 .andThen { astToCoreAST(it) }
 
 
-fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
+private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
     val exports =
             ast.exports.map {
                 when (it) {
@@ -165,7 +165,7 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module>
 }
 
 
-fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
+private fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
     val urn =
             URN(import.urn.name)
 
@@ -190,11 +190,11 @@ fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
 }
 
 
-fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
+private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)
 
 
-fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
+private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         when (ast) {
             is za.co.no9.sle.ast.typeless.Unit ->
                 Unit(ast.location)
