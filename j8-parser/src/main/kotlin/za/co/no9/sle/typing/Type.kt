@@ -31,6 +31,7 @@ data class TCon(
         override val location: Location,
         val name: QString,
         val arguments: List<Type> = emptyList()) : Type(location) {
+    constructor(location: Location, name: String, arguments: List<Type> = emptyList()) : this(location, QString(name), arguments)
 
     override fun apply(s: Substitution) =
             if (arguments.isEmpty())
@@ -73,18 +74,18 @@ data class TArr(
 
 
 val typeError =
-        TCon(homeLocation, QString(":Error:"))
+        TCon(homeLocation, ":Error:")
 
 val typeUnit =
-        TCon(homeLocation, QString("()"))
+        TCon(homeLocation, "()")
 
 val typeInt =
-        TCon(homeLocation, QString("Int"))
+        TCon(homeLocation, "Int")
 
 val typeBool =
-        TCon(homeLocation, QString("Bool"))
+        TCon(homeLocation, "Bool")
 
 val typeString =
-        TCon(homeLocation, QString("String"))
+        TCon(homeLocation, "String")
 
 
