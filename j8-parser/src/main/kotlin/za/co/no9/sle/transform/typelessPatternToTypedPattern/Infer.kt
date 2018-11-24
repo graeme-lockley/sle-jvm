@@ -40,12 +40,10 @@ private class InferContext(private val repository: Repository<Item>, private val
     fun infer(module: za.co.no9.sle.ast.typelessPattern.Module): Module {
         reportDuplicateLetDeclarationNames(module)
 
-        val imports =
-                resolveImports(repository, sourceFile, module.imports)
+        val resolvedImports =
+                resolveImports(env, repository, sourceFile, module.imports)
 
-        env = incorporateImportsIntoEnvironment(imports, env)
-
-        env = module.declarations.fold(env) { e: Environment, d: Declaration ->
+        env = module.declarations.fold(resolvedImports.environment) { e: Environment, d: Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
@@ -239,7 +237,7 @@ private class InferContext(private val repository: Repository<Item>, private val
         return Module(
                 module.location,
                 exports,
-                imports,
+                resolvedImports.imports,
                 declarations)
     }
 
@@ -499,6 +497,17 @@ private fun QualifiedID.asQString(): QString =
         QString(this.qualifier, this.name)
 
 
+private class ResolveImportsResult(val environment: Environment, val imports: List<Import>)
+
+
+private fun resolveImports(environment: Environment, repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
+    val resolvedImports =
+            resolveImports(repository, sourceFile, imports)
+
+    return ResolveImportsResult(incorporateImportsIntoEnvironment(resolvedImports, environment), resolvedImports)
+}
+
+
 private fun resolveImports(repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): List<Import> {
     val errors =
             mutableSetOf<Error>()
@@ -586,49 +595,52 @@ private fun resolveImports(repository: Repository<Item>, sourceFile: File, impor
 
 private fun incorporateImportsIntoEnvironment(imports: List<Import>, environment: Environment): Environment =
         imports.fold(environment) { env, import ->
-            import.namedDeclarations.fold(env) { e, namedDeclaration ->
-                when (namedDeclaration) {
-                    is ValueImportDeclaration -> {
-                        val valueInEnvironment =
-                                e.value(namedDeclaration.name.name)
+            if (import.namedDeclarations.isEmpty())
+                env
+            else
+                import.namedDeclarations.fold(env) { e, namedDeclaration ->
+                    when (namedDeclaration) {
+                        is ValueImportDeclaration -> {
+                            val valueInEnvironment =
+                                    e.value(namedDeclaration.name.name)
 
-                        if (valueInEnvironment == null) {
-                            e.newValue(namedDeclaration.name.name, ImportVariableBinding(namedDeclaration.scheme))
-                        } else {
-                            e
+                            if (valueInEnvironment == null) {
+                                e.newValue(namedDeclaration.name.name, ImportVariableBinding(namedDeclaration.scheme))
+                            } else {
+                                e
+                            }
+                        }
+
+                        is AliasImportDeclaration ->
+                            e.newType(namedDeclaration.name.name, ImportAliasBinding(namedDeclaration.scheme))
+
+                        is ADTImportDeclaration ->
+                            e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
+
+                        is FullADTImportDeclaration -> {
+                            val envWithADTDeclaration =
+                                    e.newType(namedDeclaration.name.name, ImportADTBinding(namedDeclaration.scheme, namedDeclaration.constructors.map { Pair(it.name, it.scheme) }))
+
+                            val envWithConstructors =
+                                    namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
+                                        if (fds.containsValue(constructor.name)) {
+//                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                                            fds
+                                        } else {
+                                            fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
+                                        }
+                                    }
+
+
+                            envWithConstructors
                         }
                     }
-
-                    is AliasImportDeclaration ->
-                        e.newType(namedDeclaration.name.name, ImportAliasBinding(namedDeclaration.scheme))
-
-                    is ADTImportDeclaration ->
-                        e.newType(namedDeclaration.name.name, OpaqueImportADTBinding(namedDeclaration.scheme))
-
-                    is FullADTImportDeclaration -> {
-                        val envWithADTDeclaration =
-                                e.newType(namedDeclaration.name.name, ImportADTBinding(namedDeclaration.scheme, namedDeclaration.constructors.map { Pair(it.name, it.scheme) }))
-
-                        val envWithConstructors =
-                                namedDeclaration.constructors.fold(envWithADTDeclaration) { fds, constructor ->
-                                    if (fds.containsValue(constructor.name)) {
-//                                        errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
-                                         fds
-                                    } else {
-                                        fds.newValue(constructor.name, VariableBinding(Scheme(namedDeclaration.scheme.parameters, constructor.scheme.type)))
-                                    }
-                                }
-
-
-                        envWithConstructors
-                    }
                 }
-            }
         }
 
 
 private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): String =
-    qualifiedID.name
+        qualifiedID.name
 
 
 private fun Type.arity(): Int =
