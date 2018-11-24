@@ -38,24 +38,24 @@ import za.co.no9.sle.typing.*
 
 fun parse(text: String): Either<Errors, Module> =
         parseModule(Lexer(text))
-                .andThen { astToCoreAST(it) }
+                .andThen { transform(it) }
 
 
-private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
+private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Module> {
     val exports =
             ast.exports.map {
                 when (it) {
                     is za.co.no9.sle.ast.typeless.LetExport ->
-                        LetExport(it.location, astToCoreAST(it.name))
+                        LetExport(it.location, transform(it.name))
 
                     is za.co.no9.sle.ast.typeless.TypeExport ->
-                        TypeExport(it.location, astToCoreAST(it.name), it.withConstructors)
+                        TypeExport(it.location, transform(it.name), it.withConstructors)
                 }
             }
 
 
     val imports =
-            ast.imports.map { astToCoreAST(it) }
+            ast.imports.map { transform(it) }
 
 
     val letDeclarationNames =
@@ -116,14 +116,14 @@ private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors,
 
                                     TypeDeclaration(
                                             ast.location,
-                                            astToCoreAST(ast.name),
+                                            transform(ast.name),
                                             scheme,
-                                            ast.constructors.map { constructor -> Constructor(constructor.location, astToCoreAST(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
+                                            ast.constructors.map { constructor -> Constructor(constructor.location, transform(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
                                     )
                                 }
 
                                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                                    TypeAliasDeclaration(ast.location, astToCoreAST(ast.name), typeToScheme(ast.type)!!)
+                                    TypeAliasDeclaration(ast.location, transform(ast.name), typeToScheme(ast.type)!!)
 
                                 else ->
                                     throw Exception("Illegal outcome")
@@ -138,19 +138,19 @@ private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors,
                         .map { asts ->
                             LetDeclaration(
                                     locationFrom(asts.value)!!,
-                                    astToCoreAST(asts.value[0].name),
+                                    transform(asts.value[0].name),
                                     typeToScheme(it[asts.key]?.type),
                                     asts.value.map { letDeclaration ->
                                         when (letDeclaration) {
                                             is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                                letDeclaration.arguments.foldRight(astToCoreAST(letDeclaration.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
+                                                letDeclaration.arguments.foldRight(transform(letDeclaration.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
 
                                             is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
                                                 letDeclaration.arguments.foldRight(
                                                         letDeclaration.guardedExpressions.dropLast(1).foldRight(
-                                                                astToCoreAST(letDeclaration.guardedExpressions.last().second)
+                                                                transform(letDeclaration.guardedExpressions.last().second)
                                                         ) { a, b ->
-                                                            IfExpression(ast.location, astToCoreAST(a.first), astToCoreAST(a.second), b)
+                                                            IfExpression(ast.location, transform(a.first), transform(a.second), b)
                                                         }
                                                 ) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
                                             else ->
@@ -165,7 +165,7 @@ private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors,
 }
 
 
-private fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
+private fun transform(import: za.co.no9.sle.ast.typeless.Import): Import {
     val urn =
             URN(import.urn.name)
 
@@ -176,25 +176,29 @@ private fun astToCoreAST(import: za.co.no9.sle.ast.typeless.Import): Import {
                 else
                     null
             else
-                astToCoreAST(import.asName)
+                transform(import.asName)
 
     return Import(import.location, urn, asName, import.namedDeclarations.map {
         when (it) {
             is za.co.no9.sle.ast.typeless.LetNamedDeclaration ->
-                ValueImportDeclaration(it.location, astToCoreAST(it.name))
+                ValueImportDeclaration(it.location, transform(it.name))
 
             is za.co.no9.sle.ast.typeless.TypeNamedDeclaration ->
-                TypeImportDeclaration(it.location, astToCoreAST(it.name), it.withConstructors)
+                TypeImportDeclaration(it.location, transform(it.name), it.withConstructors)
         }
     })
 }
 
 
-private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.ID): ID =
+private fun transform(ast: za.co.no9.sle.ast.typeless.ID): ID =
         ID(ast.location, ast.name)
 
 
-private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
+private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): String =
+        qualifiedID.name
+
+
+private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         when (ast) {
             is za.co.no9.sle.ast.typeless.Unit ->
                 Unit(ast.location)
@@ -212,7 +216,7 @@ private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression
                 ConstantString(ast.location, ast.value)
 
             is NotExpression ->
-                CallExpression(ast.location, IdReference(ast.location, "(!)"), astToCoreAST(ast.expression))
+                CallExpression(ast.location, IdReference(ast.location, "(!)"), transform(ast.expression))
 
             is za.co.no9.sle.ast.typeless.IdReference ->
                 IdReference(ast.location, transform(ast.name))
@@ -221,26 +225,26 @@ private fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression
                 ConstructorReference(ast.location, transform(ast.name))
 
             is za.co.no9.sle.ast.typeless.IfExpression ->
-                IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
+                IfExpression(ast.location, transform(ast.guardExpression), transform(ast.thenExpression), transform(ast.elseExpression))
 
             is za.co.no9.sle.ast.typeless.LambdaExpression ->
-                ast.arguments.foldRight(astToCoreAST(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
+                ast.arguments.foldRight(transform(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
 
             is BinaryOpExpression -> {
                 val operator =
-                        CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), astToCoreAST(ast.left))
+                        CallExpression(ast.operator.location, IdReference(ast.operator.location, "(${ast.operator.name})"), transform(ast.left))
 
                 val operand =
-                        astToCoreAST(ast.right)
+                        transform(ast.right)
 
                 CallExpression(ast.location, operator, operand)
             }
 
             is za.co.no9.sle.ast.typeless.CallExpression ->
-                ast.operands.fold(astToCoreAST(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, astToCoreAST(operand)) }
+                ast.operands.fold(transform(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, transform(operand)) }
 
             is za.co.no9.sle.ast.typeless.CaseExpression ->
-                CaseExpression(ast.location, astToCoreAST(ast.operator), ast.items.map { item -> CaseItem(item.location, transform(item.pattern), astToCoreAST(item.expression)) })
+                CaseExpression(ast.location, transform(ast.operator), ast.items.map { item -> CaseItem(item.location, transform(item.pattern), transform(item.expression)) })
         }
 
 
@@ -264,10 +268,6 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
             is za.co.no9.sle.ast.typeless.ConstructorReferencePattern ->
                 ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
         }
-
-
-private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): String =
-    qualifiedID.name
 
 
 private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
