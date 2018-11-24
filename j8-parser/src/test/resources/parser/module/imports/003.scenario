@@ -1,0 +1,151 @@
+-- Qualified imports
+export double
+
+import file:../Data/List as List
+
+typealias IntList =
+    List.List Int
+
+length List.Nil = 0
+length (List.Cons x xs) = 1 + (length xs)
+
+double l =
+    List.map (\x -> x + x) l
+-- ast
+Module:
+  declarations: [
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: IntList
+        type:
+          TConstReference:
+            arguments: [
+                TConstReference:
+                  arguments: []
+                  name:
+                    QualifiedID:
+                      name: Int
+                      qualifier: null
+              ]
+            name:
+              QualifiedID:
+                name: List
+                qualifier: List
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name:
+                QualifiedID:
+                  name: Nil
+                  qualifier: List
+              parameters: []
+          ]
+        expression:
+          ConstantInt:
+            value: 0
+        name:
+          ID:
+            name: length
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name:
+                QualifiedID:
+                  name: Cons
+                  qualifier: List
+              parameters: [
+                  IdReferencePattern:
+                    name: x
+                  IdReferencePattern:
+                    name: xs
+                ]
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              ConstantInt:
+                value: 1
+            operator:
+              ID:
+                name: +
+            right:
+              CallExpression:
+                operands: [
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: xs
+                          qualifier: null
+                  ]
+                operator:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: length
+                        qualifier: null
+        name:
+          ID:
+            name: length
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: l
+          ]
+        expression:
+          CallExpression:
+            operands: [
+                LambdaExpression:
+                  arguments: [
+                      IdReferencePattern:
+                        name: x
+                    ]
+                  expression:
+                    BinaryOpExpression:
+                      left:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
+                      operator:
+                        ID:
+                          name: +
+                      right:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: l
+                      qualifier: null
+              ]
+            operator:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: map
+                    qualifier: List
+        name:
+          ID:
+            name: double
+    ]
+  exports: [
+      LetExport:
+        name:
+          ID:
+            name: double
+    ]
+  imports: [
+      Import:
+        asName:
+          ID:
+            name: List
+        namedDeclarations: []
+        urn:
+          ID:
+            name: file:../Data/List
+    ]

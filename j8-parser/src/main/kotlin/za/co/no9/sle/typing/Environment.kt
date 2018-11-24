@@ -18,6 +18,19 @@ data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), v
         }
     }
 
+    fun import(name: String): Environment? {
+        val valueBinding =
+                value(name)
+
+        return when (valueBinding) {
+            is ImportBinding ->
+                valueBinding.environment
+
+            else ->
+                null
+        }
+    }
+
     fun type(name: String): TypeBinding? =
             typeBindings[name]
 

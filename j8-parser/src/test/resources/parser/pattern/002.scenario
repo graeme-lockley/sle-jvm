@@ -31,18 +31,30 @@ Module:
                           CaseItem:
                             expression:
                               ConstructorReference:
-                                name: Nil
+                                name:
+                                  QualifiedID:
+                                    name: Nil
+                                    qualifier: null
                             pattern:
                               ConstructorReferencePattern:
-                                name: Nil
+                                name:
+                                  QualifiedID:
+                                    name: Nil
+                                    qualifier: null
                                 parameters: []
                           CaseItem:
                             expression:
                               IdReference:
-                                name: bt
+                                name:
+                                  QualifiedID:
+                                    name: bt
+                                    qualifier: null
                             pattern:
                               ConstructorReferencePattern:
-                                name: Cons
+                                name:
+                                  QualifiedID:
+                                    name: Cons
+                                    qualifier: null
                                 parameters: [
                                     IdReferencePattern:
                                       name: bh
@@ -52,18 +64,30 @@ Module:
                         ]
                       operator:
                         IdReference:
-                          name: b
+                          name:
+                            QualifiedID:
+                              name: b
+                              qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Nil
+                      name:
+                        QualifiedID:
+                          name: Nil
+                          qualifier: null
                       parameters: []
                 CaseItem:
                   expression:
                     IdReference:
-                      name: at
+                      name:
+                        QualifiedID:
+                          name: at
+                          qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Cons
+                      name:
+                        QualifiedID:
+                          name: Cons
+                          qualifier: null
                       parameters: [
                           IdReferencePattern:
                             name: ah
@@ -73,7 +97,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: a
+                name:
+                  QualifiedID:
+                    name: a
+                    qualifier: null
         name:
           ID:
             name: nested

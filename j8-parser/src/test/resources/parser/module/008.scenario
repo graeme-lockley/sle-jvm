@@ -32,8 +32,9 @@ Module:
                           name: a
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: List
+                        qualifier: null
                 range:
                   TConstReference:
                     arguments: [
@@ -41,19 +42,26 @@ Module:
                           name: b
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: List
+                        qualifier: null
       LetDeclaration:
         arguments: [
             IdReferencePattern:
               name: f
             ConstructorReferencePattern:
-              name: Nil
+              name:
+                QualifiedID:
+                  name: Nil
+                  qualifier: null
               parameters: []
           ]
         expression:
           ConstructorReference:
-            name: Nil
+            name:
+              QualifiedID:
+                name: Nil
+                qualifier: null
         name:
           ID:
             name: map
@@ -62,7 +70,10 @@ Module:
             IdReferencePattern:
               name: f
             ConstructorReferencePattern:
-              name: Cons
+              name:
+                QualifiedID:
+                  name: Cons
+                  qualifier: null
               parameters: [
                   IdReferencePattern:
                     name: x
@@ -76,25 +87,43 @@ Module:
                 CallExpression:
                   operands: [
                       IdReference:
-                        name: x
+                        name:
+                          QualifiedID:
+                            name: x
+                            qualifier: null
                     ]
                   operator:
                     IdReference:
-                      name: f
+                      name:
+                        QualifiedID:
+                          name: f
+                          qualifier: null
                 CallExpression:
                   operands: [
                       IdReference:
-                        name: f
+                        name:
+                          QualifiedID:
+                            name: f
+                            qualifier: null
                       IdReference:
-                        name: xs
+                        name:
+                          QualifiedID:
+                            name: xs
+                            qualifier: null
                     ]
                   operator:
                     IdReference:
-                      name: map
+                      name:
+                        QualifiedID:
+                          name: map
+                          qualifier: null
               ]
             operator:
               ConstructorReference:
-                name: Cons
+                name:
+                  QualifiedID:
+                    name: Cons
+                    qualifier: null
         name:
           ID:
             name: map

@@ -18,14 +18,16 @@ Module:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
             range:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
       LetSignature:
         name:
           ID:
@@ -34,8 +36,9 @@ Module:
           TConstReference:
             arguments: []
             name:
-              ID:
+              QualifiedID:
                 name: IntToInt
+                qualifier: null
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -51,7 +54,10 @@ Module:
                 name: -
             right:
               IdReference:
-                name: a
+                name:
+                  QualifiedID:
+                    name: a
+                    qualifier: null
         name:
           ID:
             name: negate

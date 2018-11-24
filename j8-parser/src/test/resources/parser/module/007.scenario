@@ -15,20 +15,27 @@ Module:
                 CallExpression:
                   operands: [
                       IdReference:
-                        name: x
+                        name:
+                          QualifiedID:
+                            name: x
+                            qualifier: null
                     ]
                   operator:
                     ConstructorReference:
-                      name: Cons
+                      name:
+                        QualifiedID:
+                          name: Cons
+                          qualifier: null
               ]
             operator:
               IdReference:
-                name: removedups
+                name:
+                  QualifiedID:
+                    name: removedups
+                    qualifier: null
         name:
           ID:
             name: removedups
     ]
   exports: []
   imports: []
-
-

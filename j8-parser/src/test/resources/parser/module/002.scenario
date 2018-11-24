@@ -7,48 +7,60 @@ sub a b =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      arguments: [
-        IdReferencePattern:
-          name: x
-        IdReferencePattern:
-          name: y
-      ]
-      expression:
-        BinaryOpExpression:
-          left:
-            IdReference:
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
               name: x
-          operator:
-            ID:
-              name: +
-          right:
-            IdReference:
+            IdReferencePattern:
               name: y
-      name:
-        ID:
-          name: add
-    LetDeclaration:
-      arguments: [
-        IdReferencePattern:
-          name: a
-        IdReferencePattern:
-          name: b
-      ]
-      expression:
-        BinaryOpExpression:
-          left:
-            IdReference:
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: x
+                    qualifier: null
+            operator:
+              ID:
+                name: +
+            right:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: y
+                    qualifier: null
+        name:
+          ID:
+            name: add
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
               name: a
-          operator:
-            ID:
-              name: -
-          right:
-            IdReference:
+            IdReferencePattern:
               name: b
-      name:
-        ID:
-          name: sub
-  ]
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: a
+                    qualifier: null
+            operator:
+              ID:
+                name: -
+            right:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: b
+                    qualifier: null
+        name:
+          ID:
+            name: sub
+    ]
   exports: []
   imports: []

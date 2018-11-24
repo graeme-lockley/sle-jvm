@@ -22,18 +22,23 @@ Module:
                       name: a
                   ]
                 name:
-                  ID:
+                  QualifiedID:
                     name: List
+                    qualifier: null
             range:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
       LetDeclaration:
         arguments: [
             ConstructorReferencePattern:
-              name: Nil
+              name:
+                QualifiedID:
+                  name: Nil
+                  qualifier: null
               parameters: []
           ]
         expression:
@@ -45,7 +50,10 @@ Module:
       LetDeclaration:
         arguments: [
             ConstructorReferencePattern:
-              name: Cons
+              name:
+                QualifiedID:
+                  name: Cons
+                  qualifier: null
               parameters: [
                   IdReferencePattern:
                     name: x
@@ -65,11 +73,17 @@ Module:
               CallExpression:
                 operands: [
                     IdReference:
-                      name: xs
+                      name:
+                        QualifiedID:
+                          name: xs
+                          qualifier: null
                   ]
                 operator:
                   IdReference:
-                    name: length
+                    name:
+                      QualifiedID:
+                        name: length
+                        qualifier: null
         name:
           ID:
             name: length

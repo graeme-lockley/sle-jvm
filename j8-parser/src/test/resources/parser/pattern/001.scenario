@@ -61,8 +61,9 @@ Module:
                       name: b
                   ]
                 name:
-                  ID:
+                  QualifiedID:
                     name: Tuple
+                    qualifier: null
             range:
               TVarReference:
                 name: a
@@ -77,10 +78,16 @@ Module:
                 CaseItem:
                   expression:
                     IdReference:
-                      name: a
+                      name:
+                        QualifiedID:
+                          name: a
+                          qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Tuple
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                       parameters: [
                           IdReferencePattern:
                             name: a
@@ -90,7 +97,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: t
+                name:
+                  QualifiedID:
+                    name: t
+                    qualifier: null
         name:
           ID:
             name: first
@@ -109,8 +119,9 @@ Module:
                       name: b
                   ]
                 name:
-                  ID:
+                  QualifiedID:
                     name: Tuple
+                    qualifier: null
             range:
               TVarReference:
                 name: b
@@ -125,10 +136,16 @@ Module:
                 CaseItem:
                   expression:
                     IdReference:
-                      name: b
+                      name:
+                        QualifiedID:
+                          name: b
+                          qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Tuple
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                       parameters: [
                           IdReferencePattern:
                             name: a
@@ -138,7 +155,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: t
+                name:
+                  QualifiedID:
+                    name: t
+                    qualifier: null
         name:
           ID:
             name: second
@@ -167,8 +187,9 @@ Module:
                           name: b
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
                 range:
                   TConstReference:
                     arguments: [
@@ -178,8 +199,9 @@ Module:
                           name: b
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -197,20 +219,35 @@ Module:
                           CallExpression:
                             operands: [
                                 IdReference:
-                                  name: a
+                                  name:
+                                    QualifiedID:
+                                      name: a
+                                      qualifier: null
                               ]
                             operator:
                               IdReference:
-                                name: f
+                                name:
+                                  QualifiedID:
+                                    name: f
+                                    qualifier: null
                           IdReference:
-                            name: b
+                            name:
+                              QualifiedID:
+                                name: b
+                                qualifier: null
                         ]
                       operator:
                         ConstructorReference:
-                          name: Tuple
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Tuple
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                       parameters: [
                           IdReferencePattern:
                             name: a
@@ -220,7 +257,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: t
+                name:
+                  QualifiedID:
+                    name: t
+                    qualifier: null
         name:
           ID:
             name: mapFirst
@@ -249,8 +289,9 @@ Module:
                           name: b
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
                 range:
                   TConstReference:
                     arguments: [
@@ -260,8 +301,9 @@ Module:
                           name: c
                       ]
                     name:
-                      ID:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -277,22 +319,37 @@ Module:
                     CallExpression:
                       operands: [
                           IdReference:
-                            name: a
+                            name:
+                              QualifiedID:
+                                name: a
+                                qualifier: null
                           CallExpression:
                             operands: [
                                 IdReference:
-                                  name: b
+                                  name:
+                                    QualifiedID:
+                                      name: b
+                                      qualifier: null
                               ]
                             operator:
                               IdReference:
-                                name: f
+                                name:
+                                  QualifiedID:
+                                    name: f
+                                    qualifier: null
                         ]
                       operator:
                         ConstructorReference:
-                          name: Tuple
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                   pattern:
                     ConstructorReferencePattern:
-                      name: Tuple
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                       parameters: [
                           IdReferencePattern:
                             name: a
@@ -302,7 +359,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: t
+                name:
+                  QualifiedID:
+                    name: t
+                    qualifier: null
         name:
           ID:
             name: mapSecond

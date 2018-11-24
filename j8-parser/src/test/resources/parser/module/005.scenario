@@ -16,14 +16,16 @@ Module:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
             range:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
       LetGuardDeclaration:
         arguments: [
             IdReferencePattern:
@@ -35,7 +37,10 @@ Module:
                 BinaryOpExpression:
                   left:
                     IdReference:
-                      name: n
+                      name:
+                        QualifiedID:
+                          name: n
+                          qualifier: null
                   operator:
                     ID:
                       name: ==
@@ -48,12 +53,18 @@ Module:
             Pair:
               first:
                 IdReference:
-                  name: otherwise
+                  name:
+                    QualifiedID:
+                      name: otherwise
+                      qualifier: null
               second:
                 BinaryOpExpression:
                   left:
                     IdReference:
-                      name: n
+                      name:
+                        QualifiedID:
+                          name: n
+                          qualifier: null
                   operator:
                     ID:
                       name: *
@@ -63,7 +74,10 @@ Module:
                           BinaryOpExpression:
                             left:
                               IdReference:
-                                name: n
+                                name:
+                                  QualifiedID:
+                                    name: n
+                                    qualifier: null
                             operator:
                               ID:
                                 name: -
@@ -73,7 +87,10 @@ Module:
                         ]
                       operator:
                         IdReference:
-                          name: factorial
+                          name:
+                            QualifiedID:
+                              name: factorial
+                              qualifier: null
           ]
         name:
           ID:

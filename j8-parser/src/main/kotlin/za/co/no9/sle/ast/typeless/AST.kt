@@ -92,6 +92,11 @@ data class ID(
         override val location: Location,
         val name: String) : Node(location)
 
+data class QualifiedID(
+        override val location: Location,
+        val qualifier: String?,
+        val name: String) : Node(location)
+
 
 sealed class Expression(
         location: Location) : Node(location)
@@ -119,11 +124,11 @@ data class NotExpression(
 
 data class IdReference(
         override val location: Location,
-        val name: String) : Expression(location)
+        val name: QualifiedID) : Expression(location)
 
 data class ConstructorReference(
         override val location: Location,
-        val name: String) : Expression(location)
+        val name: QualifiedID) : Expression(location)
 
 data class IfExpression(
         override val location: Location,
@@ -182,7 +187,7 @@ data class IdReferencePattern(
 
 data class ConstructorReferencePattern(
         override val location: Location,
-        val name: String,
+        val name: QualifiedID,
         val parameters: List<Pattern>) : Pattern(location)
 
 
@@ -198,7 +203,7 @@ data class TVarReference(
 
 data class TConstReference(
         override val location: Location,
-        val name: ID,
+        val name: QualifiedID,
         val arguments: List<TType>) : TType(location)
 
 data class TArrow(

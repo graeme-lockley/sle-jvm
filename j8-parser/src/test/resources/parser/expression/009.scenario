@@ -7,29 +7,38 @@ value a b c =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      arguments: [
-        IdReferencePattern:
-          name: a
-        IdReferencePattern:
-          name: b
-        IdReferencePattern:
-          name: c
-      ]
-      expression:
-        IfExpression:
-          elseExpression:
-            IdReference:
-              name: c
-          guardExpression:
-            IdReference:
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
               name: a
-          thenExpression:
-            IdReference:
+            IdReferencePattern:
               name: b
-      name:
-        ID:
-          name: value
-  ]
+            IdReferencePattern:
+              name: c
+          ]
+        expression:
+          IfExpression:
+            elseExpression:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: c
+                    qualifier: null
+            guardExpression:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: a
+                    qualifier: null
+            thenExpression:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: b
+                    qualifier: null
+        name:
+          ID:
+            name: value
+    ]
   exports: []
   imports: []

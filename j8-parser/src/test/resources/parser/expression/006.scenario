@@ -4,19 +4,22 @@ value x =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      arguments: [
-        IdReferencePattern:
-          name: x
-      ]
-      expression:
-        NotExpression:
-          expression:
-            IdReference:
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
               name: x
-      name:
-        ID:
-          name: value
-  ]
+          ]
+        expression:
+          NotExpression:
+            expression:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: x
+                    qualifier: null
+        name:
+          ID:
+            name: value
+    ]
   exports: []
   imports: []

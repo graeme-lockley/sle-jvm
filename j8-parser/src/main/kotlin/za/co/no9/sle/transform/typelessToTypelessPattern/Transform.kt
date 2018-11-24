@@ -215,10 +215,10 @@ fun astToCoreAST(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 CallExpression(ast.location, IdReference(ast.location, "(!)"), astToCoreAST(ast.expression))
 
             is za.co.no9.sle.ast.typeless.IdReference ->
-                IdReference(ast.location, ast.name)
+                IdReference(ast.location, transform(ast.name))
 
             is za.co.no9.sle.ast.typeless.ConstructorReference ->
-                ConstructorReference(ast.location, ast.name)
+                ConstructorReference(ast.location, transform(ast.name))
 
             is za.co.no9.sle.ast.typeless.IfExpression ->
                 IfExpression(ast.location, astToCoreAST(ast.guardExpression), astToCoreAST(ast.thenExpression), astToCoreAST(ast.elseExpression))
@@ -262,8 +262,12 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
                 IdReferencePattern(pattern.location, pattern.name)
 
             is za.co.no9.sle.ast.typeless.ConstructorReferencePattern ->
-                ConstructorReferencePattern(pattern.location, pattern.name, pattern.parameters.map { transform(it) })
+                ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
         }
+
+
+private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): String =
+    qualifiedID.name
 
 
 private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =

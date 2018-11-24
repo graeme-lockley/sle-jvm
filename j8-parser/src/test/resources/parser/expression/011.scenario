@@ -37,294 +37,366 @@ slash =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: ||
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: barBar
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: ||
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: barBar
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: &&
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: ampersandAmpersand
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: &&
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: ampersandAmpersand
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: ==
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: equalEqual
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: ==
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: equalEqual
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: !=
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: bangEqual
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: !=
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: bangEqual
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: <=
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: lessEqual
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: <=
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: lessEqual
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: <
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: lessThan
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: <
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: lessThan
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: >=
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: greaterEqual
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: >=
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: greaterEqual
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: >
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: greaterThan
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: >
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: greaterThan
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: +
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: plus
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: +
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: plus
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: -
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: minus
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: -
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: minus
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: *
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: star
-    LetDeclaration:
-      arguments: []
-      expression:
-        LambdaExpression:
-          arguments: [
-            IdReferencePattern:
-              name: x
-            IdReferencePattern:
-              name: y
-          ]
-          expression:
-            BinaryOpExpression:
-              left:
-                IdReference:
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: *
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: star
+      LetDeclaration:
+        arguments: []
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
                   name: x
-              operator:
-                ID:
-                  name: /
-              right:
-                IdReference:
+                IdReferencePattern:
                   name: y
-      name:
-        ID:
-          name: slash
-  ]
+              ]
+            expression:
+              BinaryOpExpression:
+                left:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: x
+                        qualifier: null
+                operator:
+                  ID:
+                    name: /
+                right:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: y
+                        qualifier: null
+        name:
+          ID:
+            name: slash
+    ]
   exports: []
   imports: []

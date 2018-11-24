@@ -485,7 +485,7 @@ class Parser(private val lexer: Lexer) {
                     val lowerIDSymbol =
                             lexer.next()
 
-                    IdReference(lowerIDSymbol.location, lowerIDSymbol.text)
+                    IdReference(lowerIDSymbol.location, QualifiedID(lowerIDSymbol.location, null, lowerIDSymbol.text))
                 }
 
                 isOperator("(") -> {
@@ -508,10 +508,33 @@ class Parser(private val lexer: Lexer) {
                 }
 
                 isToken(Token.UpperID) -> {
-                    val lowerID =
+                    val upperID =
                             lexer.next()
 
-                    ConstructorReference(lowerID.location, lowerID.text)
+                    if (isOperator(".")) {
+                        skip()
+
+                        when {
+                            isToken(Token.UpperID) -> {
+                                val name =
+                                        lexer.next()
+
+                                ConstructorReference(upperID.location + name.location, QualifiedID(upperID.location + name.location, upperID.text, name.text))
+                            }
+
+                            isToken(Token.LowerID) -> {
+                                val name =
+                                        lexer.next()
+
+                                IdReference(upperID.location + name.location, QualifiedID(upperID.location + name.location, upperID.text, name.text))
+                            }
+
+                            else ->
+                                throw syntaxError("Expected lower ID or upper ID")
+                        }
+                    } else {
+                        ConstructorReference(upperID.location, QualifiedID(upperID.location, null, upperID.text))
+                    }
                 }
 
                 else ->
@@ -547,8 +570,8 @@ class Parser(private val lexer: Lexer) {
     fun parseADTType(): TType =
             when {
                 isToken(Token.UpperID) -> {
-                    val upperID =
-                            lexer.next().toID()
+                    val qualifiedUpperID =
+                            parseQualifiedUpperID()
 
                     val arguments =
                             mutableListOf<TType>()
@@ -557,11 +580,62 @@ class Parser(private val lexer: Lexer) {
                         arguments.add(parseADTType())
                     }
 
-                    TConstReference(upperID.location + locationFrom(arguments), upperID, arguments)
+                    TConstReference(qualifiedUpperID.location + locationFrom(arguments), qualifiedUpperID, arguments)
                 }
 
                 else ->
                     parseTermType()
+            }
+
+
+    fun parseQualifiedUpperID(): QualifiedID =
+            when {
+                isToken(Token.UpperID) -> {
+                    val upperID =
+                            lexer.next().toID()
+
+                    if (isOperator(".")) {
+                        skip()
+                        val otherUpperID =
+                                lexer.next().toID()
+                        QualifiedID(upperID.location + otherUpperID.location, upperID.name, otherUpperID.name)
+                    } else {
+                        QualifiedID(upperID.location, null, upperID.name)
+                    }
+                }
+
+                else ->
+                    throw syntaxError("Expected upper ID")
+            }
+
+
+    fun parseQualifiedLowerID(): QualifiedID =
+            when {
+                isToken(Token.UpperID) -> {
+                    val upperID =
+                            lexer.next().toID()
+
+                    matchOperator(".")
+                    skip()
+                    if (isToken(Token.LowerID)) {
+                        val lowerID =
+                                lexer.next().toID()
+
+                        QualifiedID(upperID.location + lowerID.location, upperID.name, lowerID.name)
+                    } else {
+                        throw syntaxError("Expected lower ID")
+                    }
+                }
+
+                isToken(Token.LowerID) -> {
+                    val lowerID =
+                            lexer.next().toID()
+
+                    QualifiedID(lowerID.location, null, lowerID.name)
+                }
+
+                else ->
+                    throw syntaxError("Expected upper ID or lower ID")
             }
 
 
@@ -613,8 +687,8 @@ class Parser(private val lexer: Lexer) {
     fun parseConstructorPattern(): Pattern =
             when {
                 isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" -> {
-                    val upperIDSymbol =
-                            lexer.next()
+                    val qualifiedUpperID =
+                            parseQualifiedUpperID()
 
                     val parameters =
                             mutableListOf<Pattern>()
@@ -623,7 +697,7 @@ class Parser(private val lexer: Lexer) {
                         parameters.add(parseArgumentPattern())
                     }
 
-                    ConstructorReferencePattern(upperIDSymbol.location + locationFrom(parameters), upperIDSymbol.text, parameters)
+                    ConstructorReferencePattern(qualifiedUpperID.location + locationFrom(parameters), qualifiedUpperID, parameters)
                 }
 
                 else ->
@@ -634,10 +708,10 @@ class Parser(private val lexer: Lexer) {
     fun parseArgumentPattern(): Pattern =
             when {
                 isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" -> {
-                    val upperIDSymbol =
-                            lexer.next()
+                    val qualifiedUpperID =
+                            parseQualifiedUpperID()
 
-                    ConstructorReferencePattern(upperIDSymbol.location, upperIDSymbol.text, emptyList())
+                    ConstructorReferencePattern(qualifiedUpperID.location, qualifiedUpperID, emptyList())
                 }
                 else -> parsePattern()
             }

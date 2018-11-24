@@ -20,8 +20,9 @@ Module:
               TConstReference:
                 arguments: []
                 name:
-                  ID:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
       LetDeclaration:
         arguments: []
         expression:
@@ -39,7 +40,10 @@ Module:
               ]
             operator:
               IdReference:
-                name: calculate
+                name:
+                  QualifiedID:
+                    name: calculate
+                    qualifier: null
         name:
           ID:
             name: value
