@@ -119,7 +119,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                                             ast.location,
                                             transform(ast.name),
                                             scheme,
-                                            ast.constructors.map { constructor -> Constructor(constructor.location, transform(constructor.name), constructor.arguments.map { ttype -> astToType(ttype, substitution) }) }
+                                            ast.constructors.map { constructor -> Constructor(constructor.location, transform(constructor.name), constructor.arguments.map { ttype -> transform(ttype, substitution) }) }
                                     )
                                 }
 
@@ -271,7 +271,7 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
         }
 
 
-private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
         when (type) {
             is TUnit ->
                 typeUnit
@@ -280,10 +280,10 @@ private fun astToType(type: TType, substitution: Map<String, TVar> = emptyMap())
                 substitution[type.name] ?: TCon(type.location, type.name)
 
             is TConstReference ->
-                TCon(type.location, type.name.name, type.arguments.map { astToType(it, substitution) })
+                TCon(type.location, type.name.name, type.arguments.map { transform(it, substitution) })
 
             is TArrow ->
-                TArr(astToType(type.domain, substitution), astToType(type.range, substitution))
+                TArr(transform(type.domain, substitution), transform(type.range, substitution))
         }
 
 
