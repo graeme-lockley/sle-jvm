@@ -1,8 +1,8 @@
--- Use an explicitly imported function
-import file:./List exposing map
+-- Use an explicitly imported opaque type
+import file:./List
 
-multiplyByN n =
-    map (\i -> n * i)
+multiply n =
+    List.map (\i -> n * i)
 -- typeAST
 Module:
   declarations: [
@@ -166,7 +166,7 @@ Module:
           ]
         name:
           ID:
-            name: multiplyByN
+            name: multiply
         scheme:
           Scheme:
             parameters: []

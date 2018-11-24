@@ -61,7 +61,6 @@ private class ApplyContext(private val environment: Environment) {
             Module(
                     module.location,
                     module.exports.map { apply(it, substitution) },
-                    module.imports,
                     module.declarations.map {
                         when (it) {
                             is LetDeclaration ->

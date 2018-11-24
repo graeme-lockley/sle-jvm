@@ -12,7 +12,6 @@ sealed class Node(
 data class Module(
         override val location: Location,
         val exports: List<ExportDeclaration>,
-        val imports: List<Import>,
         val declarations: List<Declaration>) : Node(location)
 
 
