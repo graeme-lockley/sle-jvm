@@ -1,0 +1,223 @@
+-- Use imported constructors for constructing and pattern matching
+import file:./List
+
+
+isEmpty List.Nil = True
+isEmpty xs = False
+
+
+singleton x =
+    List.Cons x List.Nil
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstructorReferencePattern:
+                  name:
+                    QualifiedID:
+                      name: Nil
+                      qualifier: List
+                  parameters: []
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 0
+                        ]
+                      name: List
+              expression:
+                ConstantBool:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Bool
+                  value: true
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 0
+                        ]
+                      name: List
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Bool
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: xs
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 0
+                        ]
+                      name: List
+              expression:
+                ConstantBool:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Bool
+                  value: false
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 0
+                        ]
+                      name: List
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Bool
+          ]
+        name:
+          ID:
+            name: isEmpty
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: List
+                range:
+                  TCon:
+                    arguments: []
+                    name: Bool
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+                  type:
+                    TVar:
+                      variable: 5
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: Nil
+                          qualifier: List
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 5
+                            ]
+                          name: List
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
+                          type:
+                            TVar:
+                              variable: 5
+                      operator:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: List
+                          type:
+                            TArr:
+                              domain:
+                                TVar:
+                                  variable: 5
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 5
+                                        ]
+                                      name: List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 5
+                                        ]
+                                      name: List
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 5
+                                ]
+                              name: List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 5
+                                ]
+                              name: List
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 5
+                        ]
+                      name: List
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 5
+                  range:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 5
+                        ]
+                      name: List
+          ]
+        name:
+          ID:
+            name: singleton
+        scheme:
+          Scheme:
+            parameters: [
+                5
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 5
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 5
+                      ]
+                    name: List
+    ]
+  exports: []
