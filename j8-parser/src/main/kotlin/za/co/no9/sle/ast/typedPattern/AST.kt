@@ -40,41 +40,6 @@ data class ConstructorNameDeclaration(
         val scheme: Scheme)
 
 
-
-data class Import(
-        override val location: Location,
-        val asName: ID,
-        val namedDeclarations: List<ImportDeclaration>) : Node(location)
-
-sealed class ImportDeclaration(
-        location: Location) : Node(location)
-
-data class ValueImportDeclaration(
-        override val location: Location,
-        val name: ID,
-        val scheme: Scheme) : ImportDeclaration(location)
-
-data class AliasImportDeclaration(
-        override val location: Location,
-        val name: ID,
-        val scheme: Scheme) : ImportDeclaration(location)
-
-data class ADTImportDeclaration(
-        override val location: Location,
-        val name: ID,
-        val scheme: Scheme) : ImportDeclaration(location)
-
-data class FullADTImportDeclaration(
-        override val location: Location,
-        val name: ID,
-        val scheme: Scheme,
-        val constructors: List<ConstructorImportDeclaration>) : ImportDeclaration(location)
-
-data class ConstructorImportDeclaration(
-        val name: String,
-        val scheme: Scheme)
-
-
 sealed class Declaration(
         location: Location) : Node(location)
 
