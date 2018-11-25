@@ -97,7 +97,10 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name: Nil
+                      name:
+                        QualifiedID:
+                          name: Nil
+                          qualifier: null
                       type:
                         TCon:
                           arguments: [
@@ -109,13 +112,19 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: x
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
                           type:
                             TVar:
                               variable: 3
                       operator:
                         IdReference:
-                          name: Cons
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: null
                           type:
                             TArr:
                               domain:
@@ -208,7 +217,10 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: Nil
+                          name:
+                            QualifiedID:
+                              name: Nil
+                              qualifier: null
                           type:
                             TCon:
                               arguments: [
@@ -220,13 +232,19 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name: x
+                              name:
+                                QualifiedID:
+                                  name: x
+                                  qualifier: null
                               type:
                                 TVar:
                                   variable: 10
                           operator:
                             IdReference:
-                              name: Cons
+                              name:
+                                QualifiedID:
+                                  name: Cons
+                                  qualifier: null
                               type:
                                 TArr:
                                   domain:
@@ -275,13 +293,19 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: x
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
                           type:
                             TVar:
                               variable: 10
                       operator:
                         IdReference:
-                          name: Cons
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: null
                           type:
                             TArr:
                               domain:
@@ -371,7 +395,10 @@ Module:
                   value: 10
               operator:
                 IdReference:
-                  name: singleton
+                  name:
+                    QualifiedID:
+                      name: singleton
+                      qualifier: null
                   type:
                     TArr:
                       domain:
@@ -421,7 +448,10 @@ Module:
                   value: true
               operator:
                 IdReference:
-                  name: duplicate
+                  name:
+                    QualifiedID:
+                      name: duplicate
+                      qualifier: null
                   type:
                     TArr:
                       domain:

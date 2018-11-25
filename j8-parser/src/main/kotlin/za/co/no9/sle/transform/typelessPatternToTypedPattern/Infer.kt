@@ -4,7 +4,6 @@ import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedPattern.*
 import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.Declaration
-import za.co.no9.sle.ast.typelessPattern.QualifiedID
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
@@ -494,7 +493,7 @@ private class InferContext(private val repository: Repository<Item>, private val
     }
 }
 
-private fun QualifiedID.asQString(): QString =
+private fun za.co.no9.sle.ast.typelessPattern.QualifiedID.asQString(): QString =
         QString(this.qualifier, this.name)
 
 
@@ -620,8 +619,8 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
 }
 
 
-private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): String =
-        qualifiedID.name
+private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): QualifiedID =
+        QualifiedID(qualifiedID.location, qualifiedID.qualifier, qualifiedID.name)
 
 
 private fun Type.arity(): Int =

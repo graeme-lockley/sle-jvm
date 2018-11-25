@@ -114,7 +114,10 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name: e
+                                  name:
+                                    QualifiedID:
+                                      name: e
+                                      qualifier: null
                                   type:
                                     TVar:
                                       variable: 1
@@ -133,14 +136,20 @@ Module:
                                         CallExpression:
                                           operand:
                                             IdReference:
-                                              name: n
+                                              name:
+                                                QualifiedID:
+                                                  name: n
+                                                  qualifier: null
                                               type:
                                                 TCon:
                                                   arguments: []
                                                   name: Int
                                           operator:
                                             IdReference:
-                                              name: (-)
+                                              name:
+                                                QualifiedID:
+                                                  name: (-)
+                                                  qualifier: null
                                               type:
                                                 TArr:
                                                   domain:
@@ -173,7 +182,10 @@ Module:
                                           name: Int
                                   operator:
                                     IdReference:
-                                      name: repeat
+                                      name:
+                                        QualifiedID:
+                                          name: repeat
+                                          qualifier: null
                                       type:
                                         TArr:
                                           domain:
@@ -215,13 +227,19 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name: e
+                                  name:
+                                    QualifiedID:
+                                      name: e
+                                      qualifier: null
                                   type:
                                     TVar:
                                       variable: 1
                               operator:
                                 IdReference:
-                                  name: Cons
+                                  name:
+                                    QualifiedID:
+                                      name: Cons
+                                      qualifier: null
                                   type:
                                     TArr:
                                       domain:
@@ -279,14 +297,20 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name: n
+                                  name:
+                                    QualifiedID:
+                                      name: n
+                                      qualifier: null
                                   type:
                                     TCon:
                                       arguments: []
                                       name: Int
                               operator:
                                 IdReference:
-                                  name: (==)
+                                  name:
+                                    QualifiedID:
+                                      name: (==)
+                                      qualifier: null
                                   type:
                                     TArr:
                                       domain:
@@ -319,7 +343,10 @@ Module:
                               name: Bool
                       thenExpression:
                         IdReference:
-                          name: Nil
+                          name:
+                            QualifiedID:
+                              name: Nil
+                              qualifier: null
                           type:
                             TCon:
                               arguments: [
@@ -404,7 +431,10 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name: x
+                      name:
+                        QualifiedID:
+                          name: x
+                          qualifier: null
                       type:
                         TVar:
                           variable: 15
@@ -419,7 +449,10 @@ Module:
                           value: 1
                       operator:
                         IdReference:
-                          name: repeat
+                          name:
+                            QualifiedID:
+                              name: repeat
+                              qualifier: null
                           type:
                             TArr:
                               domain:

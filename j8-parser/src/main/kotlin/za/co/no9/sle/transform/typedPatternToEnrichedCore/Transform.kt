@@ -148,7 +148,7 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
                 ConstantString(expression.location, expression.type, expression.value)
 
             is za.co.no9.sle.ast.typedPattern.IdReference ->
-                IdReference(expression.location, expression.type, expression.name)
+                IdReference(expression.location, expression.type, expression.name.name)
 
             is za.co.no9.sle.ast.typedPattern.IfExpression ->
                 IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
@@ -292,7 +292,7 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
                             PatternTransformResult(a.result + transformResult.result, transformResult.state)
                         }
 
-                PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
+                PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name.name, parameters.result), parameters.state)
             }
         }
 

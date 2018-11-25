@@ -30,7 +30,10 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: b
+                          name:
+                            QualifiedID:
+                              name: b
+                              qualifier: null
                           type:
                             TCon:
                               arguments: []
@@ -39,14 +42,20 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name: a
+                              name:
+                                QualifiedID:
+                                  name: a
+                                  qualifier: null
                               type:
                                 TCon:
                                   arguments: []
                                   name: Int
                           operator:
                             IdReference:
-                              name: (+)
+                              name:
+                                QualifiedID:
+                                  name: (+)
+                                  qualifier: null
                               type:
                                 TArr:
                                   domain:

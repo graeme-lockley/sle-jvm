@@ -55,7 +55,10 @@ Module:
             LambdaExpression:
               argument:
                 ConstructorReferencePattern:
-                  name: Nil
+                  name:
+                    QualifiedID:
+                      name: Nil
+                      qualifier: null
                   parameters: []
                   type:
                     TCon:
@@ -87,7 +90,10 @@ Module:
             LambdaExpression:
               argument:
                 ConstructorReferencePattern:
-                  name: Cons
+                  name:
+                    QualifiedID:
+                      name: Cons
+                      qualifier: null
                   parameters: [
                       IdReferencePattern:
                         name: x
@@ -117,7 +123,10 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name: xs
+                          name:
+                            QualifiedID:
+                              name: xs
+                              qualifier: null
                           type:
                             TCon:
                               arguments: [
@@ -127,7 +136,10 @@ Module:
                               name: List
                       operator:
                         IdReference:
-                          name: length
+                          name:
+                            QualifiedID:
+                              name: length
+                              qualifier: null
                           type:
                             TArr:
                               domain:
@@ -156,7 +168,10 @@ Module:
                           value: 1
                       operator:
                         IdReference:
-                          name: (+)
+                          name:
+                            QualifiedID:
+                              name: (+)
+                              qualifier: null
                           type:
                             TArr:
                               domain:

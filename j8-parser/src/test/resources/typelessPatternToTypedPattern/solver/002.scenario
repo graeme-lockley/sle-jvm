@@ -73,7 +73,10 @@ Module:
                       name: ()
               operator:
                 IdReference:
-                  name: calculate
+                  name:
+                    QualifiedID:
+                      name: calculate
+                      qualifier: null
                   type:
                     TArr:
                       domain:

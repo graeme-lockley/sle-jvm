@@ -30,7 +30,10 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name: f
+                      name:
+                        QualifiedID:
+                          name: f
+                          qualifier: null
                       type:
                         TArr:
                           domain:
@@ -43,7 +46,10 @@ Module:
                               name: Int
                   operator:
                     IdReference:
-                      name: map
+                      name:
+                        QualifiedID:
+                          name: map
+                          qualifier: null
                       type:
                         TArr:
                           domain:
@@ -176,7 +182,10 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name: i
+                              name:
+                                QualifiedID:
+                                  name: i
+                                  qualifier: null
                               type:
                                 TCon:
                                   arguments: []
@@ -185,14 +194,20 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name: n
+                                  name:
+                                    QualifiedID:
+                                      name: n
+                                      qualifier: null
                                   type:
                                     TCon:
                                       arguments: []
                                       name: Int
                               operator:
                                 IdReference:
-                                  name: (*)
+                                  name:
+                                    QualifiedID:
+                                      name: (*)
+                                      qualifier: null
                                   type:
                                     TArr:
                                       domain:
@@ -235,7 +250,10 @@ Module:
                               name: Int
                   operator:
                     IdReference:
-                      name: transform
+                      name:
+                        QualifiedID:
+                          name: transform
+                          qualifier: null
                       type:
                         TArr:
                           domain:

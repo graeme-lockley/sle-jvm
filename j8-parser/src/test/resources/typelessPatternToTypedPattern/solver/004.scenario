@@ -16,7 +16,10 @@ Module:
                       variable: 0
               expression:
                 IdReference:
-                  name: x
+                  name:
+                    QualifiedID:
+                      name: x
+                      qualifier: null
                   type:
                     TVar:
                       variable: 0
