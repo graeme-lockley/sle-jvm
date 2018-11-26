@@ -1,11 +1,11 @@
 package za.co.no9.sle.repository
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import za.co.no9.sle.Location
 import za.co.no9.sle.QString
+import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.TArr
 import za.co.no9.sle.typing.TCon
 import za.co.no9.sle.typing.TVar
@@ -18,7 +18,30 @@ fun toJsonString(export: Export): String =
         gson.toJson(export)
 
 
-fun fromJsonString(input: String): Export {
+fun fromJsonString(input: String, builtins: Environment, qualifier: String?): Export {
+    fun jsonToType(type: JsonObject): Type =
+            when {
+                type.has("variable") ->
+                    Variable(type["variable"].asInt)
+
+                type.has("constant") ->
+                    if (builtins.containsType(type["constant"].asString))
+                        Constant(QString(type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                    else
+                        Constant(QString(qualifier, type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+
+                else ->
+                    Arrow(jsonToType(type["domain"].asJsonObject), jsonToType(type["range"].asJsonObject))
+            }
+
+    fun jsonToScheme(scheme: JsonObject): Scheme =
+            Scheme(scheme["parameters"].asJsonArray.map { it.asInt }, jsonToType(scheme["type"].asJsonObject))
+
+
+    fun jsonToConstructor(constructor: JsonObject): Constructor =
+            Constructor(constructor["name"].asString, jsonToScheme(constructor["scheme"].asJsonObject))
+
+
     val declarations =
             JsonParser().parse(input).asJsonObject["declarations"].asJsonArray
 
@@ -41,27 +64,6 @@ fun fromJsonString(input: String): Export {
         }
     })
 }
-
-
-private fun jsonToConstructor(constructor: JsonObject): Constructor =
-        Constructor(constructor["name"].asString, jsonToScheme(constructor["scheme"].asJsonObject))
-
-
-private fun jsonToScheme(scheme: JsonObject): Scheme =
-        Scheme(scheme["parameters"].asJsonArray.map { it.asInt }, jsonToType(scheme["type"].asJsonObject))
-
-
-private fun jsonToType(type: JsonObject): Type =
-        when {
-            type.has("variable") ->
-                Variable(type["variable"].asInt)
-
-            type.has("constant") ->
-                Constant(QString(type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
-
-            else ->
-                Arrow(jsonToType(type["domain"].asJsonObject), jsonToType(type["range"].asJsonObject))
-        }
 
 
 data class Export(

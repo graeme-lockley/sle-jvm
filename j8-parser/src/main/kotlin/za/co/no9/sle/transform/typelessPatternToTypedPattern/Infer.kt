@@ -509,17 +509,23 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                 val importFile =
                         File(sourceFile.parentFile, import.urn.name)
 
-                val importItem =
-                        repository.item(import.urn.source, importFile)
-
-                val exports =
-                        importItem.exports()
-
                 val importName =
                         if (import.asName == null)
                             ID(import.location, import.urn.impliedName())
                         else
                             ID(import.asName.location, import.asName.name)
+
+                val importQualifier =
+                        if (import.importDeclarations.isEmpty() || import.asName != null)
+                            importName.name
+                        else
+                            null
+
+                val importItem =
+                        repository.item(import.urn.source, importFile, importQualifier)
+
+                val exports =
+                        importItem.exports()
 
                 if (import.importDeclarations.isEmpty()) {
                     val importEnvironment =

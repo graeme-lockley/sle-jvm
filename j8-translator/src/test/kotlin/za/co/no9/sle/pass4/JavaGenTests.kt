@@ -62,7 +62,7 @@ class TestRepository : Repository<TestItem> {
         TODO()
     }
 
-    override fun item(source: Source, inputFile: File): TestItem =
+    override fun item(source: Source, inputFile: File, qualifier: String?): TestItem =
             TestItem()
 }
 

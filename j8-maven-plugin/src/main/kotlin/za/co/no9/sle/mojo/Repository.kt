@@ -15,7 +15,7 @@ class Repository(
     }
 
 
-    override fun item(source: Source, inputFile: File): Item {
+    override fun item(source: Source, inputFile: File, qualifier: String?): Item {
         val sourcePrefixName =
                 sourcePrefix.absolutePath
 

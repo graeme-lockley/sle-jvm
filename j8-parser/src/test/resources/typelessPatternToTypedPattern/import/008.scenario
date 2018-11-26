@@ -1,13 +1,15 @@
--- Use imported constructors for constructing and pattern matching
-import file:./List
+-- Use imported constructors for constructing and pattern matching with type signatures
+import file:./List as LL
 
 
-isEmpty List.Nil = True
+isEmpty : LL.List a -> Bool
+isEmpty LL.Nil = True
 isEmpty xs = False
 
 
+singleton : a -> LL.List a
 singleton x =
-    List.Cons x List.Nil
+    LL.Cons x LL.Nil
 -- typeAST
 Module:
   declarations: [
@@ -19,7 +21,7 @@ Module:
                   name:
                     QualifiedID:
                       name: Nil
-                      qualifier: List
+                      qualifier: LL
                   parameters: []
                   type:
                     TCon:
@@ -27,7 +29,7 @@ Module:
                           TVar:
                             variable: 0
                         ]
-                      name: List.List
+                      name: LL.List
               expression:
                 ConstantBool:
                   type:
@@ -43,7 +45,7 @@ Module:
                           TVar:
                             variable: 0
                         ]
-                      name: List.List
+                      name: LL.List
                   range:
                     TCon:
                       arguments: []
@@ -58,7 +60,7 @@ Module:
                           TVar:
                             variable: 0
                         ]
-                      name: List.List
+                      name: LL.List
               expression:
                 ConstantBool:
                   type:
@@ -74,7 +76,7 @@ Module:
                           TVar:
                             variable: 0
                         ]
-                      name: List.List
+                      name: LL.List
                   range:
                     TCon:
                       arguments: []
@@ -96,7 +98,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: List.List
+                    name: LL.List
                 range:
                   TCon:
                     arguments: []
@@ -109,7 +111,7 @@ Module:
                   name: x
                   type:
                     TVar:
-                      variable: 5
+                      variable: 6
               expression:
                 CallExpression:
                   operand:
@@ -117,14 +119,14 @@ Module:
                       name:
                         QualifiedID:
                           name: Nil
-                          qualifier: List
+                          qualifier: LL
                       type:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 6
                             ]
-                          name: List.List
+                          name: LL.List
                   operator:
                     CallExpression:
                       operand:
@@ -135,69 +137,69 @@ Module:
                               qualifier: null
                           type:
                             TVar:
-                              variable: 5
+                              variable: 6
                       operator:
                         IdReference:
                           name:
                             QualifiedID:
                               name: Cons
-                              qualifier: List
+                              qualifier: LL
                           type:
                             TArr:
                               domain:
                                 TVar:
-                                  variable: 5
+                                  variable: 6
                               range:
                                 TArr:
                                   domain:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 5
+                                            variable: 6
                                         ]
-                                      name: List.List
+                                      name: LL.List
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 5
+                                            variable: 6
                                         ]
-                                      name: List.List
+                                      name: LL.List
                       type:
                         TArr:
                           domain:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 5
+                                    variable: 6
                                 ]
-                              name: List.List
+                              name: LL.List
                           range:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 5
+                                    variable: 6
                                 ]
-                              name: List.List
+                              name: LL.List
                   type:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 5
+                            variable: 6
                         ]
-                      name: List.List
+                      name: LL.List
               type:
                 TArr:
                   domain:
                     TVar:
-                      variable: 5
+                      variable: 6
                   range:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 5
+                            variable: 6
                         ]
-                      name: List.List
+                      name: LL.List
           ]
         name:
           ID:
@@ -205,19 +207,19 @@ Module:
         scheme:
           Scheme:
             parameters: [
-                5
+                0
               ]
             type:
               TArr:
                 domain:
                   TVar:
-                    variable: 5
+                    variable: 0
                 range:
                   TCon:
                     arguments: [
                         TVar:
-                          variable: 5
+                          variable: 0
                       ]
-                    name: List.List
+                    name: LL.List
     ]
   exports: []
