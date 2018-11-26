@@ -1,13 +1,13 @@
 -- A collection of list extension functions with import and export
 export find
 
-import github:Data.List:1.2.1
+import github:Data.List:1.2.1 as LL
 import github:Data.Maybe exposing Maybe(..)
 
 
-find : (a -> Bool) -> List a -> Maybe a
-find p Nil = Nothing
-find p (Cons x xs) =
+find : (a -> Bool) -> LL.List a -> Maybe a
+find p LL.Nil = Nothing
+find p (LL.Cons x xs) =
     if p x then
         Just x
     else
@@ -28,7 +28,7 @@ Module:
                       name:
                         QualifiedID:
                           name: Nil
-                          qualifier: null
+                          qualifier: LL
                       parameters: []
                   expression:
                     ConstructorReference:
@@ -47,7 +47,7 @@ Module:
                       name:
                         QualifiedID:
                           name: Cons
-                          qualifier: null
+                          qualifier: LL
                       parameters: [
                           IdReferencePattern:
                             name: x
@@ -134,7 +134,7 @@ Module:
                             TVar:
                               variable: 0
                           ]
-                        name: List
+                        name: LL.List
                     range:
                       TCon:
                         arguments: [
@@ -153,7 +153,7 @@ Module:
       Import:
         asName:
           ID:
-            name: List
+            name: LL
         importDeclarations: []
         urn:
           URN:
