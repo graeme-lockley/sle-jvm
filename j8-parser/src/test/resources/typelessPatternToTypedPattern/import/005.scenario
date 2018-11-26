@@ -124,7 +124,7 @@ Module:
                                         arguments: []
                                         name: Int
                                     ]
-                                  name: List
+                                  name: List.List
                               range:
                                 TCon:
                                   arguments: [
@@ -132,7 +132,7 @@ Module:
                                         arguments: []
                                         name: Int
                                     ]
-                                  name: List
+                                  name: List.List
                   type:
                     TArr:
                       domain:
@@ -142,7 +142,7 @@ Module:
                                 arguments: []
                                 name: Int
                             ]
-                          name: List
+                          name: List.List
                       range:
                         TCon:
                           arguments: [
@@ -150,7 +150,7 @@ Module:
                                 arguments: []
                                 name: Int
                             ]
-                          name: List
+                          name: List.List
               type:
                 TArr:
                   domain:
@@ -166,7 +166,7 @@ Module:
                                 arguments: []
                                 name: Int
                             ]
-                          name: List
+                          name: List.List
                       range:
                         TCon:
                           arguments: [
@@ -174,7 +174,7 @@ Module:
                                 arguments: []
                                 name: Int
                             ]
-                          name: List
+                          name: List.List
           ]
         name:
           ID:
@@ -197,7 +197,7 @@ Module:
                               arguments: []
                               name: Int
                           ]
-                        name: List
+                        name: List.List
                     range:
                       TCon:
                         arguments: [
@@ -205,6 +205,6 @@ Module:
                               arguments: []
                               name: Int
                           ]
-                        name: List
+                        name: List.List
     ]
   exports: []
