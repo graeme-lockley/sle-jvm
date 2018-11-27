@@ -81,64 +81,79 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                             it.second.source().absoluteFile
 
                     errors.forEach { error ->
-                        when (error) {
-                            is SyntaxError ->
-                                log.error("Syntax Error: $sourceName: ${error.location}: ${error.msg}")
+                        val errorMessage =
+                                when (error) {
+                                    is SyntaxError ->
+                                        "Syntax Error: $sourceName: ${error.location}: ${error.msg}"
 
-                            is UnboundVariable ->
-                                log.error("Unbound Parameter: $sourceName: ${error.location}: ${error.name}")
+                                    is UnboundVariable ->
+                                        "Unbound Parameter: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateLetDeclaration ->
-                                log.error("Duplicate Let Declaration: $sourceName: ${error.location}: ${error.name}")
+                                    is DuplicateLetDeclaration ->
+                                        "Duplicate Let Declaration: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateLetSignature ->
-                                log.error("Duplicate Let Signature: $sourceName: ${error.location}: ${error.otherLocation}: ${error.name}")
+                                    is DuplicateLetSignature ->
+                                        "Duplicate Let Signature: $sourceName: ${error.location}: ${error.otherLocation}: ${error.name}"
 
-                            is UnificationFail ->
-                                log.error("Unification Fail: $sourceName: ${error.t1} ${error.t2}")
+                                    is UnificationFail ->
+                                        "Unification Fail: $sourceName: ${error.t1} ${error.t2}"
 
-                            is UnificationMismatch ->
-                                log.error("Unification Mismatch: $sourceName: ${error.t1s}: ${error.t2s}")
+                                    is UnificationMismatch ->
+                                        "Unification Mismatch: $sourceName: ${error.t1s}: ${error.t2s}"
 
-                            is UnknownTypeReference ->
-                                log.error("Unknown Type Reference: $sourceName: ${error.location}: ${error.name}")
+                                    is UnknownTypeReference ->
+                                        "Unknown Type Reference: $sourceName: ${error.location}: ${error.name}"
 
-                            is UnknownConstructorReference ->
-                                log.error("Unknown Constructor Reference: $sourceName: ${error.location}: ${error.name}")
+                                    is UnknownConstructorReference ->
+                                        "Unknown Constructor Reference: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateTypeDeclaration ->
-                                log.error("Duplicate Type Declaration: $sourceName: ${error.location}: ${error.name}")
+                                    is DuplicateTypeDeclaration ->
+                                        "Duplicate Type Declaration: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateTypeAliasDeclaration ->
-                                log.error("Duplicate Type Alias Declaration: $sourceName: ${error.location}: ${error.name}")
+                                    is DuplicateTypeAliasDeclaration ->
+                                        "Duplicate Type Alias Declaration: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateConstructorDeclaration ->
-                                log.error("Duplicate Constructor Declaration: $sourceName: ${error.location}: ${error.name}")
+                                    is DuplicateConstructorDeclaration ->
+                                        "Duplicate Constructor Declaration: $sourceName: ${error.location}: ${error.name}"
 
-                            is LetSignatureWithoutDeclaration ->
-                                log.error("Let Signature Without Declaration: $sourceName: ${error.location}: ${error.name}")
+                                    is LetSignatureWithoutDeclaration ->
+                                        "Let Signature Without Declaration: $sourceName: ${error.location}: ${error.name}"
 
-                            is IncorrectNumberOfSchemeArguments ->
-                                log.error("Incorrect Number of Scheme Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
+                                    is IncorrectNumberOfSchemeArguments ->
+                                        "Incorrect Number of Scheme Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
 
-                            is IncorrectNumberOfAliasArguments ->
-                                log.error("Incorrect Number of Alias Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
+                                    is IncorrectNumberOfAliasArguments ->
+                                        "Incorrect Number of Alias Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
 
-                            is IncorrectNumberOfConstructorArguments ->
-                                log.error("Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
+                                    is IncorrectNumberOfConstructorArguments ->
+                                        "Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
 
-                            is IncompatibleDeclarationSignature ->
-                                log.error("Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}")
+                                    is IncompatibleDeclarationSignature ->
+                                        "Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}"
 
-                            is UnknownType ->
-                                log.error("Unknown Type: $sourceName: ${error.location}: ${error.name}")
+                                    is UnknownType ->
+                                        "Unknown Type: $sourceName: ${error.location}: ${error.name}"
 
-                            is NonExhaustivePattern ->
-                                log.error("Non Exhaustive Pattern: $sourceName: ${error.location}")
+                                    is NonExhaustivePattern ->
+                                        "Non Exhaustive Pattern: $sourceName: ${error.location}"
 
-                            else ->
-                                log.error("Unknown Error: $error")
-                        }
+                                    is ValueNotExported ->
+                                        "Value not Exported: $sourceName: ${error.location}: ${error.name}"
+
+                                    is TypeNotExported ->
+                                        "Type not Exported: $sourceName: ${error.location}: ${error.name}"
+
+                                    is TypeAliasHasNoConstructors ->
+                                        "Type Alias has no Constructors: $sourceName: ${error.location}: ${error.name}"
+
+                                    is ADTHasNoConstructors ->
+                                        "ADT has no Constructors: $sourceName: ${error.location}: ${error.name}"
+
+                                    is TypeConstructorNotExported ->
+                                        "Type Constructor not Exported: $sourceName: ${error.location}: ${error.name}"
+                                }
+
+                        log.error(errorMessage)
                     }
 
                     throw MojoFailureException(sourceFile, "Translation Error", "${errors.size} errors")
