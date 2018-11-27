@@ -7,7 +7,10 @@
           0
         ],
         "type": {
-          "constant": "List",
+          "constant": {
+            "qualifier": "/home/alfred/.sle",
+            "string": "List"
+          },
           "arguments": [
             {
               "variable": 0
@@ -23,7 +26,10 @@
               0
             ],
             "type": {
-              "constant": "List",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "List"
+              },
               "arguments": [
                 {
                   "variable": 0
@@ -44,7 +50,10 @@
               },
               "range": {
                 "domain": {
-                  "constant": "List",
+                  "constant": {
+                    "qualifier": "/home/alfred/.sle",
+                    "string": "List"
+                  },
                   "arguments": [
                     {
                       "variable": 0
@@ -52,7 +61,10 @@
                   ]
                 },
                 "range": {
-                  "constant": "List",
+                  "constant": {
+                    "qualifier": "/home/alfred/.sle",
+                    "string": "List"
+                  },
                   "arguments": [
                     {
                       "variable": 0
@@ -72,7 +84,10 @@
           0
         ],
         "type": {
-          "constant": "Maybe",
+          "constant": {
+            "qualifier": "/home/alfred/.sle",
+            "string": "Maybe"
+          },
           "arguments": [
             {
               "variable": 0
@@ -88,7 +103,10 @@
               0
             ],
             "type": {
-              "constant": "Maybe",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "Maybe"
+              },
               "arguments": [
                 {
                   "variable": 0
@@ -108,7 +126,10 @@
                 "variable": 0
               },
               "range": {
-                "constant": "Maybe",
+                "constant": {
+                  "qualifier": "/home/alfred/.sle",
+                  "string": "Maybe"
+                },
                 "arguments": [
                   {
                     "variable": 0
@@ -128,7 +149,9 @@
         ],
         "type": {
           "domain": {
-            "constant": "Int",
+            "constant": {
+              "string": "Int"
+            },
             "arguments": []
           },
           "range": {
@@ -136,7 +159,10 @@
               "variable": 0
             },
             "range": {
-              "constant": "List",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "List"
+              },
               "arguments": [
                 {
                   "variable": 0
@@ -153,19 +179,28 @@
         "parameters": [],
         "type": {
           "domain": {
-            "constant": "Int",
+            "constant": {
+              "string": "Int"
+            },
             "arguments": []
           },
           "range": {
             "domain": {
-              "constant": "Int",
+              "constant": {
+                "string": "Int"
+              },
               "arguments": []
             },
             "range": {
-              "constant": "List",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "List"
+              },
               "arguments": [
                 {
-                  "constant": "Int",
+                  "constant": {
+                    "string": "Int"
+                  },
                   "arguments": []
                 }
               ]
@@ -182,7 +217,10 @@
         ],
         "type": {
           "domain": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -190,7 +228,9 @@
             ]
           },
           "range": {
-            "constant": "Bool",
+            "constant": {
+              "string": "Bool"
+            },
             "arguments": []
           }
         }
@@ -204,7 +244,10 @@
         ],
         "type": {
           "domain": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -212,7 +255,10 @@
             ]
           },
           "range": {
-            "constant": "Maybe",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "Maybe"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -230,7 +276,10 @@
         ],
         "type": {
           "domain": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -238,10 +287,16 @@
             ]
           },
           "range": {
-            "constant": "Maybe",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "Maybe"
+            },
             "arguments": [
               {
-                "constant": "List",
+                "constant": {
+                  "qualifier": "/home/alfred/.sle",
+                  "string": "List"
+                },
                 "arguments": [
                   {
                     "variable": 0
@@ -271,7 +326,10 @@
           },
           "range": {
             "domain": {
-              "constant": "List",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "List"
+              },
               "arguments": [
                 {
                   "variable": 0
@@ -279,7 +337,10 @@
               ]
             },
             "range": {
-              "constant": "List",
+              "constant": {
+                "qualifier": "/home/alfred/.sle",
+                "string": "List"
+              },
               "arguments": [
                 {
                   "variable": 1
@@ -296,19 +357,29 @@
         "parameters": [],
         "type": {
           "domain": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
-                "constant": "Int",
+                "constant": {
+                  "string": "Int"
+                },
                 "arguments": []
               }
             ]
           },
           "range": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
-                "constant": "Int",
+                "constant": {
+                  "string": "Int"
+                },
                 "arguments": []
               }
             ]
@@ -324,7 +395,10 @@
         ],
         "type": {
           "domain": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -332,7 +406,10 @@
             ]
           },
           "range": {
-            "constant": "List",
+            "constant": {
+              "qualifier": "/home/alfred/.sle",
+              "string": "List"
+            },
             "arguments": [
               {
                 "variable": 0
@@ -347,10 +424,15 @@
       "scheme": {
         "parameters": [],
         "type": {
-          "constant": "List",
+          "constant": {
+            "qualifier": "/home/alfred/.sle",
+            "string": "List"
+          },
           "arguments": [
             {
-              "constant": "Int",
+              "constant": {
+                "string": "Int"
+              },
               "arguments": []
             }
           ]

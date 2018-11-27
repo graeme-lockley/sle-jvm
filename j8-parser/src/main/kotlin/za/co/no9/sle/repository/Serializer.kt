@@ -24,11 +24,15 @@ fun fromJsonString(input: String, builtins: Environment, qualifier: String?): Ex
                 type.has("variable") ->
                     Variable(type["variable"].asInt)
 
-                type.has("constant") ->
-                    if (builtins.containsType(type["constant"].asString))
-                        Constant(QString(type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                type.has("constant") -> {
+                    val constant =
+                            type["constant"].asJsonObject
+
+                    if (builtins.containsType(constant["string"].asString))
+                        Constant(QString(constant["qualifier"]?.asString, constant["string"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
                     else
-                        Constant(QString(qualifier, type["constant"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                        Constant(QString(qualifier, constant["string"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                }
 
                 else ->
                     Arrow(jsonToType(type["domain"].asJsonObject), jsonToType(type["range"].asJsonObject))
