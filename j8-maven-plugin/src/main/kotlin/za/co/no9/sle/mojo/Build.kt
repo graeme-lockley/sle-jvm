@@ -80,64 +80,64 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                     val sourceName =
                             it.second.source().absoluteFile
 
-                    errors.forEach {
-                        when (it) {
+                    errors.forEach { error ->
+                        when (error) {
                             is SyntaxError ->
-                                log.error("Syntax Error: $sourceName: ${it.location}: ${it.msg}")
+                                log.error("Syntax Error: $sourceName: ${error.location}: ${error.msg}")
 
                             is UnboundVariable ->
-                                log.error("Unbound Parameter: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Unbound Parameter: $sourceName: ${error.location}: ${error.name}")
 
                             is DuplicateLetDeclaration ->
-                                log.error("Duplicate Let Declaration: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Duplicate Let Declaration: $sourceName: ${error.location}: ${error.name}")
 
                             is DuplicateLetSignature ->
-                                log.error("Duplicate Let Signature: $sourceName: ${it.location}: ${it.otherLocation}: ${it.name}")
+                                log.error("Duplicate Let Signature: $sourceName: ${error.location}: ${error.otherLocation}: ${error.name}")
 
                             is UnificationFail ->
-                                log.error("Unification Fail: $sourceName: ${it.t1} ${it.t2}")
+                                log.error("Unification Fail: $sourceName: ${error.t1} ${error.t2}")
 
                             is UnificationMismatch ->
-                                log.error("Unification Mismatch: $sourceName: ${it.t1s}: ${it.t2s}")
+                                log.error("Unification Mismatch: $sourceName: ${error.t1s}: ${error.t2s}")
 
                             is UnknownTypeReference ->
-                                log.error("Unknown Type Reference: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Unknown Type Reference: $sourceName: ${error.location}: ${error.name}")
 
                             is UnknownConstructorReference ->
-                                log.error("Unknown Constructor Reference: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Unknown Constructor Reference: $sourceName: ${error.location}: ${error.name}")
 
                             is DuplicateTypeDeclaration ->
-                                log.error("Duplicate Type Declaration: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Duplicate Type Declaration: $sourceName: ${error.location}: ${error.name}")
 
                             is DuplicateTypeAliasDeclaration ->
-                                log.error("Duplicate Type Alias Declaration: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Duplicate Type Alias Declaration: $sourceName: ${error.location}: ${error.name}")
 
                             is DuplicateConstructorDeclaration ->
-                                log.error("Duplicate Constructor Declaration: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Duplicate Constructor Declaration: $sourceName: ${error.location}: ${error.name}")
 
                             is LetSignatureWithoutDeclaration ->
-                                log.error("Let Signature Without Declaration: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Let Signature Without Declaration: $sourceName: ${error.location}: ${error.name}")
 
                             is IncorrectNumberOfSchemeArguments ->
-                                log.error("Incorrect Number of Scheme Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+                                log.error("Incorrect Number of Scheme Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
 
                             is IncorrectNumberOfAliasArguments ->
-                                log.error("Incorrect Number of Alias Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+                                log.error("Incorrect Number of Alias Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
 
                             is IncorrectNumberOfConstructorArguments ->
-                                log.error("Incorrect Number of Constructor Arguments: $sourceName: ${it.location}: ${it.name}: actual ${it.actual}: expected ${it.expected}")
+                                log.error("Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}")
 
                             is IncompatibleDeclarationSignature ->
-                                log.error("Incompatible Declaration Signature: $sourceName: ${it.location}: ${it.name}: inferred ${it.inferred}: expected ${it.expected}")
+                                log.error("Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}")
 
                             is UnknownType ->
-                                log.error("Unknown Type: $sourceName: ${it.location}: ${it.name}")
+                                log.error("Unknown Type: $sourceName: ${error.location}: ${error.name}")
 
                             is NonExhaustivePattern ->
-                                log.error("Non Exhaustive Pattern: $sourceName: ${it.location}")
+                                log.error("Non Exhaustive Pattern: $sourceName: ${error.location}")
 
                             else ->
-                                log.error("Unknown Error: $it")
+                                log.error("Unknown Error: $error")
                         }
                     }
 
