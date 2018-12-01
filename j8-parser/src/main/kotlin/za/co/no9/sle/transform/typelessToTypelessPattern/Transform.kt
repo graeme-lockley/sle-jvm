@@ -276,7 +276,7 @@ private fun transform(type: za.co.no9.sle.ast.typeless.TType): TType =
             is za.co.no9.sle.ast.typeless.TVarReference ->
                 TVarReference(type.location, type.name)
 
-            is za.co.no9.sle.ast.typeless.TConstReference ->
+            is za.co.no9.sle.ast.typeless.TTypeReference ->
                 TTypeReference(type.location, transform(type.name), type.arguments.map { transform(it) })
 
             is za.co.no9.sle.ast.typeless.TArrow ->

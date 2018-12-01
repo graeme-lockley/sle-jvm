@@ -33,7 +33,7 @@ Module:
               arguments: [
                   TVarReference:
                     name: a
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a

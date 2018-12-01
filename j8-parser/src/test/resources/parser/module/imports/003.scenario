@@ -19,9 +19,9 @@ Module:
           ID:
             name: IntList
         type:
-          TConstReference:
+          TTypeReference:
             arguments: [
-                TConstReference:
+                TTypeReference:
                   arguments: []
                   name:
                     QualifiedID:

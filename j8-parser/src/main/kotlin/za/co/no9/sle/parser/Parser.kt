@@ -580,7 +580,7 @@ class Parser(private val lexer: Lexer) {
                         arguments.add(parseADTType())
                     }
 
-                    TConstReference(qualifiedUpperID.location + locationFrom(arguments), qualifiedUpperID, arguments)
+                    TTypeReference(qualifiedUpperID.location + locationFrom(arguments), qualifiedUpperID, arguments)
                 }
 
                 else ->
