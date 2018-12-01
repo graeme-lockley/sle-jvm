@@ -71,7 +71,7 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
             }
 
 
-    fun alias(name: String): Scheme? {
+    fun alias(name: QString): Scheme? {
         val typeBinding =
                 type(name)
 
@@ -86,6 +86,10 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
                 null
         }
     }
+
+
+    fun alias(name: String): Scheme? =
+            alias(QString(name))
 
 
     fun newValue(name: String, value: ValueBinding): Environment =

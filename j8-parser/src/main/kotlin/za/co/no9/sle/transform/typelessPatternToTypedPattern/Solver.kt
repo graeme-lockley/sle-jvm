@@ -146,27 +146,8 @@ private class ApplyContext(private val environment: Environment) {
                     }
                 }
 
-                is TCon -> {
-                    val alias =
-                            environment.alias(name)
-
-                    when {
-                        alias == null ->
-                            this
-
-                        arguments.size != alias.parameters.size -> {
-                            errors.add(IncorrectNumberOfAliasArguments(this.location, name, alias.parameters.size, arguments.size))
-                            this
-                        }
-
-                        else -> {
-                            val substitutionMap =
-                                    alias.parameters.zip(arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
-
-                            alias.type.apply(Substitution(substitutionMap)).expandAliases(environment)
-                        }
-                    }
-                }
+                is TCon ->
+                    this
 
                 is TArr ->
                     TArr(domain.expandAliases(environment), range.expandAliases(environment))
@@ -267,6 +248,9 @@ private class SolverContext(private var varPump: VarPump, private var constraint
                 t1 is TCon && t2 is TCon && t1.name == t2.name && t1.arguments.size == t2.arguments.size ->
                     unifyMany(t1.arguments, t2.arguments)
 
+                t1 is TAlias && t2 is TAlias && t1.name == t2.name && t1.arguments.size == t2.arguments.size ->
+                    unifyMany(t1.arguments, t2.arguments)
+
                 t1 is TVar ->
                     Pair(Substitution(t1.variable, t2), noConstraints)
 
@@ -277,12 +261,12 @@ private class SolverContext(private var varPump: VarPump, private var constraint
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
 
                 else -> {
-                    if (t1 is TCon && environment.isAlias(t1.name)) {
+                    if (t1 is TAlias) {
                         val type =
                                 environment.instantiateAlias(t1.name, varPump)!!
 
                         unifies(type, t2)
-                    } else if (t2 is TCon && environment.isAlias(t2.name)) {
+                    } else if (t2 is TAlias) {
                         val type =
                                 environment.instantiateAlias(t2.name, varPump)!!
 
@@ -335,27 +319,6 @@ private class SolverContext(private var varPump: VarPump, private var constraint
                 }
             }
 }
-
-
-private fun Environment.alias(name: QString): Scheme? {
-    val binding =
-            this.type(name)
-
-    return when (binding) {
-        is AliasBinding ->
-            binding.scheme
-
-        is ImportAliasBinding ->
-            binding.scheme
-
-        else ->
-            null
-    }
-}
-
-
-private fun Environment.isAlias(name: QString): Boolean =
-        this.alias(name) != null
 
 
 private fun Environment.instantiateAlias(name: QString, varPump: VarPump): Type? =

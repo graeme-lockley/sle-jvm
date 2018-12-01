@@ -139,7 +139,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     d.location,
                                     ID(d.name.location, d.name.name),
                                     scheme.first,
-                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(it, scheme.second) }) }
+                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(env, it, scheme.second) }) }
                             )
                         }
                     }
@@ -205,7 +205,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             d.name.name
 
                     val scheme =
-                            typeToSchemeNullable(d.ttype)
+                            typeToSchemeNullable(e, d.ttype)
 
                     if (scheme == null) {
                         e
@@ -219,7 +219,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
                     } else {
-                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype)))
+                        e.newType(d.name.name, AliasBinding(typeToScheme(e, d.ttype)))
                     }
                 }
 
@@ -233,7 +233,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
                                     fds
                                 } else {
-                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(a, scheme.second), b) })))
+                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(e, a, scheme.second), b) })))
                                 }
                             }
 
@@ -705,7 +705,7 @@ private fun Type.last(): Type =
         }
 
 
-private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+private fun transform(env: Environment, type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
         when (type) {
             is TUnit ->
                 typeUnit
@@ -714,14 +714,17 @@ private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap())
                 substitution[type.name]!!
 
             is TTypeReference ->
-                TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
+                if (env.isAlias(type.name.asQString()))
+                    TAlias(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, it, substitution) })
+                else
+                    TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, it, substitution) })
 
             is TArrow ->
-                TArr(transform(type.domain, substitution), transform(type.range, substitution))
+                TArr(transform(env, type.domain, substitution), transform(env, type.range, substitution))
         }
 
 
-private fun typeToScheme(ttype: TType): Scheme {
+private fun typeToScheme(env: Environment, ttype: TType): Scheme {
     val pump =
             VarPump()
 
@@ -751,7 +754,10 @@ private fun typeToScheme(ttype: TType): Scheme {
                 }
 
                 is TTypeReference ->
-                    TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
+                    if (env.isAlias(ttype.name.asQString()))
+                        TAlias(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
+                    else
+                        TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
 
                 is TArrow ->
                     TArr(map(ttype.domain), map(ttype.range))
@@ -765,13 +771,17 @@ private fun typeToScheme(ttype: TType): Scheme {
 }
 
 
-private fun typeToSchemeNullable(ttype: TType?): Scheme? =
+private fun typeToSchemeNullable(env: Environment, ttype: TType?): Scheme? =
         when (ttype) {
             null ->
                 null
 
-            else -> typeToScheme(ttype)
+            else -> typeToScheme(env, ttype)
         }
+
+
+private fun Environment.isAlias(name: QString): Boolean =
+        this.alias(name) != null
 
 
 private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(): Pair<Scheme, Map<String, TVar>> {

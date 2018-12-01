@@ -150,11 +150,11 @@ Module:
                 range:
                   TArr:
                     domain:
-                      TCon:
+                      TAlias:
                         arguments: []
                         name: IntList
                     range:
-                      TCon:
+                      TAlias:
                         arguments: []
                         name: IntList
       LetDeclaration:
@@ -269,21 +269,21 @@ Module:
                           range:
                             TArr:
                               domain:
-                                TCon:
+                                TAlias:
                                   arguments: []
                                   name: IntList
                               range:
-                                TCon:
+                                TAlias:
                                   arguments: []
                                   name: IntList
                   type:
                     TArr:
                       domain:
-                        TCon:
+                        TAlias:
                           arguments: []
                           name: IntList
                       range:
-                        TCon:
+                        TAlias:
                           arguments: []
                           name: IntList
               type:
@@ -295,11 +295,11 @@ Module:
                   range:
                     TArr:
                       domain:
-                        TCon:
+                        TAlias:
                           arguments: []
                           name: IntList
                       range:
-                        TCon:
+                        TAlias:
                           arguments: []
                           name: IntList
           ]
@@ -318,11 +318,11 @@ Module:
                 range:
                   TArr:
                     domain:
-                      TCon:
+                      TAlias:
                         arguments: []
                         name: IntList
                     range:
-                      TCon:
+                      TAlias:
                         arguments: []
                         name: IntList
     ]

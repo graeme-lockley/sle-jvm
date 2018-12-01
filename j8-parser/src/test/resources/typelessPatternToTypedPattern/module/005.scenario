@@ -42,7 +42,7 @@ Module:
                     arguments: []
                     name: Int
                 range:
-                  TCon:
+                  TAlias:
                     arguments: []
                     name: IntMap
     ]

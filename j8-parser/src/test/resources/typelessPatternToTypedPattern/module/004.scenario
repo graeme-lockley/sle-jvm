@@ -146,7 +146,7 @@ Module:
           Scheme:
             parameters: []
             type:
-              TCon:
+              TAlias:
                 arguments: []
                 name: IntMap
     ]
