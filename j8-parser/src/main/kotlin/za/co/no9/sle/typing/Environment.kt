@@ -106,10 +106,6 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
 
     fun containsType(name: String): Boolean =
             type(name) != null
-
-
-    fun containsType(name: QString): Boolean =
-            type(name) != null
 }
 
 
