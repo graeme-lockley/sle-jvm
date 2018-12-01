@@ -41,7 +41,7 @@ Module:
         name:
           ID:
             name: binaryOpExpression
-        scheme: null
+        ttype: null
     ]
   exports: []
   imports: []

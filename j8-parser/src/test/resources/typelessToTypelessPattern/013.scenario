@@ -12,6 +12,10 @@ duplicate x =
 Module:
   declarations: [
       TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+          ]
         constructors: [
             Constructor:
               arguments: []
@@ -20,14 +24,17 @@ Module:
                   name: Nil
             Constructor:
               arguments: [
-                  TVar:
-                    variable: 0
-                  TCon:
+                  TVarReference:
+                    name: a
+                  TConstReference:
                     arguments: [
-                        TVar:
-                          variable: 0
+                        TVarReference:
+                          name: a
                       ]
-                    name: List
+                    name:
+                      QualifiedID:
+                        name: List
+                        qualifier: null
                 ]
               name:
                 ID:
@@ -36,18 +43,6 @@ Module:
         name:
           ID:
             name: List
-        scheme:
-          Scheme:
-            parameters: [
-                0
-              ]
-            type:
-              TCon:
-                arguments: [
-                    TVar:
-                      variable: 0
-                  ]
-                name: List
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -80,7 +75,7 @@ Module:
         name:
           ID:
             name: singleton
-        scheme: null
+        ttype: null
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -129,7 +124,7 @@ Module:
         name:
           ID:
             name: duplicate
-        scheme: null
+        ttype: null
     ]
   exports: []
   imports: []

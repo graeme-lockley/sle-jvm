@@ -25,13 +25,19 @@ mapSecond f t =
 Module:
   declarations: [
       TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+          ]
         constructors: [
             Constructor:
               arguments: [
-                  TVar:
-                    variable: 0
-                  TVar:
-                    variable: 1
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
                 ]
               name:
                 ID:
@@ -40,21 +46,6 @@ Module:
         name:
           ID:
             name: Tuple
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-              ]
-            type:
-              TCon:
-                arguments: [
-                    TVar:
-                      variable: 0
-                    TVar:
-                      variable: 1
-                  ]
-                name: Tuple
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -94,26 +85,23 @@ Module:
         name:
           ID:
             name: first
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-              ]
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 0
-                        TVar:
-                          variable: 1
-                      ]
+        ttype:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+                name:
+                  QualifiedID:
                     name: Tuple
-                range:
-                  TVar:
-                    variable: 0
+                    qualifier: null
+            range:
+              TVarReference:
+                name: a
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -153,26 +141,23 @@ Module:
         name:
           ID:
             name: second
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-              ]
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: [
-                        TVar:
-                          variable: 0
-                        TVar:
-                          variable: 1
-                      ]
+        ttype:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+                name:
+                  QualifiedID:
                     name: Tuple
-                range:
-                  TVar:
-                    variable: 1
+                    qualifier: null
+            range:
+              TVarReference:
+                name: b
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -241,43 +226,42 @@ Module:
         name:
           ID:
             name: mapFirst
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-                2
-              ]
-            type:
-              TArr:
+        ttype:
+          TArrow:
+            domain:
+              TArrow:
                 domain:
-                  TArr:
-                    domain:
-                      TVar:
-                        variable: 0
-                    range:
-                      TVar:
-                        variable: 1
+                  TVarReference:
+                    name: a
                 range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 0
-                            TVar:
-                              variable: 2
-                          ]
+                  TVarReference:
+                    name: c
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      QualifiedID:
                         name: Tuple
-                    range:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 1
-                            TVar:
-                              variable: 2
-                          ]
+                        qualifier: null
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: c
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -346,43 +330,42 @@ Module:
         name:
           ID:
             name: mapSecond
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-                2
-              ]
-            type:
-              TArr:
+        ttype:
+          TArrow:
+            domain:
+              TArrow:
                 domain:
-                  TArr:
-                    domain:
-                      TVar:
-                        variable: 0
-                    range:
-                      TVar:
-                        variable: 1
+                  TVarReference:
+                    name: b
                 range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 2
-                            TVar:
-                              variable: 0
-                          ]
+                  TVarReference:
+                    name: c
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      QualifiedID:
                         name: Tuple
-                    range:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 2
-                            TVar:
-                              variable: 1
-                          ]
+                        qualifier: null
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                        TVarReference:
+                          name: c
+                      ]
+                    name:
+                      QualifiedID:
                         name: Tuple
+                        qualifier: null
     ]
   exports: []
   imports: []

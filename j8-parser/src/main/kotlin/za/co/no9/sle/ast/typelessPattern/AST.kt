@@ -2,8 +2,6 @@ package za.co.no9.sle.ast.typelessPattern
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.URN
-import za.co.no9.sle.typing.Scheme
-import za.co.no9.sle.typing.Type
 
 
 sealed class Node(
@@ -56,24 +54,24 @@ sealed class Declaration(
 data class LetDeclaration(
         override val location: Location,
         val name: ID,
-        val scheme: Scheme?,
+        val ttype: TType?,
         val expressions: List<Expression>) : Declaration(location)
 
 data class TypeAliasDeclaration(
         override val location: Location,
         val name: ID,
-        val scheme: Scheme) : Declaration(location)
+        val ttype: TType) : Declaration(location)
 
 data class TypeDeclaration(
         override val location: Location,
         val name: ID,
-        val scheme: Scheme,
+        val arguments: List<ID>,
         val constructors: List<Constructor>) : Declaration(location)
 
 data class Constructor(
         override val location: Location,
         val name: ID,
-        val arguments: List<Type>) : Node(location)
+        val arguments: List<TType>) : Node(location)
 
 
 data class ID(
@@ -165,3 +163,24 @@ data class ConstructorReferencePattern(
         override val location: Location,
         val name: QualifiedID,
         val parameters: List<Pattern>) : Pattern(location)
+
+
+sealed class TType(
+        override val location: Location) : Node(location)
+
+data class TUnit(
+        override val location: Location) : TType(location)
+
+data class TVarReference(
+        override val location: Location,
+        val name: String) : TType(location)
+
+data class TConstReference(
+        override val location: Location,
+        val name: QualifiedID,
+        val arguments: List<TType>) : TType(location)
+
+data class TArrow(
+        override val location: Location,
+        val domain: TType,
+        val range: TType) : TType(location)

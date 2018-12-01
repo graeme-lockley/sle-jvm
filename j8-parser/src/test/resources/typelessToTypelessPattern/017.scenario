@@ -65,19 +65,22 @@ Module:
         name:
           ID:
             name: factorial
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
+        ttype:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: []
+                name:
+                  QualifiedID:
                     name: Int
-                range:
-                  TCon:
-                    arguments: []
+                    qualifier: null
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
     ]
   exports: []
   imports: []

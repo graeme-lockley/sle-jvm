@@ -16,19 +16,17 @@ Module:
         name:
           ID:
             name: calculate
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
-                    name: ()
-                range:
-                  TCon:
-                    arguments: []
+        ttype:
+          TArrow:
+            domain:
+              TUnit:
+            range:
+              TConstReference:
+                arguments: []
+                name:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
       LetDeclaration:
         expressions: [
             CallExpression:
@@ -44,7 +42,7 @@ Module:
         name:
           ID:
             name: value
-        scheme: null
+        ttype: null
     ]
   exports: []
   imports: []

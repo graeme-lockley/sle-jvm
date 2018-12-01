@@ -23,18 +23,20 @@ import za.co.no9.sle.ast.typelessPattern.Import
 import za.co.no9.sle.ast.typelessPattern.LambdaExpression
 import za.co.no9.sle.ast.typelessPattern.LetDeclaration
 import za.co.no9.sle.ast.typelessPattern.LetExport
-import za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration
 import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.QualifiedID
+import za.co.no9.sle.ast.typelessPattern.TArrow
+import za.co.no9.sle.ast.typelessPattern.TConstReference
+import za.co.no9.sle.ast.typelessPattern.TType
+import za.co.no9.sle.ast.typelessPattern.TUnit
+import za.co.no9.sle.ast.typelessPattern.TVarReference
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.ast.typelessPattern.TypeExport
-import za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration
 import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
-import za.co.no9.sle.typing.*
 
 
 fun parse(text: String): Either<Errors, Module> =
@@ -105,26 +107,15 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                         .filter { ast -> ast is za.co.no9.sle.ast.typeless.TypeDeclaration || ast is za.co.no9.sle.ast.typeless.TypeAliasDeclaration }
                         .map { ast ->
                             when (ast) {
-                                is za.co.no9.sle.ast.typeless.TypeDeclaration -> {
-                                    val substitution =
-                                            ast.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
-
-                                    val parameters =
-                                            ast.arguments.mapIndexed { index, _ -> index }
-
-                                    val scheme =
-                                            Scheme(parameters, TCon(ast.name.location, QString(ast.name.name), ast.arguments.map { argument -> substitution[argument.name]!! }))
-
+                                is za.co.no9.sle.ast.typeless.TypeDeclaration ->
                                     TypeDeclaration(
                                             ast.location,
                                             transform(ast.name),
-                                            scheme,
-                                            ast.constructors.map { constructor -> Constructor(constructor.location, transform(constructor.name), constructor.arguments.map { ttype -> transform(ttype, substitution) }) }
-                                    )
-                                }
+                                            ast.arguments.map { transform(it) },
+                                            ast.constructors.map { constructor -> Constructor(constructor.location, transform(constructor.name), constructor.arguments.map { transform(it) }) })
 
                                 is za.co.no9.sle.ast.typeless.TypeAliasDeclaration ->
-                                    TypeAliasDeclaration(ast.location, transform(ast.name), typeToScheme(ast.type)!!)
+                                    TypeAliasDeclaration(ast.location, transform(ast.name), transform(ast.type))
 
                                 else ->
                                     throw Exception("Illegal outcome")
@@ -140,7 +131,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                             LetDeclaration(
                                     locationFrom(asts.value)!!,
                                     transform(asts.value[0].name),
-                                    typeToScheme(it[asts.key]?.type),
+                                    transformNullable(it[asts.key]?.type),
                                     asts.value.map { letDeclaration ->
                                         when (letDeclaration) {
                                             is za.co.no9.sle.ast.typeless.LetDeclaration ->
@@ -217,7 +208,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 ConstantString(ast.location, ast.value)
 
             is NotExpression ->
-                CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null,"(!)")), transform(ast.expression))
+                CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null, "(!)")), transform(ast.expression))
 
             is za.co.no9.sle.ast.typeless.IdReference ->
                 IdReference(ast.location, transform(ast.name))
@@ -271,71 +262,27 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
         }
 
 
-private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
-        when (type) {
-            is TUnit ->
-                typeUnit
-
-            is TVarReference ->
-                substitution[type.name] ?: TCon(type.location, QString(type.name))
-
-            is TConstReference ->
-                TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
-
-            is TArrow ->
-                TArr(transform(type.domain, substitution), transform(type.range, substitution))
-        }
-
-
-private fun typeToScheme(ttype: TType?): Scheme? {
-    val pump =
-            VarPump()
-
-    val substitution =
-            mutableMapOf<String, TVar>()
-
-
-    fun map(ttype: TType): Type =
-            when (ttype) {
-                is TUnit ->
-                    typeUnit
-
-                is TVarReference -> {
-                    val varRef =
-                            substitution[ttype.name]
-
-                    if (varRef == null) {
-                        val newVarRef =
-                                pump.fresh(ttype.location)
-
-                        substitution[ttype.name] = newVarRef
-
-                        newVarRef
-                    } else {
-                        varRef
-                    }
-                }
-
-                is TConstReference ->
-                    TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
-
-                is TArrow ->
-                    TArr(map(ttype.domain), map(ttype.range))
-            }
-
-
-    return when (ttype) {
-        null ->
+private fun transformNullable(type: za.co.no9.sle.ast.typeless.TType?): TType? =
+        if (type == null)
             null
+        else
+            transform(type)
 
-        else -> {
-            val type =
-                    map(ttype)
+private fun transform(type: za.co.no9.sle.ast.typeless.TType): TType =
+        when (type) {
+            is za.co.no9.sle.ast.typeless.TUnit ->
+                TUnit(type.location)
 
-            Scheme(substitution.values.map { it.variable }, type)
+            is za.co.no9.sle.ast.typeless.TVarReference ->
+                TVarReference(type.location, type.name)
+
+            is za.co.no9.sle.ast.typeless.TConstReference ->
+                TConstReference(type.location, transform(type.name), type.arguments.map { transform(it) })
+
+            is za.co.no9.sle.ast.typeless.TArrow ->
+                TArrow(type.location, transform(type.domain), transform(type.range))
         }
-    }
-}
+
 
 private fun locationFrom(nodes: List<za.co.no9.sle.ast.typeless.Node>): Location? =
         when {

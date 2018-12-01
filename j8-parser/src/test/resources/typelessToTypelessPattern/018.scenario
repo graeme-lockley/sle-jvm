@@ -110,38 +110,42 @@ Module:
         name:
           ID:
             name: find
-        scheme:
-          Scheme:
-            parameters: [
-                0
-              ]
-            type:
-              TArr:
+        ttype:
+          TArrow:
+            domain:
+              TArrow:
                 domain:
-                  TArr:
-                    domain:
-                      TVar:
-                        variable: 0
-                    range:
-                      TCon:
-                        arguments: []
-                        name: Bool
+                  TVarReference:
+                    name: a
                 range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 0
-                          ]
-                        name: LL.List
-                    range:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 0
-                          ]
+                  TConstReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Bool
+                        qualifier: null
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      QualifiedID:
+                        name: List
+                        qualifier: LL
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      QualifiedID:
                         name: Maybe
+                        qualifier: null
     ]
   exports: [
       LetExport:

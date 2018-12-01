@@ -42,25 +42,31 @@ Module:
         name:
           ID:
             name: add
-        scheme:
-          Scheme:
-            parameters: []
-            type:
-              TArr:
-                domain:
-                  TCon:
-                    arguments: []
+        ttype:
+          TArrow:
+            domain:
+              TConstReference:
+                arguments: []
+                name:
+                  QualifiedID:
                     name: Int
+                    qualifier: null
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Int
+                        qualifier: null
                 range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: []
+                  TConstReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
                         name: Int
-                    range:
-                      TCon:
-                        arguments: []
-                        name: Int
+                        qualifier: null
     ]
   exports: []
   imports: []

@@ -28,7 +28,7 @@ Module:
         name:
           ID:
             name: negate
-        scheme: null
+        ttype: null
     ]
   exports: []
   imports: []

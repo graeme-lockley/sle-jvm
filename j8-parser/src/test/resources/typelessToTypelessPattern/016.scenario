@@ -98,38 +98,38 @@ Module:
         name:
           ID:
             name: map
-        scheme:
-          Scheme:
-            parameters: [
-                0
-                1
-              ]
-            type:
-              TArr:
+        ttype:
+          TArrow:
+            domain:
+              TArrow:
                 domain:
-                  TArr:
-                    domain:
-                      TVar:
-                        variable: 0
-                    range:
-                      TVar:
-                        variable: 1
+                  TVarReference:
+                    name: a
                 range:
-                  TArr:
-                    domain:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 0
-                          ]
+                  TVarReference:
+                    name: b
+            range:
+              TArrow:
+                domain:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: a
+                      ]
+                    name:
+                      QualifiedID:
                         name: List
-                    range:
-                      TCon:
-                        arguments: [
-                            TVar:
-                              variable: 1
-                          ]
+                        qualifier: null
+                range:
+                  TConstReference:
+                    arguments: [
+                        TVarReference:
+                          name: b
+                      ]
+                    name:
+                      QualifiedID:
                         name: List
+                        qualifier: null
     ]
   exports: []
   imports: []

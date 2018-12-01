@@ -2,7 +2,31 @@ package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typedPattern.*
+import za.co.no9.sle.ast.typedPattern.CallExpression
+import za.co.no9.sle.ast.typedPattern.CaseExpression
+import za.co.no9.sle.ast.typedPattern.CaseItem
+import za.co.no9.sle.ast.typedPattern.ConstantBool
+import za.co.no9.sle.ast.typedPattern.ConstantBoolPattern
+import za.co.no9.sle.ast.typedPattern.ConstantInt
+import za.co.no9.sle.ast.typedPattern.ConstantIntPattern
+import za.co.no9.sle.ast.typedPattern.ConstantString
+import za.co.no9.sle.ast.typedPattern.ConstantStringPattern
+import za.co.no9.sle.ast.typedPattern.ConstantUnitPattern
+import za.co.no9.sle.ast.typedPattern.Constructor
+import za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern
+import za.co.no9.sle.ast.typedPattern.Expression
+import za.co.no9.sle.ast.typedPattern.ID
+import za.co.no9.sle.ast.typedPattern.IdReference
+import za.co.no9.sle.ast.typedPattern.IdReferencePattern
+import za.co.no9.sle.ast.typedPattern.IfExpression
+import za.co.no9.sle.ast.typedPattern.LambdaExpression
+import za.co.no9.sle.ast.typedPattern.LetDeclaration
+import za.co.no9.sle.ast.typedPattern.Module
+import za.co.no9.sle.ast.typedPattern.Pattern
+import za.co.no9.sle.ast.typedPattern.QualifiedID
+import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
+import za.co.no9.sle.ast.typelessPattern.*
 import za.co.no9.sle.ast.typelessPattern.Declaration
 import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.repository.Item
@@ -51,7 +75,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             d.name.name
 
                     val scheme =
-                            d.scheme
+                            typeToSchemeNullable(d.ttype).first
 
                     if (scheme == null) {
                         e
@@ -65,7 +89,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
                     } else {
-                        e.newType(d.name.name, AliasBinding(d.scheme))
+                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype).first))
                     }
                 }
 
@@ -76,7 +100,10 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
                                     fds
                                 } else {
-                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(d.scheme.parameters, constructor.arguments.foldRight(d.scheme.type) { a, b -> TArr(a, b) })))
+                                    val scheme =
+                                            d.scheme()
+
+                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(a, scheme.second), b) })))
                                 }
                             }
 
@@ -84,7 +111,10 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
                         newEnv
                     } else {
-                        newEnv.newType(d.name.name, ADTBinding(d.scheme, d.constructors.map {
+                        val scheme =
+                                d.scheme()
+
+                        newEnv.newType(d.name.name, ADTBinding(scheme.first, d.constructors.map {
                             Pair(it.name.name, newEnv.variable(it.name.name)!!)
                         }))
                     }
@@ -96,7 +126,7 @@ private class InferContext(private val repository: Repository<Item>, private val
             when (declaration) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val scheme =
-                            declaration.scheme
+                            typeToSchemeNullable(declaration.ttype).first
 
                     if (scheme != null) {
                         validateScheme(scheme)
@@ -104,14 +134,17 @@ private class InferContext(private val repository: Repository<Item>, private val
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
-                    validateScheme(declaration.scheme)
+                    validateScheme(typeToScheme(declaration.ttype).first)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
-                    validateScheme(declaration.scheme)
+                    val scheme =
+                            declaration.scheme()
+
+                    validateScheme(scheme.first)
                     for (constructor in declaration.constructors) {
                         for (type in constructor.arguments) {
-                            validateType(type)
+                            validateType(transform(type, scheme.second))
                         }
                     }
                 }
@@ -127,7 +160,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     d.expressions.map { infer(it) }
 
                             val dScheme =
-                                    d.scheme
+                                    typeToSchemeNullable(d.ttype).first
 
                             if (dScheme == null) {
                                 for (e in es.drop(1)) {
@@ -177,15 +210,19 @@ private class InferContext(private val repository: Repository<Item>, private val
                         }
 
                         is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
-                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), d.scheme)
+                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), typeToScheme(d.ttype).first)
 
-                        is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
+                        is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
+                            val scheme =
+                                    d.scheme()
+
                             ds + za.co.no9.sle.ast.typedPattern.TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
-                                    d.scheme,
-                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments) }
+                                    scheme.first,
+                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(it, scheme.second) }) }
                             )
+                        }
                     }
                 }
 
@@ -649,3 +686,81 @@ private fun Type.last(): Type =
         }
 
 
+private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+        when (type) {
+            is TUnit ->
+                typeUnit
+
+            is TVarReference ->
+                substitution[type.name] ?: TCon(type.location, QString(type.name))
+
+            is TConstReference ->
+                TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
+
+            is TArrow ->
+                TArr(transform(type.domain, substitution), transform(type.range, substitution))
+        }
+
+
+private fun typeToScheme(ttype: TType): Pair<Scheme, Map<String, TVar>> {
+    val pump =
+            VarPump()
+
+    val substitution =
+            mutableMapOf<String, TVar>()
+
+
+    fun map(ttype: TType): Type =
+            when (ttype) {
+                is TUnit ->
+                    typeUnit
+
+                is TVarReference -> {
+                    val varRef =
+                            substitution[ttype.name]
+
+                    if (varRef == null) {
+                        val newVarRef =
+                                pump.fresh(ttype.location)
+
+                        substitution[ttype.name] = newVarRef
+
+                        newVarRef
+                    } else {
+                        varRef
+                    }
+                }
+
+                is TConstReference ->
+                    TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
+
+                is TArrow ->
+                    TArr(map(ttype.domain), map(ttype.range))
+            }
+
+
+    val type =
+            map(ttype)
+
+    return Pair(Scheme(substitution.values.map { it.variable }, type), substitution)
+}
+
+
+private fun typeToSchemeNullable(ttype: TType?): Pair<Scheme?, Map<String, TVar>> =
+        when (ttype) {
+            null ->
+                Pair(null, mapOf())
+
+            else -> typeToScheme(ttype)
+        }
+
+
+private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(): Pair<Scheme, Map<String, TVar>> {
+    val substitution =
+            this.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
+
+    val parameters =
+            this.arguments.mapIndexed { index, _ -> index }
+
+    return Pair(Scheme(parameters, TCon(this.name.location, QString(this.name.name), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
+}

@@ -12,7 +12,7 @@ Module:
       name:
         ID:
           name: true
-      scheme: null
+      ttype: null
   ]
   exports: []
   imports: []
