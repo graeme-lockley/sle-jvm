@@ -80,7 +80,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     d.expressions.map { infer(it) }
 
                             val dScheme =
-                                    typeToSchemeNullable(d.ttype).first
+                                    env.variable(d.name.name)
 
                             if (dScheme == null) {
                                 for (e in es.drop(1)) {
@@ -130,7 +130,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                         }
 
                         is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
-                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), typeToScheme(d.ttype).first)
+                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), env.alias(d.name.name)!!)
 
                         is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
                             val scheme =
@@ -206,7 +206,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             d.name.name
 
                     val scheme =
-                            typeToSchemeNullable(d.ttype).first
+                            typeToSchemeNullable(d.ttype)
 
                     if (scheme == null) {
                         e
@@ -220,20 +220,20 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
                     } else {
-                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype).first))
+                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype)))
                     }
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
+                    val scheme =
+                            d.scheme()
+
                     val newEnv =
                             d.constructors.fold(e) { fds, constructor ->
                                 if (fds.containsValue(constructor.name.name)) {
                                     errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
                                     fds
                                 } else {
-                                    val scheme =
-                                            d.scheme()
-
                                     fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(a, scheme.second), b) })))
                                 }
                             }
@@ -242,9 +242,6 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
                         newEnv
                     } else {
-                        val scheme =
-                                d.scheme()
-
                         newEnv.newType(d.name.name, ADTBinding(scheme.first, d.constructors.map {
                             Pair(it.name.name, newEnv.variable(it.name.name)!!)
                         }))
@@ -725,7 +722,7 @@ private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap())
         }
 
 
-private fun typeToScheme(ttype: TType): Pair<Scheme, Map<String, TVar>> {
+private fun typeToScheme(ttype: TType): Scheme {
     val pump =
             VarPump()
 
@@ -765,14 +762,14 @@ private fun typeToScheme(ttype: TType): Pair<Scheme, Map<String, TVar>> {
     val type =
             map(ttype)
 
-    return Pair(Scheme(substitution.values.map { it.variable }, type), substitution)
+    return Scheme(substitution.values.map { it.variable }, type)
 }
 
 
-private fun typeToSchemeNullable(ttype: TType?): Pair<Scheme?, Map<String, TVar>> =
+private fun typeToSchemeNullable(ttype: TType?): Scheme? =
         when (ttype) {
             null ->
-                Pair(null, mapOf())
+                null
 
             else -> typeToScheme(ttype)
         }

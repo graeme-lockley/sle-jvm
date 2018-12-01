@@ -7,6 +7,7 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
     fun value(name: String): ValueBinding? =
             valueBindings[name]
 
+
     fun value(name: QString): ValueBinding? =
             if (name.qualifier == null)
                 valueBindings[name.string]
@@ -26,6 +27,7 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
                 null
         }
     }
+
 
     fun variable(name: QString): Scheme? =
             if (name.qualifier == null)
@@ -47,8 +49,10 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
         }
     }
 
+
     fun type(name: String): TypeBinding? =
             typeBindings[name]
+
 
     fun type(name: QString): TypeBinding? =
             if (name.qualifier == null)
@@ -66,17 +70,39 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
                 }
             }
 
+
+    fun alias(name: String): Scheme? {
+        val typeBinding =
+                type(name)
+
+        return when(typeBinding) {
+            is AliasBinding ->
+                typeBinding.scheme
+
+            is ImportAliasBinding ->
+                typeBinding.scheme
+
+            else ->
+                null
+        }
+    }
+
+
     fun newValue(name: String, value: ValueBinding): Environment =
             Environment(this.valueBindings + Pair(name, value), this.typeBindings)
+
 
     fun newType(name: String, binding: TypeBinding): Environment =
             Environment(this.valueBindings, this.typeBindings + Pair(name, binding))
 
+
     fun containsValue(name: String): Boolean =
             valueBindings.contains(name)
 
+
     fun containsType(name: String): Boolean =
             type(name) != null
+
 
     fun containsType(name: QString): Boolean =
             type(name) != null
