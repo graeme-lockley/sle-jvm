@@ -2,6 +2,7 @@ package za.co.no9.sle.mojo
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import za.co.no9.sle.QString
 import za.co.no9.sle.Source
 import java.io.File
 
@@ -51,5 +52,21 @@ class TargetFileTests : StringSpec({
 
         item.className
                 .shouldBe("List")
+    }
+
+    "sourcePrefix: '/home/gjl/src', targetRoot: '/home/gjl/.sle', source: File, input: '/home/gjl/src/List.sle' resolveConstructor('Cons')" {
+        val item =
+                repository.item(Source.File, File("/home/gjl/src/List.sle"))
+
+        item.resolveConstructor("Cons")
+                .shouldBe("file.List.Cons")
+    }
+
+    "sourcePrefix: '/home/gjl/src', targetRoot: '/home/gjl/.sle', source: File, input: '/home/gjl/src/Data/List.sle' resolveConstructor('Cons')" {
+        val item =
+                repository.item(Source.File, File("/home/gjl/src/Data/List.sle"))
+
+        item.resolveConstructor("Cons")
+                .shouldBe("file.Data.List.Cons")
     }
 })

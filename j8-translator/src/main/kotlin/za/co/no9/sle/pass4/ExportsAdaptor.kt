@@ -1,6 +1,5 @@
 package za.co.no9.sle.pass4
 
-import za.co.no9.sle.QString
 import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.repository.*
 import za.co.no9.sle.repository.Constructor
@@ -21,15 +20,16 @@ private fun toClass(source: Item, nameDeclaration: NameDeclaration): Declaration
                 AliasDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme))
 
             is ADTNameDeclaration ->
-                OpaqueADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(QString(nameDeclaration.name)))
+                OpaqueADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(nameDeclaration.name))
 
             is FullADTNameDeclaration ->
-                FullADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(QString(nameDeclaration.name)), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
+                FullADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(nameDeclaration.name), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
         }
 
 
 private fun toClass(scheme: za.co.no9.sle.typing.Scheme): Scheme =
         Scheme(scheme.parameters, toClass(scheme.type))
+
 
 private fun toClass(type: za.co.no9.sle.typing.Type): Type =
         when (type) {

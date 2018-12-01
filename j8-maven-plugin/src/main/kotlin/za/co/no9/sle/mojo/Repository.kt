@@ -2,21 +2,20 @@ package za.co.no9.sle.mojo
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
-import za.co.no9.sle.QString
 import za.co.no9.sle.Source
 import za.co.no9.sle.repository.Export
+import za.co.no9.sle.repository.fromJsonString
 import java.io.File
 
 
 class Repository(
         private val sourcePrefix: File,
         val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
-    override fun import(name: String): Either<Errors, Export> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun import(name: String): Either<Errors, Export> =
+            TODO("not implemented")
 
 
-    override fun item(source: Source, inputFile: File, qualifier: String?): Item {
+    override fun item(source: Source, inputFile: File): Item {
         val sourcePrefixName =
                 sourcePrefix.absolutePath
 
@@ -53,8 +52,10 @@ class Item(
     override fun sourceCode(): String =
             inputFile.readText()
 
+
     override fun sourceFile(): File =
             inputFile
+
 
     fun mustCompile(): Boolean {
         val targetJavaFile =
@@ -66,15 +67,18 @@ class Item(
         return !targetJavaFile.exists() || !targetJsonFile.exists() || sourceFile().lastModified() > targetJavaFile.lastModified()
     }
 
+
     fun targetJavaFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.java")
+
 
     fun targetJsonFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.json")
 
-    override fun exports(): Export {
-        TODO()
-    }
+
+    override fun exports(): Export =
+            fromJsonString(targetJsonFile().readText())
+
 
     fun writeJava(output: String) {
         val targetJavaFile =
@@ -84,6 +88,7 @@ class Item(
         targetJavaFile.writeText(output)
     }
 
+
     fun writeJson(output: String) {
         val targetJsonFile =
                 targetJsonFile()
@@ -92,9 +97,14 @@ class Item(
         targetJsonFile.writeText(output)
     }
 
-    override fun resolveConstructor(name: QString): String =
-            if (name.qualifier == null)
-                name.string
+
+    override fun itemRelativeTo(name: String): Item =
+            repository.item(Source.File, File(name).relativeTo(inputFile))
+
+
+    override fun resolveConstructor(name: String): String =
+            if (packageName.isEmpty())
+                "$className.$name"
             else
-                "${name.qualifier}.${name.string}"
+                "${packageName.joinToString(".")}.$className.$name"
 }

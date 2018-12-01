@@ -4,46 +4,48 @@ import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.repository.fromJsonString
-import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.typeBool
+import za.co.no9.sle.typing.typeInt
+import za.co.no9.sle.typing.typeString
+import za.co.no9.sle.typing.typeUnit
 import java.io.File
 
 
-class TestRepository(private val builtins: Environment) : Repository<TestItem> {
+class TestRepository : Repository<TestItem> {
     override fun import(name: String): Either<Errors, Export> {
         TODO()
     }
 
 
-    override fun item(source: Source, inputFile: File, qualifier: String?): TestItem =
-            TestItem(inputFile, builtins, qualifier)
+    override fun item(source: Source, inputFile: File): TestItem =
+            TestItem(inputFile)
 }
 
 
-class TestItem(private val inputFile: File, private val text: String?, private val builtins: Environment, private val qualifier: String? = null) : Item {
+class TestItem(private val inputFile: File, private val text: String?) : Item {
+    override fun itemRelativeTo(name: String): Item =
+            TODO("not implemented")
 
-    constructor(inputFile: File, builtins: Environment, qualifier: String?) : this(inputFile, null, builtins, qualifier)
+    constructor(inputFile: File) : this(inputFile, null)
 
 
-    override fun resolveConstructor(name: QString): String =
-            if (name.qualifier == null)
-                when(name.string) {
-                    "()" ->
-                        typeUnit.name
+    override fun resolveConstructor(name: String): String =
+            when (name) {
+                "()" ->
+                    typeUnit.name
 
-                    "Int" ->
-                        typeInt.name
+                "Int" ->
+                    typeInt.name
 
-                    "Bool" ->
-                        typeBool.name
+                "Bool" ->
+                    typeBool.name
 
-                    "String" ->
-                        typeString.name
+                "String" ->
+                    typeString.name
 
-                    else ->
-                        name.string
-                }
-            else
-                "${name.qualifier}.${name.string}"
+                else ->
+                    name
+            }
 
 
     override fun sourceCode(): String =

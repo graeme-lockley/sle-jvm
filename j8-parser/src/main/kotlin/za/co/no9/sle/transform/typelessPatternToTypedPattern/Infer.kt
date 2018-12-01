@@ -493,14 +493,8 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                         else
                             ID(import.asName.location, import.asName.name)
 
-                val importQualifier =
-                        if (import.importDeclarations.isEmpty() || import.asName != null)
-                            importName.name
-                        else
-                            null
-
                 val importItem =
-                        repository.item(import.urn.source, importFile, importQualifier)
+                        repository.item(import.urn.source, importFile)
 
                 val exports =
                         importItem.exports()
@@ -717,7 +711,7 @@ private fun transform(env: Environment, source: Item, type: TType, substitution:
                 if (env.isAlias(type.name.asQString()))
                     TAlias(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, source, it, substitution) })
                 else
-                    TCon(type.location, source.resolveConstructor(QString(type.name.qualifier, type.name.name)), type.arguments.map { transform(env, source, it, substitution) })
+                    TCon(type.location, source.resolveConstructor(type.name.name), type.arguments.map { transform(env, source, it, substitution) })
 
             is TArrow ->
                 TArr(transform(env, source, type.domain, substitution), transform(env, source, type.range, substitution))
@@ -762,7 +756,7 @@ private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype
                                 TCon(ttype.location, (typeBinding.scheme.type as TCon).name, ttype.arguments.map { map(it) })
 
                             is ADTBinding ->
-                                TCon(ttype.location, source.resolveConstructor(ttype.name.asQString()), ttype.arguments.map { map(it) })
+                                TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { map(it) })
 
                             is OpaqueImportADTBinding ->
                                 TCon(ttype.location, typeBinding.identity, ttype.arguments.map { map(it) })
@@ -771,7 +765,7 @@ private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype
                                 TCon(ttype.location, typeBinding.identity, ttype.arguments.map { map(it) })
 
                             else ->
-                                TCon(ttype.location, source.resolveConstructor(QString(ttype.name.qualifier, ttype.name.name)), ttype.arguments.map { map(it) })
+                                TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { map(it) })
                         }
                     }
 
@@ -808,5 +802,5 @@ private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(source: Ite
     val parameters =
             this.arguments.mapIndexed { index, _ -> index }
 
-    return Pair(Scheme(parameters, TCon(this.name.location, source.resolveConstructor(QString(this.name.name)), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
+    return Pair(Scheme(parameters, TCon(this.name.location, source.resolveConstructor(this.name.name), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
 }

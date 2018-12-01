@@ -10,7 +10,7 @@ import java.io.File
 interface Repository<out T: Item> {
     fun import(name: String): Either<Errors, Export>
 
-    fun item(source: Source, inputFile: File, qualifier: String? = null): T
+    fun item(source: Source, inputFile: File): T
 }
 
 
@@ -21,5 +21,7 @@ interface Item {
 
     fun sourceFile(): File
 
-    fun resolveConstructor(name: QString): String
+    fun resolveConstructor(name: String): String
+
+    fun itemRelativeTo(name: String): Item
 }

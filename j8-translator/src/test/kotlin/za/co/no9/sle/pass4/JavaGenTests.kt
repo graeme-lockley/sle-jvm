@@ -59,26 +59,29 @@ class TestRepository : Repository<TestItem> {
         TODO()
     }
 
-    override fun item(source: Source, inputFile: File, qualifier: String?): TestItem =
+
+    override fun item(source: Source, inputFile: File): TestItem =
             TestItem(inputFile)
 }
 
 
 class TestItem(private val inputFile: File) : Item {
-    override fun resolveConstructor(name: QString): String =
-            if (name.qualifier == null)
-                name.string
-            else
-                "${name.qualifier}.${name.string}"
+    override fun itemRelativeTo(name: String): Item =
+            TODO("not implemented")
+
+
+    override fun resolveConstructor(name: String): String =
+            name
+
 
     override fun sourceFile(): File =
             inputFile
+
 
     override fun sourceCode(): String =
             inputFile.readText()
 
 
-    override fun exports(): Export {
-        TODO()
-    }
+    override fun exports(): Export =
+            TODO()
 }
