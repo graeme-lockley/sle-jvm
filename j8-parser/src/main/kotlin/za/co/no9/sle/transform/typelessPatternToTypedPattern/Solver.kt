@@ -260,32 +260,24 @@ private class SolverContext(private var varPump: VarPump, private var constraint
                 t1 is TArr && t2 is TArr ->
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
 
+                t1 is TAlias -> {
+                    val type =
+                            environment.instantiateAlias(t1.name, varPump)!!
+
+                    unifies(type, t2)
+                }
+
+                t2 is TAlias -> {
+                    val type =
+                            environment.instantiateAlias(t2.name, varPump)!!
+
+                    unifies(t1, type)
+                }
+
                 else -> {
-                    if (t1 is TAlias) {
-                        val type =
-                                environment.instantiateAlias(t1.name, varPump)!!
+                    errors.add(UnificationFail(t1, t2))
 
-                        unifies(type, t2)
-                    } else if (t2 is TAlias) {
-                        val type =
-                                environment.instantiateAlias(t2.name, varPump)!!
-
-                        unifies(t1, type)
-                    } else {
-//                        if (t1 is TCon && !environment.containsType(t1.name)) {
-//                            errors.add(UnknownType(t1.location, t1.name))
-//
-//                            Pair(nullSubstitution, noConstraints)
-//                        } else if (t2 is TCon && !environment.containsType(t2.name)) {
-//                            errors.add(UnknownType(t2.location, t2.name))
-//
-//                            Pair(nullSubstitution, noConstraints)
-//                        } else {
-                            errors.add(UnificationFail(t1, t2))
-
-                            Pair(nullSubstitution, noConstraints)
-//                        }
-                    }
+                    Pair(nullSubstitution, noConstraints)
                 }
             }
 
