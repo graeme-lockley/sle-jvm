@@ -68,89 +68,9 @@ private class InferContext(private val repository: Repository<Item>, private val
 
         errors.addAll(resolvedImports.errors)
 
-        env = module.declarations.fold(resolvedImports.environment) { e: Environment, d: Declaration ->
-            when (d) {
-                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                    val name =
-                            d.name.name
+        env = module.declarations.fold(resolvedImports.environment) { e, d -> addDeclarationIntoEnvironment(e, d) }
 
-                    val scheme =
-                            typeToSchemeNullable(d.ttype).first
-
-                    if (scheme == null) {
-                        e
-                    } else {
-                        e.newValue(name, VariableBinding(scheme))
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
-                    if (e.containsType(d.name.name)) {
-                        errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
-                        e
-                    } else {
-                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype).first))
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
-                    val newEnv =
-                            d.constructors.fold(e) { fds, constructor ->
-                                if (fds.containsValue(constructor.name.name)) {
-                                    errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
-                                    fds
-                                } else {
-                                    val scheme =
-                                            d.scheme()
-
-                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(a, scheme.second), b) })))
-                                }
-                            }
-
-                    if (newEnv.containsType(d.name.name)) {
-                        errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
-                        newEnv
-                    } else {
-                        val scheme =
-                                d.scheme()
-
-                        newEnv.newType(d.name.name, ADTBinding(scheme.first, d.constructors.map {
-                            Pair(it.name.name, newEnv.variable(it.name.name)!!)
-                        }))
-                    }
-                }
-            }
-        }
-
-        for (declaration in module.declarations) {
-            when (declaration) {
-                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                    val scheme =
-                            typeToSchemeNullable(declaration.ttype).first
-
-                    if (scheme != null) {
-                        validateScheme(scheme)
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
-                    validateScheme(typeToScheme(declaration.ttype).first)
-                }
-
-                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
-                    val scheme =
-                            declaration.scheme()
-
-                    validateScheme(scheme.first)
-                    for (constructor in declaration.constructors) {
-                        for (type in constructor.arguments) {
-                            validateType(transform(type, scheme.second))
-                        }
-                    }
-                }
-            }
-        }
-
+        validateDeclarationSchemes(module)
 
         val declarations =
                 module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
@@ -279,6 +199,121 @@ private class InferContext(private val repository: Repository<Item>, private val
     }
 
 
+    private fun addDeclarationIntoEnvironment(e: Environment, d: Declaration): Environment =
+            when (d) {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
+                    val name =
+                            d.name.name
+
+                    val scheme =
+                            typeToSchemeNullable(d.ttype).first
+
+                    if (scheme == null) {
+                        e
+                    } else {
+                        e.newValue(name, VariableBinding(scheme))
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
+                    if (e.containsType(d.name.name)) {
+                        errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
+                        e
+                    } else {
+                        e.newType(d.name.name, AliasBinding(typeToScheme(d.ttype).first))
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
+                    val newEnv =
+                            d.constructors.fold(e) { fds, constructor ->
+                                if (fds.containsValue(constructor.name.name)) {
+                                    errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
+                                    fds
+                                } else {
+                                    val scheme =
+                                            d.scheme()
+
+                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(a, scheme.second), b) })))
+                                }
+                            }
+
+                    if (newEnv.containsType(d.name.name)) {
+                        errors.add(DuplicateTypeDeclaration(d.location, d.name.name))
+                        newEnv
+                    } else {
+                        val scheme =
+                                d.scheme()
+
+                        newEnv.newType(d.name.name, ADTBinding(scheme.first, d.constructors.map {
+                            Pair(it.name.name, newEnv.variable(it.name.name)!!)
+                        }))
+                    }
+                }
+            }
+
+
+    private fun validateDeclarationSchemes(module: za.co.no9.sle.ast.typelessPattern.Module) {
+        fun validateType(type: Type) {
+            when (type) {
+                is TCon -> {
+                    val scheme =
+                            env.type(type.name)?.scheme
+
+                    if (scheme == null) {
+                        errors.add(UnknownTypeReference(type.location, type.name))
+                    } else if (type.arguments.size != scheme.parameters.size) {
+                        errors.add(IncorrectNumberOfSchemeArguments(type.location, type.name, scheme.parameters.size, type.arguments.size))
+                    }
+                }
+
+                is TArr -> {
+                    validateType(type.domain)
+                    validateType(type.range)
+                }
+
+                else -> {
+                }
+            }
+        }
+
+
+        fun validateScheme(scheme: Scheme) {
+            validateType(scheme.type)
+        }
+
+
+        for (declaration in module.declarations) {
+            when (declaration) {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
+                    val scheme =
+                            typeToSchemeNullable(declaration.ttype).first
+
+                    if (scheme != null) {
+                        validateScheme(scheme)
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
+                    validateScheme(typeToScheme(declaration.ttype).first)
+                }
+
+                is TypeDeclaration -> {
+                    val scheme =
+                            declaration.scheme()
+
+                    validateScheme(scheme.first)
+                    for (constructor in declaration.constructors) {
+                        for (type in constructor.arguments) {
+                            validateType(transform(type, scheme.second))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessPattern.Module) {
         module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
             when (d) {
@@ -299,35 +334,6 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                 is TypeDeclaration ->
                     e
-            }
-        }
-    }
-
-
-    private fun validateScheme(scheme: Scheme) {
-        validateType(scheme.type)
-    }
-
-
-    private fun validateType(type: Type) {
-        when (type) {
-            is TCon -> {
-                val scheme =
-                        env.type(type.name)?.scheme
-
-                if (scheme == null) {
-                    errors.add(UnknownTypeReference(type.location, type.name))
-                } else if (type.arguments.size != scheme.parameters.size) {
-                    errors.add(IncorrectNumberOfSchemeArguments(type.location, type.name, scheme.parameters.size, type.arguments.size))
-                }
-            }
-
-            is TArr -> {
-                validateType(type.domain)
-                validateType(type.range)
-            }
-
-            else -> {
             }
         }
     }
