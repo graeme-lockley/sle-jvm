@@ -8,7 +8,6 @@ import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.Environment
 import za.co.no9.sle.typing.Substitution
-import java.io.File
 
 
 private typealias Patterns =
@@ -84,12 +83,12 @@ private class Transform(private var counter: Int = 0) {
                 a
         }
 
-        return Module(module.location, module.exports.map{transform(it)}, module.declarations.map { transform(it) })
+        return Module(module.location, module.exports.map { transform(it) }, module.declarations.map { transform(it) })
     }
 
 
     private fun transform(nameDeclaration: za.co.no9.sle.ast.enrichedCore.NameDeclaration): NameDeclaration =
-            when(nameDeclaration) {
+            when (nameDeclaration) {
                 is za.co.no9.sle.ast.enrichedCore.ValueNameDeclaration ->
                     ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
                 is za.co.no9.sle.ast.enrichedCore.AliasNameDeclaration ->
