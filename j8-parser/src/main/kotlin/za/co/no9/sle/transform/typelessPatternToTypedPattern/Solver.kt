@@ -124,6 +124,28 @@ private class ApplyContext(private val environment: Environment) {
                 is TVar ->
                     this
 
+                is TAlias -> {
+                    val alias =
+                            environment.alias(name)
+
+                    when {
+                        alias == null ->
+                            this
+
+                        arguments.size != alias.parameters.size -> {
+                            errors.add(IncorrectNumberOfAliasArguments(this.location, name, alias.parameters.size, arguments.size))
+                            this
+                        }
+
+                        else -> {
+                            val substitutionMap =
+                                    alias.parameters.zip(arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
+
+                            alias.type.apply(Substitution(substitutionMap)).expandAliases(environment)
+                        }
+                    }
+                }
+
                 is TCon -> {
                     val alias =
                             environment.alias(name)

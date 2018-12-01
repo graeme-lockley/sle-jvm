@@ -35,6 +35,9 @@ private fun toClass(type: za.co.no9.sle.typing.Type): Type =
             is za.co.no9.sle.typing.TVar ->
                 Variable(type.variable)
 
+            is za.co.no9.sle.typing.TAlias ->
+                Alias(type.name, type.arguments.map { toClass(it) })
+
             is za.co.no9.sle.typing.TCon ->
                 Constant(type.name, type.arguments.map { toClass(it) })
 

@@ -155,14 +155,11 @@ private fun constructorExpression(declaration: TypeDeclaration, constructor: Con
 
 fun javaType(type: Type): String =
         when (type) {
-            is TCon ->
-                "Object"
-
-            is TVar ->
-                "Object"
-
             is TArr ->
                 "Function<${javaType(type.domain)}, ${javaType(type.range)}>"
+
+            else ->
+                "Object"
         }
 
 

@@ -27,6 +27,29 @@ data class TVar(
 }
 
 
+data class TAlias(
+        override val location: Location,
+        val name: QString,
+        val arguments: List<Type> = emptyList()) : Type(location) {
+    constructor(location: Location, name: String, arguments: List<Type> = emptyList()) : this(location, QString(name), arguments)
+
+    override fun apply(s: Substitution) =
+            if (arguments.isEmpty())
+                this
+            else
+                TCon(location, name, arguments.map { it.apply(s) })
+
+    override fun ftv() =
+            arguments.fold(emptySet<Var>()) { ftvs, type -> ftvs + type.ftv() }
+
+    override fun toString(): String =
+            if (arguments.isEmpty())
+                "alias.$name"
+            else
+                "alias.$name ${arguments.map { it.toString() }.joinToString(" ")}"
+}
+
+
 data class TCon(
         override val location: Location,
         val name: QString,
