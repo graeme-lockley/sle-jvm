@@ -60,7 +60,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                         item.className
 
                 val parseDetail =
-                        parseWithDetail(repository, item.source(), item.readText(), environment)
+                        parseWithDetail(repository, item, environment)
 
                 val compiledFile =
                         parseDetail
@@ -78,7 +78,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                     item.writeJson(toJsonString(toClass(parseDetail.right()!!.coreModule.exports)))
                 } else {
                     val sourceName =
-                            it.second.source().absoluteFile
+                            it.second.sourceFile().absoluteFile
 
                     errors.forEach { error ->
                         val errorMessage =

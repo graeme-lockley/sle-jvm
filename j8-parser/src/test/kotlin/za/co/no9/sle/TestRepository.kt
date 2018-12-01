@@ -13,12 +13,24 @@ class TestRepository(private val builtins: Environment) : Repository<TestItem> {
         TODO()
     }
 
+
     override fun item(source: Source, inputFile: File, qualifier: String?): TestItem =
             TestItem(inputFile, builtins, qualifier)
 }
 
 
-class TestItem(private val inputFile: File, private val builtins: Environment, private val qualifier: String?) : Item {
+class TestItem(private val inputFile: File, private val text: String?, private val builtins: Environment, private val qualifier: String? = null) : Item {
+    constructor(inputFile: File, builtins: Environment, qualifier: String?) : this(inputFile, null, builtins, qualifier)
+
+
+    override fun sourceCode(): String =
+            text ?: inputFile.readText()
+
+
+    override fun sourceFile(): File =
+            inputFile
+
+
     override fun exports(): Export =
             fromJsonString(File(inputFile.absolutePath + ".json").readText(), builtins, qualifier)
 }

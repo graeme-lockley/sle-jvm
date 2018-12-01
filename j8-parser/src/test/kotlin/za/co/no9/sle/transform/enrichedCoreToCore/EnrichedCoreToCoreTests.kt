@@ -33,7 +33,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 param.second
 
         val parseWithDetail =
-                parseWithDetail(TestRepository(initialEnvironment), sourceFile, fileContent["src"]?.joinToString("\n") ?: "", environment)
+                parseWithDetail(TestRepository(initialEnvironment), TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
+                        ?: "", initialEnvironment, null), environment)
 
 
         val constraints =

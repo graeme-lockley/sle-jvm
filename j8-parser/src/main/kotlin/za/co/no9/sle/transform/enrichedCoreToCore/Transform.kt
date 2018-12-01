@@ -30,9 +30,9 @@ data class Detail(
         val coreModule: Module)
 
 
-fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, Detail> {
+fun parseWithDetail(repository: Repository<Item>, source: Item, environment: Environment): Either<Errors, Detail> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(repository, sourceFile, text, environment)
+            za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(repository, source, environment)
 
     return typePatternDetail.andThen { detail ->
         val coreModule =
@@ -43,8 +43,8 @@ fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String
 }
 
 
-fun parse(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, Module> =
-        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(repository, sourceFile, text, environment).andThen { transform(it) }
+fun parse(repository: Repository<Item>, source: Item, environment: Environment): Either<Errors, Module> =
+        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(repository, source, environment).andThen { transform(it) }
 
 
 private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {

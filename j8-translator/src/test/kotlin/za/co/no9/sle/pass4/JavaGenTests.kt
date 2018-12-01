@@ -16,11 +16,8 @@ class JavaGenTests : StringSpec({
         val inputFile =
                 File(".", "./src/test/resources/test/$name.sle")
 
-        val input =
-                inputFile.readText()
-
         val result =
-                parseWithDetail(TestRepository(), inputFile, input, environment)
+                parseWithDetail(TestRepository(), TestItem(inputFile), environment)
                         .map { translateToJava(it.coreModule, "test", name) }
                         .map { it.toString() }
 
@@ -63,11 +60,18 @@ class TestRepository : Repository<TestItem> {
     }
 
     override fun item(source: Source, inputFile: File, qualifier: String?): TestItem =
-            TestItem()
+            TestItem(inputFile)
 }
 
 
-class TestItem : Item {
+class TestItem(private val inputFile: File) : Item {
+    override fun sourceFile(): File =
+            inputFile
+
+    override fun sourceCode(): String =
+            inputFile.readText()
+
+
     override fun exports(): Export {
         TODO()
     }

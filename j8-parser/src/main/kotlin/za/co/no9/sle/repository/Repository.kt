@@ -15,4 +15,8 @@ interface Repository<out T: Item> {
 
 interface Item {
     fun exports(): Export
+
+    fun sourceCode(): String
+
+    fun sourceFile(): File
 }

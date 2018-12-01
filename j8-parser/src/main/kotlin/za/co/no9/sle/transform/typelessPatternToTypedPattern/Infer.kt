@@ -37,9 +37,9 @@ import java.io.File
 data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
 
 
-fun infer(repository: Repository<Item>, sourceFile: File, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
+fun infer(repository: Repository<Item>, source: Item, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
-            InferContext(repository, sourceFile, varPump, env)
+            InferContext(repository, source.sourceFile(), varPump, env)
 
     val m =
             context.infer(module)

@@ -29,12 +29,12 @@ private data class Tuple4<out A, out B, out C, out D>(
          val v4: D)
 
 
-fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String, __env: Environment): Either<Errors, InferenceDetail> {
+fun parseWithDetail(repository: Repository<Item>, source: Item, __env: Environment): Either<Errors, InferenceDetail> {
     val varPump =
             VarPump()
 
-    return parse(text)
-            .andThen { infer(repository, sourceFile, varPump, it, __env) }
+    return parse(source.sourceCode())
+            .andThen { infer(repository, source, varPump, it, __env) }
             .andThen { (unresolvedModule, constraints, environment) ->
                 unifies(varPump, constraints, environment).map { Tuple4(unresolvedModule, constraints, it, environment) }
             }.andThen { (unresolvedModule, constraints, substitution, environment) ->
@@ -46,11 +46,11 @@ fun parseWithDetail(repository: Repository<Item>, sourceFile: File, text: String
 }
 
 
-fun parse(repository: Repository<Item>, sourceFile: File, text: String, environment: Environment): Either<Errors, InferResult> {
+fun parse(repository: Repository<Item>, source: Item, environment: Environment): Either<Errors, InferResult> {
     val varPump =
             VarPump()
 
 
-    return parse(text)
-            .andThen { infer(repository, sourceFile, varPump, it, environment) }
+    return parse(source.sourceCode())
+            .andThen { infer(repository, source, varPump, it, environment) }
 }

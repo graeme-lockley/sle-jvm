@@ -49,6 +49,13 @@ class Item(
         private val inputFile: File,
         val packageName: List<String>,
         val className: String) : za.co.no9.sle.repository.Item {
+
+    override fun sourceCode(): String =
+            inputFile.readText()
+
+    override fun sourceFile(): File =
+            inputFile
+
     fun mustCompile(): Boolean {
         val targetJavaFile =
                 targetJavaFile()
@@ -56,11 +63,8 @@ class Item(
         val targetJsonFile =
                 targetJsonFile()
 
-        return !targetJavaFile.exists() || !targetJsonFile.exists() || source().lastModified() > targetJavaFile.lastModified()
+        return !targetJavaFile.exists() || !targetJsonFile.exists() || sourceFile().lastModified() > targetJavaFile.lastModified()
     }
-
-    fun readText(): String =
-            inputFile.readText()
 
     fun targetJavaFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.java")
@@ -71,9 +75,6 @@ class Item(
     override fun exports(): Export {
         TODO()
     }
-
-    fun source(): File =
-            inputFile
 
     fun writeJava(output: String) {
         val targetJavaFile =
