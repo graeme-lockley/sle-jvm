@@ -25,10 +25,9 @@ import za.co.no9.sle.ast.typedPattern.Module
 import za.co.no9.sle.ast.typedPattern.Pattern
 import za.co.no9.sle.ast.typedPattern.QualifiedID
 import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
+import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.*
-import za.co.no9.sle.ast.typelessPattern.Declaration
-import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.typing.*
@@ -136,7 +135,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             val scheme =
                                     d.scheme()
 
-                            ds + za.co.no9.sle.ast.typedPattern.TypeDeclaration(
+                            ds + TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
                                     scheme.first,
@@ -199,7 +198,7 @@ private class InferContext(private val repository: Repository<Item>, private val
     }
 
 
-    private fun addDeclarationIntoEnvironment(e: Environment, d: Declaration): Environment =
+    private fun addDeclarationIntoEnvironment(e: Environment, d: za.co.no9.sle.ast.typelessPattern.Declaration): Environment =
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
@@ -251,7 +250,7 @@ private class InferContext(private val repository: Repository<Item>, private val
 
 
     private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessPattern.Module) {
-        module.declarations.fold(emptySet()) { e: Set<String>, d: Declaration ->
+        module.declarations.fold(emptySet()) { e: Set<String>, d: za.co.no9.sle.ast.typelessPattern.Declaration ->
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
@@ -268,7 +267,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                 is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
                     e
 
-                is TypeDeclaration ->
+                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
                     e
             }
         }
@@ -615,7 +614,7 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
                     is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
                         m + Pair(d.name.name, 0)
 
-                    is TypeDeclaration ->
+                    is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
                         m + Pair(d.name.name, d.arguments.size)
 
                     else ->
@@ -669,7 +668,7 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
             is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
                 validateTType(declaration.ttype)
 
-            is TypeDeclaration ->
+            is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
                 for (constructor in declaration.constructors) {
                     for (type in constructor.arguments) {
                         validateTType(type)
