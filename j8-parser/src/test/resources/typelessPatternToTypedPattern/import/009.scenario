@@ -1,0 +1,304 @@
+-- Validate that the type checker will deal identities of types
+import file:./List as L1
+import file:./List as L2
+
+
+isEmpty : L2.List a -> Bool
+isEmpty L1.Nil = True
+isEmpty xs = False
+
+
+singleton : a -> L1.List a
+singleton x =
+    L2.Cons x L1.Nil
+
+result =
+    isEmpty (singleton "Hello")
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstructorReferencePattern:
+                  name:
+                    QualifiedID:
+                      name: Nil
+                      qualifier: L1
+                  parameters: []
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 2
+                        ]
+                      name: /home/alfred/.sle/List
+              expression:
+                ConstantBool:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+                  value: true
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 2
+                        ]
+                      name: /home/alfred/.sle/List
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: xs
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 2
+                        ]
+                      name: /home/alfred/.sle/List
+              expression:
+                ConstantBool:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+                  value: false
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 2
+                        ]
+                      name: /home/alfred/.sle/List
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+          ]
+        name:
+          ID:
+            name: isEmpty
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: /home/alfred/.sle/List
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.Bool
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: x
+                  type:
+                    TVar:
+                      variable: 8
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: Nil
+                          qualifier: L1
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 8
+                            ]
+                          name: /home/alfred/.sle/List
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
+                          type:
+                            TVar:
+                              variable: 8
+                      operator:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: Cons
+                              qualifier: L2
+                          type:
+                            TArr:
+                              domain:
+                                TVar:
+                                  variable: 8
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 8
+                                        ]
+                                      name: /home/alfred/.sle/List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 8
+                                        ]
+                                      name: /home/alfred/.sle/List
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 8
+                                ]
+                              name: /home/alfred/.sle/List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 8
+                                ]
+                              name: /home/alfred/.sle/List
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 8
+                        ]
+                      name: /home/alfred/.sle/List
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 8
+                  range:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 8
+                        ]
+                      name: /home/alfred/.sle/List
+          ]
+        name:
+          ID:
+            name: singleton
+        scheme:
+          Scheme:
+            parameters: [
+                1
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 1
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 1
+                      ]
+                    name: /home/alfred/.sle/List
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                CallExpression:
+                  operand:
+                    ConstantString:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      value: Hello
+                  operator:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: singleton
+                          qualifier: null
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                                ]
+                              name: /home/alfred/.sle/List
+                  type:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        ]
+                      name: /home/alfred/.sle/List
+              operator:
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: isEmpty
+                      qualifier: null
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: /home/alfred/.sle/List
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+              type:
+                TCon:
+                  arguments: []
+                  name: Data.Bool
+          ]
+        name:
+          ID:
+            name: result
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.Bool
+    ]
+  exports: []
