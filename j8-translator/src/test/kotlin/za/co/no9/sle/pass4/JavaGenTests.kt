@@ -65,6 +65,12 @@ class TestRepository : Repository<TestItem> {
 
 
 class TestItem(private val inputFile: File) : Item {
+    override fun resolveConstructor(name: QString): String =
+            if (name.qualifier == null)
+                name.string
+            else
+                "${name.qualifier}.${name.string}"
+
     override fun sourceFile(): File =
             inputFile
 

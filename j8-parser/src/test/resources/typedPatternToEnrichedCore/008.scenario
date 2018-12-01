@@ -36,7 +36,7 @@ map =
         (CALL
           (CALL
             (LAMBDA f ->
-              (LAMBDA Cons '4 List '4 ->
+              (LAMBDA Cons '6 List '6 ->
                 (CALL
                   (CALL
                     Cons
@@ -63,4 +63,3 @@ map =
       )
     )
   )
-

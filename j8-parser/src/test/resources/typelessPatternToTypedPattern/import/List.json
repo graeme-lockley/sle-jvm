@@ -2,22 +2,8 @@
   "declarations": [
     {
       "adt": "List",
-      "scheme": {
-        "parameters": [
-          0
-        ],
-        "type": {
-          "constant": {
-            "qualifier": "/home/alfred/.sle",
-            "string": "List"
-          },
-          "arguments": [
-            {
-              "variable": 0
-            }
-          ]
-        }
-      },
+      "cardinality": 1,
+      "identity": "/home/alfred/.sle/List",
       "constructors": [
         {
           "name": "Nil",
@@ -26,10 +12,7 @@
               0
             ],
             "type": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "List"
-              },
+              "constant": "/home/alfred/.sle/List",
               "arguments": [
                 {
                   "variable": 0
@@ -50,10 +33,7 @@
               },
               "range": {
                 "domain": {
-                  "constant": {
-                    "qualifier": "/home/alfred/.sle",
-                    "string": "List"
-                  },
+                  "constant": "/home/alfred/.sle/List",
                   "arguments": [
                     {
                       "variable": 0
@@ -61,10 +41,7 @@
                   ]
                 },
                 "range": {
-                  "constant": {
-                    "qualifier": "/home/alfred/.sle",
-                    "string": "List"
-                  },
+                  "constant": "/home/alfred/.sle/List",
                   "arguments": [
                     {
                       "variable": 0
@@ -79,22 +56,8 @@
     },
     {
       "adt": "Maybe",
-      "scheme": {
-        "parameters": [
-          0
-        ],
-        "type": {
-          "constant": {
-            "qualifier": "/home/alfred/.sle",
-            "string": "Maybe"
-          },
-          "arguments": [
-            {
-              "variable": 0
-            }
-          ]
-        }
-      },
+      "cardinality": 1,
+      "identity": "/home/alfred/.sle/Maybe",
       "constructors": [
         {
           "name": "Nothing",
@@ -103,10 +66,7 @@
               0
             ],
             "type": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "Maybe"
-              },
+              "constant": "/home/alfred/.sle/Maybe",
               "arguments": [
                 {
                   "variable": 0
@@ -126,10 +86,7 @@
                 "variable": 0
               },
               "range": {
-                "constant": {
-                  "qualifier": "/home/alfred/.sle",
-                  "string": "Maybe"
-                },
+                "constant": "/home/alfred/.sle/Maybe",
                 "arguments": [
                   {
                     "variable": 0
@@ -149,9 +106,7 @@
         ],
         "type": {
           "domain": {
-            "constant": {
-              "string": "Int"
-            },
+            "constant": "Data.Int",
             "arguments": []
           },
           "range": {
@@ -159,10 +114,7 @@
               "variable": 0
             },
             "range": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "List"
-              },
+              "constant": "/home/alfred/.sle/List",
               "arguments": [
                 {
                   "variable": 0
@@ -179,28 +131,19 @@
         "parameters": [],
         "type": {
           "domain": {
-            "constant": {
-              "string": "Int"
-            },
+            "constant": "Data.Int",
             "arguments": []
           },
           "range": {
             "domain": {
-              "constant": {
-                "string": "Int"
-              },
+              "constant": "Data.Int",
               "arguments": []
             },
             "range": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "List"
-              },
+              "constant": "/home/alfred/.sle/List",
               "arguments": [
                 {
-                  "constant": {
-                    "string": "Int"
-                  },
+                  "constant": "Data.Int",
                   "arguments": []
                 }
               ]
@@ -217,10 +160,7 @@
         ],
         "type": {
           "domain": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
                 "variable": 0
@@ -228,9 +168,7 @@
             ]
           },
           "range": {
-            "constant": {
-              "string": "Bool"
-            },
+            "constant": "Data.Bool",
             "arguments": []
           }
         }
@@ -244,10 +182,7 @@
         ],
         "type": {
           "domain": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
                 "variable": 0
@@ -255,10 +190,7 @@
             ]
           },
           "range": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "Maybe"
-            },
+            "constant": "/home/alfred/.sle/Maybe",
             "arguments": [
               {
                 "variable": 0
@@ -276,10 +208,7 @@
         ],
         "type": {
           "domain": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
                 "variable": 0
@@ -287,16 +216,10 @@
             ]
           },
           "range": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "Maybe"
-            },
+            "constant": "/home/alfred/.sle/Maybe",
             "arguments": [
               {
-                "constant": {
-                  "qualifier": "/home/alfred/.sle",
-                  "string": "List"
-                },
+                "constant": "/home/alfred/.sle/List",
                 "arguments": [
                   {
                     "variable": 0
@@ -326,10 +249,7 @@
           },
           "range": {
             "domain": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "List"
-              },
+              "constant": "/home/alfred/.sle/List",
               "arguments": [
                 {
                   "variable": 0
@@ -337,10 +257,7 @@
               ]
             },
             "range": {
-              "constant": {
-                "qualifier": "/home/alfred/.sle",
-                "string": "List"
-              },
+              "constant": "/home/alfred/.sle/List",
               "arguments": [
                 {
                   "variable": 1
@@ -357,29 +274,19 @@
         "parameters": [],
         "type": {
           "domain": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
-                "constant": {
-                  "string": "Int"
-                },
+                "constant": "Data.Int",
                 "arguments": []
               }
             ]
           },
           "range": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
-                "constant": {
-                  "string": "Int"
-                },
+                "constant": "Data.Int",
                 "arguments": []
               }
             ]
@@ -395,10 +302,7 @@
         ],
         "type": {
           "domain": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
                 "variable": 0
@@ -406,10 +310,7 @@
             ]
           },
           "range": {
-            "constant": {
-              "qualifier": "/home/alfred/.sle",
-              "string": "List"
-            },
+            "constant": "/home/alfred/.sle/List",
             "arguments": [
               {
                 "variable": 0
@@ -424,15 +325,10 @@
       "scheme": {
         "parameters": [],
         "type": {
-          "constant": {
-            "qualifier": "/home/alfred/.sle",
-            "string": "List"
-          },
+          "constant": "/home/alfred/.sle/List",
           "arguments": [
             {
-              "constant": {
-                "string": "Int"
-              },
+              "constant": "Data.Int",
               "arguments": []
             }
           ]

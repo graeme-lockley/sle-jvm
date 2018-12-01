@@ -14,13 +14,13 @@ length l =
             1 + (length xs)
 -- constraints
 [
-  '0 : List '2
-  '1 : Int
-  '5 -> List '5 -> List '5 : '3 -> '4 -> List '5
-  Int -> Int -> Int : Int -> '6
-  List '7 -> Int : '4 -> '8
-  '6 : '8 -> '9
-  '0 : List '5
-  '1 : '9
-  List '10 -> Int : '0 -> '1
+  '1 : List '3
+  '2 : Data.Int
+  '6 -> List '6 -> List '6 : '4 -> '5 -> List '6
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '7
+  List '8 -> Data.Int : '5 -> '9
+  '7 : '9 -> '10
+  '1 : List '6
+  '2 : '10
+  List '11 -> Data.Int : '1 -> '2
 ]

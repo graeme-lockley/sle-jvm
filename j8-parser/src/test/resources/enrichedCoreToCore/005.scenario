@@ -53,7 +53,7 @@ duplicate =
   )
 
 
-intList : <> List Int
+intList : <> List Data.Int
 intList =
   (CALL
     singleton
@@ -61,7 +61,7 @@ intList =
   )
 
 
-boolList : <> List Bool
+boolList : <> List Data.Bool
 boolList =
   (CALL
     duplicate

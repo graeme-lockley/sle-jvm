@@ -22,17 +22,17 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TArr:
                     domain:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
                     range:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -42,7 +42,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
               expression:
                 LambdaExpression:
                   argument:
@@ -51,7 +51,7 @@ Module:
                       type:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
                   expression:
                     CallExpression:
                       operand:
@@ -63,7 +63,7 @@ Module:
                           type:
                             TCon:
                               arguments: []
-                              name: Int
+                              name: Data.Int
                       operator:
                         CallExpression:
                           operand:
@@ -75,7 +75,7 @@ Module:
                               type:
                                 TCon:
                                   arguments: []
-                                  name: Int
+                                  name: Data.Int
                           operator:
                             IdReference:
                               name:
@@ -87,57 +87,57 @@ Module:
                                   domain:
                                     TCon:
                                       arguments: []
-                                      name: Int
+                                      name: Data.Int
                                   range:
                                     TArr:
                                       domain:
                                         TCon:
                                           arguments: []
-                                          name: Int
+                                          name: Data.Int
                                       range:
                                         TCon:
                                           arguments: []
-                                          name: Int
+                                          name: Data.Int
                           type:
                             TArr:
                               domain:
                                 TCon:
                                   arguments: []
-                                  name: Int
+                                  name: Data.Int
                               range:
                                 TCon:
                                   arguments: []
-                                  name: Int
+                                  name: Data.Int
                       type:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
                   type:
                     TArr:
                       domain:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
                       range:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
               type:
                 TArr:
                   domain:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   range:
                     TArr:
                       domain:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
                       range:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
           ]
         name:
           ID:
@@ -161,15 +161,15 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TArr:
                     domain:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
                     range:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
     ]

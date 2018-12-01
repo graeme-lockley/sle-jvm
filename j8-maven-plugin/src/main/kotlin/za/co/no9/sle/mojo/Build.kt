@@ -75,7 +75,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                 if (errors == null) {
                     item.writeJava(output.right() ?: "")
-                    item.writeJson(toJsonString(toClass(parseDetail.right()!!.coreModule.exports)))
+                    item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.coreModule.exports)))
                 } else {
                     val sourceName =
                             it.second.sourceFile().absoluteFile

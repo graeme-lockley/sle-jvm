@@ -28,8 +28,8 @@ export full List: <0> List '0
   Nil: <0> List '0
   Cons: <0> '0 -> List '0 -> List '0
 export adt Maybe: <0> Maybe '0
-export value find: <0> ('0 -> Bool) -> List '0 -> Maybe '0
-export alias IntMap: <> Int -> Int
+export value find: <0> ('0 -> Data.Bool) -> List '0 -> Maybe '0
+export alias IntMap: <> Data.Int -> Data.Int
 
 type List =
   Nil
@@ -42,9 +42,9 @@ type Maybe =
 
 
 typealias IntMap =
-  <> Int -> Int
+  <> Data.Int -> Data.Int
 
-find : <0> ('0 -> Bool) -> List '0 -> Maybe '0
+find : <0> ('0 -> Data.Bool) -> List '0 -> Maybe '0
 find =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->
@@ -72,3 +72,4 @@ find =
       )
     )
   )
+

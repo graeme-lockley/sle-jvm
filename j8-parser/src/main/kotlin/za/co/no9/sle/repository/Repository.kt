@@ -2,6 +2,7 @@ package za.co.no9.sle.repository
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
+import za.co.no9.sle.QString
 import za.co.no9.sle.Source
 import java.io.File
 
@@ -19,4 +20,6 @@ interface Item {
     fun sourceCode(): String
 
     fun sourceFile(): File
+
+    fun resolveConstructor(name: QString): String
 }

@@ -4,7 +4,7 @@ boolToNum v =
         True -> 1
         False -> 0
 -- enrichedASTpp
-boolToNum : <> Bool -> Int
+boolToNum : <> Data.Bool -> Data.Int
 boolToNum =
   (LAMBDA v ->
     (CALL

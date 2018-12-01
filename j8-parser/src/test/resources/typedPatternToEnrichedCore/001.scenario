@@ -6,7 +6,7 @@ factorial n =
     else
         n * factorial (n - 1)
 -- enrichedASTpp
-factorial : <> Int -> Int
+factorial : <> Data.Int -> Data.Int
 factorial =
   (LAMBDA n ->
     (IF

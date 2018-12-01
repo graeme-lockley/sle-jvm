@@ -6,7 +6,7 @@ import static za.co.no9.sle.runtime.Builtin.*;
 public class First {
 
     /**
-     * factorial: <> Int -> Int
+     * factorial: <> Data.Int -> Data.Int
      */
     public static final Function<Object, Object> factorial = new Function<Object, Object>() {
 
@@ -16,7 +16,7 @@ public class First {
     };
 
     /**
-     * factorial2: <> Int -> Int
+     * factorial2: <> Data.Int -> Data.Int
      */
     public static final Function<Object, Object> factorial2 = new Function<Object, Object>() {
 
@@ -26,7 +26,7 @@ public class First {
     };
 
     /**
-     * factorial3: <> Int -> Int
+     * factorial3: <> Data.Int -> Data.Int
      */
     public static final Function<Object, Object> factorial3 = new Function<Object, Object>() {
 

@@ -4,5 +4,5 @@ value =
     False
 -- constraints
 [
-    Bool : Bool
+    Data.Bool : Data.Bool
 ]

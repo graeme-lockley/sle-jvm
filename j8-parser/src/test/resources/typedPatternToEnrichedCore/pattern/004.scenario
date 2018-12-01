@@ -5,7 +5,7 @@ stringToNum v =
         "World" -> 2
         otherwise -> 0
 -- enrichedASTpp
-stringToNum : <> String -> Int
+stringToNum : <> Data.String -> Data.Int
 stringToNum =
   (LAMBDA v ->
     (CALL

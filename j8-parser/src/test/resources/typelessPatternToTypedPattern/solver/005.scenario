@@ -23,8 +23,8 @@ boolList =
   '8 -> List '8 -> List '8 : '5 -> '9
   '9 : List '10 -> '11
   '7 : '11 -> '12
-  '13 -> List '13 : Int -> '14
-  '15 -> List '15 : Bool -> '16
+  '13 -> List '13 : Data.Int -> '14
+  '15 -> List '15 : Data.Bool -> '16
 ]
 -- substitution
 [
@@ -39,10 +39,10 @@ boolList =
   5='10
   11=List '10
   12=List '10
-  13=Int
-  14=List Int
-  15=Bool
-  16=List Bool
+  13=Data.Int
+  14=List Data.Int
+  15=Data.Bool
+  16=List Data.Bool
 ]
 -- typeAST
 Module:
@@ -391,7 +391,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   value: 10
               operator:
                 IdReference:
@@ -404,13 +404,13 @@ Module:
                       domain:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
                       range:
                         TCon:
                           arguments: [
                               TCon:
                                 arguments: []
-                                name: Int
+                                name: Data.Int
                             ]
                           name: List
               type:
@@ -418,7 +418,7 @@ Module:
                   arguments: [
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
                     ]
                   name: List
           ]
@@ -433,7 +433,7 @@ Module:
                 arguments: [
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   ]
                 name: List
       LetDeclaration:
@@ -444,7 +444,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: Bool
+                      name: Data.Bool
                   value: true
               operator:
                 IdReference:
@@ -457,13 +457,13 @@ Module:
                       domain:
                         TCon:
                           arguments: []
-                          name: Bool
+                          name: Data.Bool
                       range:
                         TCon:
                           arguments: [
                               TCon:
                                 arguments: []
-                                name: Bool
+                                name: Data.Bool
                             ]
                           name: List
               type:
@@ -471,7 +471,7 @@ Module:
                   arguments: [
                       TCon:
                         arguments: []
-                        name: Bool
+                        name: Data.Bool
                     ]
                   name: List
           ]
@@ -486,7 +486,7 @@ Module:
                 arguments: [
                     TCon:
                       arguments: []
-                      name: Bool
+                      name: Data.Bool
                   ]
                 name: List
     ]

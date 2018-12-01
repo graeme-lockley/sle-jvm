@@ -3,7 +3,7 @@ unitToNum v =
     case v of
         () -> 1
 -- enrichedASTpp
-unitToNum : <> () -> Int
+unitToNum : <> Data.Unit -> Data.Int
 unitToNum =
   (LAMBDA v ->
     (CALL
@@ -21,4 +21,3 @@ unitToNum =
       v
     )
   )
-

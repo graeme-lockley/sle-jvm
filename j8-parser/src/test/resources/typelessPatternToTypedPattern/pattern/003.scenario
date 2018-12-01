@@ -8,10 +8,10 @@ add a b =
             a + 1
 -- constraints
 [
-  '1 : String
+  '1 : Data.String
   '2 : '0
-  Int -> Int -> Int : '0 -> '3
-  '3 : Int -> '4
-  '1 : String
+  Data.Int -> Data.Int -> Data.Int : '0 -> '3
+  '3 : Data.Int -> '4
+  '1 : Data.String
   '2 : '4
 ]

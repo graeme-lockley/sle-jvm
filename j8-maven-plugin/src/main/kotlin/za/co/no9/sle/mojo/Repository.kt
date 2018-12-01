@@ -2,6 +2,7 @@ package za.co.no9.sle.mojo
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
+import za.co.no9.sle.QString
 import za.co.no9.sle.Source
 import za.co.no9.sle.repository.Export
 import java.io.File
@@ -49,7 +50,6 @@ class Item(
         private val inputFile: File,
         val packageName: List<String>,
         val className: String) : za.co.no9.sle.repository.Item {
-
     override fun sourceCode(): String =
             inputFile.readText()
 
@@ -91,4 +91,10 @@ class Item(
         targetJsonFile.parentFile.mkdirs()
         targetJsonFile.writeText(output)
     }
+
+    override fun resolveConstructor(name: QString): String =
+            if (name.qualifier == null)
+                name.string
+            else
+                "${name.qualifier}.${name.string}"
 }

@@ -23,11 +23,11 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
       TypeAliasDeclaration:
         name:
           ID:
@@ -40,7 +40,7 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TAlias:
                     arguments: []
@@ -57,15 +57,15 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TArr:
                     domain:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
                     range:
                       TCon:
                         arguments: []
-                        name: Int
+                        name: Data.Int
     ]

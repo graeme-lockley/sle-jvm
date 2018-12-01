@@ -75,7 +75,7 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
         val typeBinding =
                 type(name)
 
-        return when(typeBinding) {
+        return when (typeBinding) {
             is AliasBinding ->
                 typeBinding.scheme
 
@@ -125,28 +125,49 @@ data class ImportBinding(
         val environment: Environment) : ValueBinding()
 
 
-sealed class TypeBinding(
-        open val scheme: Scheme)
+sealed class TypeBinding {
+    abstract fun numberOfParameters(): Int
+}
 
 data class BuiltinBinding(
-        override val scheme: Scheme) : TypeBinding(scheme)
+        val scheme: Scheme) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            scheme.parameters.size
+}
 
 data class AliasBinding(
-        override val scheme: Scheme) : TypeBinding(scheme)
+        val scheme: Scheme) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            scheme.parameters.size
+}
 
 data class ImportAliasBinding(
-        override val scheme: Scheme) : TypeBinding(scheme)
+        val scheme: Scheme) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            scheme.parameters.size
+}
 
 data class ADTBinding(
-        override val scheme: Scheme,
-        val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
+        val scheme: Scheme,
+        val constructors: List<Pair<String, Scheme>>) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            scheme.parameters.size
+}
 
 data class ImportADTBinding(
-        override val scheme: Scheme,
-        val constructors: List<Pair<String, Scheme>>) : TypeBinding(scheme)
+        val cardinality: Int,
+        val identity: String,
+        val constructors: List<Pair<String, Scheme>>) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            cardinality
+}
 
 data class OpaqueImportADTBinding(
-        override val scheme: Scheme) : TypeBinding(scheme)
+        val cardinality: Int,
+        val identity: String) : TypeBinding() {
+    override fun numberOfParameters(): Int =
+            cardinality
+}
 
 
 val emptyEnvironment =

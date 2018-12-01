@@ -74,17 +74,17 @@ public class ListType {
     };
 
     /**
-     * singleIntList: <> List Int
+     * singleIntList: <> List Data.Int
      */
     public static final Object singleIntList = singleton.apply(10);
 
     /**
-     * doubleIntList: <> List Int
+     * doubleIntList: <> List Data.Int
      */
     public static final Object doubleIntList = double.apply(1).apply(2);
 
     /**
-     * doubleBooleanList: <> List Bool
+     * doubleBooleanList: <> List Data.Bool
      */
     public static final Object doubleBooleanList = double.apply(true).apply(false);
 

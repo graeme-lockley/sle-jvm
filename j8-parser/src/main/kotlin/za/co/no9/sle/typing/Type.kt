@@ -56,11 +56,8 @@ data class TAlias(
 
 data class TCon(
         override val location: Location,
-        val name: QString,
+        val name: String,
         val arguments: List<Type> = emptyList()) : Type(location) {
-
-    constructor(location: Location, name: String, arguments: List<Type> = emptyList()) : this(location, QString(name), arguments)
-
 
     override fun apply(s: Substitution) =
             if (arguments.isEmpty())
@@ -75,7 +72,7 @@ data class TCon(
 
     override fun toString(): String =
             if (arguments.isEmpty())
-                name.toString()
+                name
             else
                 "$name ${arguments.map { it.toString() }.joinToString(" ")}"
 }
@@ -108,18 +105,18 @@ data class TArr(
 
 
 val typeError =
-        TCon(homeLocation, ":Error:")
+        TCon(homeLocation, "Data.Error")
 
 val typeUnit =
-        TCon(homeLocation, "()")
+        TCon(homeLocation, "Data.Unit")
 
 val typeInt =
-        TCon(homeLocation, "Int")
+        TCon(homeLocation, "Data.Int")
 
 val typeBool =
-        TCon(homeLocation, "Bool")
+        TCon(homeLocation, "Data.Bool")
 
 val typeString =
-        TCon(homeLocation, "String")
+        TCon(homeLocation, "Data.String")
 
 

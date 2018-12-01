@@ -4,5 +4,5 @@ value =
     aString
 -- constraints
 [
-    String : String
+    Data.String : Data.String
 ]

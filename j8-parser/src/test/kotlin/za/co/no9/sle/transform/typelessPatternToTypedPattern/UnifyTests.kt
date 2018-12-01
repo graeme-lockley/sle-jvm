@@ -38,7 +38,7 @@ class UnifyTests : StringSpec({
                         Constraint(TVar(homeLocation, 1), typeInt)))
 
         unifiesAsString(constraints)
-                .shouldBe("'1 Int")
+                .shouldBe("'1 Data.Int")
     }
 
 
@@ -48,7 +48,7 @@ class UnifyTests : StringSpec({
                         Constraint(typeInt, TVar(homeLocation, 1))))
 
         unifiesAsString(constraints)
-                .shouldBe("'1 Int")
+                .shouldBe("'1 Data.Int")
     }
 
 
@@ -58,6 +58,6 @@ class UnifyTests : StringSpec({
                         Constraint(TArr(typeInt, typeString), TArr(TVar(homeLocation, 2), TVar(homeLocation, 1)))))
 
         unifiesAsString(constraints)
-                .shouldBe("'1 String, '2 Int")
+                .shouldBe("'1 Data.String, '2 Data.Int")
     }
 })

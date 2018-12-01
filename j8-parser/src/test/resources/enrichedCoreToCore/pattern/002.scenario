@@ -6,7 +6,7 @@ numToString n =
         2 -> "two"
         n -> "many"
 -- coreASTpp
-numToString : <> Int -> String
+numToString : <> Data.Int -> Data.String
 numToString =
   (LAMBDA n ->
     (CALL

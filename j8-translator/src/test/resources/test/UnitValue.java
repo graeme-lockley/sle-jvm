@@ -6,7 +6,7 @@ import static za.co.no9.sle.runtime.Builtin.*;
 public class UnitValue {
 
     /**
-     * calculate: <> () -> Int
+     * calculate: <> Data.Unit -> Data.Int
      */
     public static final Function<Object, Object> calculate = new Function<Object, Object>() {
 
@@ -16,7 +16,7 @@ public class UnitValue {
     };
 
     /**
-     * value: <> Int
+     * value: <> Data.Int
      */
     public static final Object value = calculate.apply(za.co.no9.sle.runtime.Unit.INSTANCE);
 }

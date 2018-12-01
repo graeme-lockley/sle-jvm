@@ -4,5 +4,5 @@ value =
     123
 -- constraints
 [
-    Int : Int
+    Data.Int : Data.Int
 ]

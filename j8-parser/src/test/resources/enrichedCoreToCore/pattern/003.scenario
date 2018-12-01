@@ -16,7 +16,7 @@ type List =
 | Cons '0 List '0
 
 
-remove0s : <> List Int -> List Int
+remove0s : <> List Data.Int -> List Data.Int
 remove0s =
   (LAMBDA l ->
     (CALL

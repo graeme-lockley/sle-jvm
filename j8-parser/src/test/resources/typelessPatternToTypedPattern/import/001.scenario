@@ -15,7 +15,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   value: 0
               expression:
                 LambdaExpression:
@@ -24,7 +24,7 @@ Module:
                       name: x
                       type:
                         TVar:
-                          variable: 3
+                          variable: 4
                   expression:
                     IdReference:
                       name:
@@ -35,39 +35,39 @@ Module:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
                   type:
                     TArr:
                       domain:
                         TVar:
-                          variable: 3
+                          variable: 4
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
               type:
                 TArr:
                   domain:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   range:
                     TArr:
                       domain:
                         TVar:
-                          variable: 3
+                          variable: 4
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
             LambdaExpression:
               argument:
                 IdReferencePattern:
@@ -75,7 +75,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
               expression:
                 LambdaExpression:
                   argument:
@@ -83,7 +83,7 @@ Module:
                       name: x
                       type:
                         TVar:
-                          variable: 3
+                          variable: 4
                   expression:
                     CallExpression:
                       operand:
@@ -96,7 +96,7 @@ Module:
                                   qualifier: null
                               type:
                                 TVar:
-                                  variable: 3
+                                  variable: 4
                           operator:
                             CallExpression:
                               operand:
@@ -106,7 +106,7 @@ Module:
                                       type:
                                         TCon:
                                           arguments: []
-                                          name: Int
+                                          name: Data.Int
                                       value: 1
                                   operator:
                                     CallExpression:
@@ -119,7 +119,7 @@ Module:
                                           type:
                                             TCon:
                                               arguments: []
-                                              name: Int
+                                              name: Data.Int
                                       operator:
                                         IdReference:
                                           name:
@@ -131,31 +131,31 @@ Module:
                                               domain:
                                                 TCon:
                                                   arguments: []
-                                                  name: Int
+                                                  name: Data.Int
                                               range:
                                                 TArr:
                                                   domain:
                                                     TCon:
                                                       arguments: []
-                                                      name: Int
+                                                      name: Data.Int
                                                   range:
                                                     TCon:
                                                       arguments: []
-                                                      name: Int
+                                                      name: Data.Int
                                       type:
                                         TArr:
                                           domain:
                                             TCon:
                                               arguments: []
-                                              name: Int
+                                              name: Data.Int
                                           range:
                                             TCon:
                                               arguments: []
-                                              name: Int
+                                              name: Data.Int
                                   type:
                                     TCon:
                                       arguments: []
-                                      name: Int
+                                      name: Data.Int
                               operator:
                                 IdReference:
                                   name:
@@ -167,38 +167,38 @@ Module:
                                       domain:
                                         TCon:
                                           arguments: []
-                                          name: Int
+                                          name: Data.Int
                                       range:
                                         TArr:
                                           domain:
                                             TVar:
-                                              variable: 3
+                                              variable: 4
                                           range:
                                             TCon:
                                               arguments: [
                                                   TVar:
-                                                    variable: 3
+                                                    variable: 4
                                                 ]
-                                              name: List
+                                              name: /home/alfred/.sle/List
                               type:
                                 TArr:
                                   domain:
                                     TVar:
-                                      variable: 3
+                                      variable: 4
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 3
+                                            variable: 4
                                         ]
-                                      name: List
+                                      name: /home/alfred/.sle/List
                           type:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 3
+                                    variable: 4
                                 ]
-                              name: List
+                              name: /home/alfred/.sle/List
                       operator:
                         CallExpression:
                           operand:
@@ -209,7 +209,7 @@ Module:
                                   qualifier: null
                               type:
                                 TVar:
-                                  variable: 3
+                                  variable: 4
                           operator:
                             IdReference:
                               name:
@@ -220,76 +220,76 @@ Module:
                                 TArr:
                                   domain:
                                     TVar:
-                                      variable: 3
+                                      variable: 4
                                   range:
                                     TArr:
                                       domain:
                                         TCon:
                                           arguments: [
                                               TVar:
-                                                variable: 3
+                                                variable: 4
                                             ]
-                                          name: List
+                                          name: /home/alfred/.sle/List
                                       range:
                                         TCon:
                                           arguments: [
                                               TVar:
-                                                variable: 3
+                                                variable: 4
                                             ]
-                                          name: List
+                                          name: /home/alfred/.sle/List
                           type:
                             TArr:
                               domain:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 3
+                                        variable: 4
                                     ]
-                                  name: List
+                                  name: /home/alfred/.sle/List
                               range:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 3
+                                        variable: 4
                                     ]
-                                  name: List
+                                  name: /home/alfred/.sle/List
                       type:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
                   type:
                     TArr:
                       domain:
                         TVar:
-                          variable: 3
+                          variable: 4
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
               type:
                 TArr:
                   domain:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   range:
                     TArr:
                       domain:
                         TVar:
-                          variable: 3
+                          variable: 4
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 3
+                                variable: 4
                             ]
-                          name: List
+                          name: /home/alfred/.sle/List
           ]
         name:
           ID:
@@ -304,7 +304,7 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
                 range:
                   TArr:
                     domain:
@@ -316,6 +316,6 @@ Module:
                             TVar:
                               variable: 0
                           ]
-                        name: List
+                        name: /home/alfred/.sle/List
     ]
   exports: []

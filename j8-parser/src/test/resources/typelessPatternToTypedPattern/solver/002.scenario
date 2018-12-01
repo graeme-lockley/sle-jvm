@@ -7,13 +7,13 @@ value =
     calculate ()
 -- constraints
 [
-  () -> Int : '0 -> Int
-  () -> Int : () -> '1
+  Data.Unit -> Data.Int : '0 -> Data.Int
+  Data.Unit -> Data.Int : Data.Unit -> '1
 ]
 -- substitution
 [
-  0=()
-  1=Int
+  0=Data.Unit
+  1=Data.Int
 ]
 -- typeAST
 Module:
@@ -27,24 +27,24 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: ()
+                      name: Data.Unit
               expression:
                 ConstantInt:
                   type:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
                   value: 100
               type:
                 TArr:
                   domain:
                     TCon:
                       arguments: []
-                      name: ()
+                      name: Data.Unit
                   range:
                     TCon:
                       arguments: []
-                      name: Int
+                      name: Data.Int
           ]
         name:
           ID:
@@ -57,11 +57,11 @@ Module:
                 domain:
                   TCon:
                     arguments: []
-                    name: ()
+                    name: Data.Unit
                 range:
                   TCon:
                     arguments: []
-                    name: Int
+                    name: Data.Int
       LetDeclaration:
         expressions: [
             CallExpression:
@@ -70,7 +70,7 @@ Module:
                   type:
                     TCon:
                       arguments: []
-                      name: ()
+                      name: Data.Unit
               operator:
                 IdReference:
                   name:
@@ -82,15 +82,15 @@ Module:
                       domain:
                         TCon:
                           arguments: []
-                          name: ()
+                          name: Data.Unit
                       range:
                         TCon:
                           arguments: []
-                          name: Int
+                          name: Data.Int
               type:
                 TCon:
                   arguments: []
-                  name: Int
+                  name: Data.Int
           ]
         name:
           ID:
@@ -101,6 +101,6 @@ Module:
             type:
               TCon:
                 arguments: []
-                name: Int
+                name: Data.Int
     ]
   exports: []

@@ -4,5 +4,5 @@ value =
     "Hello World"
 -- constraints
 [
-    String : String
+    Data.String : Data.String
 ]

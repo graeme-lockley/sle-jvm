@@ -5,7 +5,7 @@ numToString v =
         1 -> "1"
         x -> "many"
 -- enrichedASTpp
-numToString : <> Int -> String
+numToString : <> Data.Int -> Data.String
 numToString =
   (LAMBDA v ->
     (CALL

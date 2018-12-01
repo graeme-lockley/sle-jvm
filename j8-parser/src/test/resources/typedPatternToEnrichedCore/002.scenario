@@ -6,14 +6,14 @@ calculate =
 value =
     calculate ()
 -- enrichedASTpp
-calculate : <> () -> Int
+calculate : <> Data.Unit -> Data.Int
 calculate =
   (LAMBDA n ->
     100
   )
 
 
-value : <> Int
+value : <> Data.Int
 value =
   (CALL
     calculate

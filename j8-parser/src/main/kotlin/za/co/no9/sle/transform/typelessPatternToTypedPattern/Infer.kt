@@ -39,7 +39,7 @@ data class InferResult(val module: Module, val constaints: Constraints, val envi
 
 fun infer(repository: Repository<Item>, source: Item, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
-            InferContext(repository, source.sourceFile(), varPump, env)
+            InferContext(repository, source, varPump, env)
 
     val m =
             context.infer(module)
@@ -51,7 +51,7 @@ fun infer(repository: Repository<Item>, source: Item, varPump: VarPump, module: 
 }
 
 
-private class InferContext(private val repository: Repository<Item>, private val sourceFile: File, private val varPump: VarPump, internal var env: Environment) {
+private class InferContext(private val repository: Repository<Item>, private val source: Item, private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -63,7 +63,7 @@ private class InferContext(private val repository: Repository<Item>, private val
         reportDuplicateLetDeclarationNames(module)
 
         val resolvedImports =
-                resolveImports(env, repository, sourceFile, module.imports)
+                resolveImports(env, repository, source, module.imports)
 
         errors.addAll(resolvedImports.errors)
 
@@ -133,13 +133,13 @@ private class InferContext(private val repository: Repository<Item>, private val
 
                         is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
                             val scheme =
-                                    d.scheme()
+                                    d.scheme(source)
 
                             ds + TypeDeclaration(
                                     d.location,
                                     ID(d.name.location, d.name.name),
                                     scheme.first,
-                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(env, it, scheme.second) }) }
+                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(env, source, it, scheme.second) }) }
                             )
                         }
                     }
@@ -205,7 +205,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                             d.name.name
 
                     val scheme =
-                            typeToSchemeNullable(e, d.ttype)
+                            typeToSchemeNullable(e, varPump, source, d.ttype)
 
                     if (scheme == null) {
                         e
@@ -219,13 +219,13 @@ private class InferContext(private val repository: Repository<Item>, private val
                         errors.add(DuplicateTypeAliasDeclaration(d.location, d.name.name))
                         e
                     } else {
-                        e.newType(d.name.name, AliasBinding(typeToScheme(e, d.ttype)))
+                        e.newType(d.name.name, AliasBinding(typeToScheme(e, varPump, source, d.ttype)))
                     }
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
                     val scheme =
-                            d.scheme()
+                            d.scheme(source)
 
                     val newEnv =
                             d.constructors.fold(e) { fds, constructor ->
@@ -233,7 +233,7 @@ private class InferContext(private val repository: Repository<Item>, private val
                                     errors.add(DuplicateConstructorDeclaration(constructor.location, constructor.name.name))
                                     fds
                                 } else {
-                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(e, a, scheme.second), b) })))
+                                    fds.newValue(constructor.name.name, VariableBinding(Scheme(scheme.first.parameters, constructor.arguments.foldRight(scheme.first.type) { a, b -> TArr(transform(e, source, a, scheme.second), b) })))
                                 }
                             }
 
@@ -478,14 +478,14 @@ private fun za.co.no9.sle.ast.typelessPattern.QualifiedID.asQString(): QString =
 private class ResolveImportsResult(val environment: Environment, val errors: Errors)
 
 
-private fun resolveImports(environment: Environment, repository: Repository<Item>, sourceFile: File, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
+private fun resolveImports(environment: Environment, repository: Repository<Item>, source: Item, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
     val errors =
             mutableSetOf<Error>()
 
     val newEnvironment =
             imports.fold(environment) { currentEnvironment, import ->
                 val importFile =
-                        File(sourceFile.parentFile, import.urn.name)
+                        File(source.sourceFile().parentFile, import.urn.name)
 
                 val importName =
                         if (import.asName == null)
@@ -515,12 +515,12 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                     is za.co.no9.sle.repository.AliasDeclaration ->
                                         e.newType(d.alias, ImportAliasBinding(d.scheme.asScheme(import.location)))
 
-                                    is za.co.no9.sle.repository.ADTDeclaration ->
-                                        e.newType(d.adt, OpaqueImportADTBinding(d.scheme.asScheme(import.location)))
+                                    is za.co.no9.sle.repository.OpaqueADTDeclaration ->
+                                        e.newType(d.adt, OpaqueImportADTBinding(d.cardinality, d.identity))
 
                                     is za.co.no9.sle.repository.FullADTDeclaration -> {
                                         val envWithADTDeclaration =
-                                                e.newType(d.adt, ImportADTBinding(d.scheme.asScheme(import.location), d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
+                                                e.newType(d.adt, ImportADTBinding(d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
 
                                         d.constructors.fold(envWithADTDeclaration) { a, b ->
                                             a.newValue(b.name, VariableBinding(b.scheme.asScheme(import.location)))
@@ -575,23 +575,23 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                         } else
                                             e.newType(d.name.name, ImportAliasBinding(importDeclaration.scheme.asScheme(d.name.location)))
 
-                                    is za.co.no9.sle.repository.ADTDeclaration ->
+                                    is za.co.no9.sle.repository.OpaqueADTDeclaration ->
                                         if (d.withConstructors) {
                                             errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
                                         } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
 
                                     is za.co.no9.sle.repository.FullADTDeclaration ->
                                         if (d.withConstructors) {
                                             val envWithADTDeclaration =
-                                                    e.newType(d.name.name, ImportADTBinding(importDeclaration.scheme.asScheme(d.name.location), importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
+                                                    e.newType(d.name.name, ImportADTBinding(importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
 
                                             importDeclaration.constructors.fold(envWithADTDeclaration) { a, b ->
                                                 a.newValue(b.name, VariableBinding(b.scheme.asScheme(d.name.location)))
                                             }
                                         } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
                                 }
                             }
                         }
@@ -632,10 +632,10 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
                 val qualifiedName =
                         QString(ttype.name.qualifier, ttype.name.name)
 
-                val scheme =
-                        env.type(qualifiedName)?.scheme
+                val typeBinding =
+                        env.type(qualifiedName)
 
-                if (scheme == null) {
+                if (typeBinding == null) {
                     val declaration =
                             numberOfTypeParameters[qualifiedName.string]
 
@@ -644,8 +644,8 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
                     } else if (ttype.arguments.size != declaration) {
                         errors.add(IncorrectNumberOfSchemeArguments(ttype.location, qualifiedName, declaration, ttype.arguments.size))
                     }
-                } else if (ttype.arguments.size != scheme.parameters.size) {
-                    errors.add(IncorrectNumberOfSchemeArguments(ttype.location, qualifiedName, scheme.parameters.size, ttype.arguments.size))
+                } else if (ttype.arguments.size != typeBinding.numberOfParameters()) {
+                    errors.add(IncorrectNumberOfSchemeArguments(ttype.location, qualifiedName, typeBinding.numberOfParameters(), ttype.arguments.size))
                 }
             }
 
@@ -705,7 +705,7 @@ private fun Type.last(): Type =
         }
 
 
-private fun transform(env: Environment, type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+private fun transform(env: Environment, source: Item, type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
         when (type) {
             is TUnit ->
                 typeUnit
@@ -715,19 +715,16 @@ private fun transform(env: Environment, type: TType, substitution: Map<String, T
 
             is TTypeReference ->
                 if (env.isAlias(type.name.asQString()))
-                    TAlias(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, it, substitution) })
+                    TAlias(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, source, it, substitution) })
                 else
-                    TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, it, substitution) })
+                    TCon(type.location, source.resolveConstructor(QString(type.name.qualifier, type.name.name)), type.arguments.map { transform(env, source, it, substitution) })
 
             is TArrow ->
-                TArr(transform(env, type.domain, substitution), transform(env, type.range, substitution))
+                TArr(transform(env, source, type.domain, substitution), transform(env, source, type.range, substitution))
         }
 
 
-private fun typeToScheme(env: Environment, ttype: TType): Scheme {
-    val pump =
-            VarPump()
-
+private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype: TType): Scheme {
     val substitution =
             mutableMapOf<String, TVar>()
 
@@ -743,7 +740,7 @@ private fun typeToScheme(env: Environment, ttype: TType): Scheme {
 
                     if (varRef == null) {
                         val newVarRef =
-                                pump.fresh(ttype.location)
+                                varPump.fresh(ttype.location)
 
                         substitution[ttype.name] = newVarRef
 
@@ -756,8 +753,27 @@ private fun typeToScheme(env: Environment, ttype: TType): Scheme {
                 is TTypeReference ->
                     if (env.isAlias(ttype.name.asQString()))
                         TAlias(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
-                    else
-                        TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
+                    else {
+                        val typeBinding =
+                                env.type(ttype.name.asQString())
+
+                        when (typeBinding) {
+                            is BuiltinBinding ->
+                                TCon(ttype.location, (typeBinding.scheme.type as TCon).name, ttype.arguments.map { map(it) })
+
+                            is ADTBinding ->
+                                TCon(ttype.location, source.resolveConstructor(ttype.name.asQString()), ttype.arguments.map { map(it) })
+
+                            is OpaqueImportADTBinding ->
+                                TCon(ttype.location, typeBinding.identity, ttype.arguments.map { map(it) })
+
+                            is ImportADTBinding ->
+                                TCon(ttype.location, typeBinding.identity, ttype.arguments.map { map(it) })
+
+                            else ->
+                                TCon(ttype.location, source.resolveConstructor(QString(ttype.name.qualifier, ttype.name.name)), ttype.arguments.map { map(it) })
+                        }
+                    }
 
                 is TArrow ->
                     TArr(map(ttype.domain), map(ttype.range))
@@ -771,12 +787,13 @@ private fun typeToScheme(env: Environment, ttype: TType): Scheme {
 }
 
 
-private fun typeToSchemeNullable(env: Environment, ttype: TType?): Scheme? =
+private fun typeToSchemeNullable(env: Environment, varPump: VarPump, source: Item, ttype: TType?): Scheme? =
         when (ttype) {
             null ->
                 null
 
-            else -> typeToScheme(env, ttype)
+            else ->
+                typeToScheme(env, varPump, source, ttype)
         }
 
 
@@ -784,12 +801,12 @@ private fun Environment.isAlias(name: QString): Boolean =
         this.alias(name) != null
 
 
-private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(): Pair<Scheme, Map<String, TVar>> {
+private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(source: Item): Pair<Scheme, Map<String, TVar>> {
     val substitution =
             this.arguments.foldIndexed(emptyMap<String, TVar>()) { index, subst, id -> subst + Pair(id.name, TVar(id.location, index)) }
 
     val parameters =
             this.arguments.mapIndexed { index, _ -> index }
 
-    return Pair(Scheme(parameters, TCon(this.name.location, QString(this.name.name), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
+    return Pair(Scheme(parameters, TCon(this.name.location, source.resolveConstructor(QString(this.name.name)), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
 }

@@ -5,7 +5,10 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import za.co.no9.sle.Location
 import za.co.no9.sle.QString
-import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.TAlias
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.TVar
 
 private val gson =
         GsonBuilder().setPrettyPrinting().create()
@@ -15,7 +18,7 @@ fun toJsonString(export: Export): String =
         gson.toJson(export)
 
 
-fun fromJsonString(input: String, builtins: Environment, qualifier: String?): Export {
+fun fromJsonString(input: String): Export {
     fun jsonToType(type: JsonObject): Type =
             when {
                 type.has("variable") ->
@@ -23,12 +26,9 @@ fun fromJsonString(input: String, builtins: Environment, qualifier: String?): Ex
 
                 type.has("constant") -> {
                     val constant =
-                            type["constant"].asJsonObject
+                            type["constant"].asString
 
-                    if (builtins.containsType(constant["string"].asString))
-                        Constant(QString(constant["qualifier"]?.asString, constant["string"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
-                    else
-                        Constant(QString(qualifier, constant["string"].asString), type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
+                    Constant(constant, type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
                 }
 
                 else ->
@@ -58,10 +58,10 @@ fun fromJsonString(input: String, builtins: Environment, qualifier: String?): Ex
                 AliasDeclaration(declaration["alias"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
 
             declaration.has("constructors") ->
-                FullADTDeclaration(declaration["adt"].asString, jsonToScheme(declaration["scheme"].asJsonObject), declaration["constructors"].asJsonArray.map { jsonToConstructor(it.asJsonObject) })
+                FullADTDeclaration(declaration["adt"].asString, declaration["cardinality"].asInt, declaration["identity"].asString, declaration["constructors"].asJsonArray.map { jsonToConstructor(it.asJsonObject) })
 
             else ->
-                ADTDeclaration(declaration["adt"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
+                OpaqueADTDeclaration(declaration["adt"].asString, declaration["cardinality"].asInt, declaration["identity"].asString)
         }
     })
 }
@@ -79,7 +79,7 @@ data class Export(
                     is AliasDeclaration ->
                         it.alias == name
 
-                    is ADTDeclaration ->
+                    is OpaqueADTDeclaration ->
                         it.adt == name
 
                     is FullADTDeclaration ->
@@ -99,13 +99,15 @@ data class AliasDeclaration(
         val alias: String,
         val scheme: Scheme) : Declaration()
 
-data class ADTDeclaration(
+data class OpaqueADTDeclaration(
         val adt: String,
-        val scheme: Scheme) : Declaration()
+        val cardinality: Int,
+        val identity: String) : Declaration()
 
 data class FullADTDeclaration(
         val adt: String,
-        val scheme: Scheme,
+        val cardinality: Int,
+        val identity: String,
         val constructors: List<Constructor>) : Declaration()
 
 data class Constructor(
@@ -127,7 +129,7 @@ data class Variable(val variable: Int) : Type() {
             TVar(location, variable)
 }
 
-data class Constant(val constant: QString, val arguments: List<Type>) : Type() {
+data class Constant(val constant: String, val arguments: List<Type>) : Type() {
     override fun asType(location: Location): za.co.no9.sle.typing.Type =
             TCon(location, constant, arguments.map { it.asType(location) })
 }
