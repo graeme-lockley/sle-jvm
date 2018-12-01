@@ -711,7 +711,7 @@ private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap())
                 typeUnit
 
             is TVarReference ->
-                substitution[type.name] ?: TCon(type.location, QString(type.name))
+                substitution[type.name]!!
 
             is TConstReference ->
                 TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
