@@ -39,7 +39,7 @@ data class TAlias(
             if (arguments.isEmpty())
                 this
             else
-                TCon(location, name, arguments.map { it.apply(s) })
+                TAlias(location, name, arguments.map { it.apply(s) })
 
 
     override fun ftv() =
