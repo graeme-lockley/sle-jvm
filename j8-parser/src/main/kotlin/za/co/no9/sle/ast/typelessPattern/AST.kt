@@ -175,7 +175,7 @@ data class TVarReference(
         override val location: Location,
         val name: String) : TType(location)
 
-data class TConstReference(
+data class TTypeReference(
         override val location: Location,
         val name: QualifiedID,
         val arguments: List<TType>) : TType(location)

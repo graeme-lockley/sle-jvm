@@ -628,7 +628,7 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
             null -> {
             }
 
-            is TConstReference -> {
+            is TTypeReference -> {
                 val qualifiedName =
                         QString(ttype.name.qualifier, ttype.name.name)
 
@@ -713,7 +713,7 @@ private fun transform(type: TType, substitution: Map<String, TVar> = emptyMap())
             is TVarReference ->
                 substitution[type.name]!!
 
-            is TConstReference ->
+            is TTypeReference ->
                 TCon(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(it, substitution) })
 
             is TArrow ->
@@ -750,7 +750,7 @@ private fun typeToScheme(ttype: TType): Scheme {
                     }
                 }
 
-                is TConstReference ->
+                is TTypeReference ->
                     TCon(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { map(it) })
 
                 is TArrow ->

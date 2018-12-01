@@ -21,7 +21,7 @@ Module:
             domain:
               TUnit:
             range:
-              TConstReference:
+              TTypeReference:
                 arguments: []
                 name:
                   QualifiedID:

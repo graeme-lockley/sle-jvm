@@ -111,7 +111,7 @@ Module:
             range:
               TArrow:
                 domain:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a
@@ -121,7 +121,7 @@ Module:
                         name: List
                         qualifier: null
                 range:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: b

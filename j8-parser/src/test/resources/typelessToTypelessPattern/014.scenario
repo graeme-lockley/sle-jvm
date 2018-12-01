@@ -88,7 +88,7 @@ Module:
         ttype:
           TArrow:
             domain:
-              TConstReference:
+              TTypeReference:
                 arguments: [
                     TVarReference:
                       name: a
@@ -144,7 +144,7 @@ Module:
         ttype:
           TArrow:
             domain:
-              TConstReference:
+              TTypeReference:
                 arguments: [
                     TVarReference:
                       name: a
@@ -239,7 +239,7 @@ Module:
             range:
               TArrow:
                 domain:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a
@@ -251,7 +251,7 @@ Module:
                         name: Tuple
                         qualifier: null
                 range:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: c
@@ -343,7 +343,7 @@ Module:
             range:
               TArrow:
                 domain:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a
@@ -355,7 +355,7 @@ Module:
                         name: Tuple
                         qualifier: null
                 range:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a

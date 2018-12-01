@@ -68,14 +68,14 @@ Module:
         ttype:
           TArrow:
             domain:
-              TConstReference:
+              TTypeReference:
                 arguments: []
                 name:
                   QualifiedID:
                     name: Int
                     qualifier: null
             range:
-              TConstReference:
+              TTypeReference:
                 arguments: []
                 name:
                   QualifiedID:

@@ -27,7 +27,7 @@ import za.co.no9.sle.ast.typelessPattern.Module
 import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.QualifiedID
 import za.co.no9.sle.ast.typelessPattern.TArrow
-import za.co.no9.sle.ast.typelessPattern.TConstReference
+import za.co.no9.sle.ast.typelessPattern.TTypeReference
 import za.co.no9.sle.ast.typelessPattern.TType
 import za.co.no9.sle.ast.typelessPattern.TUnit
 import za.co.no9.sle.ast.typelessPattern.TVarReference
@@ -277,7 +277,7 @@ private fun transform(type: za.co.no9.sle.ast.typeless.TType): TType =
                 TVarReference(type.location, type.name)
 
             is za.co.no9.sle.ast.typeless.TConstReference ->
-                TConstReference(type.location, transform(type.name), type.arguments.map { transform(it) })
+                TTypeReference(type.location, transform(type.name), type.arguments.map { transform(it) })
 
             is za.co.no9.sle.ast.typeless.TArrow ->
                 TArrow(type.location, transform(type.domain), transform(type.range))

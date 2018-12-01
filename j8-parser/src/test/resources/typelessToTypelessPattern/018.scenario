@@ -118,7 +118,7 @@ Module:
                   TVarReference:
                     name: a
                 range:
-                  TConstReference:
+                  TTypeReference:
                     arguments: []
                     name:
                       QualifiedID:
@@ -127,7 +127,7 @@ Module:
             range:
               TArrow:
                 domain:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a
@@ -137,7 +137,7 @@ Module:
                         name: List
                         qualifier: LL
                 range:
-                  TConstReference:
+                  TTypeReference:
                     arguments: [
                         TVarReference:
                           name: a
