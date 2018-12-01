@@ -68,9 +68,9 @@ private class InferContext(private val repository: Repository<Item>, private val
 
         errors.addAll(resolvedImports.errors)
 
-        env = module.declarations.fold(resolvedImports.environment) { e, d -> addDeclarationIntoEnvironment(e, d) }
+        errors.addAll(validateDeclarationTTypes(resolvedImports.environment, module))
 
-        validateDeclarationSchemes(module)
+        env = module.declarations.fold(resolvedImports.environment) { e, d -> addDeclarationIntoEnvironment(e, d) }
 
         val declarations =
                 module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
@@ -251,67 +251,6 @@ private class InferContext(private val repository: Repository<Item>, private val
                     }
                 }
             }
-
-
-    private fun validateDeclarationSchemes(module: za.co.no9.sle.ast.typelessPattern.Module) {
-        fun validateType(type: Type) {
-            when (type) {
-                is TCon -> {
-                    val scheme =
-                            env.type(type.name)?.scheme
-
-                    if (scheme == null) {
-                        errors.add(UnknownTypeReference(type.location, type.name))
-                    } else if (type.arguments.size != scheme.parameters.size) {
-                        errors.add(IncorrectNumberOfSchemeArguments(type.location, type.name, scheme.parameters.size, type.arguments.size))
-                    }
-                }
-
-                is TArr -> {
-                    validateType(type.domain)
-                    validateType(type.range)
-                }
-
-                else -> {
-                }
-            }
-        }
-
-
-        fun validateScheme(scheme: Scheme) {
-            validateType(scheme.type)
-        }
-
-
-        for (declaration in module.declarations) {
-            when (declaration) {
-                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                    val scheme =
-                            typeToSchemeNullable(declaration.ttype).first
-
-                    if (scheme != null) {
-                        validateScheme(scheme)
-                    }
-                }
-
-                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration -> {
-                    validateScheme(typeToScheme(declaration.ttype).first)
-                }
-
-                is TypeDeclaration -> {
-                    val scheme =
-                            declaration.scheme()
-
-                    validateScheme(scheme.first)
-                    for (constructor in declaration.constructors) {
-                        for (type in constructor.arguments) {
-                            validateType(transform(type, scheme.second))
-                        }
-                    }
-                }
-            }
-        }
-    }
 
 
     private fun reportDuplicateLetDeclarationNames(module: za.co.no9.sle.ast.typelessPattern.Module) {
@@ -665,6 +604,84 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
 
 
     return ResolveImportsResult(newEnvironment, errors)
+}
+
+
+private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.ast.typelessPattern.Module): Errors {
+    val errors =
+            mutableSetOf<Error>()
+
+
+    val numberOfTypeParameters =
+            module.declarations.fold(emptyMap<String, Int>()) { m, d ->
+                when (d) {
+                    is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
+                        m + Pair(d.name.name, 0)
+
+                    is TypeDeclaration ->
+                        m + Pair(d.name.name, d.arguments.size)
+
+                    else ->
+                        m
+                }
+            }
+
+
+    fun validateTType(ttype: TType?) {
+        when (ttype) {
+            null -> {
+            }
+
+            is TConstReference -> {
+                val qualifiedName =
+                        QString(ttype.name.qualifier, ttype.name.name)
+
+                val scheme =
+                        env.type(qualifiedName)?.scheme
+
+                if (scheme == null) {
+                    val declaration =
+                            numberOfTypeParameters[qualifiedName.string]
+
+                    if (declaration == null) {
+                        errors.add(UnknownTypeReference(ttype.location, qualifiedName))
+                    } else if (ttype.arguments.size != declaration) {
+                        errors.add(IncorrectNumberOfSchemeArguments(ttype.location, qualifiedName, declaration, ttype.arguments.size))
+                    }
+                } else if (ttype.arguments.size != scheme.parameters.size) {
+                    errors.add(IncorrectNumberOfSchemeArguments(ttype.location, qualifiedName, scheme.parameters.size, ttype.arguments.size))
+                }
+            }
+
+            is TArrow -> {
+                validateTType(ttype.domain)
+                validateTType(ttype.range)
+            }
+
+            else -> {
+            }
+        }
+    }
+
+
+    for (declaration in module.declarations) {
+        when (declaration) {
+            is za.co.no9.sle.ast.typelessPattern.LetDeclaration ->
+                validateTType(declaration.ttype)
+
+            is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
+                validateTType(declaration.ttype)
+
+            is TypeDeclaration ->
+                for (constructor in declaration.constructors) {
+                    for (type in constructor.arguments) {
+                        validateTType(type)
+                    }
+                }
+        }
+    }
+
+    return errors
 }
 
 
