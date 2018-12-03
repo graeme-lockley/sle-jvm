@@ -307,31 +307,57 @@ private class InferContext(private val repository: Repository<Item>, private val
                     if (scheme == null) {
                         errors.add(UnboundVariable(expression.location, expression.name.asQString()))
 
-                        IdReference(expression.location, typeError, transform(expression.name))
+                        IdReference(expression.location, typeError, expression.name.name)
                     } else {
                         val type =
                                 scheme.instantiate(varPump)
 
-                        IdReference(expression.location, type, transform(expression.name))
+                        when (valueBinding) {
+                            is VariableBinding ->
+                                IdReference(expression.location, type, expression.name.name)
+
+                            is ImportVariableBinding ->
+                                IdReference(expression.location, type, valueBinding.item.resolveId(expression.name.name))
+
+                            else ->
+                                IdReference(expression.location, type, "unknown")
+                        }
                     }
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReference -> {
+                    val valueBinding =
+                            env.value(expression.name.asQString())
+
                     val scheme =
-                            env.variable(expression.name.asQString())
+                            when (valueBinding) {
+                                is VariableBinding ->
+                                    valueBinding.scheme
 
-                    when (scheme) {
-                        null -> {
-                            errors.add(UnboundVariable(expression.location, expression.name.asQString()))
+                                is ImportVariableBinding ->
+                                    valueBinding.scheme
 
-                            IdReference(expression.location, typeError, transform(expression.name))
-                        }
+                                else ->
+                                    null
+                            }
 
-                        else -> {
-                            val type =
-                                    scheme.instantiate(varPump)
+                    if (scheme == null) {
+                        errors.add(UnboundVariable(expression.location, expression.name.asQString()))
 
-                            IdReference(expression.location, type, transform(expression.name))
+                        IdReference(expression.location, typeError, expression.name.name)
+                    } else {
+                        val type =
+                                scheme.instantiate(varPump)
+
+                        when (valueBinding) {
+                            is VariableBinding ->
+                                IdReference(expression.location, type, expression.name.name)
+
+                            is ImportVariableBinding ->
+                                IdReference(expression.location, type, valueBinding.item.resolveConstructor(expression.name.name))
+
+                            else ->
+                                IdReference(expression.location, type, "unknown")
                         }
                     }
                 }
@@ -504,7 +530,7 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                             exports.declarations.fold(Environment()) { e, d ->
                                 when (d) {
                                     is za.co.no9.sle.repository.LetDeclaration ->
-                                        e.newValue(d.name, ImportVariableBinding(d.scheme.asScheme(import.location)))
+                                        e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
 
                                     is za.co.no9.sle.repository.AliasDeclaration ->
                                         e.newType(d.alias, ImportAliasBinding(d.scheme.asScheme(import.location)))
@@ -534,15 +560,15 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                 when (importDeclaration) {
                                     null -> {
                                         errors.add(ValueNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(errorScheme))
+                                        e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
                                     }
 
                                     is za.co.no9.sle.repository.LetDeclaration ->
-                                        e.newValue(d.name.name, ImportVariableBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                        e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
 
                                     else -> {
                                         errors.add(ValueNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(errorScheme))
+                                        e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
                                     }
                                 }
                             }
@@ -559,7 +585,7 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
 
                                     is za.co.no9.sle.repository.LetDeclaration -> {
                                         errors.add(TypeNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                        e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
                                     }
 
                                     is za.co.no9.sle.repository.AliasDeclaration ->

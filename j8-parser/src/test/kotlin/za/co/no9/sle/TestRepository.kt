@@ -44,9 +44,12 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
                     typeString.name
 
                 else ->
-                    name
+                    "file.package.name.File.$name"
             }
 
+
+    override fun resolveId(name: String): String =
+            "file.package.name.File.$name"
 
     override fun sourceCode(): String =
             text ?: inputFile.readText()

@@ -62,20 +62,14 @@ Module:
                                 CallExpression:
                                   operand:
                                     IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: n
-                                          qualifier: null
+                                      name: n
                                       type:
                                         TCon:
                                           arguments: []
                                           name: Data.Int
                                   operator:
                                     IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: (-)
-                                          qualifier: null
+                                      name: (-)
                                       type:
                                         TArr:
                                           domain:
@@ -108,10 +102,7 @@ Module:
                                   name: Data.Int
                           operator:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: factorial
-                                  qualifier: null
+                              name: factorial
                               type:
                                 TArr:
                                   domain:
@@ -130,20 +121,14 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: n
-                                  qualifier: null
+                              name: n
                               type:
                                 TCon:
                                   arguments: []
                                   name: Data.Int
                           operator:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: (*)
-                                  qualifier: null
+                              name: (*)
                               type:
                                 TArr:
                                   domain:
@@ -187,20 +172,14 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: n
-                                  qualifier: null
+                              name: n
                               type:
                                 TCon:
                                   arguments: []
                                   name: Data.Int
                           operator:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: (==)
-                                  qualifier: null
+                              name: (==)
                               type:
                                 TArr:
                                   domain:

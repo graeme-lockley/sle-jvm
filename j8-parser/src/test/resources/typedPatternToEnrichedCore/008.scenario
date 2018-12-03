@@ -14,10 +14,10 @@ map f (Cons x xs) =
 -- enrichedASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-map : <0, 1> ('0 -> '1) -> List '0 -> List '1
+map : <0, 1> ('0 -> '1) -> file.package.name.File.List '0 -> file.package.name.File.List '1
 map =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->
@@ -36,7 +36,7 @@ map =
         (CALL
           (CALL
             (LAMBDA f ->
-              (LAMBDA Cons '6 List '6 ->
+              (LAMBDA Cons '6 file.package.name.File.List '6 ->
                 (CALL
                   (CALL
                     Cons

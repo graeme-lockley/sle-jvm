@@ -24,16 +24,16 @@ find p (Cons x xs) =
     else
         find p xs
 -- coreASTpp
-export full List: <0> List '0
-  Nil: <0> List '0
-  Cons: <0> '0 -> List '0 -> List '0
-export adt Maybe: <0> Maybe '0
-export value find: <0> ('0 -> Data.Bool) -> List '0 -> Maybe '0
+export full List: <0> file.package.name.File.List '0
+  Nil: <0> file.package.name.File.List '0
+  Cons: <0> '0 -> file.package.name.File.List '0 -> file.package.name.File.List '0
+export adt Maybe: <0> file.package.name.File.Maybe '0
+export value find: <0> ('0 -> Data.Bool) -> file.package.name.File.List '0 -> file.package.name.File.Maybe '0
 export alias IntMap: <> Data.Int -> Data.Int
 
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
 type Maybe =
@@ -44,7 +44,7 @@ type Maybe =
 typealias IntMap =
   <> Data.Int -> Data.Int
 
-find : <0> ('0 -> Data.Bool) -> List '0 -> Maybe '0
+find : <0> ('0 -> Data.Bool) -> file.package.name.File.List '0 -> file.package.name.File.Maybe '0
 find =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->

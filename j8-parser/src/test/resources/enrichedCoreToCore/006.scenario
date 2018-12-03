@@ -15,10 +15,10 @@ singleton x =
 -- coreASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-repeat : <0> Data.Int -> '0 -> List '0
+repeat : <0> Data.Int -> '0 -> file.package.name.File.List '0
 repeat =
   (LAMBDA n ->
     (LAMBDA e ->
@@ -55,7 +55,7 @@ repeat =
   )
 
 
-singleton : <0> '0 -> List '0
+singleton : <0> '0 -> file.package.name.File.List '0
 singleton =
   (LAMBDA x ->
     (CALL

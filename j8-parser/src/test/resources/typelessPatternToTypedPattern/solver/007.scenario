@@ -11,12 +11,12 @@ f g a b =
             Cons (g a a) xs
 -- constraints
 [
-  '8 -> List '8 -> List '8 : '6 -> '7 -> List '8
+  '8 -> file.package.name.File.List '8 -> file.package.name.File.List '8 : '6 -> '7 -> file.package.name.File.List '8
   '2 : '3 -> '10
   '10 : '3 -> '11
-  '9 -> List '9 -> List '9 : '11 -> '12
+  '9 -> file.package.name.File.List '9 -> file.package.name.File.List '9 : '11 -> '12
   '12 : '7 -> '13
-  '4 : List '8
+  '4 : file.package.name.File.List '8
   '5 : '13
-  ('14 -> '14 -> '15) -> '14 -> List '15 -> List '15 : '2 -> '3 -> '4 -> '5
+  ('14 -> '14 -> '15) -> '14 -> file.package.name.File.List '15 -> file.package.name.File.List '15 : '2 -> '3 -> '4 -> '5
 ]

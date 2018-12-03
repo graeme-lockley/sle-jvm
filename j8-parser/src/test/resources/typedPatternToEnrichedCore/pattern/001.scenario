@@ -14,7 +14,7 @@ type Tuple =
   Tuple '0 '1
 
 
-first : <0, 1> Tuple '0 '1 -> '0
+first : <0, 1> file.package.name.File.Tuple '0 '1 -> '0
 first =
   (LAMBDA t ->
     (CALL
@@ -34,7 +34,7 @@ first =
   )
 
 
-second : <0, 1> Tuple '0 '1 -> '1
+second : <0, 1> file.package.name.File.Tuple '0 '1 -> '1
 second =
   (LAMBDA t ->
     (CALL

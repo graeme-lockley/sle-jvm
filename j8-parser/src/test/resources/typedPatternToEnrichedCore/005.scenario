@@ -18,10 +18,10 @@ boolList =
 -- enrichedASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-singleton : <0> '0 -> List '0
+singleton : <0> '0 -> file.package.name.File.List '0
 singleton =
   (LAMBDA x ->
     (CALL
@@ -34,7 +34,7 @@ singleton =
   )
 
 
-duplicate : <0> '0 -> List '0
+duplicate : <0> '0 -> file.package.name.File.List '0
 duplicate =
   (LAMBDA x ->
     (CALL
@@ -53,7 +53,7 @@ duplicate =
   )
 
 
-intList : <> List Data.Int
+intList : <> file.package.name.File.List Data.Int
 intList =
   (CALL
     singleton
@@ -61,7 +61,7 @@ intList =
   )
 
 
-boolList : <> List Data.Bool
+boolList : <> file.package.name.File.List Data.Bool
 boolList =
   (CALL
     duplicate

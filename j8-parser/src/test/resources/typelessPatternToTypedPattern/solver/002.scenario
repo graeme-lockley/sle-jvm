@@ -73,10 +73,7 @@ Module:
                       name: Data.Unit
               operator:
                 IdReference:
-                  name:
-                    QualifiedID:
-                      name: calculate
-                      qualifier: null
+                  name: calculate
                   type:
                     TArr:
                       domain:

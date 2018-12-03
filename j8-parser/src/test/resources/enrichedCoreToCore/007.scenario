@@ -14,10 +14,10 @@ map f (Cons x xs) =
 -- coreASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-map : <0, 1> ('0 -> '1) -> List '0 -> List '1
+map : <0, 1> ('0 -> '1) -> file.package.name.File.List '0 -> file.package.name.File.List '1
 map =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->

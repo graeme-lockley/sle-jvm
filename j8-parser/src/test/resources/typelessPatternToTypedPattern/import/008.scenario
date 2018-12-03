@@ -116,10 +116,7 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name:
-                        QualifiedID:
-                          name: Nil
-                          qualifier: LL
+                      name: Nil
                       type:
                         TCon:
                           arguments: [
@@ -131,19 +128,13 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: x
-                              qualifier: null
+                          name: x
                           type:
                             TVar:
                               variable: 8
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: Cons
-                              qualifier: LL
+                          name: Cons
                           type:
                             TArr:
                               domain:

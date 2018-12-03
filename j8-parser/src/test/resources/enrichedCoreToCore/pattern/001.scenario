@@ -26,10 +26,10 @@ type Option =
 
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-head : <0> List '0 -> Option '0
+head : <0> file.package.name.File.List '0 -> file.package.name.File.Option '0
 head =
   (LAMBDA l ->
     (CALL
@@ -49,7 +49,7 @@ head =
   )
 
 
-tail : <0> List '0 -> Option List '0
+tail : <0> file.package.name.File.List '0 -> file.package.name.File.Option file.package.name.File.List '0
 tail =
   (LAMBDA l ->
     (CALL

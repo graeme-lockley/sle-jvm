@@ -13,10 +13,10 @@ remove0s l =
 -- coreASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
-remove0s : <> List Data.Int -> List Data.Int
+remove0s : <> file.package.name.File.List Data.Int -> file.package.name.File.List Data.Int
 remove0s =
   (LAMBDA l ->
     (CALL

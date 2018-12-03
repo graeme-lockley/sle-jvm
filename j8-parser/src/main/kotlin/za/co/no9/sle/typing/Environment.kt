@@ -1,6 +1,7 @@
 package za.co.no9.sle.typing
 
 import za.co.no9.sle.QString
+import za.co.no9.sle.repository.Item
 
 
 data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {
@@ -115,6 +116,7 @@ data class VariableBinding(
         val scheme: Scheme) : ValueBinding()
 
 data class ImportVariableBinding(
+        val item: Item,
         val scheme: Scheme) : ValueBinding()
 
 data class ImportBinding(

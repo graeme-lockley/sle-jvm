@@ -17,32 +17,32 @@ boolList =
     duplicate True
 -- constraints
 [
-  '1 -> List '1 -> List '1 : '0 -> '2
-  '2 : List '3 -> '4
-  '6 -> List '6 -> List '6 : '5 -> '7
-  '8 -> List '8 -> List '8 : '5 -> '9
-  '9 : List '10 -> '11
+  '1 -> file.package.name.File.List '1 -> file.package.name.File.List '1 : '0 -> '2
+  '2 : file.package.name.File.List '3 -> '4
+  '6 -> file.package.name.File.List '6 -> file.package.name.File.List '6 : '5 -> '7
+  '8 -> file.package.name.File.List '8 -> file.package.name.File.List '8 : '5 -> '9
+  '9 : file.package.name.File.List '10 -> '11
   '7 : '11 -> '12
-  '13 -> List '13 : Data.Int -> '14
-  '15 -> List '15 : Data.Bool -> '16
+  '13 -> file.package.name.File.List '13 : Data.Int -> '14
+  '15 -> file.package.name.File.List '15 : Data.Bool -> '16
 ]
 -- substitution
 [
   1='3
-  2=List '3 -> List '3
+  2=file.package.name.File.List '3 -> file.package.name.File.List '3
   0='3
-  4=List '3
+  4=file.package.name.File.List '3
   6='10
-  7=List '10 -> List '10
+  7=file.package.name.File.List '10 -> file.package.name.File.List '10
   8='10
-  9=List '10 -> List '10
+  9=file.package.name.File.List '10 -> file.package.name.File.List '10
   5='10
-  11=List '10
-  12=List '10
+  11=file.package.name.File.List '10
+  12=file.package.name.File.List '10
   13=Data.Int
-  14=List Data.Int
+  14=file.package.name.File.List Data.Int
   15=Data.Bool
-  16=List Data.Bool
+  16=file.package.name.File.List Data.Bool
 ]
 -- typeAST
 Module:
@@ -63,7 +63,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: List
+                    name: file.package.name.File.List
                 ]
               name:
                 ID:
@@ -83,7 +83,7 @@ Module:
                     TVar:
                       variable: 0
                   ]
-                name: List
+                name: file.package.name.File.List
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -97,34 +97,25 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name:
-                        QualifiedID:
-                          name: Nil
-                          qualifier: null
+                      name: Nil
                       type:
                         TCon:
                           arguments: [
                               TVar:
                                 variable: 3
                             ]
-                          name: List
+                          name: file.package.name.File.List
                   operator:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: x
-                              qualifier: null
+                          name: x
                           type:
                             TVar:
                               variable: 3
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: Cons
-                              qualifier: null
+                          name: Cons
                           type:
                             TArr:
                               domain:
@@ -138,14 +129,14 @@ Module:
                                           TVar:
                                             variable: 3
                                         ]
-                                      name: List
+                                      name: file.package.name.File.List
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
                                             variable: 3
                                         ]
-                                      name: List
+                                      name: file.package.name.File.List
                       type:
                         TArr:
                           domain:
@@ -154,21 +145,21 @@ Module:
                                   TVar:
                                     variable: 3
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                           range:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 3
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                   type:
                     TCon:
                       arguments: [
                           TVar:
                             variable: 3
                         ]
-                      name: List
+                      name: file.package.name.File.List
               type:
                 TArr:
                   domain:
@@ -180,7 +171,7 @@ Module:
                           TVar:
                             variable: 3
                         ]
-                      name: List
+                      name: file.package.name.File.List
           ]
         name:
           ID:
@@ -201,7 +192,7 @@ Module:
                         TVar:
                           variable: 3
                       ]
-                    name: List
+                    name: file.package.name.File.List
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -217,34 +208,25 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: Nil
-                              qualifier: null
+                          name: Nil
                           type:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 10
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                       operator:
                         CallExpression:
                           operand:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: x
-                                  qualifier: null
+                              name: x
                               type:
                                 TVar:
                                   variable: 10
                           operator:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: Cons
-                                  qualifier: null
+                              name: Cons
                               type:
                                 TArr:
                                   domain:
@@ -258,14 +240,14 @@ Module:
                                               TVar:
                                                 variable: 10
                                             ]
-                                          name: List
+                                          name: file.package.name.File.List
                                       range:
                                         TCon:
                                           arguments: [
                                               TVar:
                                                 variable: 10
                                             ]
-                                          name: List
+                                          name: file.package.name.File.List
                           type:
                             TArr:
                               domain:
@@ -274,38 +256,32 @@ Module:
                                       TVar:
                                         variable: 10
                                     ]
-                                  name: List
+                                  name: file.package.name.File.List
                               range:
                                 TCon:
                                   arguments: [
                                       TVar:
                                         variable: 10
                                     ]
-                                  name: List
+                                  name: file.package.name.File.List
                       type:
                         TCon:
                           arguments: [
                               TVar:
                                 variable: 10
                             ]
-                          name: List
+                          name: file.package.name.File.List
                   operator:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: x
-                              qualifier: null
+                          name: x
                           type:
                             TVar:
                               variable: 10
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: Cons
-                              qualifier: null
+                          name: Cons
                           type:
                             TArr:
                               domain:
@@ -319,14 +295,14 @@ Module:
                                           TVar:
                                             variable: 10
                                         ]
-                                      name: List
+                                      name: file.package.name.File.List
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
                                             variable: 10
                                         ]
-                                      name: List
+                                      name: file.package.name.File.List
                       type:
                         TArr:
                           domain:
@@ -335,21 +311,21 @@ Module:
                                   TVar:
                                     variable: 10
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                           range:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 10
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                   type:
                     TCon:
                       arguments: [
                           TVar:
                             variable: 10
                         ]
-                      name: List
+                      name: file.package.name.File.List
               type:
                 TArr:
                   domain:
@@ -361,7 +337,7 @@ Module:
                           TVar:
                             variable: 10
                         ]
-                      name: List
+                      name: file.package.name.File.List
           ]
         name:
           ID:
@@ -382,7 +358,7 @@ Module:
                         TVar:
                           variable: 10
                       ]
-                    name: List
+                    name: file.package.name.File.List
       LetDeclaration:
         expressions: [
             CallExpression:
@@ -395,10 +371,7 @@ Module:
                   value: 10
               operator:
                 IdReference:
-                  name:
-                    QualifiedID:
-                      name: singleton
-                      qualifier: null
+                  name: singleton
                   type:
                     TArr:
                       domain:
@@ -412,7 +385,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                             ]
-                          name: List
+                          name: file.package.name.File.List
               type:
                 TCon:
                   arguments: [
@@ -420,7 +393,7 @@ Module:
                         arguments: []
                         name: Data.Int
                     ]
-                  name: List
+                  name: file.package.name.File.List
           ]
         name:
           ID:
@@ -435,7 +408,7 @@ Module:
                       arguments: []
                       name: Data.Int
                   ]
-                name: List
+                name: file.package.name.File.List
       LetDeclaration:
         expressions: [
             CallExpression:
@@ -448,10 +421,7 @@ Module:
                   value: true
               operator:
                 IdReference:
-                  name:
-                    QualifiedID:
-                      name: duplicate
-                      qualifier: null
+                  name: duplicate
                   type:
                     TArr:
                       domain:
@@ -465,7 +435,7 @@ Module:
                                 arguments: []
                                 name: Data.Bool
                             ]
-                          name: List
+                          name: file.package.name.File.List
               type:
                 TCon:
                   arguments: [
@@ -473,7 +443,7 @@ Module:
                         arguments: []
                         name: Data.Bool
                     ]
-                  name: List
+                  name: file.package.name.File.List
           ]
         name:
           ID:
@@ -488,6 +458,6 @@ Module:
                       arguments: []
                       name: Data.Bool
                   ]
-                name: List
+                name: file.package.name.File.List
     ]
   exports: []

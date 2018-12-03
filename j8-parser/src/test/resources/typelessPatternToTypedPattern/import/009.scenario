@@ -120,10 +120,7 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name:
-                        QualifiedID:
-                          name: Nil
-                          qualifier: L1
+                      name: Nil
                       type:
                         TCon:
                           arguments: [
@@ -135,19 +132,13 @@ Module:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: x
-                              qualifier: null
+                          name: x
                           type:
                             TVar:
                               variable: 8
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: Cons
-                              qualifier: L2
+                          name: Cons
                           type:
                             TArr:
                               domain:
@@ -239,10 +230,7 @@ Module:
                       value: Hello
                   operator:
                     IdReference:
-                      name:
-                        QualifiedID:
-                          name: singleton
-                          qualifier: null
+                      name: singleton
                       type:
                         TArr:
                           domain:
@@ -267,10 +255,7 @@ Module:
                       name: /home/alfred/.sle/List
               operator:
                 IdReference:
-                  name:
-                    QualifiedID:
-                      name: isEmpty
-                      qualifier: null
+                  name: isEmpty
                   type:
                     TArr:
                       domain:

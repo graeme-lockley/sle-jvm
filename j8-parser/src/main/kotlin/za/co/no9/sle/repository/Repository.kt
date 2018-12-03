@@ -22,5 +22,7 @@ interface Item {
 
     fun resolveConstructor(name: String): String
 
+    fun resolveId(name: String): String
+
     fun itemRelativeTo(name: String): Item
 }

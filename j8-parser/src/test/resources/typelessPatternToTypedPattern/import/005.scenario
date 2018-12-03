@@ -31,10 +31,7 @@ Module:
                         CallExpression:
                           operand:
                             IdReference:
-                              name:
-                                QualifiedID:
-                                  name: i
-                                  qualifier: null
+                              name: i
                               type:
                                 TCon:
                                   arguments: []
@@ -43,20 +40,14 @@ Module:
                             CallExpression:
                               operand:
                                 IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: n
-                                      qualifier: null
+                                  name: n
                                   type:
                                     TCon:
                                       arguments: []
                                       name: Data.Int
                               operator:
                                 IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: (*)
-                                      qualifier: null
+                                  name: (*)
                                   type:
                                     TArr:
                                       domain:
@@ -99,10 +90,7 @@ Module:
                               name: Data.Int
                   operator:
                     IdReference:
-                      name:
-                        QualifiedID:
-                          name: map
-                          qualifier: List
+                      name: file.package.name.File.map
                       type:
                         TArr:
                           domain:

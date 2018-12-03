@@ -74,6 +74,10 @@ class TestItem(private val inputFile: File) : Item {
             name
 
 
+    override fun resolveId(name: String): String =
+            TODO("not implemented")
+
+
     override fun sourceFile(): File =
             inputFile
 

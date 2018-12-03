@@ -102,7 +102,7 @@ data class ConstantString(
 data class IdReference(
         override val location: Location,
         override val type: Type,
-        val name: QualifiedID) : Expression(location, type)
+        val name: String) : Expression(location, type)
 
 data class IfExpression(
         override val location: Location,

@@ -16,7 +16,7 @@ head l =
 -- coreASTpp
 type List =
   Nil
-| Cons '0 List '0
+| Cons '0 file.package.name.File.List '0
 
 
 type Maybe =
@@ -24,7 +24,7 @@ type Maybe =
 | Just '0
 
 
-head : <0> List '0 -> Maybe '0
+head : <0> file.package.name.File.List '0 -> file.package.name.File.Maybe '0
 head =
   (LAMBDA l ->
     (CALL

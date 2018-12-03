@@ -29,7 +29,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: List
+                    name: file.package.name.File.List
                 ]
               name:
                 ID:
@@ -49,7 +49,7 @@ Module:
                     TVar:
                       variable: 0
                   ]
-                name: List
+                name: file.package.name.File.List
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -66,7 +66,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: List
+                      name: file.package.name.File.List
               expression:
                 ConstantInt:
                   type:
@@ -82,7 +82,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: List
+                      name: file.package.name.File.List
                   range:
                     TCon:
                       arguments: []
@@ -108,7 +108,7 @@ Module:
                                 TVar:
                                   variable: 2
                               ]
-                            name: List
+                            name: file.package.name.File.List
                     ]
                   type:
                     TCon:
@@ -116,30 +116,24 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: List
+                      name: file.package.name.File.List
               expression:
                 CallExpression:
                   operand:
                     CallExpression:
                       operand:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: xs
-                              qualifier: null
+                          name: xs
                           type:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 2
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: length
-                              qualifier: null
+                          name: length
                           type:
                             TArr:
                               domain:
@@ -148,7 +142,7 @@ Module:
                                       TVar:
                                         variable: 2
                                     ]
-                                  name: List
+                                  name: file.package.name.File.List
                               range:
                                 TCon:
                                   arguments: []
@@ -168,10 +162,7 @@ Module:
                           value: 1
                       operator:
                         IdReference:
-                          name:
-                            QualifiedID:
-                              name: (+)
-                              qualifier: null
+                          name: (+)
                           type:
                             TArr:
                               domain:
@@ -210,7 +201,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: List
+                      name: file.package.name.File.List
                   range:
                     TCon:
                       arguments: []
@@ -232,7 +223,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: List
+                    name: file.package.name.File.List
                 range:
                   TCon:
                     arguments: []
@@ -254,7 +245,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: List
+                    name: file.package.name.File.List
                 range:
                   TCon:
                     arguments: []
@@ -274,7 +265,7 @@ Module:
                           TVar:
                             variable: 0
                         ]
-                      name: List
+                      name: file.package.name.File.List
             ConstructorNameDeclaration:
               name: Cons
               scheme:
@@ -295,14 +286,14 @@ Module:
                                   TVar:
                                     variable: 0
                                 ]
-                              name: List
+                              name: file.package.name.File.List
                           range:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 0
                                 ]
-                              name: List
+                              name: file.package.name.File.List
           ]
         name: List
         scheme:
@@ -316,5 +307,5 @@ Module:
                     TVar:
                       variable: 0
                   ]
-                name: List
+                name: file.package.name.File.List
     ]

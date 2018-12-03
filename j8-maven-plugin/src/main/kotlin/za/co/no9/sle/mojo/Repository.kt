@@ -49,6 +49,7 @@ class Item(
         private val inputFile: File,
         val packageName: List<String>,
         val className: String) : za.co.no9.sle.repository.Item {
+
     override fun sourceCode(): String =
             inputFile.readText()
 
@@ -103,6 +104,13 @@ class Item(
 
 
     override fun resolveConstructor(name: String): String =
+            if (packageName.isEmpty())
+                "$className.$name"
+            else
+                "${packageName.joinToString(".")}.$className.$name"
+
+
+    override fun resolveId(name: String): String =
             if (packageName.isEmpty())
                 "$className.$name"
             else

@@ -147,7 +147,7 @@ private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Ex
                 ConstantString(expression.location, expression.type, expression.value)
 
             is za.co.no9.sle.ast.typedPattern.IdReference ->
-                IdReference(expression.location, expression.type, expression.name.name)
+                IdReference(expression.location, expression.type, expression.name)
 
             is za.co.no9.sle.ast.typedPattern.IfExpression ->
                 IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
