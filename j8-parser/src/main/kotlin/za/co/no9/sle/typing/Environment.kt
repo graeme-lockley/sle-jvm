@@ -24,6 +24,9 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
             is VariableBinding ->
                 valueBinding.scheme
 
+            is ImportVariableBinding ->
+                valueBinding.scheme
+
             else ->
                 null
         }
@@ -140,6 +143,7 @@ data class AliasBinding(
 }
 
 data class ImportAliasBinding(
+        val item: Item,
         val scheme: Scheme) : TypeBinding() {
     override fun numberOfParameters(): Int =
             scheme.parameters.size
@@ -153,6 +157,7 @@ data class ADTBinding(
 }
 
 data class ImportADTBinding(
+        val item: Item,
         val cardinality: Int,
         val identity: String,
         val constructors: List<Pair<String, Scheme>>) : TypeBinding() {
@@ -161,6 +166,7 @@ data class ImportADTBinding(
 }
 
 data class OpaqueImportADTBinding(
+        val item: Item,
         val cardinality: Int,
         val identity: String) : TypeBinding() {
     override fun numberOfParameters(): Int =

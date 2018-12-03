@@ -22,10 +22,7 @@ Module:
             LambdaExpression:
               argument:
                 ConstructorReferencePattern:
-                  name:
-                    QualifiedID:
-                      name: Nil
-                      qualifier: L1
+                  name: file.package.name.File.Nil
                   parameters: []
                   type:
                     TCon:
@@ -120,7 +117,7 @@ Module:
                 CallExpression:
                   operand:
                     IdReference:
-                      name: Nil
+                      name: file.package.name.File.Nil
                       type:
                         TCon:
                           arguments: [
@@ -138,7 +135,7 @@ Module:
                               variable: 8
                       operator:
                         IdReference:
-                          name: Cons
+                          name: file.package.name.File.Cons
                           type:
                             TArr:
                               domain:

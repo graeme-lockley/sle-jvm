@@ -70,11 +70,6 @@ data class ID(
         override val location: Location,
         val name: String) : Node(location)
 
-data class QualifiedID(
-        override val location: Location,
-        val qualifier: String?,
-        val name: String) : Node(location)
-
 
 sealed class Expression(
         location: Location,
@@ -166,5 +161,5 @@ data class IdReferencePattern(
 data class ConstructorReferencePattern(
         override val location: Location,
         override val type: Type,
-        val name: QualifiedID,
+        val name: String,
         val parameters: List<Pattern>) : Pattern(location, type)

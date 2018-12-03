@@ -55,10 +55,7 @@ Module:
             LambdaExpression:
               argument:
                 ConstructorReferencePattern:
-                  name:
-                    QualifiedID:
-                      name: Nil
-                      qualifier: null
+                  name: Nil
                   parameters: []
                   type:
                     TCon:
@@ -90,10 +87,7 @@ Module:
             LambdaExpression:
               argument:
                 ConstructorReferencePattern:
-                  name:
-                    QualifiedID:
-                      name: Cons
-                      qualifier: null
+                  name: Cons
                   parameters: [
                       IdReferencePattern:
                         name: x

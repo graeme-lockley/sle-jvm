@@ -291,7 +291,7 @@ private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: Pa
                             PatternTransformResult(a.result + transformResult.result, transformResult.state)
                         }
 
-                PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name.name, parameters.result), parameters.state)
+                PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
             }
         }
 

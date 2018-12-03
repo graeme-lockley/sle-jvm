@@ -23,7 +23,6 @@ import za.co.no9.sle.ast.typedPattern.LambdaExpression
 import za.co.no9.sle.ast.typedPattern.LetDeclaration
 import za.co.no9.sle.ast.typedPattern.Module
 import za.co.no9.sle.ast.typedPattern.Pattern
-import za.co.no9.sle.ast.typedPattern.QualifiedID
 import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
@@ -486,7 +485,21 @@ private class InferContext(private val repository: Repository<Item>, private val
                             unify(constructorType, signature)
                         }
 
-                        ConstructorReferencePattern(pattern.location, returnType, transform(pattern.name), parameters)
+                        val valueBinding =
+                                env.value(pattern.name.asQString())
+
+                        val constructorName = when (valueBinding) {
+                            is VariableBinding ->
+                                pattern.name.name
+
+                            is ImportVariableBinding ->
+                                valueBinding.item.resolveConstructor(pattern.name.name)
+
+                            else ->
+                                "unknown"
+                        }
+
+                        ConstructorReferencePattern(pattern.location, returnType, constructorName, parameters)
                     }
                 }
             }
@@ -533,17 +546,17 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                         e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
 
                                     is za.co.no9.sle.repository.AliasDeclaration ->
-                                        e.newType(d.alias, ImportAliasBinding(d.scheme.asScheme(import.location)))
+                                        e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
 
                                     is za.co.no9.sle.repository.OpaqueADTDeclaration ->
-                                        e.newType(d.adt, OpaqueImportADTBinding(d.cardinality, d.identity))
+                                        e.newType(d.adt, OpaqueImportADTBinding(importItem, d.cardinality, d.identity))
 
                                     is za.co.no9.sle.repository.FullADTDeclaration -> {
                                         val envWithADTDeclaration =
-                                                e.newType(d.adt, ImportADTBinding(d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
+                                                e.newType(d.adt, ImportADTBinding(importItem, d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
 
                                         d.constructors.fold(envWithADTDeclaration) { a, b ->
-                                            a.newValue(b.name, VariableBinding(b.scheme.asScheme(import.location)))
+                                            a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(import.location)))
                                         }
                                     }
                                 }
@@ -580,7 +593,7 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                 when (importDeclaration) {
                                     null -> {
                                         errors.add(TypeNotExported(d.name.location, d.name.name))
-                                        e.newType(d.name.name, ImportAliasBinding(errorScheme))
+                                        e.newType(d.name.name, ImportAliasBinding(importItem, errorScheme))
                                     }
 
                                     is za.co.no9.sle.repository.LetDeclaration -> {
@@ -591,27 +604,27 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
                                     is za.co.no9.sle.repository.AliasDeclaration ->
                                         if (d.withConstructors) {
                                             errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
-                                            e.newType(d.name.name, ImportAliasBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                            e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
                                         } else
-                                            e.newType(d.name.name, ImportAliasBinding(importDeclaration.scheme.asScheme(d.name.location)))
+                                            e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
 
                                     is za.co.no9.sle.repository.OpaqueADTDeclaration ->
                                         if (d.withConstructors) {
                                             errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
                                         } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
 
                                     is za.co.no9.sle.repository.FullADTDeclaration ->
                                         if (d.withConstructors) {
                                             val envWithADTDeclaration =
-                                                    e.newType(d.name.name, ImportADTBinding(importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
+                                                    e.newType(d.name.name, ImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
 
                                             importDeclaration.constructors.fold(envWithADTDeclaration) { a, b ->
-                                                a.newValue(b.name, VariableBinding(b.scheme.asScheme(d.name.location)))
+                                                a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(d.name.location)))
                                             }
                                         } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importDeclaration.cardinality, importDeclaration.identity))
+                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
                                 }
                             }
                         }
@@ -699,10 +712,6 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
 
     return errors
 }
-
-
-private fun transform(qualifiedID: za.co.no9.sle.ast.typelessPattern.QualifiedID): QualifiedID =
-        QualifiedID(qualifiedID.location, qualifiedID.qualifier, qualifiedID.name)
 
 
 private fun Type.arity(): Int =
