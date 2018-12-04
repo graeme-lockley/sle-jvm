@@ -1,0 +1,71 @@
+-- Import an use a list
+export IntMap, find
+
+import file:../typelessPatternToTypedPattern/import/List
+
+
+typealias IntMap =
+    Int -> Int
+
+
+find : (a -> Bool) -> List.List a -> List.Maybe a
+find p List.Nil = List.Nothing
+find p (List.Cons x xs) =
+    if p x then
+        List.Just x
+    else
+        find p xs
+-- enrichedASTpp
+export alias IntMap: <> Data.Int -> Data.Int
+export value find: <0> ('0 -> Data.Bool) -> /home/alfred/.sle/List '0 -> /home/alfred/.sle/Maybe '0
+
+typealias IntMap =
+  <> Data.Int -> Data.Int
+
+find : <0> ('0 -> Data.Bool) -> /home/alfred/.sle/List '0 -> /home/alfred/.sle/Maybe '0
+find =
+  (LAMBDA $v0 ->
+    (LAMBDA $v1 ->
+      (BAR
+        (CALL
+          (CALL
+            (LAMBDA p ->
+              (LAMBDA file.package.name.File.Nil ->
+                file.package.name.File.Nothing
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        (CALL
+          (CALL
+            (LAMBDA p ->
+              (LAMBDA file.package.name.File.Cons '5 /home/alfred/.sle/List '5 ->
+                (IF
+                  (CALL
+                    p
+                    x
+                  )
+                  (CALL
+                    file.package.name.File.Just
+                    x
+                  )
+                  (CALL
+                    (CALL
+                      find
+                      p
+                    )
+                    xs
+                  )
+                )
+              )
+            )
+            $v1
+          )
+          $v0
+        )
+        ERROR
+      )
+    )
+  )
