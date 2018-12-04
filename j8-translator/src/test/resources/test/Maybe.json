@@ -1,0 +1,48 @@
+{
+  "declarations": [
+    {
+      "adt": "Maybe",
+      "cardinality": 1,
+      "identity": "/home/alfred/.sle/Maybe",
+      "constructors": [
+        {
+          "name": "Nothing",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "constant": "/home/alfred/.sle/Maybe",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Just",
+          "scheme": {
+            "parameters": [
+              0
+            ],
+            "type": {
+              "domain": {
+                "variable": 0
+              },
+              "range": {
+                "constant": "/home/alfred/.sle/Maybe",
+                "arguments": [
+                  {
+                    "variable": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

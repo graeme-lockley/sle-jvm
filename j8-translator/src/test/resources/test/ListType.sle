@@ -1,6 +1,6 @@
-type Maybe a =
-    Nothing
-  | Just a
+export List(..), singleton, head, tail, map
+
+import file:./Maybe
 
 
 type List a =
@@ -27,12 +27,12 @@ doubleBooleanList =
     double True False
 
 
-head Nil = Nothing
-head (Cons x xs) = Just x
+head Nil = Maybe.Nothing
+head (Cons x xs) = Maybe.Just x
 
 
-tail Nil = Nothing
-tail (Cons x xs) = Just xs
+tail Nil = Maybe.Nothing
+tail (Cons x xs) = Maybe.Just xs
 
 
 map : (a -> b) -> List a -> List b

@@ -6,6 +6,7 @@ import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.Repository
+import za.co.no9.sle.repository.fromJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
 import java.io.File
@@ -71,7 +72,22 @@ class TestItem(private val inputFile: File) : Item {
 
 
     override fun resolveConstructor(name: String): String =
-            name
+            when (name) {
+                "()" ->
+                    typeUnit.name
+
+                "Int" ->
+                    typeInt.name
+
+                "Bool" ->
+                    typeBool.name
+
+                "String" ->
+                    typeString.name
+
+                else ->
+                    "file.package.name.File.$name"
+            }
 
 
     override fun resolveId(name: String): String =
@@ -87,5 +103,5 @@ class TestItem(private val inputFile: File) : Item {
 
 
     override fun exports(): Export =
-            TODO()
+            fromJsonString(File(inputFile.absolutePath + ".json").readText())
 }
