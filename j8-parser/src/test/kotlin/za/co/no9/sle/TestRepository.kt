@@ -23,9 +23,6 @@ class TestRepository : Repository<TestItem> {
 
 
 class TestItem(private val inputFile: File, private val text: String?) : Item {
-    override fun itemRelativeTo(name: String): Item =
-            TODO("not implemented")
-
     constructor(inputFile: File) : this(inputFile, null)
 
 
@@ -51,12 +48,17 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
     override fun resolveId(name: String): String =
             "file.package.name.File.$name"
 
+
     override fun sourceCode(): String =
             text ?: inputFile.readText()
 
 
     override fun sourceFile(): File =
             inputFile
+
+
+    override fun itemRelativeTo(name: String): Item =
+            TestItem(File(inputFile.parentFile, name))
 
 
     override fun exports(): Export =

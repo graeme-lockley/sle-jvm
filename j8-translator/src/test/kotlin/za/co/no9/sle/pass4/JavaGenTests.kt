@@ -67,10 +67,6 @@ class TestRepository : Repository<TestItem> {
 
 
 class TestItem(private val inputFile: File) : Item {
-    override fun itemRelativeTo(name: String): Item =
-            TODO("not implemented")
-
-
     override fun resolveConstructor(name: String): String =
             when (name) {
                 "()" ->
@@ -92,6 +88,10 @@ class TestItem(private val inputFile: File) : Item {
 
     override fun resolveId(name: String): String =
             TODO("not implemented")
+
+
+    override fun itemRelativeTo(name: String): Item =
+            TestItem(File(inputFile.parentFile, name))
 
 
     override fun sourceFile(): File =

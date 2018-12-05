@@ -523,17 +523,14 @@ private fun resolveImports(environment: Environment, repository: Repository<Item
 
     val newEnvironment =
             imports.fold(environment) { currentEnvironment, import ->
-                val importFile =
-                        File(source.sourceFile().parentFile, import.urn.name)
+                val importItem =
+                        source.itemRelativeTo(import.urn.name)
 
                 val importName =
                         if (import.asName == null)
                             ID(import.location, import.urn.impliedName())
                         else
                             ID(import.asName.location, import.asName.name)
-
-                val importItem =
-                        repository.item(import.urn.source, importFile)
 
                 val exports =
                         importItem.exports()
