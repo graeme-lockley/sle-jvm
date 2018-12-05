@@ -28,17 +28,15 @@ import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
 import za.co.no9.sle.ast.typelessPattern.*
 import za.co.no9.sle.repository.Item
-import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.typing.*
-import java.io.File
 
 
 data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
 
 
-fun infer(repository: Repository<Item>, source: Item, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
+fun infer(source: Item, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {
     val context =
-            InferContext(repository, source, varPump, env)
+            InferContext(source, varPump, env)
 
     val m =
             context.infer(module)
@@ -50,7 +48,7 @@ fun infer(repository: Repository<Item>, source: Item, varPump: VarPump, module: 
 }
 
 
-private class InferContext(private val repository: Repository<Item>, private val source: Item, private val varPump: VarPump, internal var env: Environment) {
+private class InferContext(private val source: Item, private val varPump: VarPump, internal var env: Environment) {
     var constraints =
             Constraints()
 
@@ -62,7 +60,7 @@ private class InferContext(private val repository: Repository<Item>, private val
         reportDuplicateLetDeclarationNames(module)
 
         val resolvedImports =
-                resolveImports(env, repository, source, module.imports)
+                resolveImports(env, source, module.imports)
 
         errors.addAll(resolvedImports.errors)
 
@@ -517,7 +515,7 @@ private fun za.co.no9.sle.ast.typelessPattern.QualifiedID.asQString(): QString =
 private class ResolveImportsResult(val environment: Environment, val errors: Errors)
 
 
-private fun resolveImports(environment: Environment, repository: Repository<Item>, source: Item, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
+private fun resolveImports(environment: Environment, source: Item, imports: List<za.co.no9.sle.ast.typelessPattern.Import>): ResolveImportsResult {
     val errors =
             mutableSetOf<Error>()
 
