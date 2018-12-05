@@ -19,8 +19,11 @@ class Repository(
         val sourcePrefixName =
                 sourcePrefix.absolutePath
 
+        val canonicalInputFile =
+                inputFile.canonicalFile
+
         val inputFilePath =
-                inputFile.parentFile.absolutePath
+                canonicalInputFile.parent
 
         val innerPath =
                 if (inputFilePath.startsWith(sourcePrefixName))
@@ -28,7 +31,7 @@ class Repository(
                 else
                     splitPath(inputFilePath)
 
-        return Item(this, inputFile, listOf("file") + innerPath, inputFile.nameWithoutExtension)
+        return Item(this, canonicalInputFile, listOf("file") + innerPath, canonicalInputFile.nameWithoutExtension)
     }
 
 
