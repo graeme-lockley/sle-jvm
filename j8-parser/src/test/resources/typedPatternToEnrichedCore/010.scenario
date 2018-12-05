@@ -1,7 +1,7 @@
 -- Import an use a list
 export IntMap, find
 
-import file:../typelessPatternToTypedPattern/import/List
+import file:./../List
 
 
 typealias IntMap =

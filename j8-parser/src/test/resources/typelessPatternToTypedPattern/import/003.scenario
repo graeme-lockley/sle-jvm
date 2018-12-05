@@ -1,5 +1,5 @@
 -- Use an explicitly imported opaque type
-import file:./List exposing map, List
+import file:./../../List exposing map, List
 
 multiply : Int -> List Int -> List Int
 multiply n =

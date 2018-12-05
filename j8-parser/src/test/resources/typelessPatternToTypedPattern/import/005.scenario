@@ -1,5 +1,5 @@
 -- Use an explicitly imported opaque type
-import file:./List
+import file:./../../List
 
 multiply n =
     List.map (\i -> n * i)

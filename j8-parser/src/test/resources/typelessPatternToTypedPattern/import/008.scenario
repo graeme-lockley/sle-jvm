@@ -1,5 +1,5 @@
 -- Use imported constructors for constructing and pattern matching with type signatures
-import file:./List as LL
+import file:./../../List as LL
 
 
 isEmpty : LL.List a -> Bool

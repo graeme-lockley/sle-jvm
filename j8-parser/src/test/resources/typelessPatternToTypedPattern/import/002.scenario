@@ -1,5 +1,5 @@
 -- Use an explicitly imported function
-import file:./List exposing map
+import file:./../../List exposing map
 
 multiplyByN n =
     map (\i -> n * i)

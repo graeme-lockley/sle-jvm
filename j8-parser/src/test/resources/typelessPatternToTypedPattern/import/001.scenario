@@ -1,5 +1,5 @@
 -- An ADT declaration export with constructors
-import file:./List exposing List(..)
+import file:./../../List exposing List(..)
 
 repeat : Int -> a -> List a
 repeat 0 x = Nil

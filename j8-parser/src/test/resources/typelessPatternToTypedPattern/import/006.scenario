@@ -1,5 +1,5 @@
 -- Use an explicitly imported opaque type
-import file:./List
+import file:./../../List
 
 transform : (Int -> Int) -> List.IntList -> List.IntList
 transform f =

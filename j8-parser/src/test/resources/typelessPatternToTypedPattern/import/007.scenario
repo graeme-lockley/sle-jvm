@@ -1,5 +1,5 @@
 -- Use imported constructors for constructing and pattern matching
-import file:./List
+import file:./../../List
 
 
 isEmpty List.Nil = True

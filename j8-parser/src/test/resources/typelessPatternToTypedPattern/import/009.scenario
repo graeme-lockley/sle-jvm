@@ -1,6 +1,6 @@
 -- Validate that the type checker will deal identities of types
-import file:./List as L1
-import file:./List as L2
+import file:./../../List as L1
+import file:./../../List as L2
 
 
 isEmpty : L2.List a -> Bool

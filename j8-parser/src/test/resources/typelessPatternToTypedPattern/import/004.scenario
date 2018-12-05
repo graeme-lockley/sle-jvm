@@ -1,5 +1,5 @@
 -- Use an explicitly imported opaque type
-import file:./List exposing map, List, IntList
+import file:./../../List exposing map, List, IntList
 
 transform : (Int -> Int) -> IntList -> IntList
 transform f =
