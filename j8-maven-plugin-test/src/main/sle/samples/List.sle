@@ -1,6 +1,6 @@
 export List(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList
 
-import file:./Maybe
+import file:./Maybe exposing Maybe(..)
 
 type List a =
     Nil
@@ -27,12 +27,12 @@ isEmpty Nil = True
 isEmpty xs = False
 
 
-head Nil = Maybe.Nothing
-head (Cons x xs) = Maybe.Just x
+head Nil = Nothing
+head (Cons x xs) = Just x
 
 
-tail Nil = Maybe.Nothing
-tail (Cons x xs) = Maybe.Just xs
+tail Nil = Nothing
+tail (Cons x xs) = Just xs
 
 
 map : (a -> b) -> List a -> List b
