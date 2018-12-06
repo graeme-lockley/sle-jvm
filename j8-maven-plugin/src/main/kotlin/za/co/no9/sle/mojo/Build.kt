@@ -22,8 +22,6 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
         return
     }
 
-    log.info("We are about to create the repository")
-
     val repository =
             BuildRepository(sourceFile, targetFile)
 
