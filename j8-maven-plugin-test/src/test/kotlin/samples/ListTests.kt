@@ -15,17 +15,17 @@ class ListTests : StringSpec({
 
     "head [] == Nothing" {
         file.samples.List.head.apply(file.samples.List.Nil)
-                .shouldBe(file.samples.List.Nothing)
+                .shouldBe(file.samples.Maybe.Nothing)
     }
 
     "head [1] == Just 1" {
         file.samples.List.head.apply(singletonList)
-                .shouldBe(file.samples.List.Just.apply(1))
+                .shouldBe(file.samples.Maybe.Just.apply(1))
     }
 
     "tail [1] == Just Nil" {
         file.samples.List.tail.apply(singletonList)
-                .shouldBe(file.samples.List.Just.apply(file.samples.List.Nil))
+                .shouldBe(file.samples.Maybe.Just.apply(file.samples.List.Nil))
     }
 
     "map plus5 [1, 2] == [6, 7]" {
