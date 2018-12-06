@@ -1,7 +1,5 @@
 # Primary Features
 
-* Add import and exports
-
 * Add where
 
 
