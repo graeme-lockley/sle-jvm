@@ -1,5 +1,30 @@
-export Maybe(..)
+export
+    Maybe(..),
+    andThen,
+    map,
+    withDefault
 
 type Maybe a =
     Nothing
   | Just a
+
+
+withDefault : a -> Maybe a -> a
+withDefault default Nothing =
+    default
+withDefault default (Just value) =
+    value
+
+
+map : (a -> b) -> Maybe a -> Maybe b
+map f Nothing =
+    Nothing
+map f (Just value) =
+    Just (f value)
+
+
+andThen : (a -> Maybe b) -> Maybe a -> Maybe b
+andThen f Nothing =
+    Nothing
+andThen f (Just value) =
+    f value
