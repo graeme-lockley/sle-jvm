@@ -6,10 +6,6 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
             Scheme(parameters, type.apply(s - parameters))
 
 
-    fun ftv() =
-            type.ftv().minus(parameters)
-
-
     override fun toString(): String =
             "<${parameters.joinToString(", ") { it.toString() }}> $type"
 

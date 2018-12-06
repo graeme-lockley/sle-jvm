@@ -58,7 +58,7 @@ fun fromJsonString(input: String): Export {
                 AliasDeclaration(declaration["alias"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
 
             declaration.has("constructors") ->
-                FullADTDeclaration(declaration["adt"].asString, declaration["cardinality"].asInt, declaration["identity"].asString, declaration["constructors"].asJsonArray.map { jsonToConstructor(it.asJsonObject) })
+                ADTDeclaration(declaration["adt"].asString, declaration["cardinality"].asInt, declaration["identity"].asString, declaration["constructors"].asJsonArray.map { jsonToConstructor(it.asJsonObject) })
 
             else ->
                 OpaqueADTDeclaration(declaration["adt"].asString, declaration["cardinality"].asInt, declaration["identity"].asString)
@@ -82,7 +82,7 @@ data class Export(
                     is OpaqueADTDeclaration ->
                         it.adt == name
 
-                    is FullADTDeclaration ->
+                    is ADTDeclaration ->
                         it.adt == name
                 }
             }
@@ -104,7 +104,7 @@ data class OpaqueADTDeclaration(
         val cardinality: Int,
         val identity: String) : Declaration()
 
-data class FullADTDeclaration(
+data class ADTDeclaration(
         val adt: String,
         val cardinality: Int,
         val identity: String,

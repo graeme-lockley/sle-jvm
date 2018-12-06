@@ -609,36 +609,6 @@ class Parser(private val lexer: Lexer) {
             }
 
 
-    fun parseQualifiedLowerID(): QualifiedID =
-            when {
-                isToken(Token.UpperID) -> {
-                    val upperID =
-                            lexer.next().toID()
-
-                    matchOperator(".")
-                    skip()
-                    if (isToken(Token.LowerID)) {
-                        val lowerID =
-                                lexer.next().toID()
-
-                        QualifiedID(upperID.location + lowerID.location, upperID.name, lowerID.name)
-                    } else {
-                        throw syntaxError("Expected lower ID")
-                    }
-                }
-
-                isToken(Token.LowerID) -> {
-                    val lowerID =
-                            lexer.next().toID()
-
-                    QualifiedID(lowerID.location, null, lowerID.name)
-                }
-
-                else ->
-                    throw syntaxError("Expected upper ID or lower ID")
-            }
-
-
     fun isFirstADTType(): Boolean =
             isToken(Token.LowerID) ||
                     isToken(Token.UpperID) ||

@@ -553,7 +553,7 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                         is za.co.no9.sle.repository.OpaqueADTDeclaration ->
                                             e.newType(d.adt, OpaqueImportADTBinding(importItem, d.cardinality, d.identity))
 
-                                        is za.co.no9.sle.repository.FullADTDeclaration -> {
+                                        is za.co.no9.sle.repository.ADTDeclaration -> {
                                             val envWithADTDeclaration =
                                                     e.newType(d.adt, ImportADTBinding(importItem, d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
 
@@ -617,7 +617,7 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             } else
                                                 e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
 
-                                        is za.co.no9.sle.repository.FullADTDeclaration ->
+                                        is za.co.no9.sle.repository.ADTDeclaration ->
                                             if (d.withConstructors) {
                                                 val envWithADTDeclaration =
                                                         e.newType(d.name.name, ImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))

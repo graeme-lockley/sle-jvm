@@ -61,7 +61,7 @@ data class Symbol(val token: Token, val location: Location, val text: String) {
 }
 
 
-class Lexer(val input: String) {
+class Lexer(private val input: String) {
     var currentSymbol =
             Symbol(Token.EOF, Location(Position(0, 0), Position(0, 0)), "")
         private set

@@ -50,7 +50,7 @@ data class TAlias(
             if (arguments.isEmpty())
                 "alias.$name"
             else
-                "alias.$name ${arguments.map { it.toString() }.joinToString(" ")}"
+                "alias.$name ${arguments.joinToString(" ") { it.toString() }}"
 }
 
 
@@ -74,7 +74,7 @@ data class TCon(
             if (arguments.isEmpty())
                 name
             else
-                "$name ${arguments.map { it.toString() }.joinToString(" ")}"
+                "$name ${arguments.joinToString(" ") { it.toString() }}"
 }
 
 

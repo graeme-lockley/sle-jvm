@@ -23,7 +23,7 @@ private fun toClass(source: Item, nameDeclaration: NameDeclaration): Declaration
                 OpaqueADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(nameDeclaration.name))
 
             is FullADTNameDeclaration ->
-                FullADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(nameDeclaration.name), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
+                ADTDeclaration(nameDeclaration.name, nameDeclaration.scheme.parameters.size, source.resolveConstructor(nameDeclaration.name), nameDeclaration.constructors.map { Constructor(it.name, toClass(it.scheme)) })
         }
 
 
