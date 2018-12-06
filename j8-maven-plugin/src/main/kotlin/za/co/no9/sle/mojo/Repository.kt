@@ -110,8 +110,15 @@ class Item(
     }
 
 
-    override fun itemRelativeTo(name: String): Either<Errors, Item> =
-            repository.item(Source.File, File(name).relativeTo(inputFile))
+    override fun itemRelativeTo(name: String): Either<Errors, Item> {
+        val nameFile =
+                File(name)
+
+        return if (nameFile.isAbsolute)
+            repository.item(Source.File, nameFile)
+        else
+            repository.item(Source.File, File(inputFile.parentFile, "$name.sle"))
+    }
 
 
     override fun resolveConstructor(name: String): String =
