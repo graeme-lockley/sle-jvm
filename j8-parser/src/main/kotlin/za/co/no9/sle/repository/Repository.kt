@@ -7,8 +7,6 @@ import java.io.File
 
 
 interface Repository<out T : Item> {
-    fun import(name: String): Either<Errors, Export>
-
     fun item(source: Source, inputFile: File): Either<Errors, T>
 }
 

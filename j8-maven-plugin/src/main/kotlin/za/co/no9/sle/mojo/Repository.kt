@@ -12,10 +12,6 @@ import java.io.File
 abstract class Repository(
         open val sourcePrefix: File,
         open val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
-    override fun import(name: String): Either<Errors, Export> =
-            TODO("not implemented")
-
-
     override fun item(source: Source, inputFile: File): Either<Errors, Item> {
         val sourcePrefixName =
                 sourcePrefix.absolutePath
