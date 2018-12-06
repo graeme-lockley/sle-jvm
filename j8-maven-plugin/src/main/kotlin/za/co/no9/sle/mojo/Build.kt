@@ -22,143 +22,195 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
         return
     }
 
+    log.info("We are about to create the repository")
+
     val repository =
-            Repository(sourceFile, targetFile)
+            BuildRepository(sourceFile, targetFile)
 
-    val sources: Sequence<File> =
-            sourceFile.walk().filter { it.isFile }.filter { it.absolutePath.endsWith(".sle") }
+    log.info("Compiled ${repository.compiled.size} file(s)")
 
-    if (sources.count() == 0) {
-        log.warn("No sources to compile")
-    } else {
-        val toTranslate =
-                sources.map {
-                    Pair(it, repository.item(Source.File, it))
-                }.filter { it.second.mustCompile() }
 
-        if (toTranslate.count() == 0) {
-            log.info("Sources up to date")
+    var errorCount =
+            0
+
+    for (buildError in repository.buildErrors) {
+        if (buildError.value.isNotEmpty()) {
+            buildError.value.forEach { error ->
+                errorCount += 1
+
+                val sourceName =
+                        buildError.key
+
+                val errorMessage =
+                        when (error) {
+                            is SyntaxError ->
+                                "Syntax Error: $sourceName: ${error.location}: ${error.msg}"
+
+                            is UnboundVariable ->
+                                "Unbound Parameter: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateLetDeclaration ->
+                                "Duplicate Let Declaration: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateLetSignature ->
+                                "Duplicate Let Signature: $sourceName: ${error.location}: ${error.otherLocation}: ${error.name}"
+
+                            is UnificationFail ->
+                                "Unification Fail: $sourceName: ${error.t1} ${error.t2}"
+
+                            is UnificationMismatch ->
+                                "Unification Mismatch: $sourceName: ${error.t1s}: ${error.t2s}"
+
+                            is UnknownTypeReference ->
+                                "Unknown Type Reference: $sourceName: ${error.location}: ${error.name}"
+
+                            is UnknownConstructorReference ->
+                                "Unknown Constructor Reference: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateTypeDeclaration ->
+                                "Duplicate Type Declaration: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateTypeAliasDeclaration ->
+                                "Duplicate Type Alias Declaration: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateConstructorDeclaration ->
+                                "Duplicate Constructor Declaration: $sourceName: ${error.location}: ${error.name}"
+
+                            is LetSignatureWithoutDeclaration ->
+                                "Let Signature Without Declaration: $sourceName: ${error.location}: ${error.name}"
+
+                            is IncorrectNumberOfSchemeArguments ->
+                                "Incorrect Number of Scheme Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
+
+                            is IncorrectNumberOfAliasArguments ->
+                                "Incorrect Number of Alias Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
+
+                            is IncorrectNumberOfConstructorArguments ->
+                                "Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
+
+                            is IncompatibleDeclarationSignature ->
+                                "Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}"
+
+                            is UnknownType ->
+                                "Unknown Type: $sourceName: ${error.location}: ${error.name}"
+
+                            is NonExhaustivePattern ->
+                                "Non Exhaustive Pattern: $sourceName: ${error.location}"
+
+                            is ValueNotExported ->
+                                "Value not Exported: $sourceName: ${error.location}: ${error.name}"
+
+                            is TypeNotExported ->
+                                "Type not Exported: $sourceName: ${error.location}: ${error.name}"
+
+                            is TypeAliasHasNoConstructors ->
+                                "Type Alias has no Constructors: $sourceName: ${error.location}: ${error.name}"
+
+                            is ADTHasNoConstructors ->
+                                "ADT has no Constructors: $sourceName: ${error.location}: ${error.name}"
+
+                            is TypeConstructorNotExported ->
+                                "Type Constructor not Exported: $sourceName: ${error.location}: ${error.name}"
+
+                            is ImportErrors ->
+                                "Import Errors: $sourceName: ${error.location}:\n${error.errors}"
+
+                            is UnableToReadFile ->
+                                "Unable to read file: $sourceName: ${error.file}"
+
+                            is CyclicDependency ->
+                                "Cyclic Dependency: $sourceName: ${error.file}"
+                        }
+
+                log.error(errorMessage)
+            }
+        }
+    }
+
+    if (errorCount > 0)
+        throw MojoFailureException(sourceFile, "Translation Error", "$errorCount errors")
+}
+
+
+class BuildRepository(override val sourcePrefix: File,
+                      override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
+    val files =
+            sourcePrefix.walk().filter { it.isFile }.map { it.canonicalPath }.filter { it.endsWith(".sle") }.toSet()
+
+    val compiling =
+            mutableSetOf<String>()
+
+    val compiled =
+            mutableSetOf<String>()
+
+    val buildErrors =
+            mutableMapOf<String, Errors>()
+
+    init {
+        files.forEach { fileName ->
+            val file =
+                    File(fileName)
+
+            val result =
+                    item(Source.File, file)
+
+            val errors =
+                    result.left()
+
+            if (errors != null) {
+                includeErrors(file, errors)
+            }
+        }
+    }
+
+
+    private fun includeErrors(file: File, errors: Errors) {
+        val fileName =
+                file.canonicalPath
+
+        if (buildErrors.containsKey(fileName)) {
+            buildErrors[fileName] = buildErrors[fileName]!! + errors
         } else {
-            val translateCount =
-                    toTranslate.count()
+            buildErrors[fileName] = errors
+        }
+    }
 
-            if (translateCount == 1) {
-                log.info("Compiling $translateCount source file")
+
+    override fun itemLoaded(item: Item) {
+        if (compiling.contains(item.className)) {
+            includeErrors(item.sourceFile(), setOf(CyclicDependency(item.sourceFile())))
+        } else if (!compiled.contains(item.className)) {
+            compiling.add(item.className)
+
+            val packageName =
+                    item.packageName.joinToString(".")
+
+            val className =
+                    item.className
+
+            val parseDetail =
+                    parseWithDetail(item, environment)
+
+            val compiledFile =
+                    parseDetail
+                            .map { translateToJava(it.coreModule, packageName, className) }
+
+            val output =
+                    compiledFile
+                            .map { it.toString() }
+
+            val errors =
+                    output.left()
+
+            if (errors == null) {
+                item.writeJava(output.right() ?: "")
+                item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.coreModule.exports)))
             } else {
-                log.info("Compiling $translateCount source files")
+                includeErrors(item.sourceFile(), errors)
             }
 
-            toTranslate.forEach {
-                val item =
-                        it.second
-
-
-                val packageName =
-                        item.packageName.joinToString(".")
-
-                val className =
-                        item.className
-
-                val parseDetail =
-                        parseWithDetail(item, environment)
-
-                val compiledFile =
-                        parseDetail
-                                .map { translateToJava(it.coreModule, packageName, className) }
-
-                val output =
-                        compiledFile
-                                .map { it.toString() }
-
-                val errors =
-                        output.left()
-
-                if (errors == null) {
-                    item.writeJava(output.right() ?: "")
-                    item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.coreModule.exports)))
-                } else {
-                    val sourceName =
-                            it.second.sourceFile().absoluteFile
-
-                    errors.forEach { error ->
-                        val errorMessage =
-                                when (error) {
-                                    is SyntaxError ->
-                                        "Syntax Error: $sourceName: ${error.location}: ${error.msg}"
-
-                                    is UnboundVariable ->
-                                        "Unbound Parameter: $sourceName: ${error.location}: ${error.name}"
-
-                                    is DuplicateLetDeclaration ->
-                                        "Duplicate Let Declaration: $sourceName: ${error.location}: ${error.name}"
-
-                                    is DuplicateLetSignature ->
-                                        "Duplicate Let Signature: $sourceName: ${error.location}: ${error.otherLocation}: ${error.name}"
-
-                                    is UnificationFail ->
-                                        "Unification Fail: $sourceName: ${error.t1} ${error.t2}"
-
-                                    is UnificationMismatch ->
-                                        "Unification Mismatch: $sourceName: ${error.t1s}: ${error.t2s}"
-
-                                    is UnknownTypeReference ->
-                                        "Unknown Type Reference: $sourceName: ${error.location}: ${error.name}"
-
-                                    is UnknownConstructorReference ->
-                                        "Unknown Constructor Reference: $sourceName: ${error.location}: ${error.name}"
-
-                                    is DuplicateTypeDeclaration ->
-                                        "Duplicate Type Declaration: $sourceName: ${error.location}: ${error.name}"
-
-                                    is DuplicateTypeAliasDeclaration ->
-                                        "Duplicate Type Alias Declaration: $sourceName: ${error.location}: ${error.name}"
-
-                                    is DuplicateConstructorDeclaration ->
-                                        "Duplicate Constructor Declaration: $sourceName: ${error.location}: ${error.name}"
-
-                                    is LetSignatureWithoutDeclaration ->
-                                        "Let Signature Without Declaration: $sourceName: ${error.location}: ${error.name}"
-
-                                    is IncorrectNumberOfSchemeArguments ->
-                                        "Incorrect Number of Scheme Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
-
-                                    is IncorrectNumberOfAliasArguments ->
-                                        "Incorrect Number of Alias Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
-
-                                    is IncorrectNumberOfConstructorArguments ->
-                                        "Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
-
-                                    is IncompatibleDeclarationSignature ->
-                                        "Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}"
-
-                                    is UnknownType ->
-                                        "Unknown Type: $sourceName: ${error.location}: ${error.name}"
-
-                                    is NonExhaustivePattern ->
-                                        "Non Exhaustive Pattern: $sourceName: ${error.location}"
-
-                                    is ValueNotExported ->
-                                        "Value not Exported: $sourceName: ${error.location}: ${error.name}"
-
-                                    is TypeNotExported ->
-                                        "Type not Exported: $sourceName: ${error.location}: ${error.name}"
-
-                                    is TypeAliasHasNoConstructors ->
-                                        "Type Alias has no Constructors: $sourceName: ${error.location}: ${error.name}"
-
-                                    is ADTHasNoConstructors ->
-                                        "ADT has no Constructors: $sourceName: ${error.location}: ${error.name}"
-
-                                    is TypeConstructorNotExported ->
-                                        "Type Constructor not Exported: $sourceName: ${error.location}: ${error.name}"
-                                }
-
-                        log.error(errorMessage)
-                    }
-
-                    throw MojoFailureException(sourceFile, "Translation Error", "${errors.size} errors")
-                }
-            }
+            compiling.remove(item.className)
+            compiled.add(item.className)
         }
     }
 }

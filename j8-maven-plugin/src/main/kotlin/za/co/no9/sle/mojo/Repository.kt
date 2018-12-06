@@ -5,17 +5,18 @@ import za.co.no9.sle.Errors
 import za.co.no9.sle.Source
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.fromJsonString
+import za.co.no9.sle.value
 import java.io.File
 
 
-class Repository(
-        private val sourcePrefix: File,
-        val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
+abstract class Repository(
+        open val sourcePrefix: File,
+        open val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
     override fun import(name: String): Either<Errors, Export> =
             TODO("not implemented")
 
 
-    override fun item(source: Source, inputFile: File): Item {
+    override fun item(source: Source, inputFile: File): Either<Errors, Item> {
         val sourcePrefixName =
                 sourcePrefix.absolutePath
 
@@ -31,7 +32,12 @@ class Repository(
                 else
                     splitPath(inputFilePath)
 
-        return Item(this, canonicalInputFile, listOf("file") + innerPath, canonicalInputFile.nameWithoutExtension)
+        val item =
+                Item(this, canonicalInputFile, listOf("file") + innerPath, canonicalInputFile.nameWithoutExtension)
+
+        itemLoaded(item)
+
+        return value(item)
     }
 
 
@@ -44,6 +50,8 @@ class Repository(
         else
             input.split(File.separatorChar)
     }
+
+    abstract fun itemLoaded(item: Item)
 }
 
 
@@ -102,7 +110,7 @@ class Item(
     }
 
 
-    override fun itemRelativeTo(name: String): Item =
+    override fun itemRelativeTo(name: String): Either<Errors, Item> =
             repository.item(Source.File, File(name).relativeTo(inputFile))
 
 

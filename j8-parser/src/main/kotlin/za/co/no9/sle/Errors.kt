@@ -2,6 +2,7 @@ package za.co.no9.sle
 
 import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
+import java.io.File
 
 
 typealias Errors =
@@ -95,21 +96,32 @@ data class NonExhaustivePattern(
 
 data class ValueNotExported(
         override val location: Location,
-        val name: String): LocationError(location)
+        val name: String) : LocationError(location)
 
 data class TypeNotExported(
         override val location: Location,
-        val name: String): LocationError(location)
+        val name: String) : LocationError(location)
 
 data class TypeAliasHasNoConstructors(
         override val location: Location,
-        val name: String): LocationError(location)
+        val name: String) : LocationError(location)
 
 data class ADTHasNoConstructors(
         override val location: Location,
-        val name: String): LocationError(location)
+        val name: String) : LocationError(location)
 
 data class TypeConstructorNotExported(
         override val location: Location,
-        val name: String): LocationError(location)
+        val name: String) : LocationError(location)
+
+data class UnableToReadFile(
+        val file: File) : Error()
+
+data class CyclicDependency(
+        val file: File) : Error()
+
+data class ImportErrors(
+        override val location: Location,
+        val urn: URN,
+        val errors: Errors) : LocationError(location)
 

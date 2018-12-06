@@ -521,7 +521,7 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
 
     val newEnvironment =
             imports.fold(environment) { currentEnvironment, import ->
-                val importItem =
+                val importResult =
                         source.itemRelativeTo(import.urn.name)
 
                 val importName =
@@ -530,100 +530,111 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                         else
                             ID(import.asName.location, import.asName.name)
 
-                val exports =
-                        importItem.exports()
+                val importErrors =
+                        importResult.left()
 
-                if (import.importDeclarations.isEmpty()) {
-                    val importEnvironment =
-                            exports.declarations.fold(Environment()) { e, d ->
-                                when (d) {
-                                    is za.co.no9.sle.repository.LetDeclaration ->
-                                        e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
+                if (importErrors == null) {
+                    val importItem =
+                            importResult.right()!!
 
-                                    is za.co.no9.sle.repository.AliasDeclaration ->
-                                        e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
+                    val exports =
+                            importItem.exports()
 
-                                    is za.co.no9.sle.repository.OpaqueADTDeclaration ->
-                                        e.newType(d.adt, OpaqueImportADTBinding(importItem, d.cardinality, d.identity))
+                    if (import.importDeclarations.isEmpty()) {
+                        val importEnvironment =
+                                exports.declarations.fold(Environment()) { e, d ->
+                                    when (d) {
+                                        is za.co.no9.sle.repository.LetDeclaration ->
+                                            e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
 
-                                    is za.co.no9.sle.repository.FullADTDeclaration -> {
-                                        val envWithADTDeclaration =
-                                                e.newType(d.adt, ImportADTBinding(importItem, d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
+                                        is za.co.no9.sle.repository.AliasDeclaration ->
+                                            e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
 
-                                        d.constructors.fold(envWithADTDeclaration) { a, b ->
-                                            a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(import.location)))
+                                        is za.co.no9.sle.repository.OpaqueADTDeclaration ->
+                                            e.newType(d.adt, OpaqueImportADTBinding(importItem, d.cardinality, d.identity))
+
+                                        is za.co.no9.sle.repository.FullADTDeclaration -> {
+                                            val envWithADTDeclaration =
+                                                    e.newType(d.adt, ImportADTBinding(importItem, d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
+
+                                            d.constructors.fold(envWithADTDeclaration) { a, b ->
+                                                a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(import.location)))
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                    currentEnvironment.newValue(importName.name, ImportBinding(importEnvironment))
-                } else
-                    import.importDeclarations.fold(currentEnvironment) { e, d ->
-                        when (d) {
-                            is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration -> {
-                                val importDeclaration =
-                                        exports[d.name.name]
+                        currentEnvironment.newValue(importName.name, ImportBinding(importEnvironment))
+                    } else
+                        import.importDeclarations.fold(currentEnvironment) { e, d ->
+                            when (d) {
+                                is za.co.no9.sle.ast.typelessPattern.ValueImportDeclaration -> {
+                                    val importDeclaration =
+                                            exports[d.name.name]
 
-                                when (importDeclaration) {
-                                    null -> {
-                                        errors.add(ValueNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
-                                    }
+                                    when (importDeclaration) {
+                                        null -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
+                                        }
 
-                                    is za.co.no9.sle.repository.LetDeclaration ->
-                                        e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                        is za.co.no9.sle.repository.LetDeclaration ->
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
 
-                                    else -> {
-                                        errors.add(ValueNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
+                                        else -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
+                                        }
                                     }
                                 }
-                            }
 
-                            is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration -> {
-                                val importDeclaration =
-                                        exports[d.name.name]
+                                is za.co.no9.sle.ast.typelessPattern.TypeImportDeclaration -> {
+                                    val importDeclaration =
+                                            exports[d.name.name]
 
-                                when (importDeclaration) {
-                                    null -> {
-                                        errors.add(TypeNotExported(d.name.location, d.name.name))
-                                        e.newType(d.name.name, ImportAliasBinding(importItem, errorScheme))
+                                    when (importDeclaration) {
+                                        null -> {
+                                            errors.add(TypeNotExported(d.name.location, d.name.name))
+                                            e.newType(d.name.name, ImportAliasBinding(importItem, errorScheme))
+                                        }
+
+                                        is za.co.no9.sle.repository.LetDeclaration -> {
+                                            errors.add(TypeNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                        }
+
+                                        is za.co.no9.sle.repository.AliasDeclaration ->
+                                            if (d.withConstructors) {
+                                                errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
+                                                e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                            } else
+                                                e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+
+                                        is za.co.no9.sle.repository.OpaqueADTDeclaration ->
+                                            if (d.withConstructors) {
+                                                errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
+                                                e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
+                                            } else
+                                                e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
+
+                                        is za.co.no9.sle.repository.FullADTDeclaration ->
+                                            if (d.withConstructors) {
+                                                val envWithADTDeclaration =
+                                                        e.newType(d.name.name, ImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
+
+                                                importDeclaration.constructors.fold(envWithADTDeclaration) { a, b ->
+                                                    a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(d.name.location)))
+                                                }
+                                            } else
+                                                e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
                                     }
-
-                                    is za.co.no9.sle.repository.LetDeclaration -> {
-                                        errors.add(TypeNotExported(d.name.location, d.name.name))
-                                        e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
-                                    }
-
-                                    is za.co.no9.sle.repository.AliasDeclaration ->
-                                        if (d.withConstructors) {
-                                            errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
-                                            e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
-                                        } else
-                                            e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
-
-                                    is za.co.no9.sle.repository.OpaqueADTDeclaration ->
-                                        if (d.withConstructors) {
-                                            errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
-                                        } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
-
-                                    is za.co.no9.sle.repository.FullADTDeclaration ->
-                                        if (d.withConstructors) {
-                                            val envWithADTDeclaration =
-                                                    e.newType(d.name.name, ImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
-
-                                            importDeclaration.constructors.fold(envWithADTDeclaration) { a, b ->
-                                                a.newValue(b.name, ImportVariableBinding(importItem, b.scheme.asScheme(d.name.location)))
-                                            }
-                                        } else
-                                            e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
                                 }
                             }
                         }
-                    }
+                } else {
+                    errors.add(ImportErrors(import.location, import.urn, importErrors))
+                    currentEnvironment
+                }
             }
 
 

@@ -2,24 +2,12 @@ package za.co.no9.sle
 
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Item
-import za.co.no9.sle.repository.Repository
 import za.co.no9.sle.repository.fromJsonString
 import za.co.no9.sle.typing.typeBool
 import za.co.no9.sle.typing.typeInt
 import za.co.no9.sle.typing.typeString
 import za.co.no9.sle.typing.typeUnit
 import java.io.File
-
-
-class TestRepository : Repository<TestItem> {
-    override fun import(name: String): Either<Errors, Export> {
-        TODO()
-    }
-
-
-    override fun item(source: Source, inputFile: File): TestItem =
-            TestItem(inputFile)
-}
 
 
 class TestItem(private val inputFile: File, private val text: String?) : Item {
@@ -57,8 +45,21 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
             inputFile
 
 
-    override fun itemRelativeTo(name: String): Item =
-            TestItem(File(inputFile.parentFile, name))
+    override fun itemRelativeTo(name: String): Either<Errors, Item> {
+        val relativeFile =
+                File(inputFile.parentFile, name)
+
+        val jsonFile =
+                File(relativeFile.absolutePath + ".json")
+
+        return when {
+            jsonFile.exists() && jsonFile.isFile && jsonFile.canRead() ->
+                value(TestItem(relativeFile))
+
+            else ->
+                error(setOf(UnableToReadFile(relativeFile)))
+        }
+    }
 
 
     override fun exports(): Export =
