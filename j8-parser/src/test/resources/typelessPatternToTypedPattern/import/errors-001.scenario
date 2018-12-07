@@ -1,0 +1,6 @@
+-- Duplicate import of constructor
+import file:./../../List exposing List(..), List(..)
+-- errors
+[
+    DuplicateImportedTypeDeclaration(location=[(1, 45) (1, 52)], name=List)
+]

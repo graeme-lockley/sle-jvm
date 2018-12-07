@@ -114,6 +114,25 @@ data class TypeConstructorNotExported(
         override val location: Location,
         val name: String) : LocationError(location)
 
+data class DuplicateImportedTypeDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
+data class DuplicateImportedTypeAliasDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
+data class DuplicateImportedLetDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
+data class DuplicateImportedConstructorDeclaration(
+        override val location: Location,
+        val name: String) : LocationError(location)
+
+
+
+
 data class UnableToReadFile(
         val file: File) : Error()
 

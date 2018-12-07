@@ -550,10 +550,18 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                         is za.co.no9.sle.repository.AliasDeclaration ->
                                             e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
 
-                                        is za.co.no9.sle.repository.OpaqueADTDeclaration ->
+                                        is za.co.no9.sle.repository.OpaqueADTDeclaration -> {
+                                            if (e.containsType(d.adt)) {
+                                                errors.add(DuplicateImportedTypeDeclaration(import.location, d.adt))
+                                            }
                                             e.newType(d.adt, OpaqueImportADTBinding(importItem, d.cardinality, d.identity))
+                                        }
 
                                         is za.co.no9.sle.repository.ADTDeclaration -> {
+                                            if (e.containsType(d.adt)) {
+                                                errors.add(DuplicateImportedTypeDeclaration(import.location, d.adt))
+                                            }
+
                                             val envWithADTDeclaration =
                                                     e.newType(d.adt, ImportADTBinding(importItem, d.cardinality, d.identity, d.constructors.map { Pair(it.name, it.scheme.asScheme(import.location)) }))
 
@@ -610,14 +618,23 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             } else
                                                 e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
 
-                                        is za.co.no9.sle.repository.OpaqueADTDeclaration ->
+                                        is za.co.no9.sle.repository.OpaqueADTDeclaration -> {
+                                            if (e.containsType(d.name.name)) {
+                                                errors.add(DuplicateImportedTypeDeclaration(d.location, d.name.name))
+                                            }
+
                                             if (d.withConstructors) {
                                                 errors.add(ADTHasNoConstructors(d.name.location, d.name.name))
                                                 e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
                                             } else
                                                 e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
+                                        }
 
-                                        is za.co.no9.sle.repository.ADTDeclaration ->
+                                        is za.co.no9.sle.repository.ADTDeclaration -> {
+                                            if (e.containsType(d.name.name)) {
+                                                errors.add(DuplicateImportedTypeDeclaration(d.location, d.name.name))
+                                            }
+
                                             if (d.withConstructors) {
                                                 val envWithADTDeclaration =
                                                         e.newType(d.name.name, ImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity, importDeclaration.constructors.map { Pair(it.name, it.scheme.asScheme(d.name.location)) }))
@@ -627,6 +644,7 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                                 }
                                             } else
                                                 e.newType(d.name.name, OpaqueImportADTBinding(importItem, importDeclaration.cardinality, importDeclaration.identity))
+                                        }
                                     }
                                 }
                             }

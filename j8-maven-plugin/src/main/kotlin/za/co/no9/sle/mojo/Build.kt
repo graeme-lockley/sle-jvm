@@ -118,6 +118,18 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                             is CyclicDependency ->
                                 "Cyclic Dependency: $sourceName: ${error.file}"
+
+                            is DuplicateImportedTypeDeclaration ->
+                                "Duplicate Imported Type Name: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateImportedTypeAliasDeclaration ->
+                                "Duplicate Imported Type Alias Name: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateImportedLetDeclaration ->
+                                "Duplicate Imported Value Name: $sourceName: ${error.location}: ${error.name}"
+
+                            is DuplicateImportedConstructorDeclaration ->
+                                "Duplicate Imported Constructor Name: $sourceName: ${error.location}: ${error.name}"
                         }
 
                 log.error(errorMessage)
