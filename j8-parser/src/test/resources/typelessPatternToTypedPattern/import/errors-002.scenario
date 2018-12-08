@@ -1,0 +1,6 @@
+-- Duplicate import of functions
+import file:./../../List exposing map, map
+-- errors
+[
+    DuplicateImportedLetDeclaration(location=[(1, 40) (1, 42)], name=map)
+]

@@ -544,8 +544,13 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                         val importEnvironment =
                                 exports.declarations.fold(Environment()) { e, d ->
                                     when (d) {
-                                        is za.co.no9.sle.repository.LetDeclaration ->
+                                        is za.co.no9.sle.repository.LetDeclaration -> {
+                                            if (e.containsValue(d.name)) {
+                                                errors.add(DuplicateImportedLetDeclaration(import.location, d.name))
+                                            }
+
                                             e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
+                                        }
 
                                         is za.co.no9.sle.repository.AliasDeclaration ->
                                             e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
@@ -586,8 +591,13 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
                                         }
 
-                                        is za.co.no9.sle.repository.LetDeclaration ->
+                                        is za.co.no9.sle.repository.LetDeclaration -> {
+                                            if (e.containsValue(d.name.name)) {
+                                                errors.add(DuplicateImportedLetDeclaration(d.name.location, d.name.name))
+                                            }
+
                                             e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                        }
 
                                         else -> {
                                             errors.add(ValueNotExported(d.name.location, d.name.name))
