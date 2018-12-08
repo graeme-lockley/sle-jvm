@@ -1,0 +1,6 @@
+-- Duplicate import of functions
+import file:./../../List exposing IntList, IntList
+-- errors
+[
+    DuplicateImportedTypeAliasDeclaration(location=[(1, 44) (1, 50)], name=IntList)
+]

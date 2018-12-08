@@ -552,8 +552,13 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
                                         }
 
-                                        is za.co.no9.sle.repository.AliasDeclaration ->
+                                        is za.co.no9.sle.repository.AliasDeclaration -> {
+                                            if (e.containsType(d.alias)) {
+                                                errors.add(DuplicateImportedTypeAliasDeclaration(import.location, d.alias))
+                                            }
+
                                             e.newType(d.alias, ImportAliasBinding(importItem, d.scheme.asScheme(import.location)))
+                                        }
 
                                         is za.co.no9.sle.repository.OpaqueADTDeclaration -> {
                                             if (e.containsType(d.adt)) {
@@ -622,11 +627,20 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                         }
 
                                         is za.co.no9.sle.repository.AliasDeclaration ->
-                                            if (d.withConstructors) {
-                                                errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
-                                                e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
-                                            } else
-                                                e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                            when {
+                                                d.withConstructors -> {
+                                                    errors.add(TypeAliasHasNoConstructors(d.name.location, d.name.name))
+                                                    e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                                }
+
+                                                e.containsType(d.name.name) -> {
+                                                    errors.add(DuplicateImportedTypeAliasDeclaration(d.location, d.name.name))
+                                                    e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                                }
+
+                                                else ->
+                                                    e.newType(d.name.name, ImportAliasBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                            }
 
                                         is za.co.no9.sle.repository.OpaqueADTDeclaration -> {
                                             if (e.containsType(d.name.name)) {
