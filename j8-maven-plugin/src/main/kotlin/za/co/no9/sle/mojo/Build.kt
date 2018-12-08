@@ -128,8 +128,8 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                             is DuplicateImportedLetDeclaration ->
                                 "Duplicate Imported Value Name: $sourceName: ${error.location}: ${error.name}"
 
-                            is DuplicateImportedConstructorDeclaration ->
-                                "Duplicate Imported Constructor Name: $sourceName: ${error.location}: ${error.name}"
+                            is DuplicateImportedName ->
+                                "Duplicate Imported Name: $sourceName: ${error.location}: ${error.name}"
                         }
 
                 log.error(errorMessage)

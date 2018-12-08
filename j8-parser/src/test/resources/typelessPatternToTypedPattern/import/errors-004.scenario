@@ -1,0 +1,7 @@
+-- Duplicate import of modules with the same names
+import file:./../../List as L1
+import file:./../../List as L1
+-- errors
+[
+    DuplicateImportedName(location=[(2, 29) (2, 30)], name=L1)
+]

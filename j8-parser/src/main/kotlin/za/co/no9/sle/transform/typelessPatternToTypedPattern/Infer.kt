@@ -582,6 +582,11 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                     }
                                 }
 
+                        if (currentEnvironment.containsValue(importName.name)) {
+                            errors.add(DuplicateImportedName(import.asName?.location
+                                    ?: import.location, importName.name))
+                        }
+
                         currentEnvironment.newValue(importName.name, ImportBinding(importEnvironment))
                     } else
                         import.importDeclarations.fold(currentEnvironment) { e, d ->

@@ -126,7 +126,7 @@ data class DuplicateImportedLetDeclaration(
         override val location: Location,
         val name: String) : LocationError(location)
 
-data class DuplicateImportedConstructorDeclaration(
+data class DuplicateImportedName(
         override val location: Location,
         val name: String) : LocationError(location)
 
