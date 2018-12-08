@@ -1,4 +1,4 @@
--- Duplicate import of functions
+-- Duplicate import of type aliases
 import file:./../../List exposing IntList, IntList
 -- errors
 [
