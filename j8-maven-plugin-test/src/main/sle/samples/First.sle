@@ -1,3 +1,7 @@
+minus =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.MINUS"
+
+
 factorial : Int -> Int
 factorial n
     | n == 0 = 1
