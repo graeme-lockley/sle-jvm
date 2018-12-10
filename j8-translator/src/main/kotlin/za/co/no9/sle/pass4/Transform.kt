@@ -15,10 +15,13 @@ import com.github.javaparser.ast.type.PrimitiveType
 import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Expression
 import za.co.no9.sle.ast.core.Unit
-import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.Type
+import za.co.no9.sle.typing.generalise
 
 
 private val RefMapping = mapOf(
+        Pair("i_BuiltinValue", "BUILTIN_VALUE"),
         Pair("(&&)", "AMPERSAND_AMPERSAND"),
         Pair("(||)", "BAR_BAR"),
         Pair("(==)", "EQUAL_EQUAL"),
