@@ -30,11 +30,11 @@ fun translate(module: Module, packageDeclaration: String, className: String): za
             packageDeclaration,
             listOf(ImportDeclaration(false, "java.util.function.Function", false),
                     ImportDeclaration(true, "za.co.no9.sle.runtime.Builtin", true)),
-            listOf(ClassDeclaration(className, translateTDeclarations(module.declarations) + translateLDeclarations(module.declarations))))
+            listOf(ClassDeclaration(className, translateTypeDeclarations(module.declarations) + translateLetDeclarations(module.declarations))))
 }
 
 
-private fun translateLDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
+private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
         declarations.fold(emptyList()) { a, declaration ->
             when (declaration) {
                 is LetDeclaration ->
@@ -46,28 +46,18 @@ private fun translateLDeclarations(declarations: List<za.co.no9.sle.ast.core.Dec
         }
 
 
-private fun translateTDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
+private fun translateTypeDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
         declarations.fold(emptyList()) { a, b ->
             when (b) {
                 is TypeDeclaration ->
-                    a + translateTDeclaration(b)
+                    a + translateTypeDeclaration(b)
                 else ->
                     a
             }
-
         }
 
-//private fun translateTypeDeclarations(module: Module, classDeclaration: ClassOrInterfaceDeclaration) {
-//    for (declaration in module.declarations) {
-//        when (declaration) {
-//            is TypeDeclaration ->
-//                translateTypeDeclaration(declaration, classDeclaration)
-//        }
-//    }
-//}
 
-
-private fun translateTDeclaration(declaration: TypeDeclaration): List<Declaration> =
+private fun translateTypeDeclaration(declaration: TypeDeclaration): List<Declaration> =
         declaration.constructors.withIndex().fold(emptyList()) { a, b ->
             val constructorType =
                     b.value.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
@@ -105,19 +95,8 @@ private fun constructorE(declaration: TypeDeclaration, constructor: Constructor)
         val argumentType =
                 TArr(type, expressionState.type)
 
-//        val objectTypes =
-//                javaPairType(argumentType)
-
         val nextArgumentIndex =
                 expressionState.argumentIndex - 1
-
-//        val applyMethod =
-//                MethodDeclaration()
-//                        .setName("apply")
-//                        .setType(objectTypes.second)
-//                        .setModifier(Modifier.PUBLIC, true)
-//                        .setParameters(NodeList.nodeList(Parameter().setName("v$nextArgumentIndex").setType(objectTypes.first)))
-//                        .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
 
         ExpressionState(
                 nextArgumentIndex,
@@ -134,105 +113,11 @@ private fun constructorE(declaration: TypeDeclaration, constructor: Constructor)
                         )
                 ))
                 )
-//                ObjectCreationExpr()
-//                        .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
-//                        .setAnonymousClassBody(NodeList.nodeList(applyMethod))
         )
     }
 
     return finalExpressionState.expression
 }
-
-
-//private fun translateTypeDeclaration(declaration: TypeDeclaration, classDeclaration: ClassOrInterfaceDeclaration) {
-//    for ((constructorIndex, constructor) in declaration.constructors.withIndex()) {
-//        classDeclaration.addFieldWithInitializer(
-//                "int",
-//                "${constructor.name.name}$",
-//                IntegerLiteralExpr(constructorIndex),
-//                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-//
-//        val constructorType =
-//                constructor.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
-//
-//        classDeclaration.addOrphanComment(JavadocComment("${constructor.name.name}: ${generalise(constructorType).normalize()}"))
-//
-//        classDeclaration.addFieldWithInitializer(
-//                javaType(constructorType),
-//                constructor.name.name,
-//                constructorExpression(declaration, constructor),
-//                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-//    }
-//}
-
-
-//private fun constructorExpression(declaration: TypeDeclaration, constructor: Constructor): com.github.javaparser.ast.expr.Expression {
-//    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: com.github.javaparser.ast.expr.Expression)
-//
-//    val initialExpressionStateInitializer = ArrayInitializerExpr(
-//            constructor.arguments.foldIndexed(
-//                    NodeList.nodeList<com.github.javaparser.ast.expr.Expression>(NameExpr("${constructor.name.name}$"))) { index, nodeList, _ ->
-//                nodeList.addLast(NameExpr("v$index"))
-//            }
-//    )
-//
-//    val initialExpressionState =
-//            ExpressionState(constructor.arguments.size, declaration.scheme.type,
-//                    ArrayCreationExpr()
-//                            .setElementType("Object[]")
-//                            .setInitializer(initialExpressionStateInitializer))
-//
-//
-//    val finalExpressionState = constructor.arguments.foldRight(
-//            initialExpressionState) { type, expressionState ->
-//        val argumentType =
-//                TArr(type, expressionState.type)
-//
-//        val objectTypes =
-//                javaPairType(argumentType)
-//
-//        val nextArgumentIndex =
-//                expressionState.argumentIndex - 1
-//
-//        val applyMethod =
-//                MethodDeclaration()
-//                        .setName("apply")
-//                        .setType(objectTypes.second)
-//                        .setModifier(Modifier.PUBLIC, true)
-//                        .setParameters(NodeList.nodeList(Parameter().setName("v$nextArgumentIndex").setType(objectTypes.first)))
-//                        .setBody(BlockStmt(NodeList.nodeList(ReturnStmt().setExpression(expressionState.expression))))
-//
-//        ExpressionState(
-//                nextArgumentIndex,
-//                argumentType,
-//                ObjectCreationExpr()
-//                        .setType(ClassOrInterfaceType().setName("Function").setTypeArguments(ClassOrInterfaceType().setName(objectTypes.first), ClassOrInterfaceType().setName(objectTypes.second)))
-//                        .setAnonymousClassBody(NodeList.nodeList(applyMethod))
-//        )
-//    }
-//
-//    return finalExpressionState.expression
-//}
-
-
-fun javaType(type: Type): String =
-        when (type) {
-            is TArr ->
-                "Function<${javaType(type.domain)}, ${javaType(type.range)}>"
-
-            else ->
-                "Object"
-        }
-
-
-//private fun javaPairType(type: Type): Pair<String, String> =
-//        when (type) {
-//            is TArr ->
-//                Pair(javaType(type.domain), javaType(type.range))
-//
-//            else ->
-//                Pair(javaType(type), javaType(type))
-//        }
 
 
 private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
