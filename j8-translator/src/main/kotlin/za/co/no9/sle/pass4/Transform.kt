@@ -9,27 +9,26 @@ import za.co.no9.sle.typing.generalise
 
 
 private val RefMapping = mapOf(
-        Pair("i_BuiltinValue", "BUILTIN_VALUE"),
-        Pair("(&&)", "AMPERSAND_AMPERSAND"),
-        Pair("(||)", "BAR_BAR"),
-        Pair("(==)", "EQUAL_EQUAL"),
-        Pair("(!=)", "BANG_EQUAL"),
-        Pair("(<)", "LESS"),
-        Pair("(<=)", "LESS_EQUAL"),
-        Pair("(>)", "GREATER"),
-        Pair("(>=)", "GREATER_EQUAL"),
-        Pair("(+)", "PLUS"),
-        Pair("(-)", "MINUS"),
-        Pair("(*)", "STAR"),
-        Pair("(/)", "SLASH")
+        Pair("i_BuiltinValue", "za.co.no9.sle.runtime.Builtin.BUILTIN_VALUE"),
+        Pair("(&&)", "za.co.no9.sle.runtime.Builtin.AMPERSAND_AMPERSAND"),
+        Pair("(||)", "za.co.no9.sle.runtime.Builtin.BAR_BAR"),
+        Pair("(==)", "za.co.no9.sle.runtime.Builtin.EQUAL_EQUAL"),
+        Pair("(!=)", "za.co.no9.sle.runtime.Builtin.BANG_EQUAL"),
+        Pair("(<)", "za.co.no9.sle.runtime.Builtin.LESS"),
+        Pair("(<=)", "za.co.no9.sle.runtime.Builtin.LESS_EQUAL"),
+        Pair("(>)", "za.co.no9.sle.runtime.Builtin.GREATER"),
+        Pair("(>=)", "za.co.no9.sle.runtime.Builtin.GREATER_EQUAL"),
+        Pair("(+)", "za.co.no9.sle.runtime.Builtin.PLUS"),
+        Pair("(-)", "za.co.no9.sle.runtime.Builtin.MINUS"),
+        Pair("(*)", "za.co.no9.sle.runtime.Builtin.STAR"),
+        Pair("(/)", "za.co.no9.sle.runtime.Builtin.SLASH")
 )
 
 
 fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit {
     return za.co.no9.sle.pass4.CompilationUnit(
             packageDeclaration,
-            listOf(ImportDeclaration(false, "java.util.function.Function", false),
-                    ImportDeclaration(true, "za.co.no9.sle.runtime.Builtin", true)),
+            listOf(),
             listOf(ClassDeclaration(className, translateTypeDeclarations(module.declarations) + translateLetDeclarations(module.declarations))))
 }
 
@@ -38,7 +37,7 @@ private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.D
         declarations.fold(emptyList()) { a, declaration ->
             when (declaration) {
                 is LetDeclaration ->
-                    a + MemberDeclaration("${declaration.name.name}: ${declaration.scheme.normalize()}", true, true, true, declaration.name.name, "Object", translate(declaration.expression))
+                    a + MemberDeclaration("${declaration.name.name}: ${declaration.scheme.normalize()}", true, true, true, declaration.name.name, "java.lang.Object", translate(declaration.expression))
 
                 else ->
                     a
@@ -101,7 +100,7 @@ private fun constructorE(declaration: TypeDeclaration, constructor: Constructor)
         ExpressionState(
                 nextArgumentIndex,
                 argumentType,
-                AnonymousObjectCreationExpression(AnonymousClassDeclaration("Function<java.lang.Object, java.lang.Object>", listOf(
+                AnonymousObjectCreationExpression(AnonymousClassDeclaration("java.util.function.Function<java.lang.Object, java.lang.Object>", listOf(
                         za.co.no9.sle.pass4.MethodDeclaration(
                                 true, false, false,
                                 "apply",
@@ -158,14 +157,14 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
 
             is LambdaExpression ->
                 AnonymousObjectCreationExpression(
-                        AnonymousClassDeclaration("Function<Object, Object>", listOf(
+                        AnonymousClassDeclaration("java.util.function.Function<java.lang.Object, java.lang.Object>", listOf(
                                 za.co.no9.sle.pass4.MethodDeclaration(
                                         true,
                                         false,
                                         false,
                                         "apply",
-                                        "Object",
-                                        listOf(Parameter(expression.argument.name, "Object")),
+                                        "java.lang.Object",
+                                        listOf(Parameter(expression.argument.name, "java.lang.Object")),
                                         StatementBlock(listOf(
                                                 ReturnStatement(translate(expression.expression))
                                         ))
@@ -175,7 +174,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
 
             is CallExpression ->
                 MethodCallExpression(
-                        TypeCastExpression("Function<Object, Object>", translate(expression.operator)),
+                        TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
                         "apply",
                         listOf(translate(expression.operand)))
 
