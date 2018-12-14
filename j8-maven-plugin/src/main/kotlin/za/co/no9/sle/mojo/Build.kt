@@ -4,7 +4,7 @@ import org.apache.maven.plugin.MojoFailureException
 import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
 import za.co.no9.sle.pass4.toClass
-import za.co.no9.sle.pass4.translateToJava
+import za.co.no9.sle.pass4.translate
 import za.co.no9.sle.repository.toJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
@@ -203,7 +203,7 @@ class BuildRepository(override val sourcePrefix: File,
 
             val compiledFile =
                     parseDetail
-                            .map { translateToJava(it.coreModule, packageName, className) }
+                            .map { translate(it.coreModule, packageName, className) }
 
             val output =
                     compiledFile

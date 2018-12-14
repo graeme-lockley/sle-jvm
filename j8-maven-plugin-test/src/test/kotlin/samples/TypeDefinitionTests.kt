@@ -2,10 +2,13 @@ package samples
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
+import java.util.function.Function
+
+@Suppress("UNCHECKED_CAST")
 
 class TypeDefinitionTests : StringSpec({
     "singleton 5" {
-        file.samples.TypeDefinition.singleton.apply(5)
+        (file.samples.TypeDefinition.singleton as Function<Any, Any>).apply(5)
                 .shouldBe(arrayOf(file.samples.TypeDefinition.`Cons$`, 5, file.samples.TypeDefinition.Nil))
     }
 
