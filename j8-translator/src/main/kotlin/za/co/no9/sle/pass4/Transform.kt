@@ -25,11 +25,15 @@ private val RefMapping = mapOf(
 )
 
 
-fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit =
-        za.co.no9.sle.pass4.CompilationUnit(
-                packageDeclaration,
-                listOf(),
-                listOf(ClassDeclaration(className, translateTypeDeclarations(module.declarations) + translateLetDeclarations(module.declarations))))
+fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit {
+    val optimizedModule =
+            optimize(module)
+
+    return za.co.no9.sle.pass4.CompilationUnit(
+            packageDeclaration,
+            listOf(),
+            listOf(ClassDeclaration(className, translateTypeDeclarations(optimizedModule.declarations) + translateLetDeclarations(optimizedModule.declarations))))
+}
 
 
 private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
