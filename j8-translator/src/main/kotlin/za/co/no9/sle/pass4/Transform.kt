@@ -45,7 +45,7 @@ private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.D
         }
 
 
-private fun translateTypeDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
+private fun translateTypeDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<za.co.no9.sle.pass4.Declaration> =
         declarations.fold(emptyList()) { a, b ->
             when (b) {
                 is TypeDeclaration ->
@@ -56,24 +56,24 @@ private fun translateTypeDeclarations(declarations: List<za.co.no9.sle.ast.core.
         }
 
 
-private fun translateTypeDeclaration(declaration: TypeDeclaration): List<Declaration> =
-        declaration.constructors.withIndex().fold(emptyList()) { a, b ->
+private fun translateTypeDeclaration(declaration: TypeDeclaration): List<za.co.no9.sle.pass4.Declaration> =
+        declaration.constructors.withIndex().fold(emptyList()) { declarations, indexedConstructor ->
             val constructorType =
-                    b.value.arguments.foldRight(declaration.scheme.type) { a, b -> TArr(a, b) }
+                    indexedConstructor.value.arguments.foldRight(declaration.scheme.type) { typeA, typeB -> TArr(typeA, typeB) }
 
-            a +
+            declarations +
                     MemberDeclaration(null, true, true, true,
-                            "${b.value.name.name}$",
+                            "${indexedConstructor.value.name.name}$",
                             "int",
-                            IntegerLiteralExpression(b.index)) +
-                    MemberDeclaration("${b.value.name.name}: ${generalise(constructorType).normalize()}", true, true, true,
-                            b.value.name.name,
+                            IntegerLiteralExpression(indexedConstructor.index)) +
+                    MemberDeclaration("${indexedConstructor.value.name.name}: ${generalise(constructorType).normalize()}", true, true, true,
+                            indexedConstructor.value.name.name,
                             "java.lang.Object",
-                            constructorE(declaration, b.value))
+                            constructorBody(declaration, indexedConstructor.value))
         }
 
 
-private fun constructorE(declaration: TypeDeclaration, constructor: Constructor): za.co.no9.sle.pass4.Expression {
+private fun constructorBody(declaration: TypeDeclaration, constructor: Constructor): za.co.no9.sle.pass4.Expression {
     data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: za.co.no9.sle.pass4.Expression)
 
     val initialExpressionStateInitializer =
