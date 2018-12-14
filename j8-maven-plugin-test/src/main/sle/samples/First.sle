@@ -1,3 +1,7 @@
+multiply : Int -> Int -> Int
+multiply =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.STAR"
+
 minus : Int -> Int -> Int
 minus =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.MINUS"
@@ -6,12 +10,12 @@ minus =
 factorial : Int -> Int
 factorial n
     | n == 0 = 1
-    | otherwise = n * factorial (minus n 1)
+    | otherwise = multiply n (factorial (minus n 1))
 
 
 factorial2 : Int -> Int
 factorial2 0 = 1
-factorial2 n = n * factorial2 (minus n 1)
+factorial2 n = multiply n (factorial2 (minus n 1))
 
 
 divide a b =
