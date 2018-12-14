@@ -25,12 +25,11 @@ private val RefMapping = mapOf(
 )
 
 
-fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit {
-    return za.co.no9.sle.pass4.CompilationUnit(
-            packageDeclaration,
-            listOf(),
-            listOf(ClassDeclaration(className, translateTypeDeclarations(module.declarations) + translateLetDeclarations(module.declarations))))
-}
+fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit =
+        za.co.no9.sle.pass4.CompilationUnit(
+                packageDeclaration,
+                listOf(),
+                listOf(ClassDeclaration(className, translateTypeDeclarations(module.declarations) + translateLetDeclarations(module.declarations))))
 
 
 private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
@@ -74,7 +73,10 @@ private fun translateTypeDeclaration(declaration: TypeDeclaration): List<za.co.n
 
 
 private fun constructorBody(declaration: TypeDeclaration, constructor: Constructor): za.co.no9.sle.pass4.Expression {
-    data class ExpressionState(val argumentIndex: Int, val type: Type, val expression: za.co.no9.sle.pass4.Expression)
+    data class ExpressionState(
+            val argumentIndex: Int,
+            val type: Type,
+            val expression: za.co.no9.sle.pass4.Expression)
 
     val initialExpressionStateInitializer =
             ArrayInitialisationExpression(
@@ -87,7 +89,6 @@ private fun constructorBody(declaration: TypeDeclaration, constructor: Construct
 
     val initialExpressionState =
             ExpressionState(constructor.arguments.size, declaration.scheme.type, initialExpressionStateInitializer)
-
 
     val finalExpressionState = constructor.arguments.foldRight(
             initialExpressionState) { type, expressionState ->
@@ -222,7 +223,4 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                         "get",
                         emptyList())
             }
-
-            else ->
-                IntegerLiteralExpression(-1)
         }
