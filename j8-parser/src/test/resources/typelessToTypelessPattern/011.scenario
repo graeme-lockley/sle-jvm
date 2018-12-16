@@ -40,27 +40,22 @@ Module:
                     IdReferencePattern:
                       name: b
                   expression:
-                    CallExpression:
-                      operand:
+                    BinaryOpExpression:
+                      left:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: a
+                              qualifier: null
+                      operator:
+                        ID:
+                          name: +
+                      right:
                         IdReference:
                           name:
                             QualifiedID:
                               name: b
                               qualifier: null
-                      operator:
-                        CallExpression:
-                          operand:
-                            IdReference:
-                              name:
-                                QualifiedID:
-                                  name: a
-                                  qualifier: null
-                          operator:
-                            IdReference:
-                              name:
-                                QualifiedID:
-                                  name: (+)
-                                  qualifier: null
           ]
         name:
           ID:

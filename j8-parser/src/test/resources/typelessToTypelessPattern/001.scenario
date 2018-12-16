@@ -17,27 +17,22 @@ Module:
                     IdReferencePattern:
                       name: y
                   expression:
-                    CallExpression:
-                      operand:
+                    BinaryOpExpression:
+                      left:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: x
+                              qualifier: null
+                      operator:
+                        ID:
+                          name: +
+                      right:
                         IdReference:
                           name:
                             QualifiedID:
                               name: y
                               qualifier: null
-                      operator:
-                        CallExpression:
-                          operand:
-                            IdReference:
-                              name:
-                                QualifiedID:
-                                  name: x
-                                  qualifier: null
-                          operator:
-                            IdReference:
-                              name:
-                                QualifiedID:
-                                  name: (+)
-                                  qualifier: null
           ]
         name:
           ID:

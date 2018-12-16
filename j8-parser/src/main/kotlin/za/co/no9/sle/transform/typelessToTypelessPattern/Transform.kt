@@ -1,40 +1,11 @@
 package za.co.no9.sle.transform.typelessToTypelessPattern
 
 import za.co.no9.sle.*
-import za.co.no9.sle.ast.typeless.*
+import za.co.no9.sle.ast.typeless.False
+import za.co.no9.sle.ast.typeless.LetSignature
+import za.co.no9.sle.ast.typeless.NotExpression
+import za.co.no9.sle.ast.typeless.True
 import za.co.no9.sle.ast.typelessPattern.*
-import za.co.no9.sle.ast.typelessPattern.CallExpression
-import za.co.no9.sle.ast.typelessPattern.CaseExpression
-import za.co.no9.sle.ast.typelessPattern.CaseItem
-import za.co.no9.sle.ast.typelessPattern.ConstantBoolPattern
-import za.co.no9.sle.ast.typelessPattern.ConstantInt
-import za.co.no9.sle.ast.typelessPattern.ConstantIntPattern
-import za.co.no9.sle.ast.typelessPattern.ConstantString
-import za.co.no9.sle.ast.typelessPattern.ConstantStringPattern
-import za.co.no9.sle.ast.typelessPattern.ConstantUnitPattern
-import za.co.no9.sle.ast.typelessPattern.ConstructorReference
-import za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern
-import za.co.no9.sle.ast.typelessPattern.Expression
-import za.co.no9.sle.ast.typelessPattern.ID
-import za.co.no9.sle.ast.typelessPattern.IdReference
-import za.co.no9.sle.ast.typelessPattern.IdReferencePattern
-import za.co.no9.sle.ast.typelessPattern.IfExpression
-import za.co.no9.sle.ast.typelessPattern.Import
-import za.co.no9.sle.ast.typelessPattern.LambdaExpression
-import za.co.no9.sle.ast.typelessPattern.LetDeclaration
-import za.co.no9.sle.ast.typelessPattern.LetExport
-import za.co.no9.sle.ast.typelessPattern.Module
-import za.co.no9.sle.ast.typelessPattern.NestedExpression
-import za.co.no9.sle.ast.typelessPattern.Pattern
-import za.co.no9.sle.ast.typelessPattern.QualifiedID
-import za.co.no9.sle.ast.typelessPattern.TArrow
-import za.co.no9.sle.ast.typelessPattern.TType
-import za.co.no9.sle.ast.typelessPattern.TTypeReference
-import za.co.no9.sle.ast.typelessPattern.TUnit
-import za.co.no9.sle.ast.typelessPattern.TVarReference
-import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
-import za.co.no9.sle.ast.typelessPattern.TypeDeclaration
-import za.co.no9.sle.ast.typelessPattern.TypeExport
 import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
@@ -223,15 +194,8 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.LambdaExpression ->
                 ast.arguments.foldRight(transform(ast.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
 
-            is BinaryOpExpression -> {
-                val operator =
-                        CallExpression(ast.operator.location, IdReference(ast.operator.location, QualifiedID(ast.operator.location, null, "(${ast.operator.name})")), transform(ast.left))
-
-                val operand =
-                        transform(ast.right)
-
-                CallExpression(ast.location, operator, operand)
-            }
+            is za.co.no9.sle.ast.typeless.BinaryOpExpression ->
+                BinaryOpExpression(ast.location, transform(ast.left), transform(ast.operator), transform(ast.right))
 
             is za.co.no9.sle.ast.typeless.NestedExpression ->
                 NestedExpression(ast.location, transform(ast.expression))
