@@ -70,20 +70,22 @@ Module:
               ID:
                 name: +
             right:
-              CallExpression:
-                operands: [
-                    IdReference:
-                      name:
-                        QualifiedID:
-                          name: xs
-                          qualifier: null
-                  ]
-                operator:
-                  IdReference:
-                    name:
-                      QualifiedID:
-                        name: length
-                        qualifier: null
+              NestedExpression:
+                expression:
+                  CallExpression:
+                    operands: [
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: xs
+                              qualifier: null
+                      ]
+                    operator:
+                      IdReference:
+                        name:
+                          QualifiedID:
+                            name: length
+                            qualifier: null
         name:
           ID:
             name: length

@@ -21,32 +21,36 @@ Module:
               expression:
                 CallExpression:
                   operand:
-                    CallExpression:
-                      operand:
+                    NestedExpression:
+                      expression:
                         CallExpression:
                           operand:
-                            ConstantInt:
-                              value: 1
+                            NestedExpression:
+                              expression:
+                                CallExpression:
+                                  operand:
+                                    ConstantInt:
+                                      value: 1
+                                  operator:
+                                    CallExpression:
+                                      operand:
+                                        IdReference:
+                                          name:
+                                            QualifiedID:
+                                              name: n
+                                              qualifier: null
+                                      operator:
+                                        IdReference:
+                                          name:
+                                            QualifiedID:
+                                              name: (-)
+                                              qualifier: null
                           operator:
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: n
-                                      qualifier: null
-                              operator:
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: (-)
-                                      qualifier: null
-                      operator:
-                        IdReference:
-                          name:
-                            QualifiedID:
-                              name: factorial
-                              qualifier: null
+                            IdReference:
+                              name:
+                                QualifiedID:
+                                  name: factorial
+                                  qualifier: null
                   operator:
                     CallExpression:
                       operand:

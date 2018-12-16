@@ -501,9 +501,10 @@ class Parser(private val lexer: Lexer) {
                         val expression =
                                 parseExpression(leftEdge)
 
-                        matchOperator(")")
+                        val closeParen =
+                                matchOperator(")")
 
-                        expression
+                        NestedExpression(openParen.location + closeParen.location, expression)
                     }
                 }
 

@@ -121,6 +121,10 @@ data class LambdaExpression(
         val argument: Pattern,
         val expression: Expression) : Expression(location)
 
+data class NestedExpression(
+        override val location: Location,
+        val expression: Expression) : Expression(location)
+
 data class CallExpression(
         override val location: Location,
         val operator: Expression,

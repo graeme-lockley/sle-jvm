@@ -171,44 +171,48 @@ Module:
                   expression:
                     CallExpression:
                       operands: [
-                          CallExpression:
-                            operands: [
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: x
-                                      qualifier: null
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: y
-                                      qualifier: null
-                              ]
-                            operator:
-                              IdReference:
-                                name:
-                                  QualifiedID:
-                                    name: f
-                                    qualifier: null
-                          CallExpression:
-                            operands: [
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: xs
-                                      qualifier: null
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: ys
-                                      qualifier: null
-                              ]
-                            operator:
-                              IdReference:
-                                name:
-                                  QualifiedID:
-                                    name: map2
-                                    qualifier: null
+                          NestedExpression:
+                            expression:
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: x
+                                          qualifier: null
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: y
+                                          qualifier: null
+                                  ]
+                                operator:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: f
+                                        qualifier: null
+                          NestedExpression:
+                            expression:
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: xs
+                                          qualifier: null
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: ys
+                                          qualifier: null
+                                  ]
+                                operator:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: map2
+                                        qualifier: null
                         ]
                       operator:
                         ConstructorReference:

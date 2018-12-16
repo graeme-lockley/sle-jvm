@@ -24,11 +24,12 @@ import za.co.no9.sle.ast.typelessPattern.LambdaExpression
 import za.co.no9.sle.ast.typelessPattern.LetDeclaration
 import za.co.no9.sle.ast.typelessPattern.LetExport
 import za.co.no9.sle.ast.typelessPattern.Module
+import za.co.no9.sle.ast.typelessPattern.NestedExpression
 import za.co.no9.sle.ast.typelessPattern.Pattern
 import za.co.no9.sle.ast.typelessPattern.QualifiedID
 import za.co.no9.sle.ast.typelessPattern.TArrow
-import za.co.no9.sle.ast.typelessPattern.TTypeReference
 import za.co.no9.sle.ast.typelessPattern.TType
+import za.co.no9.sle.ast.typelessPattern.TTypeReference
 import za.co.no9.sle.ast.typelessPattern.TUnit
 import za.co.no9.sle.ast.typelessPattern.TVarReference
 import za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration
@@ -231,6 +232,9 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
 
                 CallExpression(ast.location, operator, operand)
             }
+
+            is za.co.no9.sle.ast.typeless.NestedExpression ->
+                NestedExpression(ast.location, transform(ast.expression))
 
             is za.co.no9.sle.ast.typeless.CallExpression ->
                 ast.operands.fold(transform(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, transform(operand)) }

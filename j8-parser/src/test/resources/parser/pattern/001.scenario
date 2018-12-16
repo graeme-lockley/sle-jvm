@@ -216,20 +216,22 @@ Module:
                   expression:
                     CallExpression:
                       operands: [
-                          CallExpression:
-                            operands: [
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: a
-                                      qualifier: null
-                              ]
-                            operator:
-                              IdReference:
-                                name:
-                                  QualifiedID:
-                                    name: f
-                                    qualifier: null
+                          NestedExpression:
+                            expression:
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: a
+                                          qualifier: null
+                                  ]
+                                operator:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: f
+                                        qualifier: null
                           IdReference:
                             name:
                               QualifiedID:
@@ -323,20 +325,22 @@ Module:
                               QualifiedID:
                                 name: a
                                 qualifier: null
-                          CallExpression:
-                            operands: [
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: b
-                                      qualifier: null
-                              ]
-                            operator:
-                              IdReference:
-                                name:
-                                  QualifiedID:
-                                    name: f
-                                    qualifier: null
+                          NestedExpression:
+                            expression:
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: b
+                                          qualifier: null
+                                  ]
+                                operator:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: f
+                                        qualifier: null
                         ]
                       operator:
                         ConstructorReference:

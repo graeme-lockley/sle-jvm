@@ -389,6 +389,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     LambdaExpression(expression.location, TArr(tp.type, t.type), tp, t)
                 }
 
+                is za.co.no9.sle.ast.typelessPattern.NestedExpression ->
+                    infer(expression.expression)
+
                 is za.co.no9.sle.ast.typelessPattern.CallExpression -> {
                     val t1 =
                             infer(expression.operator)

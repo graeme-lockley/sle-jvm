@@ -10,29 +10,33 @@ Module:
               name: x
           ]
         expression:
-          CallExpression:
-            operands: [
-                CallExpression:
-                  operands: [
-                      IdReference:
-                        name:
-                          QualifiedID:
-                            name: x
-                            qualifier: null
-                    ]
-                  operator:
-                    ConstructorReference:
-                      name:
-                        QualifiedID:
-                          name: Cons
-                          qualifier: null
-              ]
-            operator:
-              IdReference:
-                name:
-                  QualifiedID:
-                    name: removedups
-                    qualifier: null
+          NestedExpression:
+            expression:
+              CallExpression:
+                operands: [
+                    NestedExpression:
+                      expression:
+                        CallExpression:
+                          operands: [
+                              IdReference:
+                                name:
+                                  QualifiedID:
+                                    name: x
+                                    qualifier: null
+                            ]
+                          operator:
+                            ConstructorReference:
+                              name:
+                                QualifiedID:
+                                  name: Cons
+                                  qualifier: null
+                  ]
+                operator:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: removedups
+                        qualifier: null
         name:
           ID:
             name: removedups
