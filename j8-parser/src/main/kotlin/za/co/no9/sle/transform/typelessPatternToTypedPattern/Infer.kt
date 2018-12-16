@@ -390,10 +390,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.BinaryOpExpression -> {
-                    val operator =
-                            za.co.no9.sle.ast.typelessPattern.CallExpression(expression.operator.location, za.co.no9.sle.ast.typelessPattern.IdReference(expression.operator.location, QualifiedID(expression.operator.location, null, "(${expression.operator.name})")), expression.left)
+                    val expressionWithAppliedOperatorRules =
+                            transformOperators(expression)
 
-                    infer(za.co.no9.sle.ast.typelessPattern.CallExpression(expression.location, operator, expression.right))
+                    val operator =
+                            za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.operator.location, za.co.no9.sle.ast.typelessPattern.IdReference(expressionWithAppliedOperatorRules.operator.location, QualifiedID(expressionWithAppliedOperatorRules.operator.location, null, "(${expressionWithAppliedOperatorRules.operator.name})")), expressionWithAppliedOperatorRules.left)
+
+                    infer(za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.location, operator, expressionWithAppliedOperatorRules.right))
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.NestedExpression ->
