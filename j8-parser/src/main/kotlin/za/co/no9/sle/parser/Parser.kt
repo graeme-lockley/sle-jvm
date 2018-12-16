@@ -331,43 +331,31 @@ class Parser(private val lexer: Lexer) {
                     CaseExpression(caseSymbol.location + locationFrom(caseItems.map { it.expression }), expression, caseItems)
                 }
                 else ->
-                    parseMultiplicative(leftEdge)
+                    parseBinaryOperators(leftEdge)
 
             }
 
 
-    fun parseMultiplicative(leftEdge: Int): Expression =
-            parseBinaryOp(setOf("*", "/")) { parseAdditive(leftEdge) }
+    private val operators =
+            setOf("*", "/", "+", "-", "==", "!=", "<=", "<", ">=", ">", "&&", "||")
 
-    fun parseAdditive(leftEdge: Int): Expression =
-            parseBinaryOp(setOf("+", "-")) { parseRelationalOp(leftEdge) }
-
-    fun parseRelationalOp(leftEdge: Int): Expression =
-            parseBinaryOp(setOf("==", "!=", "<=", "<", ">=", ">")) { parseBooleanAnd(leftEdge) }
-
-    fun parseBooleanAnd(leftEdge: Int): Expression =
-            parseBinaryOp(setOf("&&")) { parseBooleanOr(leftEdge) }
-
-    fun parseBooleanOr(leftEdge: Int): Expression =
-            parseBinaryOp(setOf("||")) { parseLambda(leftEdge) }
-
-
-    fun parseBinaryOp(operators: Set<String>, next: () -> Expression): Expression {
+    fun parseBinaryOperators(leftEdge: Int): Expression {
         val left =
-                next()
+                parseLambda(leftEdge)
 
         return if (isOperator(operators)) {
             val operator =
                     lexer.next()
 
             val right =
-                    next()
+                    parseBinaryOperators(leftEdge)
 
             BinaryOpExpression(left.location + right.location, left, operator.toID(), right)
         } else {
             left
         }
     }
+
 
     fun parseLambda(leftEdge: Int): Expression =
             when {
