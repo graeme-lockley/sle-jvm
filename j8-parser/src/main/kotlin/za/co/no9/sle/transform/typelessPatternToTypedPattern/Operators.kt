@@ -10,7 +10,7 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
     val right =
             binary.right
 
-    if (right is BinaryOpExpression) {
+    return if (right is BinaryOpExpression) {
         fun rotate() =
                 BinaryOpExpression(
                         right.location,
@@ -24,19 +24,24 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
         val rightOperatorPrecedence =
                 environment.operator(right.operator.name)
 
-        if (operatorPrecedence == null) {
-            return binary
-        } else if (rightOperatorPrecedence == null) {
-            return binary
-        } else if (operatorPrecedence.precedence > rightOperatorPrecedence.precedence) {
-            return transformOperators(environment, rotate())
-        } else if (operatorPrecedence.precedence == rightOperatorPrecedence.precedence && operatorPrecedence.associativity == Associativity.Left) {
-            return transformOperators(environment, rotate())
-        } else {
-            return BinaryOpExpression(binary.location, binary.left, binary.operator, transformOperators(environment, right))
+        when {
+            operatorPrecedence == null ->
+                binary
+
+            rightOperatorPrecedence == null ->
+                binary
+
+            operatorPrecedence.precedence > rightOperatorPrecedence.precedence ->
+                transformOperators(environment, rotate())
+
+            operatorPrecedence.precedence == rightOperatorPrecedence.precedence && operatorPrecedence.associativity == Associativity.Left ->
+                transformOperators(environment, rotate())
+
+            else ->
+                BinaryOpExpression(binary.location, binary.left, binary.operator, transformOperators(environment, right))
         }
     } else
-        return binary
+        binary
 }
 
 
