@@ -336,14 +336,15 @@ class Parser(private val lexer: Lexer) {
             }
 
 
-    private val operators =
-            setOf("*", "/", "+", "-", "==", "!=", "<=", "<", ">=", ">", "&&", "||")
+    private val excludeOperators =
+            setOf("(", ")", "|", "=")
+
 
     fun parseBinaryOperators(leftEdge: Int): Expression {
         val left =
                 parseLambda(leftEdge)
 
-        return if (isOperator(operators)) {
+        return if (isOperatorExcluded(excludeOperators)) {
             val operator =
                     lexer.next()
 
@@ -351,9 +352,8 @@ class Parser(private val lexer: Lexer) {
                     parseBinaryOperators(leftEdge)
 
             BinaryOpExpression(left.location + right.location, left, operator.toID(), right)
-        } else {
+        } else
             left
-        }
     }
 
 
@@ -763,6 +763,9 @@ class Parser(private val lexer: Lexer) {
 
     private fun isOperator(texts: Set<String>): Boolean =
             lexer.token == Token.ConstantOperator && texts.contains(lexer.text)
+
+    private fun isOperatorExcluded(exclusions: Set<String>): Boolean =
+            lexer.token == Token.ConstantOperator && !exclusions.contains(lexer.text)
 
 
     private fun isToken(token: Token): Boolean =
