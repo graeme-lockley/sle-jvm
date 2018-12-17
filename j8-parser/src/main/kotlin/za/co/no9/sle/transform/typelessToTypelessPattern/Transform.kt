@@ -37,10 +37,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
             ast.declarations.fold(emptySet<String>()) { names, declaration ->
                 when (declaration) {
                     is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                        names + declaration.name.name
+                        names + declaration.id.name
 
                     is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                        names + declaration.name.name
+                        names + declaration.id.name
 
                     else ->
                         names
@@ -101,10 +101,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                         .groupBy { ast ->
                             when (ast) {
                                 is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                    ast.name.name
+                                    ast.id.name
 
                                 is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                    ast.name.name
+                                    ast.id.name
 
                                 else ->
                                     ""
@@ -117,10 +117,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                             val name =
                                     when (ast0) {
                                         is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                            ast0.name
+                                            ast0.id
 
                                         is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                            ast0.name
+                                            ast0.id
 
                                         else ->
                                             za.co.no9.sle.ast.typeless.ID(ast0.location, "")

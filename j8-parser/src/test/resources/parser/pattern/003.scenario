@@ -281,7 +281,7 @@ Module:
                       QualifiedID:
                         name: Tuple
                         qualifier: null
-        name:
+        id:
           ID:
             name: map2
     ]

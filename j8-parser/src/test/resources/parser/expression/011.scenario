@@ -64,7 +64,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: barBar
       LetDeclaration:
@@ -94,7 +94,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: ampersandAmpersand
       LetDeclaration:
@@ -124,7 +124,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: equalEqual
       LetDeclaration:
@@ -154,7 +154,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: bangEqual
       LetDeclaration:
@@ -184,7 +184,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: lessEqual
       LetDeclaration:
@@ -214,7 +214,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: lessThan
       LetDeclaration:
@@ -244,7 +244,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: greaterEqual
       LetDeclaration:
@@ -274,7 +274,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: greaterThan
       LetDeclaration:
@@ -304,7 +304,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: plus
       LetDeclaration:
@@ -334,7 +334,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: minus
       LetDeclaration:
@@ -364,7 +364,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: star
       LetDeclaration:
@@ -394,7 +394,7 @@ Module:
                       QualifiedID:
                         name: y
                         qualifier: null
-        name:
+        id:
           ID:
             name: slash
     ]

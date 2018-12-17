@@ -101,7 +101,7 @@ Module:
                   QualifiedID:
                     name: t
                     qualifier: null
-        name:
+        id:
           ID:
             name: first
       LetSignature:
@@ -159,7 +159,7 @@ Module:
                   QualifiedID:
                     name: t
                     qualifier: null
-        name:
+        id:
           ID:
             name: second
       LetSignature:
@@ -263,7 +263,7 @@ Module:
                   QualifiedID:
                     name: t
                     qualifier: null
-        name:
+        id:
           ID:
             name: mapFirst
       LetSignature:
@@ -367,7 +367,7 @@ Module:
                   QualifiedID:
                     name: t
                     qualifier: null
-        name:
+        id:
           ID:
             name: mapSecond
     ]

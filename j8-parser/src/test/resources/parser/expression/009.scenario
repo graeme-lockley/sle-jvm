@@ -36,7 +36,7 @@ Module:
                   QualifiedID:
                     name: b
                     qualifier: null
-        name:
+        id:
           ID:
             name: value
     ]

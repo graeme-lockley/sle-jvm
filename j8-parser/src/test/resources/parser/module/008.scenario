@@ -62,7 +62,7 @@ Module:
               QualifiedID:
                 name: Nil
                 qualifier: null
-        name:
+        id:
           ID:
             name: map
       LetDeclaration:
@@ -128,7 +128,7 @@ Module:
                   QualifiedID:
                     name: Cons
                     qualifier: null
-        name:
+        id:
           ID:
             name: map
     ]

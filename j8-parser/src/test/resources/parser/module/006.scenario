@@ -68,7 +68,7 @@ Module:
                   QualifiedID:
                     name: Cons
                     qualifier: null
-        name:
+        id:
           ID:
             name: singleton
       LetDeclaration:
@@ -112,7 +112,7 @@ Module:
                   QualifiedID:
                     name: Cons
                     qualifier: null
-        name:
+        id:
           ID:
             name: duplicate
     ]

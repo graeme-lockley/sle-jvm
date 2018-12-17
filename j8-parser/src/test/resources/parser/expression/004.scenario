@@ -9,7 +9,7 @@ Module:
       expression:
         ConstantString:
           value: Hello World
-      name:
+      id:
         ID:
           name: value
   ]

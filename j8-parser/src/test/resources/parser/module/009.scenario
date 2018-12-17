@@ -44,7 +44,7 @@ Module:
         expression:
           ConstantInt:
             value: 0
-        name:
+        id:
           ID:
             name: length
       LetDeclaration:
@@ -86,7 +86,7 @@ Module:
                           QualifiedID:
                             name: length
                             qualifier: null
-        name:
+        id:
           ID:
             name: length
     ]

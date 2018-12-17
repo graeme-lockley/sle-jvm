@@ -9,7 +9,7 @@ Module:
       expression:
         ConstantInt:
           value: 234
-      name:
+      id:
         ID:
           name: value
   ]

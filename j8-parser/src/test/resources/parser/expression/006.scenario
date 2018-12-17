@@ -17,7 +17,7 @@ Module:
                   QualifiedID:
                     name: x
                     qualifier: null
-        name:
+        id:
           ID:
             name: value
     ]

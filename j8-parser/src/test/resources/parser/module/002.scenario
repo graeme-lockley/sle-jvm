@@ -31,7 +31,7 @@ Module:
                   QualifiedID:
                     name: y
                     qualifier: null
-        name:
+        id:
           ID:
             name: add
       LetDeclaration:
@@ -58,7 +58,7 @@ Module:
                   QualifiedID:
                     name: b
                     qualifier: null
-        name:
+        id:
           ID:
             name: sub
     ]

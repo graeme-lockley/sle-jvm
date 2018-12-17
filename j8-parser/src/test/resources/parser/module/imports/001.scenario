@@ -97,7 +97,7 @@ Module:
                   QualifiedID:
                     name: y
                     qualifier: null
-        name:
+        id:
           ID:
             name: plus
       LetDeclaration:
@@ -124,7 +124,7 @@ Module:
                   QualifiedID:
                     name: y
                     qualifier: null
-        name:
+        id:
           ID:
             name: minus
     ]

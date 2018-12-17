@@ -101,7 +101,7 @@ Module:
                   QualifiedID:
                     name: a
                     qualifier: null
-        name:
+        id:
           ID:
             name: nested
     ]

@@ -76,13 +76,13 @@ data class LetSignature(
 
 data class LetDeclaration(
         override val location: Location,
-        val name: ID,
+        val id: ID,
         val arguments: List<Pattern>,
         val expression: Expression) : Declaration(location)
 
 data class LetGuardDeclaration(
         override val location: Location,
-        val name: ID,
+        val id: ID,
         val arguments: List<Pattern>,
         val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location)
 

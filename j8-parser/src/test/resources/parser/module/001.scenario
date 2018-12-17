@@ -58,7 +58,7 @@ Module:
                   QualifiedID:
                     name: y
                     qualifier: null
-        name:
+        id:
           ID:
             name: add
     ]

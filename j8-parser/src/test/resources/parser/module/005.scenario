@@ -94,7 +94,7 @@ Module:
                               name: factorial
                               qualifier: null
           ]
-        name:
+        id:
           ID:
             name: factorial
     ]

@@ -37,7 +37,7 @@ Module:
                       QualifiedID:
                         name: removedups
                         qualifier: null
-        name:
+        id:
           ID:
             name: removedups
     ]

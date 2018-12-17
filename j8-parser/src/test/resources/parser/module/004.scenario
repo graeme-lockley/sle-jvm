@@ -28,7 +28,7 @@ Module:
         expression:
           ConstantInt:
             value: 100
-        name:
+        id:
           ID:
             name: calculate
       LetDeclaration:
@@ -44,7 +44,7 @@ Module:
                   QualifiedID:
                     name: calculate
                     qualifier: null
-        name:
+        id:
           ID:
             name: value
     ]
