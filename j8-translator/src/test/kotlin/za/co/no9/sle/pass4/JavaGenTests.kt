@@ -25,7 +25,7 @@ class JavaGenTests : StringSpec({
                 File(".", "./src/test/resources/test/$name.java").readText())
     }
 
-    "!Compile test/First.sle" {
+    "Compile test/First.sle" {
         stuff("First",
                 initialEnvironment
                         .newValue("(==)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))))
@@ -35,7 +35,7 @@ class JavaGenTests : StringSpec({
     }
 
 
-    "!Compile test/TypeReference.sle" {
+    "Compile test/TypeReference.sle" {
         stuff("TypeReference",
                 initialEnvironment
                         .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
@@ -43,12 +43,12 @@ class JavaGenTests : StringSpec({
     }
 
 
-    "!Compile test/UnitValue.sle" {
+    "Compile test/UnitValue.sle" {
         stuff("UnitValue", initialEnvironment)
     }
 
 
-    "!Compile test/ListType.sle" {
+    "Compile test/ListType.sle" {
         stuff("ListType", initialEnvironment)
     }
 })
