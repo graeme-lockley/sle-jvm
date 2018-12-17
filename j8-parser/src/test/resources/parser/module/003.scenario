@@ -29,7 +29,7 @@ Module:
                     name: Int
                     qualifier: null
       LetSignature:
-        name:
+        id:
           ID:
             name: negate
         type:

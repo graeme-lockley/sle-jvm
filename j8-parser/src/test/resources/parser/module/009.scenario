@@ -10,7 +10,7 @@ length (Cons x xs) =
 Module:
   declarations: [
       LetSignature:
-        name:
+        id:
           ID:
             name: length
         type:

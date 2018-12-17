@@ -9,7 +9,7 @@ value =
 Module:
   declarations: [
       LetSignature:
-        name:
+        id:
           ID:
             name: calculate
         type:

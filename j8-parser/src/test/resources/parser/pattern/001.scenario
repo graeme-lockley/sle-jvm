@@ -47,7 +47,7 @@ Module:
           ID:
             name: Tuple
       LetSignature:
-        name:
+        id:
           ID:
             name: first
         type:
@@ -105,7 +105,7 @@ Module:
           ID:
             name: first
       LetSignature:
-        name:
+        id:
           ID:
             name: second
         type:
@@ -163,7 +163,7 @@ Module:
           ID:
             name: second
       LetSignature:
-        name:
+        id:
           ID:
             name: mapFirst
         type:
@@ -267,7 +267,7 @@ Module:
           ID:
             name: mapFirst
       LetSignature:
-        name:
+        id:
           ID:
             name: mapSecond
         type:

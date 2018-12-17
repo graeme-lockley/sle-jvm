@@ -76,7 +76,7 @@ Module:
           ID:
             name: Tuple
       LetSignature:
-        name:
+        id:
           ID:
             name: map2
         type:

@@ -7,7 +7,7 @@ factorial n
 Module:
   declarations: [
       LetSignature:
-        name:
+        id:
           ID:
             name: factorial
         type:

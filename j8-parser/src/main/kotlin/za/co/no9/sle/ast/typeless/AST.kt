@@ -71,7 +71,7 @@ sealed class Declaration(
 
 data class LetSignature(
         override val location: Location,
-        val name: ID,
+        val id: ID,
         val type: TType) : Declaration(location)
 
 data class LetDeclaration(

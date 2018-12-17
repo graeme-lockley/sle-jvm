@@ -10,7 +10,7 @@ map f (Cons x xs) =
 Module:
   declarations: [
       LetSignature:
-        name:
+        id:
           ID:
             name: map
         type:

@@ -53,7 +53,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                     is LetSignature ->
                         letSignatureDict.andThen {
                             val nameOfLetSignature =
-                                    declaration.name.name
+                                    declaration.id.name
 
                             if (letDeclarationNames.contains(nameOfLetSignature)) {
                                 val other =
