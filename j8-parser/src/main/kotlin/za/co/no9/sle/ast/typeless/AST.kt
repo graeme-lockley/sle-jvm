@@ -1,6 +1,7 @@
 package za.co.no9.sle.ast.typeless
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.typing.Associativity
 
 
 sealed class Node(
@@ -50,37 +51,50 @@ data class TypeNamedDeclaration(
         val withConstructors: Boolean) : NamedDeclaration(location)
 
 
+sealed class ValueDeclarationID(
+        location: Location) : Node(location)
+
+data class LowerIDDeclarationID(
+        override val location: Location,
+        val name: ID) : ValueDeclarationID(location)
+
+data class OperatorDeclarationID(
+        override val location: Location,
+        val name: ID,
+        val precedence: Int,
+        val associativity: Associativity) : ValueDeclarationID(location)
+
+
 sealed class Declaration(
-        location: Location,
-        open val name: ID) : Node(location)
+        location: Location) : Node(location)
 
 data class LetSignature(
         override val location: Location,
-        override val name: ID,
-        val type: TType) : Declaration(location, name)
+        val name: ID,
+        val type: TType) : Declaration(location)
 
 data class LetDeclaration(
         override val location: Location,
-        override val name: ID,
+        val name: ID,
         val arguments: List<Pattern>,
-        val expression: Expression) : Declaration(location, name)
+        val expression: Expression) : Declaration(location)
 
 data class LetGuardDeclaration(
         override val location: Location,
-        override val name: ID,
+        val name: ID,
         val arguments: List<Pattern>,
-        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location, name)
+        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location)
 
 data class TypeAliasDeclaration(
         override val location: Location,
-        override val name: ID,
-        val type: TType) : Declaration(location, name)
+        val name: ID,
+        val type: TType) : Declaration(location)
 
 data class TypeDeclaration(
         override val location: Location,
-        override val name: ID,
+        val name: ID,
         val arguments: List<ID>,
-        val constructors: List<TypeConstructor>) : Declaration(location, name)
+        val constructors: List<TypeConstructor>) : Declaration(location)
 
 data class TypeConstructor(
         override val location: Location,

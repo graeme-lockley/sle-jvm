@@ -98,11 +98,37 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
         val letDeclarations =
                 ast.declarations
                         .filter { ast -> ast is za.co.no9.sle.ast.typeless.LetDeclaration || ast is za.co.no9.sle.ast.typeless.LetGuardDeclaration }
-                        .groupBy { ast -> ast.name.name }
+                        .groupBy { ast ->
+                            when (ast) {
+                                is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                                    ast.name.name
+
+                                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                                    ast.name.name
+
+                                else ->
+                                    ""
+                            }
+                        }
                         .map { asts ->
+                            val ast0 =
+                                    asts.value[0]
+
+                            val name =
+                                    when (ast0) {
+                                        is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                                            ast0.name
+
+                                        is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                                            ast0.name
+
+                                        else ->
+                                            za.co.no9.sle.ast.typeless.ID(ast0.location, "")
+                                    }
+
                             LetDeclaration(
                                     locationFrom(asts.value)!!,
-                                    transform(asts.value[0].name),
+                                    transform(name),
                                     transformNullable(it[asts.key]?.type),
                                     asts.value.map { letDeclaration ->
                                         when (letDeclaration) {
