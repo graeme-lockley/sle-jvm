@@ -294,6 +294,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                 is VariableBinding ->
                                     valueBinding.scheme
 
+                                is OperatorBinding ->
+                                    valueBinding.scheme
+
                                 is ImportVariableBinding ->
                                     valueBinding.scheme
 
@@ -311,6 +314,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                         when (valueBinding) {
                             is VariableBinding ->
+                                IdReference(expression.location, type, expression.name.name)
+
+                            is OperatorBinding ->
                                 IdReference(expression.location, type, expression.name.name)
 
                             is ImportVariableBinding ->
@@ -331,6 +337,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                 is VariableBinding ->
                                     valueBinding.scheme
 
+                                is OperatorBinding ->
+                                    valueBinding.scheme
+
                                 is ImportVariableBinding ->
                                     valueBinding.scheme
 
@@ -348,6 +357,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                         when (valueBinding) {
                             is VariableBinding ->
+                                IdReference(expression.location, type, expression.name.name)
+
+                            is OperatorBinding ->
                                 IdReference(expression.location, type, expression.name.name)
 
                             is ImportVariableBinding ->

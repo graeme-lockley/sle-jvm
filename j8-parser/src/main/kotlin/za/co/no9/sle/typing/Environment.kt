@@ -4,6 +4,11 @@ import za.co.no9.sle.QString
 import za.co.no9.sle.repository.Item
 
 
+enum class Associativity {
+    Left, Right, None
+}
+
+
 data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {
     fun value(name: String): ValueBinding? =
             valueBindings[name]
@@ -117,6 +122,11 @@ sealed class ValueBinding
 
 data class VariableBinding(
         val scheme: Scheme) : ValueBinding()
+
+data class OperatorBinding(
+        val scheme: Scheme,
+        val precedence: Int,
+        val associativity: Associativity) : ValueBinding()
 
 data class ImportVariableBinding(
         val item: Item,

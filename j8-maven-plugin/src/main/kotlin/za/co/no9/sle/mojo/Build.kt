@@ -229,16 +229,52 @@ class BuildRepository(override val sourcePrefix: File,
 private val environment =
         initialEnvironment
                 .newValue("i_BuiltinValue", VariableBinding(Scheme(listOf(1), TArr(typeString, TVar(homeLocation, 1)))))
-                .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(!=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(<)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(<=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(>)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(>=)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
-                .newValue("(&&)", VariableBinding(Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))))
-                .newValue("(||)", VariableBinding(Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))))
-                .newValue("(-)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                .newValue("(+)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                .newValue("(*)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                .newValue("(/)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                .newValue("(==)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(!=)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(<)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(<=)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(>)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(>=)", OperatorBinding(
+                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                        4,
+                        Associativity.None))
+                .newValue("(&&)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
+                        3,
+                        Associativity.Right))
+                .newValue("(||)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
+                        2,
+                        Associativity.Right))
+                .newValue("(-)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                        6,
+                        Associativity.Left))
+                .newValue("(+)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                        6,
+                        Associativity.Left))
+                .newValue("(*)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                        7,
+                        Associativity.Left))
+                .newValue("(/)", OperatorBinding(
+                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                        7,
+                        Associativity.Left))
 
