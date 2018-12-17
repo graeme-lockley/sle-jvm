@@ -761,9 +761,6 @@ class Parser(private val lexer: Lexer) {
             lexer.token == Token.ConstantOperator && lexer.text == text
 
 
-    private fun isOperator(texts: Set<String>): Boolean =
-            lexer.token == Token.ConstantOperator && texts.contains(lexer.text)
-
     private fun isOperatorExcluded(exclusions: Set<String>): Boolean =
             lexer.token == Token.ConstantOperator && !exclusions.contains(lexer.text)
 
