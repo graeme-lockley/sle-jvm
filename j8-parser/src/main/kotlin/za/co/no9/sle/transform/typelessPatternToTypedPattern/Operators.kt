@@ -19,10 +19,10 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
                         right.right)
 
         val operatorPrecedence =
-                operatorBinding(environment, binary.operator.name)
+                environment.operator(binary.operator.name)
 
         val rightOperatorPrecedence =
-                operatorBinding(environment, right.operator.name)
+                environment.operator(right.operator.name)
 
         if (operatorPrecedence == null) {
             return binary
@@ -40,9 +40,9 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
 }
 
 
-private fun operatorBinding(environment: Environment, name: String): OperatorBinding? {
+private fun Environment.operator(name: String): OperatorBinding? {
     val value =
-            environment.value(name)
+            this.value(name)
 
     return if (value is OperatorBinding)
         value
