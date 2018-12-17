@@ -65,8 +65,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: barBar
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: barBar
       LetDeclaration:
         arguments: []
         expression:
@@ -95,8 +97,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: ampersandAmpersand
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: ampersandAmpersand
       LetDeclaration:
         arguments: []
         expression:
@@ -125,8 +129,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: equalEqual
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: equalEqual
       LetDeclaration:
         arguments: []
         expression:
@@ -155,8 +161,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: bangEqual
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: bangEqual
       LetDeclaration:
         arguments: []
         expression:
@@ -185,8 +193,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: lessEqual
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: lessEqual
       LetDeclaration:
         arguments: []
         expression:
@@ -215,8 +225,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: lessThan
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: lessThan
       LetDeclaration:
         arguments: []
         expression:
@@ -245,8 +257,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: greaterEqual
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: greaterEqual
       LetDeclaration:
         arguments: []
         expression:
@@ -275,8 +289,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: greaterThan
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: greaterThan
       LetDeclaration:
         arguments: []
         expression:
@@ -305,8 +321,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: plus
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: plus
       LetDeclaration:
         arguments: []
         expression:
@@ -335,8 +353,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: minus
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: minus
       LetDeclaration:
         arguments: []
         expression:
@@ -365,8 +385,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: star
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: star
       LetDeclaration:
         arguments: []
         expression:
@@ -395,8 +417,10 @@ Module:
                         name: y
                         qualifier: null
         id:
-          ID:
-            name: slash
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: slash
     ]
   exports: []
   imports: []

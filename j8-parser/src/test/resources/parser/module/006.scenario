@@ -69,8 +69,10 @@ Module:
                     name: Cons
                     qualifier: null
         id:
-          ID:
-            name: singleton
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: singleton
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -113,8 +115,10 @@ Module:
                     name: Cons
                     qualifier: null
         id:
-          ID:
-            name: duplicate
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: duplicate
     ]
   exports: []
   imports: []

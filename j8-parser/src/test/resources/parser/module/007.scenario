@@ -38,8 +38,10 @@ Module:
                         name: removedups
                         qualifier: null
         id:
-          ID:
-            name: removedups
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: removedups
     ]
   exports: []
   imports: []

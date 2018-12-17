@@ -32,8 +32,10 @@ Module:
                     name: y
                     qualifier: null
         id:
-          ID:
-            name: add
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -59,8 +61,10 @@ Module:
                     name: b
                     qualifier: null
         id:
-          ID:
-            name: sub
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: sub
     ]
   exports: []
   imports: []

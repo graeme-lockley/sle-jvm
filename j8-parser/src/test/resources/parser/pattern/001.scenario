@@ -48,8 +48,10 @@ Module:
             name: Tuple
       LetSignature:
         id:
-          ID:
-            name: first
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: first
         type:
           TArrow:
             domain:
@@ -102,12 +104,16 @@ Module:
                     name: t
                     qualifier: null
         id:
-          ID:
-            name: first
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: first
       LetSignature:
         id:
-          ID:
-            name: second
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
         type:
           TArrow:
             domain:
@@ -160,12 +166,16 @@ Module:
                     name: t
                     qualifier: null
         id:
-          ID:
-            name: second
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
       LetSignature:
         id:
-          ID:
-            name: mapFirst
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapFirst
         type:
           TArrow:
             domain:
@@ -264,12 +274,16 @@ Module:
                     name: t
                     qualifier: null
         id:
-          ID:
-            name: mapFirst
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapFirst
       LetSignature:
         id:
-          ID:
-            name: mapSecond
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapSecond
         type:
           TArrow:
             domain:
@@ -368,8 +382,10 @@ Module:
                     name: t
                     qualifier: null
         id:
-          ID:
-            name: mapSecond
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapSecond
     ]
   exports: []
   imports: []

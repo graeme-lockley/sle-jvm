@@ -12,8 +12,10 @@ Module:
         expression:
           Unit:
         id:
-          ID:
-            name: value
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
     ]
   exports: []
   imports: []

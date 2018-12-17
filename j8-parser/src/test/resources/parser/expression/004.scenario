@@ -9,9 +9,11 @@ Module:
       expression:
         ConstantString:
           value: Hello World
-      id:
-        ID:
-          name: value
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
   ]
   exports: []
   imports: []

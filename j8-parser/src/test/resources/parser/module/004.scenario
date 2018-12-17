@@ -10,8 +10,10 @@ Module:
   declarations: [
       LetSignature:
         id:
-          ID:
-            name: calculate
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: calculate
         type:
           TArrow:
             domain:
@@ -29,8 +31,10 @@ Module:
           ConstantInt:
             value: 100
         id:
-          ID:
-            name: calculate
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: calculate
       LetDeclaration:
         arguments: []
         expression:
@@ -45,8 +49,10 @@ Module:
                     name: calculate
                     qualifier: null
         id:
-          ID:
-            name: value
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
     ]
   exports: []
   imports: []

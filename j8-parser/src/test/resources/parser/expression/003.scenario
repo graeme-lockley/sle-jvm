@@ -9,9 +9,11 @@ Module:
       expression:
         ConstantInt:
           value: 234
-      id:
-        ID:
-          name: value
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
   ]
   exports: []
   imports: []

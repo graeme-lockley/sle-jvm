@@ -7,8 +7,10 @@ Module:
   declarations: [
       LetSignature:
         id:
-          ID:
-            name: add
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
         type:
           TArrow:
             domain:
@@ -59,8 +61,10 @@ Module:
                     name: y
                     qualifier: null
         id:
-          ID:
-            name: add
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
     ]
   exports: []
   imports: []

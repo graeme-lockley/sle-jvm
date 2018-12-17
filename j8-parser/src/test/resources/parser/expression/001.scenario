@@ -4,13 +4,15 @@ value =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      arguments: []
-      expression:
-        True:
-      id:
-        ID:
-          name: value
-  ]
+      LetDeclaration:
+        arguments: []
+        expression:
+          True:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+    ]
   exports: []
   imports: []

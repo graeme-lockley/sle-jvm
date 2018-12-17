@@ -11,8 +11,10 @@ Module:
   declarations: [
       LetSignature:
         id:
-          ID:
-            name: length
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: length
         type:
           TArrow:
             domain:
@@ -45,8 +47,10 @@ Module:
           ConstantInt:
             value: 0
         id:
-          ID:
-            name: length
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: length
       LetDeclaration:
         arguments: [
             ConstructorReferencePattern:
@@ -87,8 +91,10 @@ Module:
                             name: length
                             qualifier: null
         id:
-          ID:
-            name: length
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: length
     ]
   exports: []
   imports: []

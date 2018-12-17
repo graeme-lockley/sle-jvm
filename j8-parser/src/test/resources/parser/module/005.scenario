@@ -8,8 +8,10 @@ Module:
   declarations: [
       LetSignature:
         id:
-          ID:
-            name: factorial
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: factorial
         type:
           TArrow:
             domain:
@@ -95,8 +97,10 @@ Module:
                               qualifier: null
           ]
         id:
-          ID:
-            name: factorial
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: factorial
     ]
   exports: []
   imports: []

@@ -37,10 +37,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
             ast.declarations.fold(emptySet<String>()) { names, declaration ->
                 when (declaration) {
                     is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                        names + declaration.id.name
+                        names + declaration.id.name.name
 
                     is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                        names + declaration.id.name
+                        names + declaration.id.name.name
 
                     else ->
                         names
@@ -53,7 +53,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                     is LetSignature ->
                         letSignatureDict.andThen {
                             val nameOfLetSignature =
-                                    declaration.id.name
+                                    declaration.id.name.name
 
                             if (letDeclarationNames.contains(nameOfLetSignature)) {
                                 val other =
@@ -101,10 +101,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                         .groupBy { ast ->
                             when (ast) {
                                 is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                    ast.id.name
+                                    ast.id.name.name
 
                                 is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                    ast.id.name
+                                    ast.id.name.name
 
                                 else ->
                                     ""
@@ -117,10 +117,10 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                             val name =
                                     when (ast0) {
                                         is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                            ast0.id
+                                            ast0.id.name
 
                                         is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                            ast0.id
+                                            ast0.id.name
 
                                         else ->
                                             za.co.no9.sle.ast.typeless.ID(ast0.location, "")

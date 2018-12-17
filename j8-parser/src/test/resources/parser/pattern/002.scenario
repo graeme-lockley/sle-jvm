@@ -102,8 +102,10 @@ Module:
                     name: a
                     qualifier: null
         id:
-          ID:
-            name: nested
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: nested
     ]
   exports: []
   imports: []

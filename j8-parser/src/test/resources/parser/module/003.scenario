@@ -30,8 +30,10 @@ Module:
                     qualifier: null
       LetSignature:
         id:
-          ID:
-            name: negate
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: negate
         type:
           TTypeReference:
             arguments: []
@@ -59,8 +61,10 @@ Module:
                     name: a
                     qualifier: null
         id:
-          ID:
-            name: negate
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: negate
     ]
   exports: []
   imports: []

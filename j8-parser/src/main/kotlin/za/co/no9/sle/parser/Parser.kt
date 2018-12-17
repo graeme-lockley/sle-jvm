@@ -233,7 +233,7 @@ class Parser(private val lexer: Lexer) {
                     val type =
                             parseType()
 
-                    return LetSignature(id.location + type.location, id, type)
+                    return LetSignature(id.location + type.location, LowerIDDeclarationID(id.location, id), type)
                 } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
                     val arguments =
                             mutableListOf<Pattern>()
@@ -260,14 +260,14 @@ class Parser(private val lexer: Lexer) {
                             guardedExpressions.add(Pair(guard, expression))
                         }
 
-                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
+                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), LowerIDDeclarationID(id.location, id), arguments, guardedExpressions)
                     } else {
                         matchOperator("=")
 
                         val expression =
                                 parseExpression(id.column)
 
-                        return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
+                        return LetDeclaration(locationFrom(listOf(id, expression))!!, LowerIDDeclarationID(id.location, id), arguments, expression)
                     }
                 } else {
                     TODO()

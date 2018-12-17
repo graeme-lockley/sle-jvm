@@ -11,8 +11,10 @@ Module:
   declarations: [
       LetSignature:
         id:
-          ID:
-            name: map
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: map
         type:
           TArrow:
             domain:
@@ -63,8 +65,10 @@ Module:
                 name: Nil
                 qualifier: null
         id:
-          ID:
-            name: map
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: map
       LetDeclaration:
         arguments: [
             IdReferencePattern:
@@ -129,8 +133,10 @@ Module:
                     name: Cons
                     qualifier: null
         id:
-          ID:
-            name: map
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: map
     ]
   exports: []
   imports: []
