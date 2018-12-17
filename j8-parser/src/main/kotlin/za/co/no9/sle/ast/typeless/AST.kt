@@ -52,17 +52,18 @@ data class TypeNamedDeclaration(
 
 
 sealed class ValueDeclarationID(
-        location: Location) : Node(location)
+        location: Location,
+        open val name: ID) : Node(location)
 
 data class LowerIDDeclarationID(
         override val location: Location,
-        val name: ID) : ValueDeclarationID(location)
+        override val name: ID) : ValueDeclarationID(location, name)
 
 data class OperatorDeclarationID(
         override val location: Location,
-        val name: ID,
+        override val name: ID,
         val precedence: Int,
-        val associativity: Associativity) : ValueDeclarationID(location)
+        val associativity: Associativity) : ValueDeclarationID(location, name)
 
 
 sealed class Declaration(
