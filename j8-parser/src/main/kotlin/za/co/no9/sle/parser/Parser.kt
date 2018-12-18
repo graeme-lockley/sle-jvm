@@ -88,6 +88,19 @@ class Parser(private val lexer: Lexer) {
                     }
                 }
 
+                isOperator("(") -> {
+                    val openParen =
+                            skip()
+
+                    val op =
+                            matchOperator()
+
+                    val closeParen =
+                            matchOperator(")")
+
+                    LetExport(openParen.location + closeParen.location, op.toID())
+                }
+
                 else ->
                     throw syntaxError("Expected UpperID or LowerID")
             }

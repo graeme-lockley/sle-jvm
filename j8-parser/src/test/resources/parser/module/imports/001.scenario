@@ -1,5 +1,5 @@
--- Multiple export
-export plus, minus, List(..), Maybe
+-- Multiple exports
+export plus, minus, List(..), Maybe, (?:)
 
 type List a =
     Nil
@@ -15,6 +15,11 @@ plus x y =
 
 minus x y =
     x - y
+
+
+(?: 5 right) : Maybe a -> a -> a
+(?: 5 right) Nothing d = d
+(?: 5 right) (Just x) d = x
 -- ast
 Module:
   declarations: [
@@ -131,6 +136,88 @@ Module:
             name:
               ID:
                 name: minus
+      LetSignature:
+        id:
+          OperatorDeclarationID:
+            associativity:
+              Right:
+            name:
+              ID:
+                name: ?:
+            precedence: 5
+        type:
+          TArrow:
+            domain:
+              TTypeReference:
+                arguments: [
+                    TVarReference:
+                      name: a
+                  ]
+                name:
+                  QualifiedID:
+                    name: Maybe
+                    qualifier: null
+            range:
+              TArrow:
+                domain:
+                  TVarReference:
+                    name: a
+                range:
+                  TVarReference:
+                    name: a
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name:
+                QualifiedID:
+                  name: Nothing
+                  qualifier: null
+              parameters: []
+            IdReferencePattern:
+              name: d
+          ]
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: d
+                qualifier: null
+        id:
+          OperatorDeclarationID:
+            associativity:
+              Right:
+            name:
+              ID:
+                name: ?:
+            precedence: 5
+      LetDeclaration:
+        arguments: [
+            ConstructorReferencePattern:
+              name:
+                QualifiedID:
+                  name: Just
+                  qualifier: null
+              parameters: [
+                  IdReferencePattern:
+                    name: x
+                ]
+            IdReferencePattern:
+              name: d
+          ]
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: x
+                qualifier: null
+        id:
+          OperatorDeclarationID:
+            associativity:
+              Right:
+            name:
+              ID:
+                name: ?:
+            precedence: 5
     ]
   exports: [
       LetExport:
@@ -151,5 +238,9 @@ Module:
           ID:
             name: Maybe
         withConstructors: false
+      LetExport:
+        name:
+          ID:
+            name: ?:
     ]
   imports: []
