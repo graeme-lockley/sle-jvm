@@ -188,7 +188,8 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is Source ->
                     "$value"
 
-                else -> dumpString(value, indent)
+                else ->
+                    dumpString(value, indent)
             }
 
     fun dd(label: String, value: Any?, indent: Int): String =
