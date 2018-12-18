@@ -365,9 +365,11 @@ Module:
                             ]
                           name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: repeat
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: repeat
         scheme:
           Scheme:
             parameters: [
@@ -470,9 +472,11 @@ Module:
                         ]
                       name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: singleton
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: singleton
         scheme:
           Scheme:
             parameters: [

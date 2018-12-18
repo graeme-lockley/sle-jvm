@@ -230,9 +230,11 @@ Module:
                       arguments: []
                       name: Data.Int
           ]
-        name:
-          ID:
-            name: factorial
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: factorial
         scheme:
           Scheme:
             parameters: []

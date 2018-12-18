@@ -40,7 +40,7 @@ private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.D
         declarations.fold(emptyList()) { a, declaration ->
             when (declaration) {
                 is LetDeclaration ->
-                    a + MemberDeclaration("${declaration.name.name}: ${declaration.scheme.normalize()}", true, true, true, declaration.name.name, "java.lang.Object", translate(declaration.expression))
+                    a + MemberDeclaration("${declaration.id.name.name}: ${declaration.scheme.normalize()}", true, true, true, declaration.id.name.name, "java.lang.Object", translate(declaration.expression))
 
                 else ->
                     a

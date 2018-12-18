@@ -173,9 +173,11 @@ Module:
                         ]
                       name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: singleton
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: singleton
         scheme:
           Scheme:
             parameters: [
@@ -339,9 +341,11 @@ Module:
                         ]
                       name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: duplicate
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: duplicate
         scheme:
           Scheme:
             parameters: [
@@ -395,9 +399,11 @@ Module:
                     ]
                   name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: intList
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: intList
         scheme:
           Scheme:
             parameters: []
@@ -445,9 +451,11 @@ Module:
                     ]
                   name: file.package.name.File.List
           ]
-        name:
-          ID:
-            name: boolList
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: boolList
         scheme:
           Scheme:
             parameters: []

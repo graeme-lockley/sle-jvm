@@ -107,11 +107,11 @@ private class ApplyContext(private val environment: Environment) {
                 letDeclaration.scheme.expandAliases(environment)
         for (scheme in schemes) {
             if (!letDeclarationSchemeExpandedAliases.isCompatibleWith(scheme.expandAliases(environment))) {
-                errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.name.name, letDeclaration.scheme, scheme))
+                errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.id.name.name, letDeclaration.scheme, scheme))
             }
         }
 
-        return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.name, appliedExpressions)
+        return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.id, appliedExpressions)
     }
 
 

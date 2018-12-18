@@ -270,9 +270,11 @@ Module:
                             ]
                           name: /home/alfred/.sle/List
           ]
-        name:
-          ID:
-            name: repeat
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: repeat
         scheme:
           Scheme:
             parameters: [

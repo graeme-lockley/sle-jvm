@@ -164,9 +164,11 @@ Module:
                             ]
                           name: /home/alfred/.sle/List
           ]
-        name:
-          ID:
-            name: multiplyByN
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: multiplyByN
         scheme:
           Scheme:
             parameters: []

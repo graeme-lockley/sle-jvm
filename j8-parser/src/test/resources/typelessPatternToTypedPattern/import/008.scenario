@@ -79,9 +79,11 @@ Module:
                       arguments: []
                       name: Data.Bool
           ]
-        name:
-          ID:
-            name: isEmpty
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: isEmpty
         scheme:
           Scheme:
             parameters: [
@@ -189,9 +191,11 @@ Module:
                         ]
                       name: /home/alfred/.sle/List
           ]
-        name:
-          ID:
-            name: singleton
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: singleton
         scheme:
           Scheme:
             parameters: [

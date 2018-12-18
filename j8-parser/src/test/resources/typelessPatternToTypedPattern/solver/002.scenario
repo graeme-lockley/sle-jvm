@@ -46,9 +46,11 @@ Module:
                       arguments: []
                       name: Data.Int
           ]
-        name:
-          ID:
-            name: calculate
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: calculate
         scheme:
           Scheme:
             parameters: []
@@ -89,9 +91,11 @@ Module:
                   arguments: []
                   name: Data.Int
           ]
-        name:
-          ID:
-            name: value
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
         scheme:
           Scheme:
             parameters: []

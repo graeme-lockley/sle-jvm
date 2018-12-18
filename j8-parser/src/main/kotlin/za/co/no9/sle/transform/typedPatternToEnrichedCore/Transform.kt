@@ -55,7 +55,7 @@ private fun transform(exportDeclaration: za.co.no9.sle.ast.typedPattern.ExportDe
 private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =
         when (declaration) {
             is za.co.no9.sle.ast.typedPattern.LetDeclaration ->
-                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expressions))
+                LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expressions))
 
             is za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration ->
                 TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
@@ -312,6 +312,16 @@ private fun range(type: Type): Type =
 
             else ->
                 type
+        }
+
+
+private fun transform(id: za.co.no9.sle.ast.typedPattern.ValueDeclarationID): ValueDeclarationID =
+        when (id) {
+            is za.co.no9.sle.ast.typedPattern.LowerIDDeclarationID ->
+                LowerIDDeclarationID(id.location, transform(id.name))
+
+            is za.co.no9.sle.ast.typedPattern.OperatorDeclarationID ->
+                OperatorDeclarationID(id.location, transform(id.name), id.precedence, id.associativity)
         }
 
 

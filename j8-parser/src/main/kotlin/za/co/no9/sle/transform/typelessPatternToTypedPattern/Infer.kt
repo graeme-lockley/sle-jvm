@@ -21,11 +21,14 @@ import za.co.no9.sle.ast.typedPattern.IdReferencePattern
 import za.co.no9.sle.ast.typedPattern.IfExpression
 import za.co.no9.sle.ast.typedPattern.LambdaExpression
 import za.co.no9.sle.ast.typedPattern.LetDeclaration
+import za.co.no9.sle.ast.typedPattern.LowerIDDeclarationID
 import za.co.no9.sle.ast.typedPattern.Module
+import za.co.no9.sle.ast.typedPattern.OperatorDeclarationID
 import za.co.no9.sle.ast.typedPattern.Pattern
 import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
+import za.co.no9.sle.ast.typedPattern.ValueDeclarationID
 import za.co.no9.sle.ast.typelessPattern.*
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.typing.*
@@ -104,9 +107,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                                 val declaration =
                                         if (substitution == null)
-                                            value(LetDeclaration(d.location, scheme, ID(d.id.name.location, d.id.name.name), es))
+                                            value(LetDeclaration(d.location, scheme, transform(d.id), es))
                                         else
-                                            LetDeclaration(d.location, scheme, ID(d.id.name.location, d.id.name.name), es).apply(env, substitution)
+                                            LetDeclaration(d.location, scheme, transform(d.id), es).apply(env, substitution)
 
                                 errors.addAll(declaration.left() ?: listOf())
 
@@ -121,7 +124,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                     unify(type, e.type)
                                 }
 
-                                ds + LetDeclaration(d.location, dScheme, ID(d.id.name.location, d.id.name.name), es)
+                                ds + LetDeclaration(d.location, dScheme, transform(d.id), es)
                             }
                         }
 
@@ -532,6 +535,21 @@ private class InferContext(private val source: Item, private val varPump: VarPum
         constraints += Constraint(t1, t2)
     }
 }
+
+
+private fun transform(id: za.co.no9.sle.ast.typelessPattern.ValueDeclarationID): ValueDeclarationID =
+        when (id) {
+            is za.co.no9.sle.ast.typelessPattern.LowerIDDeclarationID ->
+                LowerIDDeclarationID(id.location, transform(id.name))
+
+            is za.co.no9.sle.ast.typelessPattern.OperatorDeclarationID ->
+                OperatorDeclarationID(id.location, transform(id.name), id.precedence, id.associativity)
+        }
+
+
+private fun transform(name: za.co.no9.sle.ast.typelessPattern.ID): ID =
+        ID(name.location, name.name)
+
 
 private fun za.co.no9.sle.ast.typelessPattern.QualifiedID.asQString(): QString =
         QString(this.qualifier, this.name)

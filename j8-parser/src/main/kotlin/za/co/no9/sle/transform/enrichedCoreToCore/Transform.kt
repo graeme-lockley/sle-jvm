@@ -102,7 +102,7 @@ private class Transform(private var counter: Int = 0) {
     private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.Declaration): Declaration =
             when (declaration) {
                 is za.co.no9.sle.ast.enrichedCore.LetDeclaration ->
-                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.name), transform(declaration.expression))
+                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expression))
 
                 is za.co.no9.sle.ast.enrichedCore.TypeAliasDeclaration ->
                     TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
@@ -458,6 +458,16 @@ private class Transform(private var counter: Int = 0) {
 
     private fun transform(constructor: za.co.no9.sle.ast.enrichedCore.Constructor): Constructor =
             Constructor(constructor.location, transform(constructor.name), constructor.arguments)
+
+
+    private fun transform(id: za.co.no9.sle.ast.enrichedCore.ValueDeclarationID): ValueDeclarationID =
+            when (id) {
+                is za.co.no9.sle.ast.enrichedCore.LowerIDDeclarationID ->
+                    LowerIDDeclarationID(id.location, transform(id.name))
+
+                is za.co.no9.sle.ast.enrichedCore.OperatorDeclarationID ->
+                    OperatorDeclarationID(id.location, transform(id.name), id.precedence, id.associativity)
+            }
 
 
     private fun transform(name: za.co.no9.sle.ast.enrichedCore.ID): ID =

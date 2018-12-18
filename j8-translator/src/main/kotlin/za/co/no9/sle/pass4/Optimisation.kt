@@ -23,7 +23,7 @@ private fun optimize(declaration: za.co.no9.sle.ast.core.Declaration): za.co.no9
 
 
 private fun optimize(declaration: za.co.no9.sle.ast.core.LetDeclaration): za.co.no9.sle.ast.core.LetDeclaration =
-        za.co.no9.sle.ast.core.LetDeclaration(declaration.location, declaration.scheme, declaration.name, optimize(declaration.expression))
+        za.co.no9.sle.ast.core.LetDeclaration(declaration.location, declaration.scheme, declaration.id, optimize(declaration.expression))
 
 
 private fun optimize(expression: za.co.no9.sle.ast.core.Expression): za.co.no9.sle.ast.core.Expression =

@@ -130,9 +130,11 @@ Module:
                           arguments: []
                           name: Data.Int
           ]
-        name:
-          ID:
-            name: add
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
         scheme:
           Scheme:
             parameters: []

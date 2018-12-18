@@ -201,9 +201,11 @@ Module:
                       arguments: []
                       name: Data.Int
           ]
-        name:
-          ID:
-            name: length
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: length
         scheme:
           Scheme:
             parameters: [

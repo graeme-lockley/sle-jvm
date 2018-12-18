@@ -29,9 +29,11 @@ Module:
                     TVar:
                       variable: 1
           ]
-        name:
-          ID:
-            name: id
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: id
         scheme:
           Scheme:
             parameters: [

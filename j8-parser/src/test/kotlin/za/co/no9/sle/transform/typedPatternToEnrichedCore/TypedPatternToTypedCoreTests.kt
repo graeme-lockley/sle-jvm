@@ -133,7 +133,7 @@ fun NameDeclaration.asString(): String =
 fun Declaration.asString(): String =
         when (this) {
             is LetDeclaration ->
-                "${name.name} : ${scheme.normalize()}\n${name.name} =\n${expression.asString(2)}\n"
+                "${id.name.name} : ${scheme.normalize()}\n${id.name.name} =\n${expression.asString(2)}\n"
 
             is TypeAliasDeclaration ->
                 "typealias ${name.name} =\n  $scheme\n"

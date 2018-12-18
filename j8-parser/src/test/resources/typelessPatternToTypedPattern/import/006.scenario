@@ -123,9 +123,11 @@ Module:
                             ]
                           name: /home/alfred/.sle/List
           ]
-        name:
-          ID:
-            name: transform
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: transform
         scheme:
           Scheme:
             parameters: []
@@ -285,9 +287,11 @@ Module:
                           arguments: []
                           name: List.IntList
           ]
-        name:
-          ID:
-            name: multiply
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: multiply
         scheme:
           Scheme:
             parameters: []

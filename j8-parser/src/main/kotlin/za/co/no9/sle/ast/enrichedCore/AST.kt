@@ -1,6 +1,7 @@
 package za.co.no9.sle.ast.enrichedCore
 
 import za.co.no9.sle.Location
+import za.co.no9.sle.typing.Associativity
 import za.co.no9.sle.typing.Scheme
 import za.co.no9.sle.typing.Type
 
@@ -46,7 +47,7 @@ sealed class Declaration(
 data class LetDeclaration(
         override val location: Location,
         val scheme: Scheme,
-        val name: ID,
+        val id: ValueDeclarationID,
         val expression: Expression) : Declaration(location)
 
 data class TypeAliasDeclaration(
@@ -64,6 +65,21 @@ data class Constructor(
         override val location: Location,
         val name: ID,
         val arguments: List<Type>) : Node(location)
+
+
+sealed class ValueDeclarationID(
+        location: Location,
+        open val name: ID) : Node(location)
+
+data class LowerIDDeclarationID(
+        override val location: Location,
+        override val name: ID) : ValueDeclarationID(location, name)
+
+data class OperatorDeclarationID(
+        override val location: Location,
+        override val name: ID,
+        val precedence: Int,
+        val associativity: Associativity) : ValueDeclarationID(location, name)
 
 
 data class ID(

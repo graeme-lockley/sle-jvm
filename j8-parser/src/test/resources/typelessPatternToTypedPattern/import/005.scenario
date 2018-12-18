@@ -164,9 +164,11 @@ Module:
                             ]
                           name: /home/alfred/.sle/List
           ]
-        name:
-          ID:
-            name: multiply
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: multiply
         scheme:
           Scheme:
             parameters: []
