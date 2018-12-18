@@ -1,7 +1,7 @@
 package za.co.no9.sle
 
 
-data class URN(val source: Source, val name: String, val version: String?) {
+data class URN(val source: Source, val name: String, val version: String? = null) {
     constructor(input: String) : this(extractSource(input), extractName(input), extractVersion(input))
 
     fun impliedName(): String =
@@ -55,5 +55,5 @@ private fun extractVersion(input: String): String? {
 
 
 enum class Source {
-    File, Github
+    File, Github, Resource
 }
