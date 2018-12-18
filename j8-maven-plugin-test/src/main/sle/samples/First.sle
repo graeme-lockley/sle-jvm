@@ -17,6 +17,5 @@ factorial2 : Int -> Int
 factorial2 0 = 1
 factorial2 n =  n ** (factorial2 (n -- 1))
 
-First
 divide a b =
     a / b
