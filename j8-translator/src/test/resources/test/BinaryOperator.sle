@@ -1,0 +1,7 @@
+(++ 6 left) : Int -> Int -> Int
+(++ 6 left) a b =
+    a + b
+
+
+value =
+    10 ++ 100

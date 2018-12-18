@@ -39,12 +39,31 @@ fun translate(module: Module, packageDeclaration: String, className: String): za
 private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
         declarations.fold(emptyList()) { a, declaration ->
             when (declaration) {
-                is LetDeclaration ->
-                    a + MemberDeclaration("${declaration.id.name.name}: ${declaration.scheme.normalize()}", true, true, true, declaration.id.name.name, "java.lang.Object", translate(declaration.expression))
+                is LetDeclaration -> {
+                    val declarationCommentName =
+                            when (declaration.id) {
+                                is LowerIDDeclarationID ->
+                                    declaration.id.name.name
+
+                                is OperatorDeclarationID ->
+                                    "(${declaration.id.name.name})"
+                            }
+
+                    a + MemberDeclaration("$declarationCommentName: ${declaration.scheme.normalize()}", true, true, true, markupName(declaration.id.name.name), "java.lang.Object", translate(declaration.expression))
+                }
 
                 else ->
                     a
             }
+        }
+
+
+private fun markupName(name: String): String =
+        name.fold("") { a, b ->
+            if (b.isJavaIdentifierPart() || b == '.')
+                a + b
+            else
+                a + "$" + java.lang.Integer.toHexString(b.toInt())
         }
 
 
@@ -150,7 +169,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
 
                 when (refMappingName) {
                     null ->
-                        NameExpression(expression.name)
+                        NameExpression(markupName(expression.name))
 
                     else ->
                         NameExpression(refMappingName)

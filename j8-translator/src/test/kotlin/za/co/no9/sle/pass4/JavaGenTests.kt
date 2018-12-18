@@ -12,6 +12,35 @@ import java.io.File
 
 
 class JavaGenTests : StringSpec({
+    val environment =
+            initialEnvironment
+                    .newValue("+",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    6,
+                                    Left
+                            ))
+                    .newValue("-",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    6,
+                                    Left
+                            ))
+                    .newValue("*",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    7,
+                                    Left
+                            ))
+                    .newValue("==",
+                            OperatorBinding(
+                                    Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                    4,
+                                    None
+                            ))
+                    .newValue("aString", VariableBinding(Scheme(listOf(), typeString)))
+
+
     fun stuff(name: String, environment: Environment) {
         val inputFile =
                 File(".", "./src/test/resources/test/$name.sle")
@@ -71,6 +100,11 @@ class JavaGenTests : StringSpec({
 
     "Compile test/ListType.sle" {
         stuff("ListType", initialEnvironment)
+    }
+
+
+    "Compile test/BinaryOperator.sle" {
+        stuff("BinaryOperator", environment)
     }
 })
 
