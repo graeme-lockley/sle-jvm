@@ -1,22 +1,22 @@
-multiply : Int -> Int -> Int
-multiply =
+(** 7 left) : Int -> Int -> Int
+(** 7 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.STAR"
 
-minus : Int -> Int -> Int
-minus =
+(-- 6 left) : Int -> Int -> Int
+(-- 6 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.MINUS"
 
 
 factorial : Int -> Int
 factorial n
     | n == 0 = 1
-    | otherwise = multiply n (factorial (minus n 1))
+    | otherwise = n ** (factorial (n -- 1))
 
 
 factorial2 : Int -> Int
 factorial2 0 = 1
-factorial2 n = multiply n (factorial2 (minus n 1))
+factorial2 n =  n ** (factorial2 (n -- 1))
 
-
+First
 divide a b =
     a / b
