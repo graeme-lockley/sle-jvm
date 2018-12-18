@@ -99,9 +99,11 @@ Module:
                                   name: Cons
                                   qualifier: null
           ]
-        name:
-          ID:
-            name: map
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: map
         ttype:
           TArrow:
             domain:

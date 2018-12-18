@@ -34,9 +34,11 @@ Module:
                               name: y
                               qualifier: null
           ]
-        name:
-          ID:
-            name: add
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
         ttype:
           TArrow:
             domain:

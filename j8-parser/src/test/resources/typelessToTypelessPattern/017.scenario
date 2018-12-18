@@ -56,9 +56,11 @@ Module:
                                   name: factorial
                                   qualifier: null
           ]
-        name:
-          ID:
-            name: factorial
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: factorial
         ttype:
           TArrow:
             domain:

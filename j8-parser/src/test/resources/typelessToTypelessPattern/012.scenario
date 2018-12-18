@@ -13,9 +13,11 @@ Module:
             ConstantInt:
               value: 100
           ]
-        name:
-          ID:
-            name: calculate
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: calculate
         ttype:
           TArrow:
             domain:
@@ -39,9 +41,11 @@ Module:
                       name: calculate
                       qualifier: null
           ]
-        name:
-          ID:
-            name: value
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
         ttype: null
     ]
   exports: []

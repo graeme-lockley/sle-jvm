@@ -107,9 +107,11 @@ Module:
                                   name: Just
                                   qualifier: null
           ]
-        name:
-          ID:
-            name: find
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: find
         ttype:
           TArrow:
             domain:

@@ -2,6 +2,7 @@ package za.co.no9.sle.ast.typelessPattern
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.URN
+import za.co.no9.sle.typing.Associativity
 
 
 sealed class Node(
@@ -53,7 +54,7 @@ sealed class Declaration(
 
 data class LetDeclaration(
         override val location: Location,
-        val name: ID,
+        val id: ValueDeclarationID,
         val ttype: TType?,
         val expressions: List<Expression>) : Declaration(location)
 
@@ -72,6 +73,21 @@ data class Constructor(
         override val location: Location,
         val name: ID,
         val arguments: List<TType>) : Node(location)
+
+
+sealed class ValueDeclarationID(
+        location: Location,
+        open val name: ID) : Node(location)
+
+data class LowerIDDeclarationID(
+        override val location: Location,
+        override val name: ID) : ValueDeclarationID(location, name)
+
+data class OperatorDeclarationID(
+        override val location: Location,
+        override val name: ID,
+        val precedence: Int,
+        val associativity: Associativity) : ValueDeclarationID(location, name)
 
 
 data class ID(

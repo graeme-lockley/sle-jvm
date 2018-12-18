@@ -72,9 +72,11 @@ Module:
                               name: Cons
                               qualifier: null
           ]
-        name:
-          ID:
-            name: singleton
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: singleton
         ttype: null
       LetDeclaration:
         expressions: [
@@ -123,9 +125,11 @@ Module:
                               name: Cons
                               qualifier: null
           ]
-        name:
-          ID:
-            name: duplicate
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: duplicate
         ttype: null
     ]
   exports: []

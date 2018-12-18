@@ -4,15 +4,17 @@ value =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expressions: [
-          ConstantString:
-            value: Hello World
-        ]
-      name:
-        ID:
-          name: value
-      ttype: null
-  ]
+      LetDeclaration:
+        expressions: [
+            ConstantString:
+              value: Hello World
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        ttype: null
+    ]
   exports: []
   imports: []

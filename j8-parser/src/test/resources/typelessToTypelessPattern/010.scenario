@@ -30,9 +30,11 @@ Module:
                               name: a
                               qualifier: null
           ]
-        name:
-          ID:
-            name: call
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: call
         ttype: null
     ]
   exports: []

@@ -106,9 +106,11 @@ Module:
                               name: a
                               qualifier: null
           ]
-        name:
-          ID:
-            name: nested
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: nested
         ttype: null
     ]
   exports: []

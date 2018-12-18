@@ -25,9 +25,11 @@ Module:
                           name: (!)
                           qualifier: null
           ]
-        name:
-          ID:
-            name: negate
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: negate
         ttype: null
     ]
   exports: []

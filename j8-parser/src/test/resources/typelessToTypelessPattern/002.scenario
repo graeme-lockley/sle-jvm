@@ -4,15 +4,17 @@ true =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expressions: [
-          ConstantBool:
-            value: true
-        ]
-      name:
-        ID:
-          name: true
-      ttype: null
-  ]
+      LetDeclaration:
+        expressions: [
+            ConstantBool:
+              value: true
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: true
+        ttype: null
+    ]
   exports: []
   imports: []

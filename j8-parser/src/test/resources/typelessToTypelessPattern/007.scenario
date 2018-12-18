@@ -44,9 +44,11 @@ Module:
                                   name: y
                                   qualifier: null
           ]
-        name:
-          ID:
-            name: ifExpression
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: ifExpression
         ttype: null
     ]
   exports: []

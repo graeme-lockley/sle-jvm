@@ -33,9 +33,11 @@ Module:
                               name: b
                               qualifier: null
           ]
-        name:
-          ID:
-            name: binaryOpExpression
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: binaryOpExpression
         ttype: null
     ]
   exports: []

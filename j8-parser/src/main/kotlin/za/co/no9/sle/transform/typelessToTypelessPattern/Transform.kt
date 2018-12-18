@@ -114,21 +114,21 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                             val ast0 =
                                     asts.value[0]
 
-                            val name =
+                            val declarationID =
                                     when (ast0) {
                                         is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                            ast0.id.name
+                                            ast0.id
 
                                         is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                            ast0.id.name
+                                            ast0.id
 
                                         else ->
-                                            za.co.no9.sle.ast.typeless.ID(ast0.location, "")
+                                            null
                                     }
 
                             LetDeclaration(
                                     locationFrom(asts.value)!!,
-                                    transform(name),
+                                    transform(declarationID!!),
                                     transformNullable(it[asts.key]?.type),
                                     asts.value.map { letDeclaration ->
                                         when (letDeclaration) {
@@ -153,6 +153,16 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
         Module(ast.location, exports, imports, typeAndAliasDeclarations + letDeclarations)
     }
 }
+
+
+private fun transform(valueDeclarationID: za.co.no9.sle.ast.typeless.ValueDeclarationID): ValueDeclarationID =
+        when (valueDeclarationID) {
+            is za.co.no9.sle.ast.typeless.LowerIDDeclarationID ->
+                LowerIDDeclarationID(valueDeclarationID.location, transform(valueDeclarationID.name))
+
+            is za.co.no9.sle.ast.typeless.OperatorDeclarationID ->
+                OperatorDeclarationID(valueDeclarationID.location, transform(valueDeclarationID.name), valueDeclarationID.precedence, valueDeclarationID.associativity)
+        }
 
 
 private fun transform(import: za.co.no9.sle.ast.typeless.Import): Import {

@@ -4,15 +4,17 @@ false =
 -- ast
 Module:
   declarations: [
-    LetDeclaration:
-      expressions: [
-          ConstantBool:
-            value: false
-        ]
-      name:
-        ID:
-          name: false
-      ttype: null
-  ]
+      LetDeclaration:
+        expressions: [
+            ConstantBool:
+              value: false
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: false
+        ttype: null
+    ]
   exports: []
   imports: []

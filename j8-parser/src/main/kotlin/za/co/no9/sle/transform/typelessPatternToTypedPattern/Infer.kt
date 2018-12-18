@@ -76,7 +76,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                     d.expressions.map { infer(it) }
 
                             val dScheme =
-                                    env.variable(d.name.name)
+                                    env.variable(d.id.name.name)
 
                             if (dScheme == null) {
                                 for (e in es.drop(1)) {
@@ -104,13 +104,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                                 val declaration =
                                         if (substitution == null)
-                                            value(LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es))
+                                            value(LetDeclaration(d.location, scheme, ID(d.id.name.location, d.id.name.name), es))
                                         else
-                                            LetDeclaration(d.location, scheme, ID(d.name.location, d.name.name), es).apply(env, substitution)
+                                            LetDeclaration(d.location, scheme, ID(d.id.name.location, d.id.name.name), es).apply(env, substitution)
 
                                 errors.addAll(declaration.left() ?: listOf())
 
-                                env = env.newValue(d.name.name, VariableBinding(scheme))
+                                env = env.newValue(d.id.name.name, VariableBinding(scheme))
 
                                 declaration.fold({ ds }, { ds + it })
                             } else {
@@ -121,7 +121,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                     unify(type, e.type)
                                 }
 
-                                ds + LetDeclaration(d.location, dScheme, ID(d.name.location, d.name.name), es)
+                                ds + LetDeclaration(d.location, dScheme, ID(d.id.name.location, d.id.name.name), es)
                             }
                         }
 
@@ -199,7 +199,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
-                            d.name.name
+                            d.id.name.name
 
                     val scheme =
                             typeToSchemeNullable(e, varPump, source, d.ttype)
@@ -251,7 +251,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
                     val name =
-                            d.name.name
+                            d.id.name.name
 
                     if (e.contains(name)) {
                         errors.add(DuplicateLetDeclaration(d.location, name))

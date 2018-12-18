@@ -45,9 +45,11 @@ Module:
                                   name: y
                                   qualifier: null
           ]
-        name:
-          ID:
-            name: lambdaExpression
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: lambdaExpression
         ttype: null
     ]
   exports: []

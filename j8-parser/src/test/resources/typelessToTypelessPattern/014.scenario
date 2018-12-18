@@ -82,9 +82,11 @@ Module:
                           name: t
                           qualifier: null
           ]
-        name:
-          ID:
-            name: first
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: first
         ttype:
           TArrow:
             domain:
@@ -138,9 +140,11 @@ Module:
                           name: t
                           qualifier: null
           ]
-        name:
-          ID:
-            name: second
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
         ttype:
           TArrow:
             domain:
@@ -225,9 +229,11 @@ Module:
                               name: t
                               qualifier: null
           ]
-        name:
-          ID:
-            name: mapFirst
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapFirst
         ttype:
           TArrow:
             domain:
@@ -331,9 +337,11 @@ Module:
                               name: t
                               qualifier: null
           ]
-        name:
-          ID:
-            name: mapSecond
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapSecond
         ttype:
           TArrow:
             domain:

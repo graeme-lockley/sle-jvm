@@ -57,9 +57,11 @@ Module:
                               name: b
                               qualifier: null
           ]
-        name:
-          ID:
-            name: add
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: add
         ttype:
           TTypeReference:
             arguments: []
