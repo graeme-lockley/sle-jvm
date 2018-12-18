@@ -17,12 +17,12 @@ find p (List.Cons x xs) =
         find p xs
 -- enrichedASTpp
 export alias IntMap: <> Data.Int -> Data.Int
-export value find: <0> ('0 -> Data.Bool) -> /home/alfred/.sle/List '0 -> /home/alfred/.sle/Maybe '0
+export value find: <0> ('0 -> Data.Bool) -> file.samples.List.List '0 -> file.samples.Maybe.Maybe '0
 
 typealias IntMap =
   <> Data.Int -> Data.Int
 
-find : <0> ('0 -> Data.Bool) -> /home/alfred/.sle/List '0 -> /home/alfred/.sle/Maybe '0
+find : <0> ('0 -> Data.Bool) -> file.samples.List.List '0 -> file.samples.Maybe.Maybe '0
 find =
   (LAMBDA $v0 ->
     (LAMBDA $v1 ->
@@ -41,7 +41,7 @@ find =
         (CALL
           (CALL
             (LAMBDA p ->
-              (LAMBDA file.package.name.File.Cons '5 /home/alfred/.sle/List '5 ->
+              (LAMBDA file.package.name.File.Cons '5 file.samples.List.List '5 ->
                 (IF
                   (CALL
                     p

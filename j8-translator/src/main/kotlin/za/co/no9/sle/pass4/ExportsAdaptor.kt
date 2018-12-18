@@ -16,6 +16,9 @@ private fun toClass(source: Item, nameDeclaration: NameDeclaration): Declaration
             is ValueNameDeclaration ->
                 LetDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme))
 
+            is OperatorNameDeclaration ->
+                OperatorDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme), nameDeclaration.precedence, nameDeclaration.associativity.asString())
+
             is AliasNameDeclaration ->
                 AliasDeclaration(nameDeclaration.name, toClass(nameDeclaration.scheme))
 

@@ -80,6 +80,9 @@ private class ApplyContext(private val environment: Environment) {
                 is ValueExportDeclaration ->
                     ValueExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.apply(substitution).expandAliases(environment).normalize())
 
+                is OperatorExportDeclaration ->
+                    OperatorExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.apply(substitution).expandAliases(environment).normalize(), exportDeclaration.precedence, exportDeclaration.associativity)
+
                 is AliasExportDeclaration ->
                     AliasExportDeclaration(exportDeclaration.name, exportDeclaration.scheme.expandAliases(environment).normalize())
 

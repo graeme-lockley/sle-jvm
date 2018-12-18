@@ -4,11 +4,24 @@ import za.co.no9.sle.QString
 import za.co.no9.sle.repository.Item
 
 
-sealed class Associativity
+sealed class Associativity {
+    abstract fun asString(): String
+}
 
-object Left : Associativity()
-object Right : Associativity()
-object None : Associativity()
+object Left : Associativity() {
+    override fun asString() =
+            "left"
+}
+
+object Right : Associativity() {
+    override fun asString() =
+            "right"
+}
+
+object None : Associativity() {
+    override fun asString() =
+            "none"
+}
 
 
 data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {

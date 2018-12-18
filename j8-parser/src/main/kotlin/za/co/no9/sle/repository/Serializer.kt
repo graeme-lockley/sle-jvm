@@ -55,7 +55,7 @@ fun fromJsonString(input: String): Export {
                 LetDeclaration(declaration["name"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
 
             declaration.has("operator") ->
-                OperatorDeclaration(declaration["name"].asString, jsonToScheme(declaration["scheme"].asJsonObject), declaration["precedence"].asInt, declaration["associativity"].asString)
+                OperatorDeclaration(declaration["operator"].asString, jsonToScheme(declaration["scheme"].asJsonObject), declaration["precedence"].asInt, declaration["associativity"].asString)
 
             declaration.has("alias") ->
                 AliasDeclaration(declaration["alias"].asString, jsonToScheme(declaration["scheme"].asJsonObject))

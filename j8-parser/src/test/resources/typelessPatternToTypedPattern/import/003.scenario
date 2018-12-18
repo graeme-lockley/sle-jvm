@@ -113,7 +113,7 @@ Module:
                                         arguments: []
                                         name: Data.Int
                                     ]
-                                  name: /home/alfred/.sle/List
+                                  name: file.samples.List.List
                               range:
                                 TCon:
                                   arguments: [
@@ -121,7 +121,7 @@ Module:
                                         arguments: []
                                         name: Data.Int
                                     ]
-                                  name: /home/alfred/.sle/List
+                                  name: file.samples.List.List
                   type:
                     TArr:
                       domain:
@@ -131,7 +131,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                             ]
-                          name: /home/alfred/.sle/List
+                          name: file.samples.List.List
                       range:
                         TCon:
                           arguments: [
@@ -139,7 +139,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                             ]
-                          name: /home/alfred/.sle/List
+                          name: file.samples.List.List
               type:
                 TArr:
                   domain:
@@ -155,7 +155,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                             ]
-                          name: /home/alfred/.sle/List
+                          name: file.samples.List.List
                       range:
                         TCon:
                           arguments: [
@@ -163,7 +163,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                             ]
-                          name: /home/alfred/.sle/List
+                          name: file.samples.List.List
           ]
         id:
           LowerIDDeclarationID:
@@ -188,7 +188,7 @@ Module:
                               arguments: []
                               name: Data.Int
                           ]
-                        name: /home/alfred/.sle/List
+                        name: file.samples.List.List
                     range:
                       TCon:
                         arguments: [
@@ -196,6 +196,6 @@ Module:
                               arguments: []
                               name: Data.Int
                           ]
-                        name: /home/alfred/.sle/List
+                        name: file.samples.List.List
     ]
   exports: []

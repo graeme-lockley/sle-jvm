@@ -42,6 +42,9 @@ private fun transform(exportDeclaration: za.co.no9.sle.ast.typedPattern.ExportDe
             is za.co.no9.sle.ast.typedPattern.ValueExportDeclaration ->
                 ValueNameDeclaration(exportDeclaration.name, exportDeclaration.scheme)
 
+            is za.co.no9.sle.ast.typedPattern.OperatorExportDeclaration ->
+                OperatorNameDeclaration(exportDeclaration.name, exportDeclaration.scheme, exportDeclaration.precedence, exportDeclaration.associativity)
+
             is za.co.no9.sle.ast.typedPattern.AliasExportDeclaration ->
                 AliasNameDeclaration(exportDeclaration.name, exportDeclaration.scheme)
 

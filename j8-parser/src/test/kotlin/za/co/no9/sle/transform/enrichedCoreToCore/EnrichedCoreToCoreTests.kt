@@ -148,6 +148,9 @@ fun NameDeclaration.asString(): String =
             is ValueNameDeclaration ->
                 "export value ${this.name}: ${this.scheme}\n"
 
+            is OperatorNameDeclaration ->
+                "export operator ${this.name}: ${this.scheme}: ${this.precedence}: ${this.associativity}\n"
+
             is AliasNameDeclaration ->
                 "export alias ${this.name}: ${this.scheme}\n"
 

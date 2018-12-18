@@ -23,6 +23,12 @@ data class ValueNameDeclaration(
         override val name: String,
         val scheme: Scheme) : NameDeclaration(name)
 
+data class OperatorNameDeclaration(
+        override val name: String,
+        val scheme: Scheme,
+        val precedence: Int,
+        val associativity: Associativity) : NameDeclaration(name)
+
 data class AliasNameDeclaration(
         override val name: String,
         val scheme: Scheme) : NameDeclaration(name)

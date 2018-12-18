@@ -23,6 +23,12 @@ data class ValueExportDeclaration(
         override val name: String,
         val scheme: Scheme) : ExportDeclaration(name)
 
+data class OperatorExportDeclaration(
+        override val name: String,
+        val scheme: Scheme,
+        val precedence: Int,
+        val associativity: Associativity) : ExportDeclaration(name)
+
 data class AliasExportDeclaration(
         override val name: String,
         val scheme: Scheme) : ExportDeclaration(name)

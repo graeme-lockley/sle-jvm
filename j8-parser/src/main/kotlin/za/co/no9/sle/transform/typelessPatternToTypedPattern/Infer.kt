@@ -149,14 +149,23 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 module.exports.map {
                     when (it) {
                         is za.co.no9.sle.ast.typelessPattern.LetExport -> {
-                            val scheme =
-                                    env.variable(it.name.name)
+                            val valueBinding =
+                                    env.value(it.name.name)
 
-                            if (scheme == null) {
-                                errors.add(UnboundVariable(it.name.location, QString(null, it.name.name)))
-                                ValueExportDeclaration(it.name.name, generalise(typeError))
-                            } else {
-                                ValueExportDeclaration(it.name.name, scheme)
+                            when (valueBinding) {
+                                null, is ImportBinding -> {
+                                    errors.add(UnboundVariable(it.name.location, QString(null, it.name.name)))
+                                    ValueExportDeclaration(it.name.name, generalise(typeError))
+                                }
+
+                                is VariableBinding ->
+                                    ValueExportDeclaration(it.name.name, valueBinding.scheme)
+
+                                is OperatorBinding ->
+                                    OperatorExportDeclaration(it.name.name, valueBinding.scheme, valueBinding.precedence, valueBinding.associativity)
+
+                                is ImportVariableBinding ->
+                                    ValueExportDeclaration(it.name.name, valueBinding.scheme)
                             }
                         }
 
@@ -184,6 +193,24 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                     else
                                         ADTExportDeclaration(it.name.name, typeBinding.scheme)
 
+                                is ImportADTBinding -> {
+                                    val listOfVars =
+                                            listOfVars(typeBinding.cardinality)
+
+                                    val scheme =
+                                            Scheme(listOfVars, TCon(it.location, it.name.name, listOfVars.map { v -> TVar(it.location, v) }))
+
+                                    if (it.withConstructors)
+                                        FullADTExportDeclaration(
+                                                typeBinding.identity,
+                                                scheme,
+                                                typeBinding.constructors.map { pair ->
+                                                    ConstructorNameDeclaration(pair.first, pair.second)
+                                                })
+                                    else
+                                        ADTExportDeclaration(it.name.name, scheme)
+                                }
+
                                 else ->
                                     TODO()
                             }
@@ -195,6 +222,18 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 module.location,
                 exports,
                 declarations)
+    }
+
+
+    private fun listOfVars(cardinality: Int): List<Var> {
+        val result =
+                mutableListOf<Var>()
+
+        for (lp in 0 until cardinality) {
+            result.add(lp)
+        }
+
+        return result
     }
 
 
@@ -210,7 +249,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     if (scheme == null) {
                         e
                     } else {
-                        e.newValue(name, VariableBinding(scheme))
+                        when (d.id) {
+                            is za.co.no9.sle.ast.typelessPattern.LowerIDDeclarationID ->
+                                e.newValue(name, VariableBinding(scheme))
+
+                            is za.co.no9.sle.ast.typelessPattern.OperatorDeclarationID ->
+                                e.newValue(name, OperatorBinding(scheme, d.id.precedence, d.id.associativity))
+                        }
                     }
                 }
 

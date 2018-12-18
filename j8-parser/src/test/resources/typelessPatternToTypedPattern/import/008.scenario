@@ -26,7 +26,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
               expression:
                 ConstantBool:
                   type:
@@ -42,7 +42,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
                   range:
                     TCon:
                       arguments: []
@@ -57,7 +57,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
               expression:
                 ConstantBool:
                   type:
@@ -73,7 +73,7 @@ Module:
                           TVar:
                             variable: 2
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
                   range:
                     TCon:
                       arguments: []
@@ -97,7 +97,7 @@ Module:
                         TVar:
                           variable: 0
                       ]
-                    name: /home/alfred/.sle/List
+                    name: file.samples.List.List
                 range:
                   TCon:
                     arguments: []
@@ -122,7 +122,7 @@ Module:
                               TVar:
                                 variable: 8
                             ]
-                          name: /home/alfred/.sle/List
+                          name: file.samples.List.List
                   operator:
                     CallExpression:
                       operand:
@@ -147,14 +147,14 @@ Module:
                                           TVar:
                                             variable: 8
                                         ]
-                                      name: /home/alfred/.sle/List
+                                      name: file.samples.List.List
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
                                             variable: 8
                                         ]
-                                      name: /home/alfred/.sle/List
+                                      name: file.samples.List.List
                       type:
                         TArr:
                           domain:
@@ -163,21 +163,21 @@ Module:
                                   TVar:
                                     variable: 8
                                 ]
-                              name: /home/alfred/.sle/List
+                              name: file.samples.List.List
                           range:
                             TCon:
                               arguments: [
                                   TVar:
                                     variable: 8
                                 ]
-                              name: /home/alfred/.sle/List
+                              name: file.samples.List.List
                   type:
                     TCon:
                       arguments: [
                           TVar:
                             variable: 8
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
               type:
                 TArr:
                   domain:
@@ -189,7 +189,7 @@ Module:
                           TVar:
                             variable: 8
                         ]
-                      name: /home/alfred/.sle/List
+                      name: file.samples.List.List
           ]
         id:
           LowerIDDeclarationID:
@@ -212,6 +212,6 @@ Module:
                         TVar:
                           variable: 1
                       ]
-                    name: /home/alfred/.sle/List
+                    name: file.samples.List.List
     ]
   exports: []

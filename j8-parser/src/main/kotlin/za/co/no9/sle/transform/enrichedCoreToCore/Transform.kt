@@ -90,10 +90,16 @@ private class Transform(private var counter: Int = 0) {
             when (nameDeclaration) {
                 is za.co.no9.sle.ast.enrichedCore.ValueNameDeclaration ->
                     ValueNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
+                is za.co.no9.sle.ast.enrichedCore.OperatorNameDeclaration ->
+                    OperatorNameDeclaration(nameDeclaration.name, nameDeclaration.scheme, nameDeclaration.precedence, nameDeclaration.associativity)
+
                 is za.co.no9.sle.ast.enrichedCore.AliasNameDeclaration ->
                     AliasNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
                 is za.co.no9.sle.ast.enrichedCore.ADTNameDeclaration ->
                     ADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme)
+
                 is za.co.no9.sle.ast.enrichedCore.FullADTNameDeclaration ->
                     FullADTNameDeclaration(nameDeclaration.name, nameDeclaration.scheme, nameDeclaration.constructors.map { ConstructorNameDeclaration(it.name, it.scheme) })
             }

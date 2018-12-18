@@ -3,7 +3,7 @@
     {
       "adt": "List",
       "cardinality": 1,
-      "identity": "/home/alfred/.sle/List",
+      "identity": "file.samples.List.List",
       "constructors": [
         {
           "name": "Nil",
@@ -12,7 +12,7 @@
               0
             ],
             "type": {
-              "constant": "/home/alfred/.sle/List",
+              "constant": "file.samples.List.List",
               "arguments": [
                 {
                   "variable": 0
@@ -33,7 +33,7 @@
               },
               "range": {
                 "domain": {
-                  "constant": "/home/alfred/.sle/List",
+                  "constant": "file.samples.List.List",
                   "arguments": [
                     {
                       "variable": 0
@@ -41,7 +41,7 @@
                   ]
                 },
                 "range": {
-                  "constant": "/home/alfred/.sle/List",
+                  "constant": "file.samples.List.List",
                   "arguments": [
                     {
                       "variable": 0
@@ -57,7 +57,7 @@
     {
       "adt": "Maybe",
       "cardinality": 1,
-      "identity": "/home/alfred/.sle/Maybe",
+      "identity": "file.samples.Maybe.Maybe",
       "constructors": [
         {
           "name": "Nothing",
@@ -66,7 +66,7 @@
               0
             ],
             "type": {
-              "constant": "/home/alfred/.sle/Maybe",
+              "constant": "file.samples.Maybe.Maybe",
               "arguments": [
                 {
                   "variable": 0
@@ -86,7 +86,7 @@
                 "variable": 0
               },
               "range": {
-                "constant": "/home/alfred/.sle/Maybe",
+                "constant": "file.samples.Maybe.Maybe",
                 "arguments": [
                   {
                     "variable": 0
@@ -114,7 +114,7 @@
               "variable": 0
             },
             "range": {
-              "constant": "/home/alfred/.sle/List",
+              "constant": "file.samples.List.List",
               "arguments": [
                 {
                   "variable": 0
@@ -140,7 +140,7 @@
               "arguments": []
             },
             "range": {
-              "constant": "/home/alfred/.sle/List",
+              "constant": "file.samples.List.List",
               "arguments": [
                 {
                   "constant": "Data.Int",
@@ -160,7 +160,7 @@
         ],
         "type": {
           "domain": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "variable": 0
@@ -182,7 +182,7 @@
         ],
         "type": {
           "domain": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "variable": 0
@@ -190,7 +190,7 @@
             ]
           },
           "range": {
-            "constant": "/home/alfred/.sle/Maybe",
+            "constant": "file.samples.Maybe.Maybe",
             "arguments": [
               {
                 "variable": 0
@@ -208,7 +208,7 @@
         ],
         "type": {
           "domain": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "variable": 0
@@ -216,10 +216,10 @@
             ]
           },
           "range": {
-            "constant": "/home/alfred/.sle/Maybe",
+            "constant": "file.samples.Maybe.Maybe",
             "arguments": [
               {
-                "constant": "/home/alfred/.sle/List",
+                "constant": "file.samples.List.List",
                 "arguments": [
                   {
                     "variable": 0
@@ -249,7 +249,7 @@
           },
           "range": {
             "domain": {
-              "constant": "/home/alfred/.sle/List",
+              "constant": "file.samples.List.List",
               "arguments": [
                 {
                   "variable": 0
@@ -257,7 +257,7 @@
               ]
             },
             "range": {
-              "constant": "/home/alfred/.sle/List",
+              "constant": "file.samples.List.List",
               "arguments": [
                 {
                   "variable": 1
@@ -274,7 +274,7 @@
         "parameters": [],
         "type": {
           "domain": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "constant": "Data.Int",
@@ -283,7 +283,7 @@
             ]
           },
           "range": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "constant": "Data.Int",
@@ -302,7 +302,7 @@
         ],
         "type": {
           "domain": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "variable": 0
@@ -310,7 +310,7 @@
             ]
           },
           "range": {
-            "constant": "/home/alfred/.sle/List",
+            "constant": "file.samples.List.List",
             "arguments": [
               {
                 "variable": 0
@@ -325,7 +325,7 @@
       "scheme": {
         "parameters": [],
         "type": {
-          "constant": "/home/alfred/.sle/List",
+          "constant": "file.samples.List.List",
           "arguments": [
             {
               "constant": "Data.Int",
@@ -334,6 +334,39 @@
           ]
         }
       }
+    },
+    {
+      "operator": "::",
+      "scheme": {
+        "parameters": [
+          0
+        ],
+        "type": {
+          "domain": {
+            "variable": 0
+          },
+          "range": {
+            "domain": {
+              "constant": "file.samples.List.List",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            },
+            "range": {
+              "constant": "file.samples.List.List",
+              "arguments": [
+                {
+                  "variable": 0
+                }
+              ]
+            }
+          }
+        }
+      },
+      "precedence": 5,
+      "associativity": "right"
     }
   ]
 }
