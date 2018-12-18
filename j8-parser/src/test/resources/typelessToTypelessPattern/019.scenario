@@ -1,0 +1,128 @@
+-- Create a new binary operator
+(++ 6 left) : Int -> Int -> Int
+(++ 6 left) 0 b =
+    b
+(++ 6 left) a 0 =
+    a
+(++ 6 left) a b =
+    a + b
+
+num =
+    10 ++ 20
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstantIntPattern:
+                  value: 0
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                  expression:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: b
+                          qualifier: null
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstantIntPattern:
+                      value: 0
+                  expression:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: a
+                          qualifier: null
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                  expression:
+                    BinaryOpExpression:
+                      left:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: a
+                              qualifier: null
+                      operator:
+                        ID:
+                          name: +
+                      right:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: b
+                              qualifier: null
+          ]
+        id:
+          OperatorDeclarationID:
+            associativity:
+              Left:
+            name:
+              ID:
+                name: ++
+            precedence: 6
+        ttype:
+          TArrow:
+            domain:
+              TTypeReference:
+                arguments: []
+                name:
+                  QualifiedID:
+                    name: Int
+                    qualifier: null
+            range:
+              TArrow:
+                domain:
+                  TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Int
+                        qualifier: null
+                range:
+                  TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Int
+                        qualifier: null
+      LetDeclaration:
+        expressions: [
+            BinaryOpExpression:
+              left:
+                ConstantInt:
+                  value: 10
+              operator:
+                ID:
+                  name: ++
+              right:
+                ConstantInt:
+                  value: 20
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: num
+        ttype: null
+    ]
+  exports: []
+  imports: []
