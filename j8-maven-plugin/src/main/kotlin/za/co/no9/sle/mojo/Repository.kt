@@ -39,7 +39,7 @@ class Item(
 
 
     override fun sourceCode(): String =
-            inputFile.readText()
+            urn.readText()
 
 
     override fun sourceFile(): File =

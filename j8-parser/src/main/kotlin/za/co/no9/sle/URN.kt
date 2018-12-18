@@ -52,6 +52,18 @@ data class URN(val source: Source, val name: String, val version: String? = null
                 Resource ->
                     TODO()
             }
+
+    fun readText(): String =
+            when (source) {
+                File ->
+                    java.io.File(name).readText()
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
 }
 
 
