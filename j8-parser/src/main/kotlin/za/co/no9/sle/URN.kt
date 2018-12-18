@@ -6,8 +6,64 @@ data class URN(val source: Source, val name: String, val version: String? = null
 
     fun impliedName(): String =
             name.takeLastWhile { it.isLetterOrDigit() || it == '_' }
+
+
+    fun className(): String =
+            when (source) {
+                File -> {
+                    val canonicalInputFile =
+                            java.io.File(name).canonicalFile
+
+                    canonicalInputFile.nameWithoutExtension
+                }
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
+
+
+    fun packageName(sourcePrefix: java.io.File): List<String> =
+            when (source) {
+                File -> {
+                    val sourcePrefixName =
+                            sourcePrefix.absolutePath
+
+                    val canonicalInputFile =
+                            java.io.File(name).canonicalFile
+
+                    val inputFilePath =
+                            canonicalInputFile.parent
+
+                    val innerPath =
+                            if (inputFilePath.startsWith(sourcePrefixName))
+                                splitPath(inputFilePath.drop(sourcePrefixName.length))
+                            else
+                                splitPath(inputFilePath)
+
+                    listOf("file") + innerPath
+                }
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
 }
 
+
+private fun splitPath(path: String): List<String> {
+    val input =
+            path.trim(java.io.File.separatorChar)
+
+    return if (input.isBlank())
+        emptyList()
+    else
+        input.split(java.io.File.separatorChar)
+}
 
 private fun extractSource(input: String): Source {
     val indexOfFirstColon =

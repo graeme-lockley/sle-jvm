@@ -1,11 +1,8 @@
 package za.co.no9.sle.mojo
 
-import za.co.no9.sle.Either
-import za.co.no9.sle.Errors
-import za.co.no9.sle.Source
+import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.fromJsonString
-import za.co.no9.sle.value
 import java.io.File
 
 
@@ -13,23 +10,11 @@ abstract class Repository(
         open val sourcePrefix: File,
         open val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
     override fun item(source: Source, inputFile: File): Either<Errors, Item> {
-        val sourcePrefixName =
-                sourcePrefix.absolutePath
-
         val canonicalInputFile =
                 inputFile.canonicalFile
 
-        val inputFilePath =
-                canonicalInputFile.parent
-
-        val innerPath =
-                if (inputFilePath.startsWith(sourcePrefixName))
-                    splitPath(inputFilePath.drop(sourcePrefixName.length))
-                else
-                    splitPath(inputFilePath)
-
         val item =
-                Item(this, canonicalInputFile, listOf("file") + innerPath, canonicalInputFile.nameWithoutExtension)
+                Item(this, URN(source, inputFile.canonicalPath), canonicalInputFile)
 
         itemLoaded(item)
 
@@ -37,25 +22,21 @@ abstract class Repository(
     }
 
 
-    private fun splitPath(path: String): List<String> {
-        val input =
-                path.trim(File.separatorChar)
-
-        return if (input.isBlank())
-            emptyList()
-        else
-            input.split(File.separatorChar)
-    }
-
     abstract fun itemLoaded(item: Item)
 }
 
 
 class Item(
         private val repository: Repository,
-        private val inputFile: File,
-        val packageName: List<String>,
-        val className: String) : za.co.no9.sle.repository.Item {
+        private val urn: URN,
+        private val inputFile: File) : za.co.no9.sle.repository.Item {
+
+    val packageName: List<String>
+        get() = urn.packageName(repository.sourcePrefix)
+
+    val className: String
+        get() = urn.className()
+
 
     override fun sourceCode(): String =
             inputFile.readText()
