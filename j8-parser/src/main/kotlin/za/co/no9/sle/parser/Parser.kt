@@ -188,8 +188,21 @@ class Parser(private val lexer: Lexer) {
                         TypeNamedDeclaration(upperID.location, upperID, false)
                 }
 
+                isOperator("(") -> {
+                    val openParen =
+                            skip()
+
+                    val operator =
+                            matchOperator()
+
+                    val closeParen =
+                            matchOperator(")")
+
+                    OperatorNamedDeclaration(openParen.location + closeParen.location, operator.toID())
+                }
+
                 else ->
-                    throw syntaxError("Expected UpperID or LowerID")
+                    throw syntaxError("Expected UpperID, LowerID or '('")
             }
 
 

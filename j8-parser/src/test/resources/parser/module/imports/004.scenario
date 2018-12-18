@@ -1,0 +1,19 @@
+-- Import an operator
+import file:../Data/List exposing (::)
+-- ast
+Module:
+  declarations: []
+  exports: []
+  imports: [
+      Import:
+        asName: null
+        namedDeclarations: [
+            OperatorNamedDeclaration:
+              name:
+                ID:
+                  name: ::
+          ]
+        urn:
+          ID:
+            name: file:../Data/List
+    ]

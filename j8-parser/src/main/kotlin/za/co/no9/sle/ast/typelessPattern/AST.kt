@@ -43,6 +43,10 @@ data class ValueImportDeclaration(
         override val location: Location,
         val name: ID) : ImportDeclaration(location)
 
+data class OperatorImportDeclaration(
+        override val location: Location,
+        val name: ID) : ImportDeclaration(location)
+
 data class TypeImportDeclaration(
         override val location: Location,
         val name: ID,

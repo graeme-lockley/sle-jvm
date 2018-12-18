@@ -1,0 +1,276 @@
+-- Import a use an operator
+import file:./../../List as L1
+import file:./../../List exposing (::)
+
+
+duplicate : L1.List a -> L1.List a
+duplicate L1.Nil = L1.Nil
+duplicate (L1.Cons x xs) =
+    x :: x :: (duplicate xs)
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstructorReferencePattern:
+                  name: file.package.name.File.Nil
+                  parameters: []
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+              expression:
+                IdReference:
+                  name: file.package.name.File.Nil
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+                  range:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+            LambdaExpression:
+              argument:
+                ConstructorReferencePattern:
+                  name: file.package.name.File.Cons
+                  parameters: [
+                      IdReferencePattern:
+                        name: x
+                        type:
+                          TVar:
+                            variable: 3
+                      IdReferencePattern:
+                        name: xs
+                        type:
+                          TCon:
+                            arguments: [
+                                TVar:
+                                  variable: 3
+                              ]
+                            name: file.samples.List.List
+                    ]
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+              expression:
+                CallExpression:
+                  operand:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: xs
+                              type:
+                                TCon:
+                                  arguments: [
+                                      TVar:
+                                        variable: 3
+                                    ]
+                                  name: file.samples.List.List
+                          operator:
+                            IdReference:
+                              name: duplicate
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 3
+                                        ]
+                                      name: file.samples.List.List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 3
+                                        ]
+                                      name: file.samples.List.List
+                          type:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 3
+                                ]
+                              name: file.samples.List.List
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: x
+                              type:
+                                TVar:
+                                  variable: 3
+                          operator:
+                            IdReference:
+                              name: file.package.name.File.::
+                              type:
+                                TArr:
+                                  domain:
+                                    TVar:
+                                      variable: 3
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 3
+                                            ]
+                                          name: file.samples.List.List
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 3
+                                            ]
+                                          name: file.samples.List.List
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TVar:
+                                        variable: 3
+                                    ]
+                                  name: file.samples.List.List
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TVar:
+                                        variable: 3
+                                    ]
+                                  name: file.samples.List.List
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 3
+                            ]
+                          name: file.samples.List.List
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: x
+                          type:
+                            TVar:
+                              variable: 3
+                      operator:
+                        IdReference:
+                          name: file.package.name.File.::
+                          type:
+                            TArr:
+                              domain:
+                                TVar:
+                                  variable: 3
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 3
+                                        ]
+                                      name: file.samples.List.List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 3
+                                        ]
+                                      name: file.samples.List.List
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 3
+                                ]
+                              name: file.samples.List.List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TVar:
+                                    variable: 3
+                                ]
+                              name: file.samples.List.List
+                  type:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+                  range:
+                    TCon:
+                      arguments: [
+                          TVar:
+                            variable: 3
+                        ]
+                      name: file.samples.List.List
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: duplicate
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: file.samples.List.List
+                range:
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: file.samples.List.List
+    ]
+  exports: []

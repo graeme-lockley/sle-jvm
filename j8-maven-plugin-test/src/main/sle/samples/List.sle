@@ -14,13 +14,13 @@ singleton x =
 repeat : Int -> a -> List a
 repeat n e
     | n == 0 = Nil
-    | otherwise = Cons e (repeat (n - 1) e)
+    | otherwise = e :: repeat (n - 1) e
 
 
 range : Int -> Int -> List Int
 range m n
     | m > n = Nil
-    | otherwise = Cons m (range (m + 1) n)
+    | otherwise = m :: range (m + 1) n
 
 
 isEmpty Nil = True
@@ -37,18 +37,18 @@ tail (Cons x xs) = Just xs
 
 map : (a -> b) -> List a -> List b
 map f Nil = Nil
-map f (Cons x xs) = Cons (f x) (map f xs)
+map f (Cons x xs) = f x :: map f xs
 
 
 removedups : List Int -> List Int
 removedups (Cons x (Cons y ys)) =
             if (x == y) then
-                removedups (Cons y ys)
+                removedups (y :: ys)
             else
-                Cons x (removedups (Cons y ys) )
+                x :: removedups (y :: ys)
 
 removedups (Cons x xs) =
-    Cons x (removedups xs)
+    x :: (removedups xs)
 
 removedups Nil =
     Nil
@@ -56,7 +56,7 @@ removedups Nil =
 
 duplicate : List a -> List a
 duplicate Nil = Nil
-duplicate (Cons x xs) = Cons x (Cons x (duplicate xs))
+duplicate (Cons x xs) = x :: x :: duplicate xs
 
 
 plus5 n =

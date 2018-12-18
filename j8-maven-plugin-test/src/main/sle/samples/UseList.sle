@@ -1,4 +1,9 @@
 import file:./List
+import file:./List exposing (::)
+
+
+dbl x =
+    x :: x :: List.Nil
 
 
 numbers =

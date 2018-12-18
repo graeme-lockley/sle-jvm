@@ -24,6 +24,19 @@ object None : Associativity() {
 }
 
 
+fun associativityFromString(text: String): Associativity =
+        when (text) {
+            "left" ->
+                Left
+
+            "right" ->
+                Right
+
+            else ->
+                None
+        }
+
+
 data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {
     fun value(name: String): ValueBinding? =
             valueBindings[name]
@@ -149,6 +162,12 @@ data class OperatorBinding(
 data class ImportVariableBinding(
         val item: Item,
         val scheme: Scheme) : ValueBinding()
+
+data class ImportOperatorBinding(
+        val item: Item,
+        val scheme: Scheme,
+        val precedence: Int,
+        val associativity: Associativity) : ValueBinding()
 
 data class ImportBinding(
         val environment: Environment) : ValueBinding()

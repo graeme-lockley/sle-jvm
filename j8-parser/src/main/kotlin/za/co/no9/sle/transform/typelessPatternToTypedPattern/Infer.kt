@@ -166,6 +166,10 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                                 is ImportVariableBinding ->
                                     ValueExportDeclaration(it.name.name, valueBinding.scheme)
+
+                                is ImportOperatorBinding ->
+                                    OperatorExportDeclaration(it.name.name, valueBinding.scheme, valueBinding.precedence, valueBinding.associativity)
+
                             }
                         }
 
@@ -348,6 +352,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                 is ImportVariableBinding ->
                                     valueBinding.scheme
 
+                                is ImportOperatorBinding ->
+                                    valueBinding.scheme
+
                                 else ->
                                     null
                             }
@@ -370,8 +377,11 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             is ImportVariableBinding ->
                                 IdReference(expression.location, type, valueBinding.item.resolveId(expression.name.name))
 
+                            is ImportOperatorBinding ->
+                                IdReference(expression.location, type, valueBinding.item.resolveConstructor(expression.name.name))
+
                             else ->
-                                IdReference(expression.location, type, "unknown")
+                                TODO("Unknown valueBinding: $valueBinding")
                         }
                     }
                 }
@@ -389,6 +399,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                     valueBinding.scheme
 
                                 is ImportVariableBinding ->
+                                    valueBinding.scheme
+
+                                is ImportOperatorBinding ->
                                     valueBinding.scheme
 
                                 else ->
@@ -413,8 +426,11 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             is ImportVariableBinding ->
                                 IdReference(expression.location, type, valueBinding.item.resolveConstructor(expression.name.name))
 
+                            is ImportOperatorBinding ->
+                                IdReference(expression.location, type, valueBinding.item.resolveConstructor(expression.name.name))
+
                             else ->
-                                IdReference(expression.location, type, "unknown")
+                                TODO("Unknown valueBinding: $valueBinding")
                         }
                     }
                 }
@@ -567,7 +583,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                 valueBinding.item.resolveConstructor(pattern.name.name)
 
                             else ->
-                                "unknown"
+                                TODO("Unknown valueBinding: $valueBinding")
                         }
 
                         ConstructorReferencePattern(pattern.location, returnType, constructorName, parameters)
@@ -645,14 +661,7 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                                 errors.add(DuplicateImportedLetDeclaration(import.location, d.operator))
                                             }
 
-                                            val associativity =
-                                                    when (d.associativity) {
-                                                        "left" -> Left
-                                                        "right" -> Right
-                                                        else -> None
-                                                    }
-
-                                            e.newValue(d.operator, OperatorBinding(d.scheme.asScheme(import.location), d.precedence, associativity))
+                                            e.newValue(d.operator, OperatorBinding(d.scheme.asScheme(import.location), d.precedence, associativityFromString(d.associativity)))
                                         }
 
                                         is za.co.no9.sle.repository.AliasDeclaration -> {
@@ -710,6 +719,39 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             }
 
                                             e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                        }
+
+                                        is za.co.no9.sle.repository.OperatorDeclaration -> {
+                                            if (e.containsValue(importDeclaration.operator)) {
+                                                errors.add(DuplicateImportedLetDeclaration(import.location, importDeclaration.operator))
+                                            }
+
+                                            e.newValue(importDeclaration.operator, OperatorBinding(importDeclaration.scheme.asScheme(import.location), importDeclaration.precedence, associativityFromString(importDeclaration.associativity)))
+                                        }
+
+                                        else -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
+                                        }
+                                    }
+                                }
+
+                                is za.co.no9.sle.ast.typelessPattern.OperatorImportDeclaration -> {
+                                    val importDeclaration =
+                                            exports[d.name.name]
+
+                                    when (importDeclaration) {
+                                        null -> {
+                                            errors.add(ValueNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, errorScheme))
+                                        }
+
+                                        is za.co.no9.sle.repository.OperatorDeclaration -> {
+                                            if (e.containsValue(d.name.name)) {
+                                                errors.add(DuplicateImportedLetDeclaration(d.name.location, d.name.name))
+                                            }
+
+                                            e.newValue(d.name.name, ImportOperatorBinding(importItem, importDeclaration.scheme.asScheme(d.name.location), importDeclaration.precedence, associativityFromString(importDeclaration.associativity)))
                                         }
 
                                         else -> {

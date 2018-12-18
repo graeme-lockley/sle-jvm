@@ -183,6 +183,9 @@ private fun transform(import: za.co.no9.sle.ast.typeless.Import): Import {
             is za.co.no9.sle.ast.typeless.LetNamedDeclaration ->
                 ValueImportDeclaration(it.location, transform(it.name))
 
+            is za.co.no9.sle.ast.typeless.OperatorNamedDeclaration ->
+                OperatorImportDeclaration(it.location, transform(it.name))
+
             is za.co.no9.sle.ast.typeless.TypeNamedDeclaration ->
                 TypeImportDeclaration(it.location, transform(it.name), it.withConstructors)
         }

@@ -45,6 +45,10 @@ data class LetNamedDeclaration(
         override val location: Location,
         val name: ID) : NamedDeclaration(location)
 
+data class OperatorNamedDeclaration(
+        override val location: Location,
+        val name: ID) : NamedDeclaration(location)
+
 data class TypeNamedDeclaration(
         override val location: Location,
         val name: ID,
