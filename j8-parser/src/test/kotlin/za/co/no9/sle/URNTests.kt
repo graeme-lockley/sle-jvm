@@ -8,7 +8,7 @@ class URNTests : StringSpec({
         val urn =
                 URN("github:Data.List:1.2.1")
 
-        urn.shouldBe(URN(Source.Github, "Data.List", "1.2.1"))
+        urn.shouldBe(URN(Github, "Data.List", "1.2.1"))
         urn.impliedName().shouldBe("List")
     }
 
@@ -16,7 +16,7 @@ class URNTests : StringSpec({
         val urn =
                 URN("github:Data.List")
 
-        urn.shouldBe(URN(Source.Github, "Data.List", null))
+        urn.shouldBe(URN(Github, "Data.List", null))
         urn.impliedName().shouldBe("List")
     }
 
@@ -24,7 +24,7 @@ class URNTests : StringSpec({
         val urn =
                 URN("file:../Data/File")
 
-        urn.shouldBe(URN(Source.File, "../Data/File", null))
+        urn.shouldBe(URN(File, "../Data/File", null))
         urn.impliedName().shouldBe("File")
     }
 })

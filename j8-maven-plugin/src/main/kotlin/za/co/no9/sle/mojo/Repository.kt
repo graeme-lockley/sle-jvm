@@ -111,9 +111,9 @@ class Item(
                 File(name)
 
         return if (nameFile.isAbsolute)
-            repository.item(Source.File, nameFile)
+            repository.item(za.co.no9.sle.File, nameFile)
         else
-            repository.item(Source.File, File(inputFile.parentFile, "$name.sle"))
+            repository.item(za.co.no9.sle.File, File(inputFile.parentFile, "$name.sle"))
     }
 
 

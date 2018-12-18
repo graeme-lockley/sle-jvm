@@ -15,13 +15,16 @@ private fun extractSource(input: String): Source {
 
     return when (input.substring(0, indexOfFirstColon)) {
         "file" ->
-            Source.File
+            File
 
         "github" ->
-            Source.Github
+            Github
+
+        "resource" ->
+            Resource
 
         else ->
-            Source.File
+            File
     }
 }
 
@@ -54,6 +57,22 @@ private fun extractVersion(input: String): String? {
 }
 
 
-enum class Source {
-    File, Github, Resource
+sealed class Source
+
+
+object File : Source() {
+    override fun toString(): String =
+            "File"
+}
+
+
+object Github : Source() {
+    override fun toString(): String =
+            "Github"
+}
+
+
+object Resource : Source() {
+    override fun toString(): String =
+            "Resource"
 }
