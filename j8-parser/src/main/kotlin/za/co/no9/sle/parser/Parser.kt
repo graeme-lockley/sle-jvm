@@ -226,7 +226,7 @@ class Parser(private val lexer: Lexer) {
                 return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
             }
 
-            isToken(Token.LowerID) || isOperator("(") -> {
+            isFirstValueDeclarationID() -> {
                 val id =
                         parseValueDeclarationID()
 
@@ -281,6 +281,10 @@ class Parser(private val lexer: Lexer) {
                 throw syntaxError("Expected typealias, type, LowerID or '('")
         }
     }
+
+
+    fun isFirstValueDeclarationID(): Boolean =
+            isToken(Token.LowerID) || isOperator("(")
 
 
     fun parseValueDeclarationID(): ValueDeclarationID =
