@@ -4,18 +4,17 @@ package za.co.no9.sle
 data class URN(val source: Source, val name: String, val version: String? = null) {
     constructor(input: String) : this(extractSource(input), extractName(input), extractVersion(input))
 
+    constructor(source: Source, file: java.io.File) : this(source, file.canonicalPath)
+
+
     fun impliedName(): String =
             name.takeLastWhile { it.isLetterOrDigit() || it == '_' }
 
 
     fun className(): String =
             when (source) {
-                File -> {
-                    val canonicalInputFile =
-                            java.io.File(name).canonicalFile
-
-                    canonicalInputFile.nameWithoutExtension
-                }
+                File ->
+                    java.io.File(name).nameWithoutExtension
 
                 Github ->
                     TODO()
@@ -89,6 +88,7 @@ private fun splitPath(path: String): List<String> {
     else
         input.split(java.io.File.separatorChar)
 }
+
 
 private fun extractSource(input: String): Source {
     val indexOfFirstColon =

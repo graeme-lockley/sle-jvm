@@ -167,14 +167,17 @@ class BuildRepository(override val sourcePrefix: File,
             val file =
                     File(fileName)
 
+            val urn =
+                    URN(File, file.canonicalPath)
+
             val result =
-                    item(File, file)
+                    item(urn)
 
             val errors =
                     result.left()
 
             if (errors != null) {
-                includeErrors(URN(File, file.canonicalPath), errors)
+                includeErrors(urn, errors)
             }
         }
     }

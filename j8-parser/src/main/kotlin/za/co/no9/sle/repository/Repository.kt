@@ -2,13 +2,11 @@ package za.co.no9.sle.repository
 
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
-import za.co.no9.sle.Source
 import za.co.no9.sle.URN
-import java.io.File
 
 
 interface Repository<out T : Item> {
-    fun item(source: Source, inputFile: File): Either<Errors, T>
+    fun item(urn: URN): Either<Errors, T>
 }
 
 

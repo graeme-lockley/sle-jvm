@@ -9,9 +9,9 @@ import java.io.File
 abstract class Repository(
         open val sourcePrefix: File,
         open val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
-    override fun item(source: Source, inputFile: File): Either<Errors, Item> {
+    override fun item(urn: URN): Either<Errors, Item> {
         val item =
-                Item(this, URN(source, inputFile.canonicalPath))
+                Item(this, urn)
 
         itemLoaded(item)
 
@@ -79,9 +79,9 @@ class Item(
                             File(name)
 
                     if (nameFile.isAbsolute)
-                        repository.item(File, nameFile)
+                        repository.item(URN(File, nameFile.canonicalPath))
                     else
-                        repository.item(File, File(urn.inputFile()!!.parentFile, "$name.sle"))
+                        repository.item(URN(File, File(urn.inputFile()!!.parentFile, "$name.sle").canonicalPath))
                 }
 
                 Github ->
