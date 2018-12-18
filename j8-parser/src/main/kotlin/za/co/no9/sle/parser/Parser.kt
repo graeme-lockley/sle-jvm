@@ -3,6 +3,9 @@ package za.co.no9.sle.parser
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typeless.Unit
+import za.co.no9.sle.typing.Left
+import za.co.no9.sle.typing.None
+import za.co.no9.sle.typing.Right
 
 
 fun parseModule(lexer: Lexer): Either<Errors, Module> {
@@ -223,9 +226,9 @@ class Parser(private val lexer: Lexer) {
                 return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
             }
 
-            isToken(Token.LowerID) -> {
+            isToken(Token.LowerID) || isOperator("(") -> {
                 val id =
-                        lexer.next().toID()
+                        parseValueDeclarationID()
 
                 if (isOperator(":")) {
                     matchOperator(":")
@@ -233,7 +236,7 @@ class Parser(private val lexer: Lexer) {
                     val type =
                             parseType()
 
-                    return LetSignature(id.location + type.location, LowerIDDeclarationID(id.location, id), type)
+                    return LetSignature(id.location + type.location, id, type)
                 } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
                     val arguments =
                             mutableListOf<Pattern>()
@@ -260,14 +263,14 @@ class Parser(private val lexer: Lexer) {
                             guardedExpressions.add(Pair(guard, expression))
                         }
 
-                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), LowerIDDeclarationID(id.location, id), arguments, guardedExpressions)
+                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
                     } else {
                         matchOperator("=")
 
                         val expression =
                                 parseExpression(id.column)
 
-                        return LetDeclaration(locationFrom(listOf(id, expression))!!, LowerIDDeclarationID(id.location, id), arguments, expression)
+                        return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
                     }
                 } else {
                     TODO()
@@ -275,8 +278,60 @@ class Parser(private val lexer: Lexer) {
             }
 
             else ->
-                throw syntaxError("Expected typealias, type or LowerID")
+                throw syntaxError("Expected typealias, type, LowerID or '('")
         }
+    }
+
+
+    fun parseValueDeclarationID(): ValueDeclarationID =
+            when {
+                isToken(Token.LowerID) -> {
+                    val id =
+                            lexer.next().toID()
+
+                    LowerIDDeclarationID(id.location, id)
+                }
+
+                isOperator("(") ->
+                    parseOperatorDeclarationID()
+
+                else ->
+                    throw syntaxError("Expected LowerID or '('")
+            }
+
+
+    fun parseOperatorDeclarationID(): OperatorDeclarationID {
+        val openParen =
+                matchOperator("(")
+
+        val operator =
+                matchOperator()
+
+        val precedence =
+                matchToken(Token.ConstantInt, "Constant Integer")
+
+        val associativityToken =
+                matchToken(Token.LowerID, "left, right or none")
+
+        val associativity =
+                when (associativityToken.text) {
+                    "left" ->
+                        Left
+
+                    "right" ->
+                        Right
+
+                    "none" ->
+                        None
+
+                    else ->
+                        throw syntaxError("Expected left, right or none rather than ${associativityToken.text}")
+                }
+
+        val closeParen =
+                matchOperator(")")
+
+        return OperatorDeclarationID(openParen.location + closeParen.location, operator.toID(), precedence.text.toInt(), associativity)
     }
 
 
@@ -761,6 +816,10 @@ class Parser(private val lexer: Lexer) {
             lexer.token == Token.ConstantOperator && lexer.text == text
 
 
+    private fun isOperator(): Boolean =
+            lexer.token == Token.ConstantOperator
+
+
     private fun isOperatorExcluded(exclusions: Set<String>): Boolean =
             lexer.token == Token.ConstantOperator && !exclusions.contains(lexer.text)
 
@@ -774,6 +833,15 @@ class Parser(private val lexer: Lexer) {
             return lexer.next()
         } else {
             throw syntaxError("Expected '$text'")
+        }
+    }
+
+
+    private fun matchOperator(): Symbol {
+        if (isOperator()) {
+            return lexer.next()
+        } else {
+            throw syntaxError("Expected an operator")
         }
     }
 

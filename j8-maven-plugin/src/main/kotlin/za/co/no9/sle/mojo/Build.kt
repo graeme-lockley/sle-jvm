@@ -8,7 +8,11 @@ import za.co.no9.sle.pass4.translate
 import za.co.no9.sle.repository.toJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.Left
+import za.co.no9.sle.typing.None
+import za.co.no9.sle.typing.Right
 import java.io.File
+
 
 fun build(log: Log, sourceFile: File, targetFile: File) {
     if (!sourceFile.isDirectory) {
@@ -232,49 +236,49 @@ private val environment =
                 .newValue("(==)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(!=)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(<)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(<=)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(>)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(>=)", OperatorBinding(
                         Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                         4,
-                        Associativity.None))
+                        None))
                 .newValue("(&&)", OperatorBinding(
                         Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
                         3,
-                        Associativity.Right))
+                        Right))
                 .newValue("(||)", OperatorBinding(
                         Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
                         2,
-                        Associativity.Right))
+                        Right))
                 .newValue("(-)", OperatorBinding(
                         Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                         6,
-                        Associativity.Left))
+                        Left))
                 .newValue("(+)", OperatorBinding(
                         Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                         6,
-                        Associativity.Left))
+                        Left))
                 .newValue("(*)", OperatorBinding(
                         Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                         7,
-                        Associativity.Left))
+                        Left))
                 .newValue("(/)", OperatorBinding(
                         Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                         7,
-                        Associativity.Left))
+                        Left))
 

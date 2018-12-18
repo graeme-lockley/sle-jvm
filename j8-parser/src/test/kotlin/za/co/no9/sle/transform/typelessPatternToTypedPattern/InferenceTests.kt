@@ -20,37 +20,37 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     6,
-                                    Associativity.Left
+                                    Left
                             ))
                     .newValue("(-)",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     6,
-                                    Associativity.Left
+                                    Left
                             ))
                     .newValue("(*)",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     7,
-                                    Associativity.Left
+                                    Left
                             ))
                     .newValue("(/)",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     7,
-                                    Associativity.Left
+                                    Left
                             ))
                     .newValue("(&&)",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
                                     3,
-                                    Associativity.Right
+                                    Right
                             ))
                     .newValue("(==)",
                             OperatorBinding(
                                     Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                                     4,
-                                    Associativity.None
+                                    None
                             ))
                     .newValue("aString", VariableBinding(Scheme(listOf(), typeString)))
 

@@ -4,9 +4,11 @@ import za.co.no9.sle.QString
 import za.co.no9.sle.repository.Item
 
 
-enum class Associativity {
-    Left, Right, None
-}
+sealed class Associativity
+
+object Left : Associativity()
+object Right : Associativity()
+object None : Associativity()
 
 
 data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {

@@ -1,8 +1,8 @@
 package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import za.co.no9.sle.ast.typelessPattern.BinaryOpExpression
-import za.co.no9.sle.typing.Associativity
 import za.co.no9.sle.typing.Environment
+import za.co.no9.sle.typing.Left
 import za.co.no9.sle.typing.OperatorBinding
 
 
@@ -34,7 +34,7 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
             operatorPrecedence.precedence > rightOperatorPrecedence.precedence ->
                 transformOperators(environment, rotate())
 
-            operatorPrecedence.precedence == rightOperatorPrecedence.precedence && operatorPrecedence.associativity == Associativity.Left ->
+            operatorPrecedence.precedence == rightOperatorPrecedence.precedence && operatorPrecedence.associativity == Left ->
                 transformOperators(environment, rotate())
 
             else ->
