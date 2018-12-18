@@ -65,17 +65,6 @@ class Item(
             inputFile
 
 
-    fun mustCompile(): Boolean {
-        val targetJavaFile =
-                targetJavaFile()
-
-        val targetJsonFile =
-                targetJsonFile()
-
-        return !targetJavaFile.exists() || !targetJsonFile.exists() || sourceFile().lastModified() > targetJavaFile.lastModified()
-    }
-
-
     fun targetJavaFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.java")
 
