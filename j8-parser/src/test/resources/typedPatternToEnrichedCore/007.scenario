@@ -12,7 +12,7 @@ factorial =
           (IF
             (CALL
               (CALL
-                (==)
+                ==
                 0
               )
               $v0
@@ -27,14 +27,14 @@ factorial =
         (LAMBDA n ->
           (CALL
             (CALL
-              (*)
+              *
               n
             )
             (CALL
               factorial
               (CALL
                 (CALL
-                  (-)
+                  -
                   n
                 )
                 1

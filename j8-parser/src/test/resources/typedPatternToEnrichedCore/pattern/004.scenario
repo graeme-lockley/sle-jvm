@@ -16,7 +16,7 @@ stringToNum =
               (IF
                 (CALL
                   (CALL
-                    (==)
+                    ==
                     "Hello"
                   )
                   $v0
@@ -32,7 +32,7 @@ stringToNum =
               (IF
                 (CALL
                   (CALL
-                    (==)
+                    ==
                     "World"
                   )
                   $v0

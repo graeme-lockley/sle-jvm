@@ -156,7 +156,7 @@ Module:
                           value: 1
                       operator:
                         IdReference:
-                          name: (+)
+                          name: +
                           type:
                             TArr:
                               domain:

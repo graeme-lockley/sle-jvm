@@ -10,7 +10,7 @@ factorial =
     (IF
       (CALL
         (CALL
-          (==)
+          ==
           n
         )
         0
@@ -18,14 +18,14 @@ factorial =
       1
       (CALL
         (CALL
-          (*)
+          *
           n
         )
         (CALL
           factorial
           (CALL
             (CALL
-              (-)
+              -
               n
             )
             1

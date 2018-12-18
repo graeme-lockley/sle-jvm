@@ -31,6 +31,9 @@ data class Environment(private val valueBindings: Map<String, ValueBinding> = ma
             is VariableBinding ->
                 valueBinding.scheme
 
+            is OperatorBinding ->
+                valueBinding.scheme
+
             is ImportVariableBinding ->
                 valueBinding.scheme
 

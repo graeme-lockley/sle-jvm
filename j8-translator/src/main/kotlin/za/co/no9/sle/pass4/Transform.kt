@@ -10,18 +10,18 @@ import za.co.no9.sle.typing.generalise
 
 private val RefMapping = mapOf(
         Pair("i_BuiltinValue", "za.co.no9.sle.runtime.Builtin.BUILTIN_VALUE"),
-        Pair("(&&)", "za.co.no9.sle.runtime.Builtin.AMPERSAND_AMPERSAND"),
-        Pair("(||)", "za.co.no9.sle.runtime.Builtin.BAR_BAR"),
-        Pair("(==)", "za.co.no9.sle.runtime.Builtin.EQUAL_EQUAL"),
-        Pair("(!=)", "za.co.no9.sle.runtime.Builtin.BANG_EQUAL"),
-        Pair("(<)", "za.co.no9.sle.runtime.Builtin.LESS"),
-        Pair("(<=)", "za.co.no9.sle.runtime.Builtin.LESS_EQUAL"),
-        Pair("(>)", "za.co.no9.sle.runtime.Builtin.GREATER"),
-        Pair("(>=)", "za.co.no9.sle.runtime.Builtin.GREATER_EQUAL"),
-        Pair("(+)", "za.co.no9.sle.runtime.Builtin.PLUS"),
-        Pair("(-)", "za.co.no9.sle.runtime.Builtin.MINUS"),
-        Pair("(*)", "za.co.no9.sle.runtime.Builtin.STAR"),
-        Pair("(/)", "za.co.no9.sle.runtime.Builtin.SLASH")
+        Pair("&&", "za.co.no9.sle.runtime.Builtin.AMPERSAND_AMPERSAND"),
+        Pair("||", "za.co.no9.sle.runtime.Builtin.BAR_BAR"),
+        Pair("==", "za.co.no9.sle.runtime.Builtin.EQUAL_EQUAL"),
+        Pair("!=", "za.co.no9.sle.runtime.Builtin.BANG_EQUAL"),
+        Pair("<", "za.co.no9.sle.runtime.Builtin.LESS"),
+        Pair("<=", "za.co.no9.sle.runtime.Builtin.LESS_EQUAL"),
+        Pair(">", "za.co.no9.sle.runtime.Builtin.GREATER"),
+        Pair(">=", "za.co.no9.sle.runtime.Builtin.GREATER_EQUAL"),
+        Pair("+", "za.co.no9.sle.runtime.Builtin.PLUS"),
+        Pair("-", "za.co.no9.sle.runtime.Builtin.MINUS"),
+        Pair("*", "za.co.no9.sle.runtime.Builtin.STAR"),
+        Pair("/", "za.co.no9.sle.runtime.Builtin.SLASH")
 )
 
 

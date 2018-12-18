@@ -1,0 +1,306 @@
+-- Create a new binary operator
+(++ 6 left) : Int -> Int -> Int
+(++ 6 left) 0 b =
+    b
+(++ 6 left) a 0 =
+    a
+(++ 6 left) a b =
+    a + b
+
+num =
+    10 ++ 20
+
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                ConstantIntPattern:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  value: 0
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  expression:
+                    IdReference:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstantIntPattern:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      value: 0
+                  expression:
+                    IdReference:
+                      name: a
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: b
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: a
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                          operator:
+                            IdReference:
+                              name: +
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      range:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+          ]
+        id:
+          OperatorDeclarationID:
+            associativity:
+              Left:
+            name:
+              ID:
+                name: ++
+            precedence: 6
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                ConstantInt:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  value: 20
+              operator:
+                CallExpression:
+                  operand:
+                    ConstantInt:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      value: 10
+                  operator:
+                    IdReference:
+                      name: ++
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+              type:
+                TCon:
+                  arguments: []
+                  name: Data.Int
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: num
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.Int
+    ]
+  exports: []

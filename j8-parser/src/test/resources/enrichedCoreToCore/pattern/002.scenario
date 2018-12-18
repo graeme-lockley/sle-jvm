@@ -14,7 +14,7 @@ numToString =
         (IF
           (CALL
             (CALL
-              (==)
+              ==
               0
             )
             $case
@@ -23,7 +23,7 @@ numToString =
           (IF
             (CALL
               (CALL
-                (==)
+                ==
                 1
               )
               $case
@@ -32,7 +32,7 @@ numToString =
             (IF
               (CALL
                 (CALL
-                  (==)
+                  ==
                   2
                 )
                 $case

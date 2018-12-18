@@ -28,7 +28,7 @@ remove0s =
             (IF
               (CALL
                 (CALL
-                  (==)
+                  ==
                   0
                 )
                 $$0

@@ -16,12 +16,42 @@ class EnrichedCoreToCoreTests : FunSpec({
 private class RunnerConsumer : Consumer<ConsumerParam> {
     private val environment =
             initialEnvironment
-                    .newValue("(+)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                    .newValue("(-)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                    .newValue("(*)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                    .newValue("(/)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                    .newValue("(&&)", VariableBinding(Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool)))))
-                    .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                    .newValue("+",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    6,
+                                    Left
+                            ))
+                    .newValue("-",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    6,
+                                    Left
+                            ))
+                    .newValue("*",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    7,
+                                    Left
+                            ))
+                    .newValue("/",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                    7,
+                                    Left
+                            ))
+                    .newValue("&&",
+                            OperatorBinding(
+                                    Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
+                                    3,
+                                    Right
+                            ))
+                    .newValue("==",
+                            OperatorBinding(
+                                    Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                    4,
+                                    None
+                            ))
                     .newValue("aString", VariableBinding(Scheme(listOf(), typeString)))
 
 

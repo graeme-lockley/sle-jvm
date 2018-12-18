@@ -4,7 +4,6 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.typing.*
-import za.co.no9.sle.typing.Associativity
 import java.util.function.Consumer
 
 
@@ -16,37 +15,37 @@ class InferenceTests : FunSpec({
 private class RunnerConsumer : Consumer<ConsumerParam> {
     private val environment =
             initialEnvironment
-                    .newValue("(+)",
+                    .newValue("+",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     6,
                                     Left
                             ))
-                    .newValue("(-)",
+                    .newValue("-",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     6,
                                     Left
                             ))
-                    .newValue("(*)",
+                    .newValue("*",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     7,
                                     Left
                             ))
-                    .newValue("(/)",
+                    .newValue("/",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
                                     7,
                                     Left
                             ))
-                    .newValue("(&&)",
+                    .newValue("&&",
                             OperatorBinding(
                                     Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
                                     3,
                                     Right
                             ))
-                    .newValue("(==)",
+                    .newValue("==",
                             OperatorBinding(
                                     Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
                                     4,

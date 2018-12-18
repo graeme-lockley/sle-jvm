@@ -25,7 +25,7 @@ repeat =
       (IF
         (CALL
           (CALL
-            (==)
+            ==
             n
           )
           0
@@ -41,7 +41,7 @@ repeat =
               repeat
               (CALL
                 (CALL
-                  (-)
+                  -
                   n
                 )
                 1

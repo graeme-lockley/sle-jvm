@@ -69,7 +69,7 @@ Module:
                                           name: Data.Int
                                   operator:
                                     IdReference:
-                                      name: (-)
+                                      name: -
                                       type:
                                         TArr:
                                           domain:
@@ -128,7 +128,7 @@ Module:
                                   name: Data.Int
                           operator:
                             IdReference:
-                              name: (*)
+                              name: *
                               type:
                                 TArr:
                                   domain:
@@ -179,7 +179,7 @@ Module:
                                   name: Data.Int
                           operator:
                             IdReference:
-                              name: (==)
+                              name: ==
                               type:
                                 TArr:
                                   domain:

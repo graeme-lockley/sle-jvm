@@ -15,7 +15,7 @@ boolToNum =
               (IF
                 (CALL
                   (CALL
-                    (==)
+                    ==
                     true
                   )
                   $v0
@@ -31,7 +31,7 @@ boolToNum =
               (IF
                 (CALL
                   (CALL
-                    (==)
+                    ==
                     false
                   )
                   $v0

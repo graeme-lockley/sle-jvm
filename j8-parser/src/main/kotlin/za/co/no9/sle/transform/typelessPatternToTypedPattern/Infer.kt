@@ -409,7 +409,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             transformOperators(env, expression)
 
                     val operator =
-                            za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.operator.location, za.co.no9.sle.ast.typelessPattern.IdReference(expressionWithAppliedOperatorRules.operator.location, QualifiedID(expressionWithAppliedOperatorRules.operator.location, null, "(${expressionWithAppliedOperatorRules.operator.name})")), expressionWithAppliedOperatorRules.left)
+                            za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.operator.location, za.co.no9.sle.ast.typelessPattern.IdReference(expressionWithAppliedOperatorRules.operator.location, QualifiedID(expressionWithAppliedOperatorRules.operator.location, null, expressionWithAppliedOperatorRules.operator.name)), expressionWithAppliedOperatorRules.left)
 
                     infer(za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.location, operator, expressionWithAppliedOperatorRules.right))
                 }

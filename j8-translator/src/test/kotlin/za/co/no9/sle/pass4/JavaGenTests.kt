@@ -28,9 +28,25 @@ class JavaGenTests : StringSpec({
     "Compile test/First.sle" {
         stuff("First",
                 initialEnvironment
-                        .newValue("(==)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeBool)))))
-                        .newValue("(-)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
-                        .newValue("(*)", VariableBinding(Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt)))))
+                        .newValue("-",
+                                OperatorBinding(
+                                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                        6,
+                                        Left
+                                ))
+                        .newValue("*",
+                                OperatorBinding(
+                                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
+                                        7,
+                                        Left
+                                ))
+                        .newValue("==",
+                                OperatorBinding(
+                                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                        4,
+                                        None
+                                ))
+                        .newValue("aString", VariableBinding(Scheme(listOf(), typeString)))
         )
     }
 
@@ -38,7 +54,12 @@ class JavaGenTests : StringSpec({
     "Compile test/TypeReference.sle" {
         stuff("TypeReference",
                 initialEnvironment
-                        .newValue("(==)", VariableBinding(Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool)))))
+                        .newValue("==",
+                                OperatorBinding(
+                                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                        4,
+                                        None
+                                ))
         )
     }
 

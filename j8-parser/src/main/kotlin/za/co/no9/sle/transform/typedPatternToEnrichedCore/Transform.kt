@@ -227,7 +227,7 @@ private class PatternTransformState(val count: Int = 0, val expression: Expressi
                         CallExpression(
                                 expression.location + this.expression.location,
                                 TArr(typeBool, typeBool),
-                                IdReference(expression.location, TArr(typeBool, TArr(typeBool, typeBool)), "(&&)"),
+                                IdReference(expression.location, TArr(typeBool, TArr(typeBool, typeBool)), "&&"),
                                 this.expression),
                         expression
 
@@ -245,7 +245,7 @@ private class PatternTransformState(val count: Int = 0, val expression: Expressi
                                 CallExpression(
                                         location,
                                         TArr(type, typeBool),
-                                        IdReference(location, TArr(type, TArr(type, typeBool)), "(==)"),
+                                        IdReference(location, TArr(type, TArr(type, typeBool)), "=="),
                                         constantExpression),
                                 IdReference(location, type, id.result)))
 
