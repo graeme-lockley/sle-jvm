@@ -153,6 +153,10 @@ class TestItem(private val inputFile: File) : Item {
     }
 
 
+    override fun sourceURN(): URN =
+            URN(File, inputFile.canonicalPath)
+
+
     override fun sourceFile(): File =
             inputFile
 

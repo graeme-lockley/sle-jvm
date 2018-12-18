@@ -3,6 +3,7 @@ package za.co.no9.sle.repository
 import za.co.no9.sle.Either
 import za.co.no9.sle.Errors
 import za.co.no9.sle.Source
+import za.co.no9.sle.URN
 import java.io.File
 
 
@@ -23,4 +24,6 @@ interface Item {
     fun resolveId(name: String): String
 
     fun itemRelativeTo(name: String): Either<Errors, Item>
+
+    fun sourceURN(): URN
 }

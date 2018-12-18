@@ -41,6 +41,10 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
             text ?: inputFile.readText()
 
 
+    override fun sourceURN(): URN =
+            URN(File, inputFile.canonicalPath)
+
+
     override fun sourceFile(): File =
             inputFile
 

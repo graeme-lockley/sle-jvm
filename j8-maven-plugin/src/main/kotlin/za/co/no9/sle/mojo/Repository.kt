@@ -42,6 +42,9 @@ class Item(
             urn.readText()
 
 
+    override fun sourceURN(): URN =
+            urn
+
     override fun sourceFile(): File =
             inputFile
 
