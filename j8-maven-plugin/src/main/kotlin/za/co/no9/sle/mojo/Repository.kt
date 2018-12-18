@@ -10,11 +10,8 @@ abstract class Repository(
         open val sourcePrefix: File,
         open val targetRoot: File) : za.co.no9.sle.repository.Repository<Item> {
     override fun item(source: Source, inputFile: File): Either<Errors, Item> {
-        val canonicalInputFile =
-                inputFile.canonicalFile
-
         val item =
-                Item(this, URN(source, inputFile.canonicalPath), canonicalInputFile)
+                Item(this, URN(source, inputFile.canonicalPath))
 
         itemLoaded(item)
 
@@ -28,8 +25,7 @@ abstract class Repository(
 
 class Item(
         private val repository: Repository,
-        private val urn: URN,
-        private val inputFile: File) : za.co.no9.sle.repository.Item {
+        private val urn: URN) : za.co.no9.sle.repository.Item {
 
     val packageName: List<String>
         get() = urn.packageName(repository.sourcePrefix)
@@ -76,15 +72,24 @@ class Item(
     }
 
 
-    override fun itemRelativeTo(name: String): Either<Errors, Item> {
-        val nameFile =
-                File(name)
+    override fun itemRelativeTo(name: String): Either<Errors, Item> =
+            when (urn.source) {
+                File -> {
+                    val nameFile =
+                            File(name)
 
-        return if (nameFile.isAbsolute)
-            repository.item(za.co.no9.sle.File, nameFile)
-        else
-            repository.item(za.co.no9.sle.File, File(inputFile.parentFile, "$name.sle"))
-    }
+                    if (nameFile.isAbsolute)
+                        repository.item(File, nameFile)
+                    else
+                        repository.item(File, File(urn.inputFile()!!.parentFile, "$name.sle"))
+                }
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
 
 
     override fun resolveConstructor(name: String): String =
