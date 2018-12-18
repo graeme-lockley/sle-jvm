@@ -137,7 +137,7 @@ data class UnableToReadFile(
         val file: File) : Error()
 
 data class CyclicDependency(
-        val file: File) : Error()
+        val file: URN) : Error()
 
 data class ImportErrors(
         override val location: Location,

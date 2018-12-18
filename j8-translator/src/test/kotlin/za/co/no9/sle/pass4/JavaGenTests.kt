@@ -157,10 +157,6 @@ class TestItem(private val inputFile: File) : Item {
             URN(File, inputFile.canonicalPath)
 
 
-    override fun sourceFile(): File =
-            inputFile
-
-
     override fun sourceCode(): String =
             inputFile.readText()
 

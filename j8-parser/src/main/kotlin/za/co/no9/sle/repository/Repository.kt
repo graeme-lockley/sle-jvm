@@ -17,13 +17,11 @@ interface Item {
 
     fun sourceCode(): String
 
-    fun sourceFile(): File
+    fun sourceURN(): URN
 
     fun resolveConstructor(name: String): String
 
     fun resolveId(name: String): String
 
     fun itemRelativeTo(name: String): Either<Errors, Item>
-
-    fun sourceURN(): URN
 }

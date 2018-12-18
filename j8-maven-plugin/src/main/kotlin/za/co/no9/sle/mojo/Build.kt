@@ -160,7 +160,7 @@ class BuildRepository(override val sourcePrefix: File,
             mutableSetOf<String>()
 
     val buildErrors =
-            mutableMapOf<String, Errors>()
+            mutableMapOf<URN, Errors>()
 
     init {
         files.forEach { fileName ->
@@ -174,27 +174,24 @@ class BuildRepository(override val sourcePrefix: File,
                     result.left()
 
             if (errors != null) {
-                includeErrors(file, errors)
+                includeErrors(URN(File, file.canonicalPath), errors)
             }
         }
     }
 
 
-    private fun includeErrors(file: File, errors: Errors) {
-        val fileName =
-                file.canonicalPath
-
-        if (buildErrors.containsKey(fileName)) {
-            buildErrors[fileName] = buildErrors[fileName]!! + errors
+    private fun includeErrors(urn: URN, errors: Errors) {
+        if (buildErrors.containsKey(urn)) {
+            buildErrors[urn] = buildErrors[urn]!! + errors
         } else {
-            buildErrors[fileName] = errors
+            buildErrors[urn] = errors
         }
     }
 
 
     override fun itemLoaded(item: Item) {
         if (compiling.contains(item.className)) {
-            includeErrors(item.sourceFile(), setOf(CyclicDependency(item.sourceFile())))
+            includeErrors(item.sourceURN(), setOf(CyclicDependency(item.sourceURN())))
         } else if (!compiled.contains(item.className)) {
             compiling.add(item.className)
 
@@ -222,7 +219,7 @@ class BuildRepository(override val sourcePrefix: File,
                 item.writeJava(output.right() ?: "")
                 item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.coreModule.exports)))
             } else {
-                includeErrors(item.sourceFile(), errors)
+                includeErrors(item.sourceURN(), errors)
             }
 
             compiling.remove(item.className)

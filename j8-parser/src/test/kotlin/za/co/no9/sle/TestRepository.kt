@@ -45,10 +45,6 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
             URN(File, inputFile.canonicalPath)
 
 
-    override fun sourceFile(): File =
-            inputFile
-
-
     override fun itemRelativeTo(name: String): Either<Errors, Item> {
         val relativeFile =
                 File(inputFile.parentFile, name)

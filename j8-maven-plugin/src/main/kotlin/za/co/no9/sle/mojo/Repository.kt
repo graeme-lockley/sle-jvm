@@ -45,9 +45,6 @@ class Item(
     override fun sourceURN(): URN =
             urn
 
-    override fun sourceFile(): File =
-            inputFile
-
 
     fun targetJavaFile(): File =
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.java")
