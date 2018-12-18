@@ -54,6 +54,9 @@ fun fromJsonString(input: String): Export {
             declaration.has("name") ->
                 LetDeclaration(declaration["name"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
 
+            declaration.has("operator") ->
+                OperatorDeclaration(declaration["name"].asString, jsonToScheme(declaration["scheme"].asJsonObject), declaration["precedence"].asInt, declaration["associativity"].asString)
+
             declaration.has("alias") ->
                 AliasDeclaration(declaration["alias"].asString, jsonToScheme(declaration["scheme"].asJsonObject))
 
@@ -76,6 +79,9 @@ data class Export(
                     is LetDeclaration ->
                         it.name == name
 
+                    is OperatorDeclaration ->
+                        it.operator == name
+
                     is AliasDeclaration ->
                         it.alias == name
 
@@ -94,6 +100,12 @@ sealed class Declaration
 data class LetDeclaration(
         val name: String,
         val scheme: Scheme) : Declaration()
+
+data class OperatorDeclaration(
+        val operator: String,
+        val scheme: Scheme,
+        val precedence: Int,
+        val associativity: String) : Declaration()
 
 data class AliasDeclaration(
         val alias: String,

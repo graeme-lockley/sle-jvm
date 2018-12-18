@@ -595,6 +595,21 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                             e.newValue(d.name, ImportVariableBinding(importItem, d.scheme.asScheme(import.location)))
                                         }
 
+                                        is za.co.no9.sle.repository.OperatorDeclaration -> {
+                                            if (e.containsValue(d.operator)) {
+                                                errors.add(DuplicateImportedLetDeclaration(import.location, d.operator))
+                                            }
+
+                                            val associativity =
+                                                    when (d.associativity) {
+                                                        "left" -> Left
+                                                        "right" -> Right
+                                                        else -> None
+                                                    }
+
+                                            e.newValue(d.operator, OperatorBinding(d.scheme.asScheme(import.location), d.precedence, associativity))
+                                        }
+
                                         is za.co.no9.sle.repository.AliasDeclaration -> {
                                             if (e.containsType(d.alias)) {
                                                 errors.add(DuplicateImportedTypeAliasDeclaration(import.location, d.alias))
@@ -670,6 +685,11 @@ private fun resolveImports(environment: Environment, source: Item, imports: List
                                         }
 
                                         is za.co.no9.sle.repository.LetDeclaration -> {
+                                            errors.add(TypeNotExported(d.name.location, d.name.name))
+                                            e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
+                                        }
+
+                                        is za.co.no9.sle.repository.OperatorDeclaration -> {
                                             errors.add(TypeNotExported(d.name.location, d.name.name))
                                             e.newValue(d.name.name, ImportVariableBinding(importItem, importDeclaration.scheme.asScheme(d.name.location)))
                                         }
