@@ -136,6 +136,9 @@ data class DuplicateImportedName(
 data class UnableToReadFile(
         val file: File) : Error()
 
+data class IOException(
+        val e: java.io.IOException) : Error()
+
 data class CyclicDependency(
         val file: URN) : Error()
 

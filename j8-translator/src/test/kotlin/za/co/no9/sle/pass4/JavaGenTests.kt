@@ -157,10 +157,18 @@ class TestItem(private val inputFile: File) : Item {
             URN(File, inputFile.canonicalPath)
 
 
-    override fun sourceCode(): String =
-            inputFile.readText()
+    override fun sourceCode(): Either<Errors, String> =
+            try {
+                value(inputFile.readText())
+            } catch (e: java.io.IOException) {
+                error(setOf(IOException(e)))
+            }
 
 
-    override fun exports(): Export =
-            fromJsonString(File(inputFile.absolutePath + ".json").readText())
+    override fun exports(): Either<Errors, Export> =
+            try {
+                value(fromJsonString(File(inputFile.absolutePath + ".json").readText()))
+            } catch (e: java.io.IOException) {
+                error(setOf(IOException(e)))
+            }
 }

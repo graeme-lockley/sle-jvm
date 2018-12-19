@@ -1,13 +1,67 @@
 export
-      List(..)
-    , Maybe(..)
+      (*)
+    , (/)
+
+    , (+)
+    , (-)
+
+    , (==)
+    , (!=)
+    , (<)
+    , (<=)
+    , (>)
+    , (>=)
+
+    , (&&)
+    , (||)
 
 
-type List a
-    = Nil
-    | Cons a (List a)
+(* 7 left) : Int -> Int -> Int
+(* 7 left) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.STAR"
+
+(/ 7 left) : Int -> Int -> Int
+(/ 7 left) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.SLASH"
+
+(+ 6 left) : Int -> Int -> Int
+(+ 6 left) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.PLUS"
+
+(- 6 left) : Int -> Int -> Int
+(- 6 left) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.MINUS"
 
 
-type Maybe a
-    = Nothing
-    | Just a
+(== 4 none) : a -> a -> Bool
+(== 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.EQUAL_EQUAL"
+
+(!= 4 none) : a -> a -> Bool
+(!= 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.BANG_EQUAL"
+
+(< 4 none) : a -> a -> Bool
+(< 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.LESS"
+
+(<= 4 none) : a -> a -> Bool
+(<= 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.LESS_EQUAL"
+
+(> 4 none) : a -> a -> Bool
+(> 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.GREATER"
+
+(>= 4 none) : a -> a -> Bool
+(>= 4 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.GREATER_EQUAL"
+
+
+(&& 3 right) : Bool -> Bool -> Bool
+(&& 3 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.AMPERSAND_AMPERSAND"
+
+(|| 2 right) : Bool -> Bool -> Bool
+(|| 2 none) =
+    i_BuiltinValue "za.co.no9.sle.runtime.Builtin.BAR_BAR"

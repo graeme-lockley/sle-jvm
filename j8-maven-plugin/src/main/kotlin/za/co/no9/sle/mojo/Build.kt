@@ -7,6 +7,7 @@ import za.co.no9.sle.pass4.toClass
 import za.co.no9.sle.pass4.translate
 import za.co.no9.sle.repository.toJsonString
 import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
+import za.co.no9.sle.transform.typelessPatternToTypedPattern.importAll
 import za.co.no9.sle.typing.*
 import java.io.File
 
@@ -131,6 +132,9 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
                             is DuplicateImportedName ->
                                 "Duplicate Imported Name: $sourceName: ${error.location}: ${error.name}"
+
+                            is IOException ->
+                                "IO Exception: $sourceName: ${error.e.message}: ${error.e.stackTrace}"
                         }
 
                 log.error(errorMessage)
@@ -146,8 +150,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 class BuildRepository(override val sourcePrefix: File,
                       override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
     private val files =
-            setOf(URN(Resource, "/Prelude.sle")) +
-                    sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
+            sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
 
     private val compiling =
             mutableSetOf<String>()
@@ -158,8 +161,26 @@ class BuildRepository(override val sourcePrefix: File,
     val buildErrors =
             mutableMapOf<URN, Errors>()
 
+    var environment =
+            initialEnvironment
+                    .newValue("i_BuiltinValue", VariableBinding(Scheme(listOf(1), TArr(typeString, TVar(homeLocation, 1)))))
+
     init {
+        val initE =
+                item(URN(Resource, "/Prelude.sle")).right()!!
+
+
+        val importAllResult =
+                importAll(environment, homeLocation, initE)
+
+        environment =
+                importAllResult.environment
+
+//        println(environment)
+
         files.forEach { urn ->
+            //            println("Attempting $urn")
+
             val result =
                     item(urn)
 
@@ -186,6 +207,8 @@ class BuildRepository(override val sourcePrefix: File,
         if (compiling.contains(item.className)) {
             includeErrors(item.sourceURN(), setOf(CyclicDependency(item.sourceURN())))
         } else if (!compiled.contains(item.className)) {
+//            println("  - ${item.packageName.joinToString(".")}.${item.className}")
+
             compiling.add(item.className)
 
             val packageName =
@@ -220,57 +243,3 @@ class BuildRepository(override val sourcePrefix: File,
         }
     }
 }
-
-
-private val environment =
-        initialEnvironment
-                .newValue("i_BuiltinValue", VariableBinding(Scheme(listOf(1), TArr(typeString, TVar(homeLocation, 1)))))
-                .newValue("==", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue("!=", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue("<", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue("<=", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue(">", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue(">=", OperatorBinding(
-                        Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
-                        4,
-                        None))
-                .newValue("&&", OperatorBinding(
-                        Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
-                        3,
-                        Right))
-                .newValue("||", OperatorBinding(
-                        Scheme(listOf(), TArr(typeBool, TArr(typeBool, typeBool))),
-                        2,
-                        Right))
-                .newValue("-", OperatorBinding(
-                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
-                        6,
-                        Left))
-                .newValue("+", OperatorBinding(
-                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
-                        6,
-                        Left))
-                .newValue("*", OperatorBinding(
-                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
-                        7,
-                        Left))
-                .newValue("/", OperatorBinding(
-                        Scheme(listOf(), TArr(typeInt, TArr(typeInt, typeInt))),
-                        7,
-                        Left))
-

@@ -3,6 +3,7 @@ package za.co.no9.sle.mojo
 import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.specs.StringSpec
 import org.apache.maven.plugin.logging.Log
+import org.apache.maven.plugin.logging.SystemStreamLog
 import java.io.File
 
 class BuildTests : StringSpec({
@@ -24,7 +25,7 @@ class BuildTests : StringSpec({
 
     "A valid source let's walk it and compile" {
         val log =
-                TestLog()
+                SystemStreamLog()
 
         build(log, File(testsResourcesDir, "input"), File(homeDir, "target/output"))
     }

@@ -11,9 +11,9 @@ interface Repository<out T : Item> {
 
 
 interface Item {
-    fun exports(): Export
+    fun exports(): Either<Errors, Export>
 
-    fun sourceCode(): String
+    fun sourceCode(): Either<Errors, String>
 
     fun sourceURN(): URN
 

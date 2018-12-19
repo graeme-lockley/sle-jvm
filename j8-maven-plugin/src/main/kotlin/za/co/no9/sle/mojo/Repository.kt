@@ -34,23 +34,27 @@ class Item(
             File(urn.name).nameWithoutExtension
 
 
-    override fun sourceCode(): String =
-            when (urn.source) {
-                File ->
-                    java.io.File(urn.name).readText()
+    override fun sourceCode(): Either<Errors, String> =
+            try {
+                value(when (urn.source) {
+                    File ->
+                        java.io.File(urn.name).readText()
 
-                Github ->
-                    TODO()
+                    Github ->
+                        TODO()
 
-                Resource -> {
-                    val resourceName =
-                            if (urn.name.endsWith(".sle"))
-                                urn.name
-                            else
-                                "${urn.name}.sle"
+                    Resource -> {
+                        val resourceName =
+                                if (urn.name.endsWith(".sle"))
+                                    urn.name
+                                else
+                                    "${urn.name}.sle"
 
-                    BuildRepository::class.java.getResource(resourceName).readText()
-                }
+                        BuildRepository::class.java.getResource(resourceName).readText()
+                    }
+                })
+            } catch (e: java.io.IOException) {
+                error(setOf(IOException(e)))
             }
 
 
@@ -66,8 +70,12 @@ class Item(
             File(File(repository.targetRoot, packageName.joinToString(File.separator)), "$className.json")
 
 
-    override fun exports(): Export =
-            fromJsonString(targetJsonFile().readText())
+    override fun exports(): Either<Errors, Export> =
+            try {
+                value(fromJsonString(targetJsonFile().readText()))
+            } catch (e: java.io.IOException) {
+                error(setOf(IOException(e)))
+            }
 
 
     fun writeJava(output: String) {

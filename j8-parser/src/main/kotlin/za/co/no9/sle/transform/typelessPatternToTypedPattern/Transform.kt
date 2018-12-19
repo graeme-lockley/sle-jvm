@@ -21,17 +21,18 @@ data class InferenceDetail(
 
 
 private data class Tuple4<out A, out B, out C, out D>(
-         val v1: A,
-         val v2: B,
-         val v3: C,
-         val v4: D)
+        val v1: A,
+        val v2: B,
+        val v3: C,
+        val v4: D)
 
 
 fun parseWithDetail(source: Item, __env: Environment): Either<Errors, InferenceDetail> {
     val varPump =
             VarPump()
 
-    return parse(source.sourceCode())
+    return source.sourceCode()
+            .andThen { parse(it) }
             .andThen { infer(source, varPump, it, __env) }
             .andThen { (unresolvedModule, constraints, environment) ->
                 unifies(varPump, constraints, environment).map { Tuple4(unresolvedModule, constraints, it, environment) }
@@ -49,6 +50,7 @@ fun parse(source: Item, environment: Environment): Either<Errors, InferResult> {
             VarPump()
 
 
-    return parse(source.sourceCode())
+    return source.sourceCode()
+            .andThen { parse(it) }
             .andThen { infer(source, varPump, it, environment) }
 }
