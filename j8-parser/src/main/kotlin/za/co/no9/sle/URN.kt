@@ -4,7 +4,7 @@ package za.co.no9.sle
 data class URN(val source: Source, val name: String, val version: String? = null) {
     constructor(input: String) : this(extractSource(input), extractName(input), extractVersion(input))
 
-    constructor(source: Source, file: java.io.File) : this(source, file.canonicalPath)
+    constructor(file: java.io.File) : this(File, file.canonicalPath)
 
 
     fun impliedName(): String =

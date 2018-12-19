@@ -27,11 +27,11 @@ class Item(
         private val repository: Repository,
         private val urn: URN) : za.co.no9.sle.repository.Item {
 
-    val packageName: List<String>
-        get() = urn.packageName(repository.sourcePrefix)
+    val packageName =
+            urn.packageName(repository.sourcePrefix)
 
-    val className: String
-        get() = urn.className()
+    val className =
+            urn.className()
 
 
     override fun sourceCode(): String =

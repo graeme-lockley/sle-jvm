@@ -168,7 +168,7 @@ class BuildRepository(override val sourcePrefix: File,
                     File(fileName)
 
             val urn =
-                    URN(File, file)
+                    URN(file)
 
             val result =
                     item(urn)
