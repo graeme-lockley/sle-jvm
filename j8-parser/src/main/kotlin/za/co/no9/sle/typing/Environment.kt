@@ -37,7 +37,7 @@ fun associativityFromString(text: String): Associativity =
         }
 
 
-data class Environment(private val valueBindings: Map<String, ValueBinding> = mapOf(), private val typeBindings: Map<String, TypeBinding> = mapOf()) {
+data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), val typeBindings: Map<String, TypeBinding> = mapOf()) {
     fun value(name: String): ValueBinding? =
             valueBindings[name]
 

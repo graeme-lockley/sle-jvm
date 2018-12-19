@@ -18,17 +18,17 @@ class ListTests : StringSpec({
 
     "head [] == Nothing" {
         (file.samples.List.head as Function<Any, Any>).apply(file.samples.List.Nil)
-                .shouldBe(file.samples.Maybe.Nothing)
+                .shouldBe(resource.Prelude.Nothing)
     }
 
     "head [1] == Just 1" {
         (file.samples.List.head as Function<Any, Any>).apply(singletonList)
-                .shouldBe((file.samples.Maybe.Just as Function<Any, Any>).apply(1))
+                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(1))
     }
 
     "tail [1] == Just Nil" {
         (file.samples.List.tail as Function<Any, Any>).apply(singletonList)
-                .shouldBe((file.samples.Maybe.Just as Function<Any, Any>).apply(file.samples.List.Nil))
+                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(file.samples.List.Nil))
     }
 
     "map plus5 [1, 2] == [6, 7]" {

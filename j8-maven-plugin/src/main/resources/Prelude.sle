@@ -1,5 +1,7 @@
 export
-      (*)
+      Maybe (..)
+
+    , (*)
     , (/)
 
     , (+)
@@ -14,6 +16,12 @@ export
 
     , (&&)
     , (||)
+
+
+
+type Maybe a
+    = Nothing
+    | Just a
 
 
 (* 7 left) : Int -> Int -> Int

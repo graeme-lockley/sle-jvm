@@ -1,12 +1,7 @@
 export
-    Maybe(..),
     andThen,
     map,
     withDefault
-
-type Maybe a =
-    Nothing
-  | Just a
 
 
 withDefault : a -> Maybe a -> a

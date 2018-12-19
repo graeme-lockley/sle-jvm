@@ -12,6 +12,7 @@ import za.co.no9.sle.typing.*
 
 
 data class Detail(
+        val environment: Environment,
         val constraints: Constraints,
         val substitution: Substitution,
         val unresolvedModule: za.co.no9.sle.ast.typedPattern.Module,
@@ -24,7 +25,7 @@ fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Deta
             za.co.no9.sle.transform.typelessPatternToTypedPattern.parseWithDetail(source, environment)
 
     return typePatternDetail.map {
-        Detail(it.constraints, it.substitution, it.unresolvedModule, it.resolvedModule, Transform(environment).transform(it.resolvedModule))
+        Detail(it.environment, it.constraints, it.substitution, it.unresolvedModule, it.resolvedModule, Transform(environment).transform(it.resolvedModule))
     }
 }
 

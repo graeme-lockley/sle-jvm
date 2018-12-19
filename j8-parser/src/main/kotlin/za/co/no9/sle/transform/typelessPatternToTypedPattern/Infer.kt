@@ -216,7 +216,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                                 }
 
                                 else ->
-                                    TODO()
+                                    TODO("$typeBinding")
                             }
                         }
                     }

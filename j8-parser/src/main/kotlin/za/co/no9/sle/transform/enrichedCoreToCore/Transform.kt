@@ -5,8 +5,7 @@ import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Unit
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
-import za.co.no9.sle.typing.Environment
-import za.co.no9.sle.typing.Substitution
+import za.co.no9.sle.typing.*
 
 
 private typealias Patterns =
@@ -33,21 +32,22 @@ fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Deta
             za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(source, environment)
 
     return typePatternDetail.andThen { detail ->
+        if (source.sourceURN().name.endsWith("pattern/005.scenario")) {
+            println(source.sourceURN().name)
+            println(detail.environment)
+        }
+
         val coreModule =
-                transform(detail.enrichedModule)
+                transform(detail.environment, detail.enrichedModule)
 
         coreModule.map { Detail(detail.constraints, detail.substitution, detail.unresolvedModule, detail.resolvedModule, detail.enrichedModule, it) }
     }
 }
 
 
-fun parse(source: Item, environment: Environment): Either<Errors, Module> =
-        za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(source, environment).andThen { transform(it) }
-
-
-private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
+private fun transform(environment: Environment, module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
     val transform =
-            Transform()
+            Transform(environment)
 
     val m =
             transform.transform(module)
@@ -59,7 +59,7 @@ private fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Either<Err
 }
 
 
-private class Transform(private var counter: Int = 0) {
+private class Transform(val environment: Environment, private var counter: Int = 0) {
     var constructors: Map<String, List<String>> =
             emptyMap()
 
@@ -68,19 +68,7 @@ private class Transform(private var counter: Int = 0) {
 
 
     fun transform(module: za.co.no9.sle.ast.enrichedCore.Module): Module {
-        constructors = module.declarations.fold(emptyMap()) { a, b ->
-            if (b is za.co.no9.sle.ast.enrichedCore.TypeDeclaration) {
-                val x =
-                        b.constructors.map { it.name.name }
-
-                val y =
-                        x.map { Pair(it, x) }
-
-
-                a + y
-            } else
-                a
-        }
+        constructors = constructors(environment)
 
         return Module(module.location, module.exports.map { transform(it) }, module.declarations.map { transform(it) })
     }
@@ -488,5 +476,48 @@ private class Transform(private var counter: Int = 0) {
                 this.drop(takeList.size)
 
         return Pair(takeList, restList)
+    }
+}
+
+
+private typealias Constructors =
+        Map<String, List<String>>
+
+
+private fun constructors(environment: Environment): Constructors {
+    fun applyBinding(r: Constructors, binding: TypeBinding): Constructors =
+            when (binding) {
+                is ADTBinding -> {
+                    val constructorNames =
+                            binding.constructors.map { it.first }
+
+                    constructorNames.fold(r) { a, constructorName ->
+                        a + Pair(constructorName, constructorNames)
+                    }
+                }
+
+                is ImportADTBinding -> {
+                    val constructorNames =
+                            binding.constructors.map { binding.item.resolveConstructor(it.first) }
+
+                    constructorNames.fold(r) { a, constructorName ->
+                        a + Pair(constructorName, constructorNames)
+                    }
+                }
+
+                else ->
+                    r
+            }
+
+
+    fun applyBindings(r: Constructors, environment: Environment): Constructors =
+            environment.typeBindings.values.fold(r, ::applyBinding)
+
+
+    return environment.valueBindings.values.fold(applyBindings(emptyMap(), environment)) { r, valueBinding ->
+        if (valueBinding is ImportBinding)
+            applyBindings(r, valueBinding.environment)
+        else
+            r
     }
 }

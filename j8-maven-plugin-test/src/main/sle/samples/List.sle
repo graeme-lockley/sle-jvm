@@ -1,6 +1,5 @@
-export List(..), Maybe(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList, (::)
+export List(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList, (::)
 
-import file:./Maybe exposing Maybe(..)
 
 type List a =
     Nil

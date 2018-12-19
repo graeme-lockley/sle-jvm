@@ -1,0 +1,36 @@
+-- Perform pattern matching in an imported ADT
+import file:../../List exposing List(..)
+
+type Maybe a =
+    Nothing
+  | Just a
+
+
+head l =
+    case l of
+        Cons x xs -> Just x
+        x -> Nothing
+-- coreASTpp
+type Maybe =
+  Nothing
+| Just '0
+
+
+head : <0> file.samples.List.List '0 -> file.package.name.File.Maybe '0
+head =
+  (LAMBDA l ->
+    (CALL
+      (LAMBDA $case ->
+        (CASE $case
+          file.package.name.File.Cons $$0 $$1 =>
+            (CALL
+              Just
+              $$0
+            )
+          file.package.name.File.Nil =>
+            Nothing
+        )
+      )
+      l
+    )
+  )
