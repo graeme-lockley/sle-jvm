@@ -28,14 +28,55 @@ class Item(
         private val urn: URN) : za.co.no9.sle.repository.Item {
 
     val packageName =
-            urn.packageName(repository.sourcePrefix)
+            when (urn.source) {
+                File -> {
+                    val sourcePrefixName =
+                            repository.sourcePrefix.absolutePath
+
+                    val inputFilePath =
+                            File(urn.name).parent
+
+                    val innerPath =
+                            if (inputFilePath.startsWith(sourcePrefixName))
+                                splitPath(inputFilePath.drop(sourcePrefixName.length))
+                            else
+                                splitPath(inputFilePath)
+
+                    listOf("file") + innerPath
+                }
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
+
 
     val className =
-            urn.className()
+            when (urn.source) {
+                File ->
+                    java.io.File(urn.name).nameWithoutExtension
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
 
 
     override fun sourceCode(): String =
-            urn.readText()
+            when (urn.source) {
+                File ->
+                    java.io.File(urn.name).readText()
+
+                Github ->
+                    TODO()
+
+                Resource ->
+                    TODO()
+            }
 
 
     override fun sourceURN(): URN =
@@ -81,7 +122,7 @@ class Item(
                     if (nameFile.isAbsolute)
                         repository.item(URN(File, nameFile.canonicalPath))
                     else
-                        repository.item(URN(File, File(urn.inputFile()!!.parentFile, "$name.sle").canonicalPath))
+                        repository.item(URN(File, File(File(urn.name).parentFile, "$name.sle").canonicalPath))
                 }
 
                 Github ->
@@ -104,4 +145,15 @@ class Item(
                 "$className.$name"
             else
                 "${packageName.joinToString(".")}.$className.$name"
+}
+
+
+private fun splitPath(path: String): List<String> {
+    val input =
+            path.trim(java.io.File.separatorChar)
+
+    return if (input.isBlank())
+        emptyList()
+    else
+        input.split(java.io.File.separatorChar)
 }
