@@ -1,9 +1,4 @@
-export List(..), repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList, (::)
-
-
-type List a =
-    Nil
-  | Cons a (List a)
+export repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList, (::)
 
 
 singleton x =

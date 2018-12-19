@@ -3,7 +3,7 @@ import file:./List exposing (::)
 
 
 dbl x =
-    x :: x :: List.Nil
+    x :: x :: Nil
 
 
 numbers =

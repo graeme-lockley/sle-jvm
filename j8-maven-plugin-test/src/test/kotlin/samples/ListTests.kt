@@ -10,14 +10,14 @@ import java.util.function.Function
 
 class ListTests : StringSpec({
     val singletonList =
-            ((file.samples.List.Cons as Function<Any, Any>).apply(1) as Function<Any, Any>).apply(file.samples.List.Nil)
+            ((resource.Prelude.Cons as Function<Any, Any>).apply(1) as Function<Any, Any>).apply(resource.Prelude.Nil)
 
     val dualList =
-            ((file.samples.List.Cons as Function<Any, Any>).apply(1) as Function<Any, Any>).apply(((file.samples.List.Cons as Function<Any, Any>).apply(2) as Function<Any, Any>).apply(file.samples.List.Nil))
+            ((resource.Prelude.Cons as Function<Any, Any>).apply(1) as Function<Any, Any>).apply(((resource.Prelude.Cons as Function<Any, Any>).apply(2) as Function<Any, Any>).apply(resource.Prelude.Nil))
 
 
     "head [] == Nothing" {
-        (file.samples.List.head as Function<Any, Any>).apply(file.samples.List.Nil)
+        (file.samples.List.head as Function<Any, Any>).apply(resource.Prelude.Nil)
                 .shouldBe(resource.Prelude.Nothing)
     }
 
@@ -28,7 +28,7 @@ class ListTests : StringSpec({
 
     "tail [1] == Just Nil" {
         (file.samples.List.tail as Function<Any, Any>).apply(singletonList)
-                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(file.samples.List.Nil))
+                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(resource.Prelude.Nil))
     }
 
     "map plus5 [1, 2] == [6, 7]" {
@@ -50,7 +50,7 @@ class ListTests : StringSpec({
 
 
 fun <T> listEquals(actual: Array<*>, expected: kotlin.collections.List<T>) {
-    if ((actual[0] as Int) == file.samples.List.`Nil$`)
+    if ((actual[0] as Int) == resource.Prelude.`Nil$`)
         expected.shouldBeEmpty()
     else {
         expected.shouldNotBeEmpty()
