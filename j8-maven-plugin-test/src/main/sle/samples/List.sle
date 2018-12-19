@@ -1,8 +1,8 @@
-export repeat, range, isEmpty, head, tail, map, removedups, duplicate, IntList, (::)
+export repeat, range, isEmpty, head, tail, map, removedups, duplicate, plus5, IntList
 
 
 singleton x =
-    Cons x Nil
+    x :: Nil
 
 
 repeat : Int -> a -> List a
@@ -58,8 +58,3 @@ plus5 n =
 
 typealias IntList =
     List Int
-
-
-(:: 5 right) : a -> List a -> List a
-(:: 5 right) =
-    Cons

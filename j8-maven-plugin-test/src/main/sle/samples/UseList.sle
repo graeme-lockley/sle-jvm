@@ -1,5 +1,4 @@
 import file:./List
-import file:./List exposing (::)
 
 
 dbl x =

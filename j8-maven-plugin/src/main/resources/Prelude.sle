@@ -6,10 +6,11 @@ export
 
     , (+), (-)
 
+    , (::)
+
     , (==), (!=), (<), (<=), (>), (>=)
 
     , (&&), (||)
-
 
 
 type List a
@@ -30,6 +31,7 @@ type Maybe a
 (/ 7 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.SLASH"
 
+
 (+ 6 left) : Int -> Int -> Int
 (+ 6 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.PLUS"
@@ -37,6 +39,11 @@ type Maybe a
 (- 6 left) : Int -> Int -> Int
 (- 6 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.MINUS"
+
+
+(:: 5 right) : a -> List a -> List a
+(:: 5 right) =
+    Cons
 
 
 (== 4 none) : a -> a -> Bool
@@ -67,6 +74,7 @@ type Maybe a
 (&& 3 right) : Bool -> Bool -> Bool
 (&& 3 none) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.AMPERSAND_AMPERSAND"
+
 
 (|| 2 right) : Bool -> Bool -> Bool
 (|| 2 none) =
