@@ -166,12 +166,12 @@ class BuildRepository(override val sourcePrefix: File,
                     .newValue("i_BuiltinValue", VariableBinding(Scheme(listOf(1), TArr(typeString, TVar(homeLocation, 1)))))
 
     init {
-        val initE =
+        val preludeItem =
                 item(URN(Resource, "/Prelude.sle")).right()!!
 
 
         val importAllResult =
-                importAll(environment, homeLocation, initE)
+                importAll(environment, homeLocation, preludeItem)
 
         environment =
                 importAllResult.environment
