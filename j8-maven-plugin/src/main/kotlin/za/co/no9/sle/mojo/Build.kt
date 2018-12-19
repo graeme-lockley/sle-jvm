@@ -176,10 +176,10 @@ class BuildRepository(override val sourcePrefix: File,
         environment =
                 importAllResult.environment
 
-        println(environment)
+//        println(environment)
 
         files.forEach { urn ->
-            println("Attempting $urn")
+            //            println("Attempting $urn")
 
             val result =
                     item(urn)
@@ -207,7 +207,7 @@ class BuildRepository(override val sourcePrefix: File,
         if (compiling.contains(item.className)) {
             includeErrors(item.sourceURN(), setOf(CyclicDependency(item.sourceURN())))
         } else if (!compiled.contains(item.className)) {
-            println("  - ${item.packageName.joinToString(".")}.${item.className}")
+//            println("  - ${item.packageName.joinToString(".")}.${item.className}")
 
             compiling.add(item.className)
 
