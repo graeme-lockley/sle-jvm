@@ -168,7 +168,7 @@ class BuildRepository(override val sourcePrefix: File,
                     File(fileName)
 
             val urn =
-                    URN(File, file.canonicalPath)
+                    URN(File, file)
 
             val result =
                     item(urn)
