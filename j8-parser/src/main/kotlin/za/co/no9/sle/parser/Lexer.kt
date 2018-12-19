@@ -140,7 +140,7 @@ class Lexer(private val input: String) {
                     val text =
                             input.substring(startIndex, endIndex + 1)
 
-                    if (nextCh == ':' && (text == "file" || text == "github")) {
+                    if (nextCh == ':' && (text == "file" || text == "github" || text == "resource")) {
                         nextCharacter()
                         while (true) {
                             if (nextCh == EOS || nextCh.isWhitespace()) {
