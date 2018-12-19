@@ -46,6 +46,10 @@ class ListTests : StringSpec({
 
         listEquals(result, listOf(1, 2, 3))
     }
+
+    "total == 45" {
+        file.samples.List.total.shouldBe(55)
+    }
 })
 
 
