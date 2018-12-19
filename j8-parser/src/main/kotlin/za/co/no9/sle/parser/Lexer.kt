@@ -49,7 +49,7 @@ val singleOperatorCharacters =
         setOf('(', ')')
 
 val operatorCharacters =
-        setOf('-', '=', '|', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':', ',', '.', '?')
+        setOf('-', '=', '|', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':', ',', '.', '?', '[', ']')
 
 const val EOS =
         0.toChar()
