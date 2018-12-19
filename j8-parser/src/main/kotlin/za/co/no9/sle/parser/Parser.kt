@@ -422,7 +422,7 @@ class Parser(private val lexer: Lexer) {
 
 
     private val excludeOperators =
-            setOf("(", ")", "|", "=")
+            setOf("(", ")", "|", "=", ",", "[", "]")
 
 
     fun parseBinaryOperators(leftEdge: Int): Expression {
@@ -542,6 +542,33 @@ class Parser(private val lexer: Lexer) {
                                     .replace("\\\"", "\"")
 
                     ConstantString(constantStringSymbol.location, text)
+                }
+
+                isOperator("[") -> {
+                    val openSquare =
+                            lexer.next()
+
+                    val items =
+                            mutableListOf<Expression>()
+
+                    if (!isOperator("]")) {
+                        items.add(parseExpression(leftEdge))
+
+                        while (isOperator(",")) {
+                            lexer.next()
+                            items.add(parseExpression(leftEdge))
+                        }
+                    }
+
+                    val endSquare =
+                            matchOperator("]")
+
+                    val initial: Expression =
+                            IdReference(endSquare.location, QualifiedID(endSquare.location, null, "Nil"))
+
+                    items.foldRight(initial) { a, b ->
+                        BinaryOpExpression(b.location, a, ID(a.location, "::"), b)
+                    }
                 }
 
                 isOperator("!") -> {

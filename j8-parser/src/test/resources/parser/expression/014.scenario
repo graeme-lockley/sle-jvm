@@ -1,0 +1,70 @@
+-- Constant list
+value =
+    [1, 2, 3, 4, 5, 6]
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: []
+        expression:
+          BinaryOpExpression:
+            left:
+              ConstantInt:
+                value: 1
+            operator:
+              ID:
+                name: ::
+            right:
+              BinaryOpExpression:
+                left:
+                  ConstantInt:
+                    value: 2
+                operator:
+                  ID:
+                    name: ::
+                right:
+                  BinaryOpExpression:
+                    left:
+                      ConstantInt:
+                        value: 3
+                    operator:
+                      ID:
+                        name: ::
+                    right:
+                      BinaryOpExpression:
+                        left:
+                          ConstantInt:
+                            value: 4
+                        operator:
+                          ID:
+                            name: ::
+                        right:
+                          BinaryOpExpression:
+                            left:
+                              ConstantInt:
+                                value: 5
+                            operator:
+                              ID:
+                                name: ::
+                            right:
+                              BinaryOpExpression:
+                                left:
+                                  ConstantInt:
+                                    value: 6
+                                operator:
+                                  ID:
+                                    name: ::
+                                right:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: Nil
+                                        qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+    ]
+  exports: []
+  imports: []
