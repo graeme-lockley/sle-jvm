@@ -1,0 +1,13 @@
+export
+      List(..)
+    , Maybe(..)
+
+
+type List a
+    = Nil
+    | Cons a (List a)
+
+
+type Maybe a
+    = Nothing
+    | Just a

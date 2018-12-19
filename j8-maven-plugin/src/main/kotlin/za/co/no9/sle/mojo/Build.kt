@@ -143,14 +143,11 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 }
 
 
-//val preludeFileName =
-//        BuildRepository::class.java.getResource("/Prelude.sle").readText()
-
-
 class BuildRepository(override val sourcePrefix: File,
                       override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
     private val files =
-            sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
+            setOf(URN(Resource, "/Prelude.sle")) +
+                    sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
 
     private val compiling =
             mutableSetOf<String>()

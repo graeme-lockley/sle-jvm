@@ -28,42 +28,10 @@ class Item(
         private val urn: URN) : za.co.no9.sle.repository.Item {
 
     val packageName =
-            when (urn.source) {
-                File -> {
-                    val sourcePrefixName =
-                            repository.sourcePrefix.absolutePath
-
-                    val inputFilePath =
-                            File(urn.name).parent
-
-                    val innerPath =
-                            if (inputFilePath.startsWith(sourcePrefixName))
-                                splitPath(inputFilePath.drop(sourcePrefixName.length))
-                            else
-                                splitPath(inputFilePath)
-
-                    listOf("file") + innerPath
-                }
-
-                Github ->
-                    TODO()
-
-                Resource ->
-                    TODO()
-            }
-
+            derivePackage(repository, urn)
 
     val className =
-            when (urn.source) {
-                File ->
-                    java.io.File(urn.name).nameWithoutExtension
-
-                Github ->
-                    TODO()
-
-                Resource ->
-                    TODO()
-            }
+            File(urn.name).nameWithoutExtension
 
 
     override fun sourceCode(): String =
@@ -74,8 +42,15 @@ class Item(
                 Github ->
                     TODO()
 
-                Resource ->
-                    TODO()
+                Resource -> {
+                    val resourceName =
+                            if (urn.name.endsWith(".sle"))
+                                urn.name
+                            else
+                                "${urn.name}.sle"
+
+                    BuildRepository::class.java.getResource(resourceName).readText()
+                }
             }
 
 
@@ -145,6 +120,27 @@ class Item(
                 "$className.$name"
             else
                 "${packageName.joinToString(".")}.$className.$name"
+}
+
+
+private fun derivePackage(repository: Repository, urn: URN): List<String> {
+    val sourcePrefixName =
+            repository.sourcePrefix.absolutePath
+
+    val inputFilePath =
+            File(urn.name).parent
+
+    val innerPath =
+            if (inputFilePath.startsWith(sourcePrefixName))
+                splitPath(inputFilePath.drop(sourcePrefixName.length))
+            else
+                splitPath(inputFilePath)
+
+    return listOf(when (urn.source) {
+        File -> "file"
+        Github -> "github"
+        Resource -> "resource"
+    }) + innerPath
 }
 
 
