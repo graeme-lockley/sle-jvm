@@ -20,7 +20,7 @@ class URNTests : StringSpec({
         urn.impliedName().shouldBe("List")
     }
 
-    "file:../Data/File as URN with implied name being Filer" {
+    "file:../Data/File as URN with implied name being File" {
         val urn =
                 URN("file:../Data/File")
 
