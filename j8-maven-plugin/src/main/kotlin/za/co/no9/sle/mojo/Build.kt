@@ -149,11 +149,10 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
 
 class BuildRepository(override val sourcePrefix: File,
                       override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
-    val files =
-            sourcePrefix.walk().filter { it.isFile }.map { it.canonicalPath }.filter { it.endsWith(".sle") }.toSet()
-//            sourcePrefix.walk().filter { it.isFile }.map { it.canonicalPath }.filter { it.endsWith(".sle") }.map { URN(Source.File, it) }.toSet()
+    private val files =
+            sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
 
-    val compiling =
+    private val compiling =
             mutableSetOf<String>()
 
     val compiled =
@@ -163,13 +162,7 @@ class BuildRepository(override val sourcePrefix: File,
             mutableMapOf<URN, Errors>()
 
     init {
-        files.forEach { fileName ->
-            val file =
-                    File(fileName)
-
-            val urn =
-                    URN(file)
-
+        files.forEach { urn ->
             val result =
                     item(urn)
 
