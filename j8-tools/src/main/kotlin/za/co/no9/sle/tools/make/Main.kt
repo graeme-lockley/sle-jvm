@@ -4,6 +4,8 @@ import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.InvalidArgumentException
 import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
+import za.co.no9.sle.tools.build.build
+import java.io.File
 
 
 class Arguments(parser: ArgParser) {
@@ -19,13 +21,14 @@ class Arguments(parser: ArgParser) {
                         java.io.File(value)
 
                 if (directory.exists() && directory.isFile) {
-                    throw InvalidArgumentException("Target directory is not writable: $value")
+                    throw InvalidArgumentException("Target directory is not writables: $value")
                 }
             }
 
-    val sources by parser
-            .positionalList("SOURCE", help = "source files and directories")
-            .default(listOf("."))
+
+    val source by parser
+            .storing("-S", "--source", help = "source directory of files to compile")
+            .default(File(".").absolutePath)
 }
 
 
@@ -34,9 +37,24 @@ fun main(args: Array<String>) =
             val parsedArgs = ArgParser(args).parseInto(::Arguments)
 
             parsedArgs.run {
-                println("Make: Hello World")
-                println("  verbose: $verbose")
-                println("  sources: $sources")
-                println("  target: $target")
+                val log =
+                        Log()
+
+                if (verbose) {
+                    log.info("source: $source")
+                    log.info("target: $target")
+                }
+                build(Log(), File(source), File(target))
             }
         }
+
+
+class Log : za.co.no9.sle.tools.build.Log {
+    override fun error(message: String) {
+        println("Error: $message")
+    }
+
+    override fun info(message: String) {
+        println("Info: $message")
+    }
+}
