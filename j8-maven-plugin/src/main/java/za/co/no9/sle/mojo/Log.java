@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public class Log implements za.co.no9.sle.tools.build.Log {
     private org.apache.maven.plugin.logging.Log log;
 
-    public Log(org.apache.maven.plugin.logging.Log log) {
+    Log(org.apache.maven.plugin.logging.Log log) {
         this.log = log;
     }
 
