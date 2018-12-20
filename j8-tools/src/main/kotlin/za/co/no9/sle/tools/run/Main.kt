@@ -118,7 +118,7 @@ class Log : za.co.no9.sle.tools.build.Log {
     }
 
     override fun info(message: String) {
-        println("Info: $message")
+        println(message)
     }
 }
 
