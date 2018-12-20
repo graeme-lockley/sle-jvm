@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export PROJECT_ROOT=`dirname $0`/../
+
+java -classpath $PROJECT_ROOT/j8-tools/target/j8-tools-1.0-SNAPSHOT.jar za.co.no9.sle.tools.make.MainKt $*
