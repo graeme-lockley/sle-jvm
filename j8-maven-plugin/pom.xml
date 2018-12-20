@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>za.co.no9</groupId>
-            <artifactId>j8-translator</artifactId>
+            <artifactId>j8-build</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

@@ -25,8 +25,10 @@
         <module>j8-runtime</module>
         <module>j8-parser</module>
         <module>j8-translator</module>
+        <module>j8-build</module>
         <module>j8-maven-plugin</module>
         <module>j8-maven-plugin-test</module>
+        <module>j8-tools</module>
     </modules>
 
     <dependencies>

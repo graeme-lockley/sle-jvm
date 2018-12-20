@@ -1,7 +1,5 @@
-package za.co.no9.sle.mojo
+package za.co.no9.sle.tools.build
 
-import org.apache.maven.plugin.MojoFailureException
-import org.apache.maven.plugin.logging.Log
 import za.co.no9.sle.*
 import za.co.no9.sle.pass4.toClass
 import za.co.no9.sle.pass4.translate
@@ -10,6 +8,15 @@ import za.co.no9.sle.transform.enrichedCoreToCore.parseWithDetail
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.importAll
 import za.co.no9.sle.typing.*
 import java.io.File
+
+
+interface Log {
+    fun error(message: String)
+    fun info(message: String)
+}
+
+
+class BuildException(val source: File, shortMessage: String, val longMessage: String) : Exception(shortMessage)
 
 
 fun build(log: Log, sourceFile: File, targetFile: File) {
@@ -143,7 +150,7 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
     }
 
     if (errorCount > 0)
-        throw MojoFailureException(sourceFile, "Translation Error", "$errorCount errors")
+        throw BuildException(sourceFile, "Translation Error", "$errorCount errors")
 }
 
 

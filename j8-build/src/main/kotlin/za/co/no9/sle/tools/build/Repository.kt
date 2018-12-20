@@ -1,4 +1,4 @@
-package za.co.no9.sle.mojo
+package za.co.no9.sle.tools.build
 
 import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
