@@ -131,7 +131,7 @@ private fun derivePackage(repository: Repository, urn: URN): List<String> {
         File -> "file"
         Github -> "github"
         Resource -> "resource"
-    }) + innerPath
+    }) + innerPath.map { it.filter { c -> c.isLetterOrDigit() } }
 }
 
 
