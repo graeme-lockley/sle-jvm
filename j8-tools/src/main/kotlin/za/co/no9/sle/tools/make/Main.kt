@@ -4,7 +4,8 @@ import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.InvalidArgumentException
 import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
-import za.co.no9.sle.tools.build.build
+import za.co.no9.sle.right
+import za.co.no9.sle.tools.build.BuildRepository
 import java.io.File
 
 
@@ -29,12 +30,17 @@ class Arguments(parser: ArgParser) {
     val source by parser
             .storing("-S", "--source", help = "source directory of files to compile")
             .default(File(".").absolutePath)
+
+    val javac by parser
+            .storing("--javaccp", help = "javac classpath parameter")
+            .default("/Users/graemelockley/Projects/sle-jvm/j8-runtime/target/j8-runtime-1.0-SNAPSHOT.jar")
 }
 
 
-fun main(args: Array<String>) =
+fun main(args: Array<String>): Unit =
         mainBody {
-            val parsedArgs = ArgParser(args).parseInto(::Arguments)
+            val parsedArgs =
+                    ArgParser(args).parseInto(::Arguments)
 
             parsedArgs.run {
                 val log =
@@ -44,7 +50,40 @@ fun main(args: Array<String>) =
                     log.info("source: $source")
                     log.info("target: $target")
                 }
-                build(Log(), File(source), File(target))
+
+                File(target).mkdirs()
+
+                val repository =
+                        BuildRepository(File(source), File(target))
+
+                if (repository.buildErrors.isEmpty()) {
+                    println("${repository.compiled.size} files compiled - no errors")
+
+                    val pb = ProcessBuilder(*arrayOf("javac", "-sourcepath", target, "-classpath", javac) + repository.compiled.map { repository.item(it).right()!!.targetJavaFile().absolutePath })
+                    pb.redirectErrorStream(true)
+
+                    val p =
+                            pb.start()
+
+                    val inputStream =
+                            p.inputStream
+
+                    var ch = inputStream.read()
+                    while (ch != -1) {
+                        if (verbose)
+                            print(ch.toChar());
+
+                        ch = inputStream.read()
+                    }
+                    p.waitFor()
+
+                    val exitWith =
+                            p.exitValue()
+
+                    println("\nExited with $exitWith")
+                } else {
+                    println("Errors: ${repository.buildErrors}")
+                }
             }
         }
 
