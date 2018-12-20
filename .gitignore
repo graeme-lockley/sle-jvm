@@ -2,6 +2,8 @@
 target/
 *.iml
 
+dependency-reduced-pom.xml
+
 j10-runtime/target/
 j10-translator/target/
 parser/target/
