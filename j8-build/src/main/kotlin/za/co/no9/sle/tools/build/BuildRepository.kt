@@ -9,13 +9,14 @@ import za.co.no9.sle.transform.typelessPatternToTypedPattern.importAll
 import za.co.no9.sle.typing.*
 import java.io.File
 
+
 class BuildRepository(override val sourcePrefix: File,
                       override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
     private val compiling =
-            mutableSetOf<String>()
+            mutableSetOf<URN>()
 
     val compiled =
-            mutableSetOf<String>()
+            mutableSetOf<URN>()
 
     val buildErrors =
             mutableMapOf<URN, Errors>()
@@ -35,11 +36,7 @@ class BuildRepository(override val sourcePrefix: File,
         environment =
                 importAllResult.environment
 
-//        println(environment)
-
         sourceFiles().forEach { urn ->
-            //            println("Attempting $urn")
-
             val result =
                     item(urn)
 
@@ -63,12 +60,10 @@ class BuildRepository(override val sourcePrefix: File,
 
 
     override fun itemLoaded(item: Item) {
-        if (compiling.contains(item.className)) {
+        if (compiling.contains(item.sourceURN())) {
             includeErrors(item.sourceURN(), setOf(CyclicDependency(item.sourceURN())))
-        } else if (!compiled.contains(item.className)) {
-//            println("  - ${item.packageName.joinToString(".")}.${item.className}")
-
-            compiling.add(item.className)
+        } else if (!compiled.contains(item.sourceURN())) {
+            compiling.add(item.sourceURN())
 
             val packageName =
                     item.packageName.joinToString(".")
@@ -97,8 +92,8 @@ class BuildRepository(override val sourcePrefix: File,
                 includeErrors(item.sourceURN(), errors)
             }
 
-            compiling.remove(item.className)
-            compiled.add(item.className)
+            compiling.remove(item.sourceURN())
+            compiled.add(item.sourceURN())
         }
     }
 }
