@@ -11,9 +11,6 @@ import java.io.File
 
 class BuildRepository(override val sourcePrefix: File,
                       override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
-    private val files =
-            sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
-
     private val compiling =
             mutableSetOf<String>()
 
@@ -40,7 +37,7 @@ class BuildRepository(override val sourcePrefix: File,
 
 //        println(environment)
 
-        files.forEach { urn ->
+        sourceFiles().forEach { urn ->
             //            println("Attempting $urn")
 
             val result =
