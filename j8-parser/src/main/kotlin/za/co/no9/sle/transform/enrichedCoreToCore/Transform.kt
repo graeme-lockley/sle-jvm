@@ -32,11 +32,6 @@ fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Deta
             za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(source, environment)
 
     return typePatternDetail.andThen { detail ->
-        if (source.sourceURN().name.endsWith("pattern/005.scenario")) {
-            println(source.sourceURN().name)
-            println(detail.environment)
-        }
-
         val coreModule =
                 transform(detail.environment, detail.enrichedModule)
 
