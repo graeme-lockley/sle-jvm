@@ -21,7 +21,7 @@ class Arguments(parser: ArgParser) {
                         java.io.File(value)
 
                 if (directory.exists() && directory.isFile) {
-                    throw InvalidArgumentException("Target directory is not writables: $value")
+                    throw InvalidArgumentException("Target directory is not writable: $value")
                 }
             }
 
