@@ -25,4 +25,7 @@ public class StringUtil {
 
                 return result.toString();
             };
+
+    public static final Object append =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) a) + ((String) b);
 }
