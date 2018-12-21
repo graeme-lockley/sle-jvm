@@ -6,4 +6,12 @@ public class ListUtil {
 
     static final int ConsSelector =
             1;
+
+
+    static final Object[] nil =
+            {NilSelector};
+
+    static final Object[] cons(Object a, Object b) {
+        return new Object[]{ConsSelector, a, b};
+    }
 }
