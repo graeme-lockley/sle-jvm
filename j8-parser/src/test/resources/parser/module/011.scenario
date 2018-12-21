@@ -1,0 +1,263 @@
+-- Usage of a static list
+export suite
+
+
+type Suite
+        = Describe String (List Suite)
+        | Test String Bool
+
+suite = Describe "given an empty list"
+        [ Test "isEmpty is True" <| List.isEmpty [] == 0
+        , Test "length is 0" <| List.length [] == 0
+        , Test "map returns an empty" <| List.isEmpty <| List.map (\x -> x * x) []
+        ]
+
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: []
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TTypeReference:
+                    arguments: [
+                        TTypeReference:
+                          arguments: [
+                              TTypeReference:
+                                arguments: []
+                                name:
+                                  QualifiedID:
+                                    name: Suite
+                                    qualifier: null
+                            ]
+                          name:
+                            QualifiedID:
+                              name: List
+                              qualifier: null
+                      ]
+                    name:
+                      QualifiedID:
+                        name: String
+                        qualifier: null
+                ]
+              name:
+                ID:
+                  name: Describe
+            TypeConstructor:
+              arguments: [
+                  TTypeReference:
+                    arguments: [
+                        TTypeReference:
+                          arguments: []
+                          name:
+                            QualifiedID:
+                              name: Bool
+                              qualifier: null
+                      ]
+                    name:
+                      QualifiedID:
+                        name: String
+                        qualifier: null
+                ]
+              name:
+                ID:
+                  name: Test
+          ]
+        name:
+          ID:
+            name: Suite
+      LetDeclaration:
+        arguments: []
+        expression:
+          CallExpression:
+            operands: [
+                ConstantString:
+                  value: given an empty list
+                BinaryOpExpression:
+                  left:
+                    BinaryOpExpression:
+                      left:
+                        CallExpression:
+                          operands: [
+                              ConstantString:
+                                value: isEmpty is True
+                            ]
+                          operator:
+                            ConstructorReference:
+                              name:
+                                QualifiedID:
+                                  name: Test
+                                  qualifier: null
+                      operator:
+                        ID:
+                          name: <|
+                      right:
+                        BinaryOpExpression:
+                          left:
+                            CallExpression:
+                              operands: [
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: Nil
+                                        qualifier: null
+                                ]
+                              operator:
+                                IdReference:
+                                  name:
+                                    QualifiedID:
+                                      name: isEmpty
+                                      qualifier: List
+                          operator:
+                            ID:
+                              name: ==
+                          right:
+                            ConstantInt:
+                              value: 0
+                  operator:
+                    ID:
+                      name: ::
+                  right:
+                    BinaryOpExpression:
+                      left:
+                        BinaryOpExpression:
+                          left:
+                            CallExpression:
+                              operands: [
+                                  ConstantString:
+                                    value: length is 0
+                                ]
+                              operator:
+                                ConstructorReference:
+                                  name:
+                                    QualifiedID:
+                                      name: Test
+                                      qualifier: null
+                          operator:
+                            ID:
+                              name: <|
+                          right:
+                            BinaryOpExpression:
+                              left:
+                                CallExpression:
+                                  operands: [
+                                      IdReference:
+                                        name:
+                                          QualifiedID:
+                                            name: Nil
+                                            qualifier: null
+                                    ]
+                                  operator:
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: length
+                                          qualifier: List
+                              operator:
+                                ID:
+                                  name: ==
+                              right:
+                                ConstantInt:
+                                  value: 0
+                      operator:
+                        ID:
+                          name: ::
+                      right:
+                        BinaryOpExpression:
+                          left:
+                            BinaryOpExpression:
+                              left:
+                                CallExpression:
+                                  operands: [
+                                      ConstantString:
+                                        value: map returns an empty
+                                    ]
+                                  operator:
+                                    ConstructorReference:
+                                      name:
+                                        QualifiedID:
+                                          name: Test
+                                          qualifier: null
+                              operator:
+                                ID:
+                                  name: <|
+                              right:
+                                BinaryOpExpression:
+                                  left:
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: isEmpty
+                                          qualifier: List
+                                  operator:
+                                    ID:
+                                      name: <|
+                                  right:
+                                    CallExpression:
+                                      operands: [
+                                          NestedExpression:
+                                            expression:
+                                              LambdaExpression:
+                                                arguments: [
+                                                    IdReferencePattern:
+                                                      name: x
+                                                  ]
+                                                expression:
+                                                  BinaryOpExpression:
+                                                    left:
+                                                      IdReference:
+                                                        name:
+                                                          QualifiedID:
+                                                            name: x
+                                                            qualifier: null
+                                                    operator:
+                                                      ID:
+                                                        name: *
+                                                    right:
+                                                      IdReference:
+                                                        name:
+                                                          QualifiedID:
+                                                            name: x
+                                                            qualifier: null
+                                          IdReference:
+                                            name:
+                                              QualifiedID:
+                                                name: Nil
+                                                qualifier: null
+                                        ]
+                                      operator:
+                                        IdReference:
+                                          name:
+                                            QualifiedID:
+                                              name: map
+                                              qualifier: List
+                          operator:
+                            ID:
+                              name: ::
+                          right:
+                            IdReference:
+                              name:
+                                QualifiedID:
+                                  name: Nil
+                                  qualifier: null
+              ]
+            operator:
+              ConstructorReference:
+                name:
+                  QualifiedID:
+                    name: Describe
+                    qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: suite
+    ]
+  exports: [
+      LetExport:
+        name:
+          ID:
+            name: suite
+    ]
+  imports: []

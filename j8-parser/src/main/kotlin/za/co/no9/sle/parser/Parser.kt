@@ -544,6 +544,13 @@ class Parser(private val lexer: Lexer) {
                     ConstantString(constantStringSymbol.location, text)
                 }
 
+                isOperator("[]") -> {
+                    val nilSymbol =
+                            lexer.next()
+
+                    IdReference(nilSymbol.location, QualifiedID(nilSymbol.location, null, "Nil"))
+                }
+
                 isOperator("[") -> {
                     val openSquare =
                             lexer.next()
@@ -648,7 +655,9 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.ConstantString) ||
                     isOperator("!") ||
                     isToken(Token.LowerID) ||
-                    isToken(Token.UpperID)
+                    isToken(Token.UpperID) ||
+                    isOperator("[") ||
+                    isOperator("[]")
 
 
     fun parseType(): TType {
