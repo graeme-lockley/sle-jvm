@@ -97,4 +97,10 @@ public class StringUtil {
 
     public static final Object contains =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) b).contains((String) a);
+
+    public static final Object startsWith =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) b).startsWith((String) a);
+
+    public static final Object endsWith =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) b).endsWith((String) a);
 }
