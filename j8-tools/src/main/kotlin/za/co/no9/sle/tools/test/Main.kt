@@ -28,7 +28,6 @@ class Arguments(parser: ArgParser) {
                 }
             }
 
-
     val source by parser
             .storing("-S", "--source", help = "source directory of files to compile")
             .default(File(".").absolutePath)
