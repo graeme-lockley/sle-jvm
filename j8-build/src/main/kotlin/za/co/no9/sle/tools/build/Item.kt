@@ -3,6 +3,10 @@ package za.co.no9.sle.tools.build
 import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.fromJsonString
+import za.co.no9.sle.typing.typeBool
+import za.co.no9.sle.typing.typeInt
+import za.co.no9.sle.typing.typeString
+import za.co.no9.sle.typing.typeUnit
 import java.io.File
 
 
@@ -100,10 +104,25 @@ class Item(
 
 
     override fun resolveConstructor(name: String): String =
-            if (packageName.isEmpty())
-                "$className.$name"
-            else
-                "${packageName.joinToString(".")}.$className.$name"
+            when (name) {
+                "()" ->
+                    typeUnit.name
+
+                "Int" ->
+                    typeInt.name
+
+                "Bool" ->
+                    typeBool.name
+
+                "String" ->
+                    typeString.name
+
+                else ->
+                    if (packageName.isEmpty())
+                        "$className.$name"
+                    else
+                        "${packageName.joinToString(".")}.$className.$name"
+            }
 
 
     override fun resolveId(name: String): String =
