@@ -21,8 +21,4 @@ abstract class Repository(
 
 
     abstract fun itemLoaded(item: Item)
-
-
-    fun sourceFiles() =
-            sourcePrefix.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
 }

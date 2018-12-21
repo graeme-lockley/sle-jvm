@@ -11,7 +11,12 @@ import java.io.File
 
 
 class BuildRepository(override val sourcePrefix: File,
-                      override val targetRoot: File) : Repository(sourcePrefix, targetRoot) {
+                      override val targetRoot: File,
+                      sourceFiles: Set<URN>) : Repository(sourcePrefix, targetRoot) {
+    constructor(
+            sourcePrefix: File,
+            targetRoot: File) : this(sourcePrefix, targetRoot, sources(sourcePrefix))
+
     private val compiling =
             mutableSetOf<URN>()
 
@@ -36,7 +41,7 @@ class BuildRepository(override val sourcePrefix: File,
         environment =
                 importAllResult.environment
 
-        sourceFiles().forEach { urn ->
+        sourceFiles.forEach { urn ->
             val result =
                     item(urn)
 
@@ -97,3 +102,7 @@ class BuildRepository(override val sourcePrefix: File,
         }
     }
 }
+
+
+fun sources(directory: File) =
+        directory.walk().filter { it.isFile }.filter { it.name.endsWith(".sle") }.map { URN(it) }.toSet()
