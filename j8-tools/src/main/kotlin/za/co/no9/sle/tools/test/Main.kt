@@ -75,7 +75,6 @@ fun runTests(repository: Repository, file: File) {
 
 
 fun runTest(repository: Repository, urn: URN) {
-    println(urn.name)
     val item =
             repository.item(urn)
 
