@@ -28,4 +28,30 @@ public class StringUtil {
 
     public static final Object append =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) a) + ((String) b);
+
+    public static final Object join =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                Object[] lst =
+                        (Object[]) b;
+
+                if (((int) lst[0]) == ListUtil.NilSelector) {
+                    return "";
+                } else {
+                    String sep =
+                            (String) a;
+
+                    StringBuilder result =
+                            new StringBuilder();
+
+                    result.append((String) lst[1]);
+                    lst = (Object[]) lst[2];
+                    while (((int) lst[0]) == ListUtil.ConsSelector) {
+                        result.append(sep);
+                        result.append((String) lst[1]);
+                        lst = (Object[]) lst[2];
+                    }
+
+                    return result.toString();
+                }
+            };
 }
