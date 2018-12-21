@@ -1,5 +1,7 @@
 package za.co.no9.sle.runtime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -103,4 +105,28 @@ public class StringUtil {
 
     public static final Object endsWith =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) b).endsWith((String) a);
+
+    public static final Object indexes =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                String needle =
+                        (String) a;
+
+                String haystack =
+                        (String) b;
+
+                int haystackSize =
+                        haystack.length();
+
+                List<Integer> result =
+                        new ArrayList<>();
+
+                int index = haystack.indexOf(needle);
+                while (index >= 0 && index < haystackSize) {
+                    result.add(index);
+                    index = haystack.indexOf(needle, index + 1);
+                }
+
+                return ListUtil.javaListToList(result);
+            };
+
 }
