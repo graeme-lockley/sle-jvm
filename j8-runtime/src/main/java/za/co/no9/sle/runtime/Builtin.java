@@ -50,10 +50,10 @@ public class Builtin {
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((boolean) a) || ((boolean) b);
 
     public static final Object EQUAL_EQUAL =
-            (Function<Object, Object>) a -> (Function<Object, Object>) a::equals;
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> equals(a, b);
 
     public static final Object BANG_EQUAL =
-            (Function<Object, Object>) a -> (Function<Object, Object>) b -> !a.equals(b);
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> !equals(a, b);
 
     public static final Object LESS =
             (Function<Object, Object>) a -> (Function<Object, Object>) b ->
@@ -92,4 +92,33 @@ public class Builtin {
 
     public static final Object MINUS =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((int) a) - ((int) b);
+
+
+    private static final boolean equals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        } else if (a instanceof Object[] && b instanceof Object[]) {
+            Object[] aArray =
+                    (Object[]) a;
+
+            Object[] bArray =
+                    (Object[]) b;
+
+            int aLength =
+                    aArray.length;
+
+            if (aLength == bArray.length) {
+                for (int lp = 0; lp < aLength; lp += 1) {
+                    if (!equals(aArray[lp], bArray[lp])) {
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return a.equals(b);
+        }
+    }
 }
