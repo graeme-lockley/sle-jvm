@@ -981,8 +981,27 @@ private fun transform(env: Environment, source: Item, ttype: TType, substitution
             is TTypeReference ->
                 if (env.isAlias(ttype.name.asQString()))
                     TAlias(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
-                else
-                    TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
+                else {
+                    val typeBinding =
+                            env.type(ttype.name.asQString())
+
+                    when (typeBinding) {
+                        is BuiltinBinding ->
+                            TCon(ttype.location, (typeBinding.scheme.type as TCon).name, ttype.arguments.map { transform(env, source, it, substitution) })
+
+                        is ADTBinding ->
+                            TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
+
+                        is OpaqueImportADTBinding ->
+                            TCon(ttype.location, typeBinding.identity, ttype.arguments.map { transform(env, source, it, substitution) })
+
+                        is ImportADTBinding ->
+                            TCon(ttype.location, typeBinding.identity, ttype.arguments.map { transform(env, source, it, substitution) })
+
+                        else ->
+                            TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
+                    }
+                }
 
             is TArrow ->
                 TArr(transform(env, source, ttype.domain, substitution), transform(env, source, ttype.range, substitution))
