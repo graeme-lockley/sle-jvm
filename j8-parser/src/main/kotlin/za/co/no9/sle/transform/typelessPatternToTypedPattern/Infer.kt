@@ -970,22 +970,22 @@ private fun Type.last(): Type =
         }
 
 
-private fun transform(env: Environment, source: Item, type: TType, substitution: Map<String, TVar> = emptyMap()): Type =
-        when (type) {
+private fun transform(env: Environment, source: Item, ttype: TType, substitution: Map<String, TVar> = emptyMap()): Type =
+        when (ttype) {
             is TUnit ->
                 typeUnit
 
             is TVarReference ->
-                substitution[type.name]!!
+                substitution[ttype.name]!!
 
             is TTypeReference ->
-                if (env.isAlias(type.name.asQString()))
-                    TAlias(type.location, QString(type.name.qualifier, type.name.name), type.arguments.map { transform(env, source, it, substitution) })
+                if (env.isAlias(ttype.name.asQString()))
+                    TAlias(ttype.location, QString(ttype.name.qualifier, ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
                 else
-                    TCon(type.location, source.resolveConstructor(type.name.name), type.arguments.map { transform(env, source, it, substitution) })
+                    TCon(ttype.location, source.resolveConstructor(ttype.name.name), ttype.arguments.map { transform(env, source, it, substitution) })
 
             is TArrow ->
-                TArr(transform(env, source, type.domain, substitution), transform(env, source, type.range, substitution))
+                TArr(transform(env, source, ttype.domain, substitution), transform(env, source, ttype.range, substitution))
         }
 
 
