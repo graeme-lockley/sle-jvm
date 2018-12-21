@@ -66,4 +66,32 @@ public class StringUtil {
 
                 return ListUtil.arrayToList(text.split(Pattern.quote(sep)));
             };
+
+    public static final Object slice =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> (Function<Object, Object>) c -> {
+                String text =
+                        (String) c;
+
+                int textLength =
+                        text.length();
+
+                int startIndex =
+                        calculateIndex((int) a, textLength);
+
+                int endIndex =
+                        calculateIndex((int) b, textLength);
+
+                return text.substring(startIndex, endIndex);
+            };
+
+    private static int calculateIndex(int index, int textLength) {
+        if (index < 0) {
+            int newIndex =
+                    textLength + index;
+
+            return newIndex < 0 ? 0 : newIndex;
+        } else {
+            return index > textLength ? textLength : index;
+        }
+    }
 }
