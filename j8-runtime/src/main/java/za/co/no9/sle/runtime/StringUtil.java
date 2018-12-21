@@ -79,7 +79,7 @@ public class StringUtil {
                         calculateIndex((int) a, textLength);
 
                 int endIndex =
-                        calculateIndex((int) b, textLength);
+                        Math.max(startIndex, calculateIndex((int) b, textLength));
 
                 return text.substring(startIndex, endIndex);
             };
@@ -94,4 +94,7 @@ public class StringUtil {
             return index > textLength ? textLength : index;
         }
     }
+
+    public static final Object contains =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((String) b).contains((String) a);
 }
