@@ -2,6 +2,8 @@ export
       List (..)
     , Maybe (..)
 
+    , (<<), (>>)
+
     , (*), (/)
 
     , (+), (-)
@@ -12,6 +14,8 @@ export
 
     , (&&), (||)
 
+    , (|>), (<|)
+
 
 type List a
     = Nil
@@ -21,6 +25,15 @@ type List a
 type Maybe a
     = Nothing
     | Just a
+
+
+(<< 9 right) : (b -> c) -> (a -> b) -> (a -> c)
+(<< 9 right) g f x =
+    g (f x)
+
+(>> 9 right) : (a -> b) -> (b -> c) -> (a -> c)
+(>> 9 right) f g x =
+    g (f x)
 
 
 (* 7 left) : Int -> Int -> Int
@@ -79,3 +92,13 @@ type Maybe a
 (|| 2 right) : Bool -> Bool -> Bool
 (|| 2 none) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.BAR_BAR"
+
+
+(<| 0 right) : (a -> b) -> a -> b
+(<| 0 right) f x =
+	f x
+
+(|> 0 left) : a -> (a -> b) -> b
+(|> 0 left) x f =
+	f x
+
