@@ -71,7 +71,7 @@ fun main(args: Array<String>): Unit =
                     var ch = inputStream.read()
                     while (ch != -1) {
                         if (verbose)
-                            print(ch.toChar());
+                            print(ch.toChar())
 
                         ch = inputStream.read()
                     }
@@ -80,7 +80,8 @@ fun main(args: Array<String>): Unit =
                     val exitWith =
                             p.exitValue()
 
-                    println("\nExited with $exitWith")
+                    if (verbose || exitWith != 0)
+                        println("Error: javac exited with $exitWith")
                 } else {
                     println("Errors: ${repository.buildErrors}")
                 }
