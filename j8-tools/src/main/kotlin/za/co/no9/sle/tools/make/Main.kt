@@ -6,6 +6,7 @@ import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
 import za.co.no9.sle.right
 import za.co.no9.sle.tools.build.BuildRepository
+import za.co.no9.sle.tools.build.Repository
 import java.io.File
 
 
@@ -51,42 +52,49 @@ fun main(args: Array<String>): Unit =
                     log.info("target: $target")
                 }
 
-                File(target).mkdirs()
-
-                val repository =
-                        BuildRepository(File(source), File(target))
-
-                if (repository.buildErrors.isEmpty()) {
-                    println("${repository.compiled.size} files compiled - no errors")
-
-                    val pb = ProcessBuilder(*arrayOf("javac", "-sourcepath", target, "-classpath", javac) + repository.compiled.map { repository.item(it).right()!!.targetJavaFile().absolutePath })
-                    pb.redirectErrorStream(true)
-
-                    val p =
-                            pb.start()
-
-                    val inputStream =
-                            p.inputStream
-
-                    var ch = inputStream.read()
-                    while (ch != -1) {
-                        if (verbose)
-                            print(ch.toChar())
-
-                        ch = inputStream.read()
-                    }
-                    p.waitFor()
-
-                    val exitWith =
-                            p.exitValue()
-
-                    if (verbose || exitWith != 0)
-                        println("Error: javac exited with $exitWith")
-                } else {
-                    println("Errors: ${repository.buildErrors}")
-                }
+                build(source, target, javac, verbose)
             }
         }
+
+
+fun build(source: String, target: String, javac: String, verbose: Boolean): Repository {
+    File(target).mkdirs()
+
+    val repository =
+            BuildRepository(File(source), File(target))
+
+    if (repository.buildErrors.isEmpty()) {
+        println("${repository.compiled.size} files compiled - no errors")
+
+        val pb = ProcessBuilder(*arrayOf("javac", "-sourcepath", target, "-classpath", javac) + repository.compiled.map { repository.item(it).right()!!.targetJavaFile().absolutePath })
+        pb.redirectErrorStream(true)
+
+        val p =
+                pb.start()
+
+        val inputStream =
+                p.inputStream
+
+        var ch = inputStream.read()
+        while (ch != -1) {
+            if (verbose)
+                print(ch.toChar())
+
+            ch = inputStream.read()
+        }
+        p.waitFor()
+
+        val exitWith =
+                p.exitValue()
+
+        if (verbose || exitWith != 0)
+            println("Error: javac exited with $exitWith")
+    } else {
+        println("Errors: ${repository.buildErrors}")
+    }
+
+    return repository
+}
 
 
 class Log : za.co.no9.sle.tools.build.Log {
