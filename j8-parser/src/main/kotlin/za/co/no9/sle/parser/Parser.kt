@@ -376,7 +376,7 @@ class Parser(private val lexer: Lexer) {
                         isToken(Token.LowerID) ||
                                 isToken(Token.UpperID) ||
                                 isOperator("("))) {
-            arguments.add(parseType())
+            arguments.add(parseTermType())
         }
 
         return TypeConstructor(upperID.location + locationFrom(arguments), upperID, arguments)
@@ -732,6 +732,13 @@ class Parser(private val lexer: Lexer) {
                         lexer.next()
 
                 return TVarReference(lowerID.location, lowerID.text)
+            }
+
+            isToken(Token.UpperID) -> {
+                val qualifiedUpperID =
+                        parseQualifiedUpperID()
+
+                return TTypeReference(qualifiedUpperID.location, qualifiedUpperID, emptyList())
             }
 
             isOperator("(") -> {

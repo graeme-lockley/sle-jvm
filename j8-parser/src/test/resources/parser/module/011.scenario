@@ -21,24 +21,23 @@ Module:
             TypeConstructor:
               arguments: [
                   TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: String
+                        qualifier: null
+                  TTypeReference:
                     arguments: [
                         TTypeReference:
-                          arguments: [
-                              TTypeReference:
-                                arguments: []
-                                name:
-                                  QualifiedID:
-                                    name: Suite
-                                    qualifier: null
-                            ]
+                          arguments: []
                           name:
                             QualifiedID:
-                              name: List
+                              name: Suite
                               qualifier: null
                       ]
                     name:
                       QualifiedID:
-                        name: String
+                        name: List
                         qualifier: null
                 ]
               name:
@@ -47,17 +46,16 @@ Module:
             TypeConstructor:
               arguments: [
                   TTypeReference:
-                    arguments: [
-                        TTypeReference:
-                          arguments: []
-                          name:
-                            QualifiedID:
-                              name: Bool
-                              qualifier: null
-                      ]
+                    arguments: []
                     name:
                       QualifiedID:
                         name: String
+                        qualifier: null
+                  TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Bool
                         qualifier: null
                 ]
               name:
