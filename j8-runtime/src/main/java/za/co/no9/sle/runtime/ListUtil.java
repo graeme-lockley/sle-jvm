@@ -14,4 +14,20 @@ public class ListUtil {
     static final Object[] cons(Object a, Object b) {
         return new Object[]{ConsSelector, a, b};
     }
+
+
+    static final Object arrayToList(Object[] items) {
+        Object result =
+                ListUtil.nil;
+
+        int lp =
+                items.length - 1;
+
+        while (lp >= 0) {
+            result = ListUtil.cons(items[lp], result);
+            lp -= 1;
+        }
+
+        return result;
+    }
 }
