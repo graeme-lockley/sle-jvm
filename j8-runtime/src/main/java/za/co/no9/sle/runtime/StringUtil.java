@@ -1,6 +1,7 @@
 package za.co.no9.sle.runtime;
 
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 public class StringUtil {
     public static final Object length =
@@ -53,5 +54,16 @@ public class StringUtil {
 
                     return result.toString();
                 }
+            };
+
+    public static final Object split =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                String sep =
+                        (String) a;
+
+                String text =
+                        (String) b;
+
+                return ListUtil.arrayToList(text.split(Pattern.quote(sep)));
             };
 }
