@@ -129,4 +129,9 @@ public class StringUtil {
                 return ListUtil.javaListToList(result);
             };
 
+    public static final Object toUpper =
+            (Function<Object, Object>) a -> ((String) a).toUpperCase();
+
+    public static final Object toLower =
+            (Function<Object, Object>) a -> ((String) a).toLowerCase();
 }
