@@ -134,4 +134,7 @@ public class StringUtil {
 
     public static final Object toLower =
             (Function<Object, Object>) a -> ((String) a).toLowerCase();
+
+    public static final Object cons =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> Character.toString((char) a) + ((String) b);
 }
