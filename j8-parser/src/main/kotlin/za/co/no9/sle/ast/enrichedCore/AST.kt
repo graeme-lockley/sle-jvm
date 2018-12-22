@@ -116,6 +116,11 @@ data class ConstantString(
         override val type: Type,
         val value: String) : Expression(location, type)
 
+data class ConstantChar(
+        override val location: Location,
+        override val type: Type,
+        val value: Char) : Expression(location, type)
+
 data class FAIL(
         override val location: Location,
         override val type: Type): Expression(location, type)

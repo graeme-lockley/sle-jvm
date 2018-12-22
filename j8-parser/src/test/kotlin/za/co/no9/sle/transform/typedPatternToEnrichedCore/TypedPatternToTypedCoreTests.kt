@@ -194,6 +194,9 @@ fun Expression.asString(indent: Int = 0): String =
             is ConstantString ->
                 "${spaces(indent)}\"$value\"\n"
 
+            is ConstantChar ->
+                "${spaces(indent)}'$value'\n"
+
             is FAIL ->
                 "${spaces(indent)}FAIL\n"
 

@@ -122,6 +122,10 @@ data class ConstantString(
         override val location: Location,
         val value: String) : Expression(location)
 
+data class ConstantChar(
+        override val location: Location,
+        val value: Char) : Expression(location)
+
 data class IdReference(
         override val location: Location,
         val name: QualifiedID) : Expression(location)
@@ -181,6 +185,10 @@ data class ConstantBoolPattern(
 data class ConstantStringPattern(
         override val location: Location,
         val value: String) : Pattern(location)
+
+data class ConstantCharPattern(
+        override val location: Location,
+        val value: Char) : Pattern(location)
 
 data class ConstantUnitPattern(
         override val location: Location) : Pattern(location)

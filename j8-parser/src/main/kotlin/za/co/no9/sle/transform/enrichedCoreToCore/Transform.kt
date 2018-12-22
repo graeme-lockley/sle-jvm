@@ -115,6 +115,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantString ->
                     ConstantString(expression.location, expression.type, expression.value)
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
+                    ConstantChar(expression.location, expression.type, expression.value)
+
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     FAIL(expression.location, expression.type)
 
@@ -336,6 +339,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is ConstantString ->
                     haystack
 
+                is ConstantChar ->
+                    haystack
+
                 is FAIL ->
                     needle
 
@@ -371,6 +377,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                     e
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantString ->
+                    e
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     e
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
@@ -411,6 +420,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                     false
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantString ->
+                    false
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     false
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->

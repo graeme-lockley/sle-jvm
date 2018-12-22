@@ -43,6 +43,30 @@ class LexerTests : StringSpec({
                 .shouldBe(listOf("\"hello\""))
     }
 
+    "'h' -> [ConstantChar]" {
+        Lexer("'h'").tokens()
+                .shouldBe(listOf(Token.ConstantChar))
+
+        Lexer("'h'").tokenTexts()
+                .shouldBe(listOf("'h'"))
+    }
+
+    "'\\'' -> [ConstantChar]" {
+        Lexer("'\\''").tokens()
+                .shouldBe(listOf(Token.ConstantChar))
+
+        Lexer("'\\''").tokenTexts()
+                .shouldBe(listOf("'\\''"))
+    }
+
+    "'hh' -> [ERROR]" {
+        Lexer("'hh'").tokens()
+                .shouldBe(listOf(Token.ERROR))
+
+        Lexer("'hh'").tokenTexts()
+                .shouldBe(listOf("'hh"))
+    }
+
     "() ! != == <= < -> -> [ConstantOperator, ..., ConstantOperator]" {
         Lexer("() ! != == <= < ->").tokens()
                 .shouldBe(listOf(Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator, Token.ConstantOperator))

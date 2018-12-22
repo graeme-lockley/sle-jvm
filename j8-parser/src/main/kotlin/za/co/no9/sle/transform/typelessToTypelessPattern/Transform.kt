@@ -218,6 +218,9 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.ConstantString ->
                 ConstantString(ast.location, ast.value)
 
+            is za.co.no9.sle.ast.typeless.ConstantChar ->
+                ConstantChar(ast.location, ast.value)
+
             is NotExpression ->
                 CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null, "(!)")), transform(ast.expression))
 
@@ -257,6 +260,9 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
 
             is za.co.no9.sle.ast.typeless.ConstantStringPattern ->
                 ConstantStringPattern(pattern.location, pattern.value)
+
+            is za.co.no9.sle.ast.typeless.ConstantCharPattern ->
+                ConstantCharPattern(pattern.location, pattern.value)
 
             is za.co.no9.sle.ast.typeless.ConstantUnitPattern ->
                 ConstantUnitPattern(pattern.location)

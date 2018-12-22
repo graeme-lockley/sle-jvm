@@ -167,6 +167,12 @@ data class StringLiteralExpression(
             "\"$value\""
 }
 
+data class CharLiteralExpression(
+        val value: Char) : Expression() {
+    override fun toString(indent: Int) =
+            "'$value'"
+}
+
 data class NameExpression(
         val name: String) : Expression() {
     override fun toString(indent: Int) =

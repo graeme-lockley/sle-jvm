@@ -116,6 +116,11 @@ data class ConstantString(
         override val type: Type,
         val value: String) : Expression(location, type)
 
+data class ConstantChar(
+        override val location: Location,
+        override val type: Type,
+        val value: Char) : Expression(location, type)
+
 data class IdReference(
         override val location: Location,
         override val type: Type,
@@ -170,6 +175,11 @@ data class ConstantStringPattern(
         override val location: Location,
         override val type: Type,
         val value: String) : Pattern(location, type)
+
+data class ConstantCharPattern(
+        override val location: Location,
+        override val type: Type,
+        val value: Char) : Pattern(location, type)
 
 data class ConstantUnitPattern(
         override val location: Location,

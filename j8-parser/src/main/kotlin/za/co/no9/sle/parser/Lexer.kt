@@ -9,6 +9,7 @@ enum class Token {
 
     ERROR,
 
+    ConstantChar,
     ConstantInt,
     ConstantOperator,
     ConstantString,
@@ -209,6 +210,27 @@ class Lexer(private val input: String) {
                     markEnd(startIndex, startPosition, Token.ConstantString)
                 }
 
+                currentCh == '\'' -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    nextCharacter()
+                    if (currentCh == '\\') {
+                        nextCharacter()
+                        nextCharacter()
+                    } else {
+                        nextCharacter()
+                    }
+
+                    if (currentCh == '\'')
+                        markEnd(startIndex, startPosition, Token.ConstantChar)
+                    else
+                        markEnd(startIndex, startPosition, Token.ERROR)
+                }
+
                 singleOperatorCharacters.contains(currentCh) ->
                     markEnd(currentIndex, position(), Token.ConstantOperator)
 
@@ -256,7 +278,7 @@ class Lexer(private val input: String) {
             if (currentCh == '\n') {
                 currentColumn = 0
                 currentLine += 1
-            } else if (currentCh != '\r'){
+            } else if (currentCh != '\r') {
                 currentColumn += 1
             }
         } else {

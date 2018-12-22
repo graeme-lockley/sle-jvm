@@ -1,0 +1,8 @@
+-- True
+value : Char
+value =
+    'h'
+-- constraints
+[
+    Data.Char : Data.Char
+]

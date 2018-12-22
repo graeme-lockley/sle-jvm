@@ -7,6 +7,8 @@ import za.co.no9.sle.ast.typedPattern.CaseExpression
 import za.co.no9.sle.ast.typedPattern.CaseItem
 import za.co.no9.sle.ast.typedPattern.ConstantBool
 import za.co.no9.sle.ast.typedPattern.ConstantBoolPattern
+import za.co.no9.sle.ast.typedPattern.ConstantChar
+import za.co.no9.sle.ast.typedPattern.ConstantCharPattern
 import za.co.no9.sle.ast.typedPattern.ConstantInt
 import za.co.no9.sle.ast.typedPattern.ConstantIntPattern
 import za.co.no9.sle.ast.typedPattern.ConstantString
@@ -337,6 +339,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is za.co.no9.sle.ast.typelessPattern.ConstantString ->
                     ConstantString(expression.location, typeString, expression.value)
 
+                is za.co.no9.sle.ast.typelessPattern.ConstantChar ->
+                    ConstantChar(expression.location, typeChar, expression.value)
+
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val valueBinding =
                             env.value(expression.name.asQString())
@@ -531,6 +536,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantStringPattern ->
                     ConstantStringPattern(pattern.location, typeString, pattern.value)
+
+                is za.co.no9.sle.ast.typelessPattern.ConstantCharPattern ->
+                    ConstantCharPattern(pattern.location, typeString, pattern.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantUnitPattern ->
                     ConstantUnitPattern(pattern.location, typeUnit)

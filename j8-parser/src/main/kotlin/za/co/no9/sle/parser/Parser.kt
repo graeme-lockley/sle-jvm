@@ -543,6 +543,19 @@ class Parser(private val lexer: Lexer) {
 
                     ConstantString(constantStringSymbol.location, text)
                 }
+                isToken(Token.ConstantChar) -> {
+                    val constantCharSymbol =
+                            lexer.next()
+
+                    val text =
+                            constantCharSymbol.text
+                                    .drop(1)
+                                    .dropLast(1)
+                                    .replace("\\\\", "\\")
+                                    .replace("\\\'", "\'")
+
+                    ConstantChar(constantCharSymbol.location, text[0])
+                }
 
                 isOperator("[]") -> {
                     val nilSymbol =
@@ -653,6 +666,7 @@ class Parser(private val lexer: Lexer) {
             isOperator("(") ||
                     isToken(Token.ConstantInt) ||
                     isToken(Token.ConstantString) ||
+                    isToken(Token.ConstantChar) ||
                     isOperator("!") ||
                     isToken(Token.LowerID) ||
                     isToken(Token.UpperID) ||
@@ -845,6 +859,20 @@ class Parser(private val lexer: Lexer) {
                 return ConstantStringPattern(constantStringSymbol.location, text)
             }
 
+            isToken(Token.ConstantChar) -> {
+                val constantCharSymbol =
+                        lexer.next()
+
+                val text =
+                        constantCharSymbol.text
+                                .drop(1)
+                                .dropLast(1)
+                                .replace("\\\\", "\\")
+                                .replace("\\\'", "\'")
+
+                return ConstantCharPattern(constantCharSymbol.location, text[0])
+            }
+
             isOperator("(") -> {
                 val openParenSymbol =
                         lexer.next()
@@ -880,6 +908,7 @@ class Parser(private val lexer: Lexer) {
     fun isFirstPattern(): Boolean =
             isToken(Token.ConstantInt) ||
                     isToken(Token.ConstantString) ||
+                    isToken(Token.ConstantChar) ||
                     isToken(Token.UpperID) ||
                     isToken(Token.LowerID) ||
                     isOperator("(")

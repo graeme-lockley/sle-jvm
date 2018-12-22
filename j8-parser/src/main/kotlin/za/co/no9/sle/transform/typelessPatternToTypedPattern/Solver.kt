@@ -171,6 +171,9 @@ private class ApplyContext(private val environment: Environment) {
                 is ConstantString ->
                     expression
 
+                is ConstantChar ->
+                    expression
+
                 is IdReference ->
                     IdReference(expression.location, expression.type.apply(substitution), expression.name)
 
@@ -201,6 +204,9 @@ private class ApplyContext(private val environment: Environment) {
                     pattern
 
                 is ConstantStringPattern ->
+                    pattern
+
+                is ConstantCharPattern ->
                     pattern
 
                 is ConstantUnitPattern ->

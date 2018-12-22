@@ -59,12 +59,14 @@ public class Builtin {
             (Function<Object, Object>) a -> (Function<Object, Object>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) < ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) < 0
+                            : a instanceof Character && b instanceof Character ? ((Character) a).compareTo((Character) b) < 0
                             : (a instanceof Boolean && b instanceof Boolean) && ((Boolean) a).compareTo((Boolean) b) < 0;
 
     public static final Object LESS_EQUAL =
             (Function<Object, Object>) a -> (Function<Object, Object>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) <= ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) <= 0
+                            : a instanceof Character && b instanceof Character ? ((Character) a).compareTo((Character) b) <= 0
                             : a instanceof Boolean && b instanceof Boolean ? ((Boolean) a).compareTo((Boolean) b) <= 0
                             : a instanceof Unit && b instanceof Unit;
 
@@ -72,12 +74,14 @@ public class Builtin {
             (Function<Object, Object>) a -> (Function<Object, Object>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) > ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) > 0
+                            : a instanceof Character && b instanceof Character ? ((Character) a).compareTo((Character) b) > 0
                             : (a instanceof Boolean && b instanceof Boolean) && ((Boolean) a).compareTo((Boolean) b) > 0;
 
     public static final Object GREATER_EQUAL =
             (Function<Object, Object>) a -> (Function<Object, Object>) b ->
                     a instanceof Integer && b instanceof Integer ? ((Integer) a) >= ((Integer) b)
                             : a instanceof String && b instanceof String ? ((String) a).compareTo((String) b) >= 0
+                            : a instanceof Character && b instanceof Character ? ((Character) a).compareTo((Character) b) >= 0
                             : a instanceof Boolean && b instanceof Boolean ? ((Boolean) a).compareTo((Boolean) b) >= 0
                             : a instanceof Unit && b instanceof Unit;
 

@@ -150,6 +150,9 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.ConstantString ->
                     ConstantString(expression.location, expression.type, expression.value)
 
+                is za.co.no9.sle.ast.typedPattern.ConstantChar ->
+                    ConstantChar(expression.location, expression.type, expression.value)
+
                 is za.co.no9.sle.ast.typedPattern.IdReference ->
                     IdReference(expression.location, expression.type, expression.name)
 
@@ -287,6 +290,9 @@ private class Transform(val environment: Environment) {
 
                 is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
                     state.addComparison(pattern.location, pattern.type, ConstantString(pattern.location, pattern.type, pattern.value))
+
+                is za.co.no9.sle.ast.typedPattern.ConstantCharPattern ->
+                    state.addComparison(pattern.location, pattern.type, ConstantChar(pattern.location, pattern.type, pattern.value))
 
                 is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern -> {
                     val id =

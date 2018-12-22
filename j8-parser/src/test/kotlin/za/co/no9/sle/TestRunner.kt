@@ -128,6 +128,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is String ->
                     true
 
+                is Char ->
+                    true
+
                 is QString ->
                     true
 
@@ -147,6 +150,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                     "$value"
 
                 is String ->
+                    "$value"
+
+                is Char ->
                     "$value"
 
                 is QString ->
@@ -206,6 +212,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
                 is String ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
+                is Char ->
+                    "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
+
                 is QString ->
                     "${spaces(indent)}$label: ${value(value, indent + 2)}\n"
 
@@ -233,6 +242,9 @@ fun dumpString(o: Any?, indent: Int = 0): String {
             "${spaces(indent)}${value(o, indent)}\n"
 
         is String ->
+            "${spaces(indent)}${value(o, indent)}\n"
+
+        is Char ->
             "${spaces(indent)}${value(o, indent)}\n"
 
         is QString ->

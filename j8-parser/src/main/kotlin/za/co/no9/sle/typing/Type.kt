@@ -119,4 +119,7 @@ val typeBool =
 val typeString =
         TCon(homeLocation, "Data.String")
 
+val typeChar =
+        TCon(homeLocation, "Data.Char")
+
 

@@ -229,4 +229,5 @@ val initialEnvironment =
                 .newType("Int", BuiltinBinding(Scheme(listOf(), typeInt)))
                 .newType("Bool", BuiltinBinding(Scheme(listOf(), typeBool)))
                 .newType("String", BuiltinBinding(Scheme(listOf(), typeString)))
+                .newType("Char", BuiltinBinding(Scheme(listOf(), typeChar)))
                 .newType("()", BuiltinBinding(Scheme(listOf(), typeUnit)))

@@ -145,6 +145,9 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
             is ConstantString ->
                 StringLiteralExpression(expression.value)
 
+            is ConstantChar ->
+                CharLiteralExpression(expression.value)
+
             is ERROR ->
                 TODO()
 

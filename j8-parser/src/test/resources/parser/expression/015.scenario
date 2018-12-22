@@ -1,0 +1,19 @@
+-- Constant char 'h'
+value =
+    'h'
+-- ast
+Module:
+  declarations: [
+    LetDeclaration:
+      arguments: []
+      expression:
+        ConstantChar:
+          value: h
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+  ]
+  exports: []
+  imports: []
