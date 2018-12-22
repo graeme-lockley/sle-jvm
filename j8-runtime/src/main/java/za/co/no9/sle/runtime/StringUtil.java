@@ -137,4 +137,59 @@ public class StringUtil {
 
     public static final Object cons =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> Character.toString((char) a) + ((String) b);
+
+    public static final Object trim =
+            (Function<Object, Object>) a -> ((String) a).trim();
+
+    public static final Object trimLeft =
+            (Function<Object, Object>) a -> {
+                String s =
+                        (String) a;
+
+                int sLength =
+                        s.length();
+
+                int index =
+                        0;
+
+                while (true) {
+                    if (index == sLength) {
+                        return "";
+                    } else if (Character.isWhitespace(s.charAt(index))) {
+                        index += 1;
+                    } else if (index == 0) {
+                        return s;
+                    } else {
+                        return s.substring(index);
+                    }
+                }
+            };
+
+    public static final Object trimRight =
+            (Function<Object, Object>) a -> {
+                String s =
+                        (String) a;
+
+                int sLength =
+                        s.length();
+
+                if (sLength == 0) {
+                    return s;
+                } else {
+                    int index =
+                            sLength - 1;
+
+                    while (true) {
+                        if (Character.isWhitespace(s.charAt(index))) {
+                            if (index == 0) {
+                                return "";
+                            } else {
+                                index -= 1;
+                            }
+                        } else {
+                            return s.substring(0, index + 1);
+                        }
+                    }
+                }
+            };
 }
