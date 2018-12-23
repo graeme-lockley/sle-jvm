@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import static za.co.no9.sle.runtime.Maybe.just;
+import static za.co.no9.sle.runtime.Maybe.nothing;
+
 public class StringUtil {
     public static final Object length =
             (Function<Object, Object>) s -> ((String) s).length();
@@ -190,6 +193,23 @@ public class StringUtil {
                             return s.substring(0, index + 1);
                         }
                     }
+
+                }
+            };
+
+    public static final Object fromInt =
+            (Function<Object, Object>) a -> Integer.toString((int) a);
+
+
+    public static final Object toInt =
+            (Function<Object, Object>) a -> {
+                String s =
+                        (String) a;
+
+                try {
+                    return just(Integer.parseInt(s));
+                } catch (java.lang.NumberFormatException e) {
+                    return nothing;
                 }
             };
 }
