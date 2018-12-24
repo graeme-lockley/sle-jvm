@@ -99,6 +99,43 @@
       ]
     },
     {
+      "adt": "Tuple",
+      "cardinality": 2,
+      "identity": "resource.Prelude.Tuple",
+      "constructors": [
+        {
+          "name": "Tuple",
+          "scheme": {
+            "parameters": [
+              0,
+              1
+            ],
+            "type": {
+              "domain": {
+                "variable": 0
+              },
+              "range": {
+                "domain": {
+                  "variable": 1
+                },
+                "range": {
+                  "constant": "resource.Prelude.Tuple",
+                  "arguments": [
+                    {
+                      "variable": 0
+                    },
+                    {
+                      "variable": 1
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "repeat",
       "scheme": {
         "parameters": [
