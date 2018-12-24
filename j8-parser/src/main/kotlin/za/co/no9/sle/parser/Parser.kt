@@ -701,7 +701,7 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<TType>()
 
                     while (lexer.column > 1 && isFirstADTType()) {
-                        arguments.add(parseADTType())
+                        arguments.add(parseTermType())
                     }
 
                     TTypeReference(qualifiedUpperID.location + locationFrom(arguments), qualifiedUpperID, arguments)

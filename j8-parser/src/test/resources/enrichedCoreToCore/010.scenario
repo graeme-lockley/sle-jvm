@@ -1,0 +1,49 @@
+-- Attempt to unify across multiple imports
+import file:../List exposing Tuple(..), Maybe(..)
+
+
+uncons : String -> Maybe (Tuple Char String)
+uncons s =
+  Just (Tuple 'a' s)
+
+
+validate =
+    uncons "hello" == Just (Tuple 'h' "ello")
+-- coreASTpp
+uncons : <> Data.String -> file.samples.Maybe.Maybe resource.Prelude.Tuple Data.Char Data.String
+uncons =
+  (LAMBDA s ->
+    (CALL
+      file.package.name.File.Just
+      (CALL
+        (CALL
+          file.package.name.File.Tuple
+          'a'
+        )
+        s
+      )
+    )
+  )
+
+
+validate : <> Data.Bool
+validate =
+  (CALL
+    (CALL
+      ==
+      (CALL
+        uncons
+        "hello"
+      )
+    )
+    (CALL
+      file.package.name.File.Just
+      (CALL
+        (CALL
+          file.package.name.File.Tuple
+          'h'
+        )
+        "ello"
+      )
+    )
+  )
