@@ -1,4 +1,4 @@
--- True
+-- Constant char
 value : Char
 value =
     'h'
