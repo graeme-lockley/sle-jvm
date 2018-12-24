@@ -3,10 +3,7 @@ package za.co.no9.sle
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.fromJsonString
-import za.co.no9.sle.typing.typeBool
-import za.co.no9.sle.typing.typeInt
-import za.co.no9.sle.typing.typeString
-import za.co.no9.sle.typing.typeUnit
+import za.co.no9.sle.typing.*
 import java.io.File
 
 
@@ -27,6 +24,9 @@ class TestItem(private val inputFile: File, private val text: String?) : Item {
 
                 "String" ->
                     typeString.name
+
+                "Char" ->
+                    typeChar.name
 
                 else ->
                     "file.package.name.File.$name"

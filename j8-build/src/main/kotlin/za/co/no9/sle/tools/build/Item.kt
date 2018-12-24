@@ -3,10 +3,7 @@ package za.co.no9.sle.tools.build
 import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.fromJsonString
-import za.co.no9.sle.typing.typeBool
-import za.co.no9.sle.typing.typeInt
-import za.co.no9.sle.typing.typeString
-import za.co.no9.sle.typing.typeUnit
+import za.co.no9.sle.typing.*
 import java.io.File
 
 
@@ -116,6 +113,9 @@ class Item(
 
                 "String" ->
                     typeString.name
+
+                "Char" ->
+                    typeChar.name
 
                 else ->
                     if (packageName.isEmpty())
