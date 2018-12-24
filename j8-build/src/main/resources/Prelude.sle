@@ -1,6 +1,16 @@
 export
       List (..)
     , Maybe (..)
+    , Result (..)
+    , Tuple (..)
+    , Tuple3 (..)
+    , Tuple4 (..)
+    , Tuple5 (..)
+    , Tuple6 (..)
+    , Tuple7 (..)
+    , Tuple8 (..)
+    , Tuple9 (..)
+    , Tuple10 (..)
 
     , (<<), (>>)
 
@@ -25,6 +35,47 @@ type List a
 type Maybe a
     = Nothing
     | Just a
+
+
+type Result error value
+    = Okay value
+    | Error error
+
+
+type Tuple a b
+    = Tuple a b
+
+
+type Tuple3 a b c
+    = Tuple3 a b c
+
+
+type Tuple4 a b c d
+    = Tuple4 a b c d
+
+
+type Tuple5 a b c d e
+    = Tuple5 a b c d e
+
+
+type Tuple6 a b c d e f
+    = Tuple6 a b c d e f
+
+
+type Tuple7 a b c d e f g
+    = Tuple7 a b c d e f g
+
+
+type Tuple8 a b c d e f g h
+    = Tuple8 a b c d e f g h
+
+
+type Tuple9 a b c d e f g h i
+    = Tuple9 a b c d e f g h i
+
+
+type Tuple10 a b c d e f g h i j
+    = Tuple10 a b c d e f g h i j
 
 
 (<< 9 right) : (b -> c) -> (a -> b) -> (a -> c)
