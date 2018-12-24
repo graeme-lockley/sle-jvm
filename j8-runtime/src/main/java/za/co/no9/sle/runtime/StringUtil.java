@@ -141,6 +141,19 @@ public class StringUtil {
     public static final Object cons =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> Character.toString((char) a) + ((String) b);
 
+    public static final Object uncons =
+            (Function<Object, Object>) a -> {
+                String s =
+                        (String) a;
+
+                if (s.length() == 0) {
+                    return Maybe.nothing;
+                } else {
+                    return Maybe.just(Tuple.tuple(s.charAt(0), s.substring(1)));
+                }
+            };
+
+
     public static final Object trim =
             (Function<Object, Object>) a -> ((String) a).trim();
 
@@ -211,5 +224,90 @@ public class StringUtil {
                 } catch (java.lang.NumberFormatException e) {
                     return nothing;
                 }
+            };
+
+    public static final Object foldLeft =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> (Function<Object, Object>) c -> {
+                Function<Object, Function<Object, Object>> f =
+                        (Function<Object, Function<Object, Object>>) a;
+
+                String s =
+                        (String) c;
+
+                Object result =
+                        b;
+
+                for (int lp = 0; lp < s.length(); lp += 1) {
+                    result = f.apply(result).apply(s.charAt(lp));
+                }
+
+                return result;
+            };
+
+    public static final Object foldRight =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> (Function<Object, Object>) c -> {
+                Function<Object, Function<Object, Object>> f =
+                        (Function<Object, Function<Object, Object>>) a;
+
+                String s =
+                        (String) c;
+
+                Object result =
+                        b;
+
+                int lp = s.length() - 1;
+                while (lp >= 0) {
+                    result = f.apply(s.charAt(lp)).apply(result);
+                    lp -= 1;
+                }
+
+                return result;
+            };
+
+    public static final Object map =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                Function<Object, Object> f =
+                        (Function<Object, Object>) a;
+
+                String s =
+                        (String) b;
+
+                int sLength =
+                        s.length();
+
+                StringBuilder result =
+                        new StringBuilder(s.length());
+
+                for (int lp = 0; lp < sLength; lp += 1) {
+                    result.append((char) f.apply(s.charAt(lp)));
+                }
+
+                return result.toString();
+            };
+
+    public static final Object filter =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                Function<Object, Object> f =
+                        (Function<Object, Object>) a;
+
+                String s =
+                        (String) b;
+
+                int sLength =
+                        s.length();
+
+                StringBuilder result =
+                        new StringBuilder();
+
+                for (int lp = 0; lp < sLength; lp += 1) {
+                    char ch =
+                            s.charAt(lp);
+
+                    if ((boolean) f.apply(ch)) {
+                        result.append(ch);
+                    }
+                }
+
+                return result.toString();
             };
 }
