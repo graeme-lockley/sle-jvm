@@ -1,0 +1,187 @@
+-- Operator precedence with relational over chars
+isDigit : Char -> Bool
+isDigit c =
+  c >= '0' && c <= '9'
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: c
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Char
+              expression:
+                CallExpression:
+                  operand:
+                    CallExpression:
+                      operand:
+                        ConstantChar:
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Char
+                          value: 9
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: c
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Char
+                          operator:
+                            IdReference:
+                              name: <=
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Char
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Char
+                                      range:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Bool
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Char
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Bool
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+                  operator:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            ConstantChar:
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Char
+                              value: 0
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: c
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Char
+                              operator:
+                                IdReference:
+                                  name: >=
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Char
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Char
+                                          range:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Bool
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Char
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Bool
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Bool
+                      operator:
+                        IdReference:
+                          name: &&
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Bool
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Bool
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Bool
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.Bool
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.Bool
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Char
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: isDigit
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Char
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.Bool
+    ]
+  exports: []

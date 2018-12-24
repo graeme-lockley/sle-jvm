@@ -51,6 +51,18 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                                     4,
                                     None
                             ))
+                    .newValue(">=",
+                            OperatorBinding(
+                                    Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                    4,
+                                    None
+                            ))
+                    .newValue("<=",
+                            OperatorBinding(
+                                    Scheme(listOf(1), TArr(TVar(homeLocation, 1), TArr(TVar(homeLocation, 1), typeBool))),
+                                    4,
+                                    None
+                            ))
                     .newValue("aString", VariableBinding(Scheme(listOf(), typeString)))
 
 
