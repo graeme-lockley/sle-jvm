@@ -130,8 +130,24 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
 
-                is za.co.no9.sle.ast.enrichedCore.LambdaExpression ->
-                    LambdaExpression(expression.location, expression.type, transform(expression.argument), transform(expression.expression))
+                is za.co.no9.sle.ast.enrichedCore.LambdaExpression -> {
+                    val argument =
+                            expression.argument
+
+                    if (argument is za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern) {
+                        val name =
+                                variable()
+
+                        LambdaExpression(expression.location, expression.type,
+                                ID(expression.argument.location, name),
+                                CaseExpression(expression.location, expression.type, name, listOf(
+                                        CaseExpressionClause(argument.name, argument.parameters.map { (it as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name },
+                                                transform(expression.expression))
+                                ))
+                        )
+                    } else
+                        LambdaExpression(expression.location, expression.type, transform(expression.argument), transform(expression.expression))
+                }
 
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))

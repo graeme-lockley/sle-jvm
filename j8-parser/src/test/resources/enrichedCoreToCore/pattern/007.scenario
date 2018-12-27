@@ -1,0 +1,45 @@
+-- Perform pattern matching on a product type
+type Stream a =
+    Stream a (() -> Stream a)
+
+type List a =
+    Nil
+  | Cons a (List a)
+
+
+streamHead : Stream a -> a
+streamHead (Stream x xs) = x
+
+listHead : List Int -> Int
+listHead (Cons x xs) = x
+listHead Nil = 0
+-- coreASTpp
+type Stream =
+  Stream '0 Data.Unit -> file.package.name.File.Stream '0
+
+
+type List =
+  Nil
+| Cons '0 file.package.name.File.List '0
+
+
+streamHead : <0> file.package.name.File.Stream '0 -> '0
+streamHead =
+  (LAMBDA $$0 ->
+    (CASE $$0
+      Stream x xs =>
+        x
+    )
+  )
+
+
+listHead : <> file.package.name.File.List Data.Int -> Data.Int
+listHead =
+  (LAMBDA $v0 ->
+    (CASE $v0
+      Cons $$1 $$2 =>
+        $$1
+      Nil =>
+        0
+    )
+  )
