@@ -12,6 +12,21 @@ public class StringUtil {
     public static final Object length =
             (Function<Object, Object>) s -> ((String) s).length();
 
+    public static final Object at =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                int index =
+                        (int) a;
+
+                String s =
+                        (String) b;
+
+                if (index < s.length()) {
+                    return Maybe.just(s.charAt(index));
+                } else {
+                    return nothing;
+                }
+            };
+
     public static final Object reverse =
             (Function<Object, Object>) s -> {
                 String input =
