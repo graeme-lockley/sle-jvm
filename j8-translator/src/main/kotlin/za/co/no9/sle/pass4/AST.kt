@@ -164,13 +164,13 @@ data class BoolLiteralExpression(
 data class StringLiteralExpression(
         val value: String) : Expression() {
     override fun toString(indent: Int) =
-            "\"$value\""
+            "\"${value.map { markup(it) }.joinToString("")}\""
 }
 
 data class CharLiteralExpression(
         val value: Char) : Expression() {
     override fun toString(indent: Int) =
-            "'$value'"
+            "'${markup(value)}'"
 }
 
 data class NameExpression(
@@ -257,3 +257,25 @@ data class Parameter(
 
 fun spaces(indent: Int): String =
         "    ".repeat(indent)
+
+
+private fun markup(c: Char): String =
+        when (c) {
+            '\b' ->
+                "\\b"
+
+            '\t' ->
+                "\\t"
+
+            '\n' ->
+                "\\n"
+
+            '"' ->
+                "\\\""
+
+            '\'' ->
+                "\\'"
+
+            else ->
+                c.toString()
+        }
