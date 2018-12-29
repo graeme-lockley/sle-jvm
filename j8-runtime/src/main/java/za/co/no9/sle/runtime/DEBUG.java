@@ -8,7 +8,7 @@ public class DEBUG {
                 System.out.print("info: ");
                 System.out.print(message);
                 System.out.print(": ");
-                System.out.println(value);
+                System.out.println(valueToString(value));
 
                 return value;
             };
@@ -19,8 +19,35 @@ public class DEBUG {
                 System.err.print("error: ");
                 System.err.print(message);
                 System.err.print(": ");
-                System.err.println(value);
+                System.err.println(valueToString(value));
 
                 return value;
             };
+
+
+    private static String valueToString(Object value) {
+        if (value instanceof Object[]) {
+            StringBuilder result =
+                    new StringBuilder();
+
+            Object[] aArray =
+                    (Object[]) value;
+
+            int aLength =
+                    aArray.length;
+
+            result.append('[');
+            for (int lp = 0; lp < aLength; lp += 1) {
+                if (lp > 0) {
+                    result.append(", ");
+                }
+                result.append(valueToString(aArray[lp]));
+            }
+            result.append(']');
+
+            return result.toString();
+        } else {
+            return value.toString();
+        }
+    }
 }
