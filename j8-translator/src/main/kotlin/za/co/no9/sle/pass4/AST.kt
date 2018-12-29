@@ -276,6 +276,9 @@ private fun markup(c: Char): String =
             '\'' ->
                 "\\'"
 
+            '\\' ->
+                "\\\\"
+
             else ->
                 c.toString()
         }
