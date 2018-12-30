@@ -231,6 +231,27 @@ class Lexer(private val input: String) {
                         markEnd(startIndex, startPosition, Token.ERROR)
                 }
 
+                currentCh == '-' -> {
+                    val startPosition =
+                            position()
+
+                    val startIndex =
+                            currentIndex
+
+                    if (nextCh in '0'..'9') {
+                        nextCharacter()
+                        while (nextCh.isDigit()) {
+                            nextCharacter()
+                        }
+                        markEnd(startIndex, startPosition, Token.ConstantInt)
+                    } else {
+                        while (operatorCharacters.contains(nextCh)) {
+                            nextCharacter()
+                        }
+                        markEnd(startIndex, startPosition, Token.ConstantOperator)
+                    }
+                }
+
                 singleOperatorCharacters.contains(currentCh) ->
                     markEnd(currentIndex, position(), Token.ConstantOperator)
 

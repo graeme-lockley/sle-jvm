@@ -101,6 +101,14 @@ class LexerTests : StringSpec({
         Lexer("file:../Data/Lis\\ \\\\ Hello").tokenTexts()
                 .shouldBe(listOf("file:../Data/Lis\\ \\\\", "Hello"))
     }
+
+    "2147483647 -2147483648" {
+        Lexer("2147483647 -2147483648").tokens()
+                .shouldBe(listOf(Token.ConstantInt, Token.ConstantInt))
+
+        Lexer("2147483647 -2147483648").tokenTexts()
+                .shouldBe(listOf("2147483647", "-2147483648"))
+    }
 })
 
 
