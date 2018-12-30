@@ -19,3 +19,10 @@ factorial2 n =  n ** (factorial2 (n -- 1))
 
 divide a b =
     a / b
+
+
+maxInt =
+    2147483647
+
+minInt =
+    -2147483648

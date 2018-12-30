@@ -30,4 +30,14 @@ class FirstTests : StringSpec({
     "Divide 10 0" {
         shouldThrow<ArithmeticException> { ((file.samples.First.divide as Function<Any, Any>).apply(10) as Function<Any, Any>).apply(0) }
     }
+
+    "maxInt" {
+        file.samples.First.maxInt
+                .shouldBe(Int.MAX_VALUE)
+    }
+
+    "minInt" {
+        file.samples.First.minInt
+                .shouldBe(Int.MIN_VALUE)
+    }
 })
