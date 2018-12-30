@@ -1,6 +1,6 @@
 export
       List (..)
-    , Maybe (..)
+    , Option (..)
     , Result (..)
     , Tuple (..)
     , Tuple3 (..)
@@ -32,9 +32,9 @@ type List a
     | Cons a (List a)
 
 
-type Maybe a
-    = Nothing
-    | Just a
+type Option a
+    = None
+    | Some a
 
 
 type Result error value

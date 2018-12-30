@@ -16,19 +16,19 @@ class ListTests : StringSpec({
             ((resource.Prelude.Cons as Function<Any, Any>).apply(1) as Function<Any, Any>).apply(((resource.Prelude.Cons as Function<Any, Any>).apply(2) as Function<Any, Any>).apply(resource.Prelude.Nil))
 
 
-    "head [] == Nothing" {
+    "head [] == None" {
         (file.samples.List.head as Function<Any, Any>).apply(resource.Prelude.Nil)
-                .shouldBe(resource.Prelude.Nothing)
+                .shouldBe(resource.Prelude.None)
     }
 
-    "head [1] == Just 1" {
+    "head [1] == Some 1" {
         (file.samples.List.head as Function<Any, Any>).apply(singletonList)
-                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(1))
+                .shouldBe((resource.Prelude.Some as Function<Any, Any>).apply(1))
     }
 
-    "tail [1] == Just Nil" {
+    "tail [1] == Some Nil" {
         (file.samples.List.tail as Function<Any, Any>).apply(singletonList)
-                .shouldBe((resource.Prelude.Just as Function<Any, Any>).apply(resource.Prelude.Nil))
+                .shouldBe((resource.Prelude.Some as Function<Any, Any>).apply(resource.Prelude.Nil))
     }
 
     "map plus5 [1, 2] == [6, 7]" {

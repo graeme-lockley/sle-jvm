@@ -21,12 +21,12 @@ isEmpty Nil = True
 isEmpty xs = False
 
 
-head Nil = Nothing
-head (Cons x xs) = Just x
+head Nil = None
+head (Cons x xs) = Some x
 
 
-tail Nil = Nothing
-tail (Cons x xs) = Just xs
+tail Nil = None
+tail (Cons x xs) = Some xs
 
 
 map : (a -> b) -> List a -> List b

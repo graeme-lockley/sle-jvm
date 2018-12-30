@@ -1,0 +1,25 @@
+export
+    andThen,
+    map,
+    withDefault
+
+
+withDefault : a -> Option a -> a
+withDefault default None =
+    default
+withDefault default (Some value) =
+    value
+
+
+map : (a -> b) -> Option a -> Option b
+map f None =
+    None
+map f (Some value) =
+    Some (f value)
+
+
+andThen : (a -> Option b) -> Option a -> Option b
+andThen f None =
+    None
+andThen f (Some value) =
+    f value
