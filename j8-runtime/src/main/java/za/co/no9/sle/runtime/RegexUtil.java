@@ -9,8 +9,6 @@ public class RegexUtil {
                 String regex =
                         (String) a;
 
-                System.out.println("[" + regex + "]" + "  " + regex.length());
-
                 try {
                     return Maybe.just(Pattern.compile(regex));
                 } catch (Exception e) {
