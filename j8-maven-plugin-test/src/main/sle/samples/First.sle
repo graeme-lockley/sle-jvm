@@ -26,3 +26,7 @@ maxInt =
 
 minInt =
     -2147483648
+
+
+isAlpha c =
+    c >= 'a' && c <= 'z'

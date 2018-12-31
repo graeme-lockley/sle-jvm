@@ -1,9 +1,7 @@
 package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import za.co.no9.sle.ast.typelessPattern.BinaryOpExpression
-import za.co.no9.sle.typing.Environment
-import za.co.no9.sle.typing.Left
-import za.co.no9.sle.typing.OperatorBinding
+import za.co.no9.sle.typing.*
 
 
 fun transformOperators(environment: Environment, binary: BinaryOpExpression): BinaryOpExpression {
@@ -31,10 +29,10 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
             rightOperatorPrecedence == null ->
                 binary
 
-            operatorPrecedence.precedence > rightOperatorPrecedence.precedence ->
+            operatorPrecedence.second > rightOperatorPrecedence.second ->
                 transformOperators(environment, rotate())
 
-            operatorPrecedence.precedence == rightOperatorPrecedence.precedence && operatorPrecedence.associativity == Left ->
+            operatorPrecedence.second == rightOperatorPrecedence.second && operatorPrecedence.first == Left ->
                 transformOperators(environment, rotate())
 
             else ->
@@ -45,12 +43,14 @@ fun transformOperators(environment: Environment, binary: BinaryOpExpression): Bi
 }
 
 
-private fun Environment.operator(name: String): OperatorBinding? {
+private fun Environment.operator(name: String): Pair<Associativity, Int>? {
     val value =
             this.value(name)
 
     return if (value is OperatorBinding)
-        value
+        Pair(value.associativity, value.precedence)
+    else if (value is ImportOperatorBinding)
+        Pair(value.associativity, value.precedence)
     else
         null
 }
