@@ -12,4 +12,12 @@
     </parent>
     <artifactId>j8-runtime</artifactId>
     <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.6</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package za.co.no9.sle.parser
 
+import org.apache.commons.text.StringEscapeUtils
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
 import za.co.no9.sle.ast.typeless.Unit
@@ -535,11 +536,9 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val text =
-                            constantStringSymbol.text
+                            resolveStringEscape(constantStringSymbol.text
                                     .drop(1)
-                                    .dropLast(1)
-                                    .replace("\\\\", "\\")
-                                    .replace("\\\"", "\"")
+                                    .dropLast(1))
 
                     ConstantString(constantStringSymbol.location, text)
                 }
@@ -548,11 +547,9 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val text =
-                            constantCharSymbol.text
+                            resolveStringEscape(constantCharSymbol.text
                                     .drop(1)
-                                    .dropLast(1)
-                                    .replace("\\\\", "\\")
-                                    .replace("\\\'", "\'")
+                                    .dropLast(1))
 
                     ConstantChar(constantCharSymbol.location, text[0])
                 }
@@ -850,11 +847,9 @@ class Parser(private val lexer: Lexer) {
                         lexer.next()
 
                 val text =
-                        constantStringSymbol.text
+                        resolveStringEscape(constantStringSymbol.text
                                 .drop(1)
-                                .dropLast(1)
-                                .replace("\\\\", "\\")
-                                .replace("\\\"", "\"")
+                                .dropLast(1))
 
                 return ConstantStringPattern(constantStringSymbol.location, text)
             }
@@ -864,11 +859,9 @@ class Parser(private val lexer: Lexer) {
                         lexer.next()
 
                 val text =
-                        constantCharSymbol.text
+                        resolveStringEscape(constantCharSymbol.text
                                 .drop(1)
-                                .dropLast(1)
-                                .replace("\\\\", "\\")
-                                .replace("\\\'", "\'")
+                                .dropLast(1))
 
                 return ConstantCharPattern(constantCharSymbol.location, text[0])
             }
@@ -988,3 +981,7 @@ private fun locationFrom(nodes: List<Node>): Location? =
 
 private fun Symbol.toID(): ID =
         ID(this.location, this.text)
+
+
+private fun resolveStringEscape(input: String): String =
+        StringEscapeUtils.unescapeJava(input)

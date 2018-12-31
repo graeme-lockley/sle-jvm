@@ -1,5 +1,7 @@
 package za.co.no9.sle.pass4
 
+import org.apache.commons.text.StringEscapeUtils
+
 
 data class CompilationUnit(
         val packageName: String,
@@ -164,13 +166,13 @@ data class BoolLiteralExpression(
 data class StringLiteralExpression(
         val value: String) : Expression() {
     override fun toString(indent: Int) =
-            "\"${value.map { markup(it) }.joinToString("")}\""
+            "\"${StringEscapeUtils.escapeJava(value)}\""
 }
 
 data class CharLiteralExpression(
         val value: Char) : Expression() {
     override fun toString(indent: Int) =
-            "'${markup(value)}'"
+            "'${StringEscapeUtils.escapeJava(value.toString())}'"
 }
 
 data class NameExpression(
@@ -257,28 +259,3 @@ data class Parameter(
 
 fun spaces(indent: Int): String =
         "    ".repeat(indent)
-
-
-private fun markup(c: Char): String =
-        when (c) {
-            '\b' ->
-                "\\b"
-
-            '\t' ->
-                "\\t"
-
-            '\n' ->
-                "\\n"
-
-            '"' ->
-                "\\\""
-
-            '\'' ->
-                "\\'"
-
-            '\\' ->
-                "\\\\"
-
-            else ->
-                c.toString()
-        }
