@@ -11,6 +11,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <apache.commons.text.version>1.6</apache.commons.text.version>
         <kotlin.version>1.3.11</kotlin.version>
         <kotlin.test.version>3.1.11</kotlin.test.version>
         <junit.version>5.2.0</junit.version>
