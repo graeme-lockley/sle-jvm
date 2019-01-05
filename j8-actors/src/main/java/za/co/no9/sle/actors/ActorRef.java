@@ -1,9 +1,6 @@
 package za.co.no9.sle.actors;
 
 
-import java.util.Objects;
-
-
 public class ActorRef<S, M> {
     ActorState<S, M> actorState;
 
@@ -24,11 +21,5 @@ public class ActorRef<S, M> {
     @Override
     public boolean equals(Object o) {
         return this == o;
-    }
-
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this);
     }
 }

@@ -3,7 +3,6 @@ package za.co.no9.sle.actors;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.function.Function;
 
 
 public class Mailbox {
@@ -22,7 +21,7 @@ public class Mailbox {
     }
 
 
-    public boolean pendingCommands() {
+    public boolean hasPendingCommands() {
         return !queue.isEmpty();
     }
 }
@@ -40,16 +39,7 @@ class MailboxConsumer implements Runnable {
     public void run() {
         try {
             while (true) {
-                Cmd cmd =
-                        queue.take();
-
-                ActorState actorState =
-                        cmd.actorRef.actorState;
-
-                Function update =
-                        actorState.update;
-
-                actorState.setState(((Function<Object, Object>) update.apply(actorState.getState())).apply(cmd.message));
+                queue.take().process();
             }
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();

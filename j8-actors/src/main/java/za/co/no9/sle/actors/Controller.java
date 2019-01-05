@@ -1,9 +1,6 @@
 package za.co.no9.sle.actors;
 
 
-import java.util.List;
-import java.util.function.Function;
-
 public class Controller {
     private Mailbox[] mailboxes;
 
@@ -17,24 +14,15 @@ public class Controller {
     }
 
 
-    public <S, M> ActorRef<S, M> create(Function<ActorRef<S, M>, UpdateResult<S>> init, Function<S, Function<M, UpdateResult<S>>> update) {
+    public <S, M> ActorRef<S, M> create(ActorFunction<S, M> functions) {
         Mailbox mailbox = selectMailbox();
 
-        ActorState<S, M> actorState = new ActorState<>(update, null);
+        ActorState<S, M> actorState = new ActorState<>(functions, null);
         ActorRef<S, M> actorRef = new ActorRef<>(actorState, mailbox);
 
-        UpdateResult<S> initResult = init.apply(actorRef);
-
-        actorState.setState(initResult.state);
-
-        scheduleCommands(initResult.commands);
+        actorState.init(actorRef);
 
         return actorRef;
-    }
-
-
-    public void scheduleCommands(List<Cmd> commands) {
-        commands.forEach(cmd -> cmd.actorRef.postMessage(cmd));
     }
 
 
@@ -44,8 +32,7 @@ public class Controller {
 
     private boolean pendingCommands() {
         for (int lp = 0; lp < mailboxes.length; lp += 1) {
-            if (mailboxes[lp].pendingCommands()) {
-                System.out.println("pendingCommands: " + lp);
+            if (mailboxes[lp].hasPendingCommands()) {
                 return true;
             }
         }

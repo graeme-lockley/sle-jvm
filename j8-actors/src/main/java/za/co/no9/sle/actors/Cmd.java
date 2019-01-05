@@ -9,4 +9,20 @@ public class Cmd<S, M> {
         this.actorRef = actorRef;
         this.message = message;
     }
+
+    public void post() {
+        actorRef.postMessage(this);
+    }
+
+    public void process() {
+        actorRef.actorState.update(message);
+    }
+
+    @Override
+    public String toString() {
+        return "Cmd{" +
+                "actorRef=" + actorRef +
+                ", message=" + message +
+                '}';
+    }
 }

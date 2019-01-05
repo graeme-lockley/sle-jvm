@@ -1,26 +1,37 @@
 package za.co.no9.sle.actors;
 
 
-import java.util.function.Function;
+import java.util.List;
 
 public class ActorState<S, M> {
-    Function<S, Function<M, UpdateResult<S>>> update;
+    private ActorFunction<S, M> functions;
 
     private S state;
 
 
-    public ActorState(Function<S, Function<M, UpdateResult<S>>> update, S state) {
-        this.update = update;
+    public ActorState(ActorFunction<S, M> functions, S state) {
+        this.functions = functions;
         this.state = state;
     }
 
 
-    void setState(S state) {
-        this.state = state;
+    public void init(ActorRef<S, M> self) {
+        processUpdateResult(functions.init(self));
     }
 
 
-    S getState() {
-        return state;
+    public void update(M message) {
+        processUpdateResult(functions.update(state, message));
+    }
+
+
+    private void processUpdateResult(UpdateResult<S> result) {
+        state = result.state;
+        postCommands(result.commands);
+    }
+
+
+    private void postCommands(List<Cmd> cmds) {
+        cmds.forEach(cmd -> cmd.post());
     }
 }
