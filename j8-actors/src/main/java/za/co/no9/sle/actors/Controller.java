@@ -2,6 +2,8 @@ package za.co.no9.sle.actors;
 
 
 public class Controller {
+    private int nextMailBox = 0;
+
     private Mailbox[] mailboxes;
 
 
@@ -26,22 +28,48 @@ public class Controller {
     }
 
 
-    private Mailbox selectMailbox() {
-        return mailboxes[(int) Math.floor(Math.random() * mailboxes.length)];
+    synchronized private Mailbox selectMailbox() {
+        nextMailBox = (nextMailBox + 1) % mailboxes.length;
+//        System.out.println("selected queue: " + nextMailBox);
+
+        return mailboxes[nextMailBox];
     }
 
+
+//    private Mailbox selectMailbox() {
+//        final int index = (int) Math.floor(Math.random() * mailboxes.length);
+//        System.out.println("selected queue: " + index);
+//
+//        return mailboxes[index];
+//    }
+//
+//
+
     private boolean pendingCommands() {
-        for (int lp = 0; lp < mailboxes.length; lp += 1) {
-            if (mailboxes[lp].hasPendingCommands()) {
-                return true;
-            }
+        StringBuilder sb =
+                new StringBuilder();
+
+        boolean result =
+                false;
+
+        for (Mailbox mailbox : mailboxes) {
+            result = result || mailbox.hasPendingCommands(sb);
+//            || result;
         }
 
-        return false;
+//        System.out.println(sb.toString());
+
+        return result;
     }
 
 
     public void synchronousWait(long duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         while (true) {
             if (!pendingCommands()) {
                 try {
@@ -61,5 +89,4 @@ public class Controller {
             }
         }
     }
-
 }

@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class ActorUtil {
     private static Controller controller =
-            new Controller(1000);
+            new Controller(10);
 
 
     public static final Object create =
