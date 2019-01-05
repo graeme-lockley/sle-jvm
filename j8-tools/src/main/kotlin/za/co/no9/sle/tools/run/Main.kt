@@ -6,6 +6,7 @@ import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
 import za.co.no9.sle.URN
 import za.co.no9.sle.right
+import za.co.no9.sle.runtime.ActorUtil
 import za.co.no9.sle.tools.build.Item
 import java.io.File
 import java.util.function.Function
@@ -93,6 +94,8 @@ fun main(arguments: Array<String>) =
                     println()
                 }
             }
+            (ActorUtil.synchronousWait as java.util.function.Function<Int, Any>).apply(10)
+            System.exit(0)
         }
 
 
