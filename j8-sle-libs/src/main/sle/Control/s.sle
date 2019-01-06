@@ -14,18 +14,6 @@ console =
   Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
 
 
-myActor : String -> Actor.Actor String
-myActor msg =
-  Actor.create (\self -> Tuple () [Actor.cmd console msg]) (\state message -> Response.none)
-
-
-statelessCreate : (m -> List Actor.Cmd) -> Actor.Actor m
-statelessCreate f =
-  Actor.create
-    (\self -> Tuple () [])
-    (\state message -> Response.msgs (f message))
-
-
 intConsole : Actor.Actor Int
 intConsole =
   Actor.map String.fromInt console
