@@ -10,4 +10,12 @@ suite =
     [ Test "1234" <| List.singleton 1234 == [1234]
     , Test "\"abc\"" <| List.singleton "abc" == ["abc"]
     ]
+  , Describe "reverse"
+    [ Test "[]" <| List.reverse [] == []
+    , Test "[1, 2, 3, 4]" <| List.reverse [1, 2, 3, 4] == [4, 3, 2, 1]
+    ]
+  , Describe "map"
+    [ Test "(\\n -> n + 1) []" <| List.map (\n -> n + 1) [] == []
+    , Test "(\\n -> n + 1) [1, 2, 3, 4]" <| List.map (\n -> n + 1) [1, 2, 3, 4] == [2, 3, 4, 5]
+    ]
   ]
