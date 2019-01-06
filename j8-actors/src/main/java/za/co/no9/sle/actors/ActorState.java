@@ -1,8 +1,6 @@
 package za.co.no9.sle.actors;
 
 
-import java.util.List;
-
 public class ActorState<S, M> {
     private ActorFunction<S, M> functions;
 
@@ -16,22 +14,18 @@ public class ActorState<S, M> {
 
 
     public void init(ActorRef<S, M> self) {
-        processUpdateResult(functions.init(self));
+        InitResult<S> result =
+                functions.init(self);
+
+        Response.postCommands(result.commands);
+        state = result.state;
     }
 
 
     public void update(M message) {
-        processUpdateResult(functions.update(state, message));
-    }
+        Response<S> response =
+                functions.update(state, message);
 
-
-    private void processUpdateResult(UpdateResult<S> result) {
-        state = result.state;
-        postCommands(result.commands);
-    }
-
-
-    private void postCommands(List<Cmd> cmds) {
-        cmds.forEach(cmd -> cmd.post());
+        state = response.process(state);
     }
 }

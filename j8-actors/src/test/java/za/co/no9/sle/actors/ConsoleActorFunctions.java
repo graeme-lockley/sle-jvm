@@ -3,8 +3,8 @@ package za.co.no9.sle.actors;
 import java.util.ArrayList;
 
 public class ConsoleActorFunctions implements ActorFunction<Object, String> {
-    private static final UpdateResult<Object> RESULT =
-            new UpdateResult<>(null, new ArrayList<>());
+    private static final InitResult<Object> RESULT =
+            new InitResult<>(null, new ArrayList<>());
 
 
     public static final ConsoleActorFunctions INSTANCE =
@@ -12,14 +12,15 @@ public class ConsoleActorFunctions implements ActorFunction<Object, String> {
 
 
     @Override
-    public UpdateResult<Object> init(ActorRef<Object, String> self) {
+    public InitResult<Object> init(ActorRef<Object, String> self) {
         return RESULT;
     }
 
+
     @Override
-    public UpdateResult<Object> update(Object state, String message) {
+    public Response<Object> update(Object state, String message) {
         System.out.println(message);
 
-        return RESULT;
+        return NoneResponse.INSTANCE;
     }
 }

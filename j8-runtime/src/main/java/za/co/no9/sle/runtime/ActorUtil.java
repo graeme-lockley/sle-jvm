@@ -3,8 +3,6 @@ package za.co.no9.sle.runtime;
 import za.co.no9.sle.actors.*;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 public class ActorUtil {
@@ -17,8 +15,8 @@ public class ActorUtil {
                 Function<ActorRef, Object[]> init =
                         (Function<ActorRef, Object[]>) a;
 
-                Function<Object, Function<Object, Object[]>> update =
-                        (Function<Object, Function<Object, Object[]>>) b;
+                Function<Object, Function<Object, Object>> update =
+                        (Function<Object, Function<Object, Object>>) b;
 
                 return controller.create(new Delegate<>(init, update));
             };
@@ -79,28 +77,47 @@ public class ActorUtil {
 
                 return Unit.INSTANCE;
             };
+
+
+    public static final Object none =
+            NoneResponse.INSTANCE;
+
+    public static final Object state =
+            (Function<Object, Object>) StateResponse::new;
+
+    public static final Object msg =
+            (Function<Object, Object>) a -> new MsgResponse<>((Cmd) a);
+
+    public static final Object stateMsg =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> new StateMsgResponse<>(a, (Cmd) b);
+
+    public static final Object msgs =
+            (Function<Object, Object>) a -> new MsgsResponse(ListUtil.sleListToList((Object[]) a));
+
+    public static final Object stateMsgs =
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> new StateMsgsResponse(a, ListUtil.sleListToList((Object[]) b));
 }
 
 
 class Delegate<S, M> implements ActorFunction<S, M> {
     private final Function<ActorRef, Object[]> init;
-    private final Function<Object, Function<Object, Object[]>> update;
+    private final Function<Object, Function<Object, Object>> update;
 
-    Delegate(Function<ActorRef, Object[]> init, Function<Object, Function<Object, Object[]>> update) {
+    Delegate(Function<ActorRef, Object[]> init, Function<Object, Function<Object, Object>> update) {
         this.init = init;
         this.update = update;
     }
 
 
     @Override
-    public UpdateResult<S> init(ActorRef<S, M> self) {
-        return mapResult(init.apply(self));
+    public InitResult<S> init(ActorRef<S, M> self) {
+        return mapInitResult(init.apply(self));
     }
 
 
     @Override
-    public UpdateResult<S> update(S state, M message) {
-        return mapResult(update.apply(state).apply(message));
+    public Response<S> update(S state, M message) {
+        return (Response) update.apply(state).apply(message);
     }
 
 
@@ -125,23 +142,8 @@ class Delegate<S, M> implements ActorFunction<S, M> {
     }
 
 
-    private UpdateResult<S> mapResult(Object[] result) {
-        S resultState =
-                (S) result[1];
-
-        Object[] resultCommands =
-                (Object[]) result[2];
-
-
-        List<Cmd> commands =
-                new ArrayList<>();
-
-        while ((int) resultCommands[0] == ListUtil.ConsSelector) {
-            commands.add((Cmd) resultCommands[1]);
-            resultCommands = (Object[]) resultCommands[2];
-        }
-
-        return new UpdateResult<>(resultState, commands);
+    private InitResult<S> mapInitResult(Object[] result) {
+        return new InitResult<>(result[1], ListUtil.sleListToList((Object[]) result[2]));
     }
 }
 
@@ -158,33 +160,18 @@ class BuiltinWithinInitDelegate<S, M> implements ActorFunction<S, M> {
 
 
     @Override
-    public UpdateResult<S> init(ActorRef<S, M> self) {
+    public InitResult<S> init(ActorRef<S, M> self) {
         return mapResult(init.apply(self));
     }
 
 
     @Override
-    public UpdateResult<S> update(S state, M message) {
+    public Response<S> update(S state, M message) {
         return actorFunction.update(state, message);
     }
 
 
-    private UpdateResult<S> mapResult(Object[] result) {
-        S resultState =
-                (S) result[0];
-
-        Object[] resultCommands =
-                (Object[]) result[1];
-
-
-        List<Cmd> commands =
-                new ArrayList<>();
-
-        while ((int) resultCommands[0] == ListUtil.ConsSelector) {
-            commands.add((Cmd) resultCommands[1]);
-            resultCommands = (Object[]) resultCommands[2];
-        }
-
-        return new UpdateResult<>(resultState, commands);
+    private InitResult<S> mapResult(Object[] result) {
+        return new InitResult<>(result[1], ListUtil.sleListToList((Object[]) result[2]));
     }
 }
