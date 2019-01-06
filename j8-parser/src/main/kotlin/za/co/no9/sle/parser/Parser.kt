@@ -558,8 +558,6 @@ class Parser(private val lexer: Lexer) {
                     val nilSymbol =
                             lexer.next()
                     ConstantList(nilSymbol.location, emptyList())
-
-//                    IdReference(nilSymbol.location, QualifiedID(nilSymbol.location, null, "Nil"))
                 }
 
                 isOperator("[") -> {
@@ -580,13 +578,6 @@ class Parser(private val lexer: Lexer) {
 
                     val endSquare =
                             matchOperator("]")
-
-//                    val initial: Expression =
-//                            IdReference(endSquare.location, QualifiedID(endSquare.location, null, "Nil"))
-
-//                    items.foldRight(initial) { a, b ->
-//                        BinaryOpExpression(b.location, a, ID(a.location, "::"), b)
-//                    }
 
                     ConstantList(openSquare.location + endSquare.location, items)
                 }
