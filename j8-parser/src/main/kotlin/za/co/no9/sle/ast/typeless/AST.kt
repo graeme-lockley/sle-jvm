@@ -141,6 +141,10 @@ data class ConstantChar(
         override val location: Location,
         val value: Char) : Expression(location)
 
+data class ConstantList(
+        override val location: Location,
+        val expressions: List<Expression>) : Expression(location)
+
 data class NotExpression(
         override val location: Location,
         val expression: Expression) : Expression(location)

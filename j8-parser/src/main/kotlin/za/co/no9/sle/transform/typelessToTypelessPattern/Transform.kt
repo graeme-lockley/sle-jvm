@@ -221,6 +221,15 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.ConstantChar ->
                 ConstantChar(ast.location, ast.value)
 
+            is za.co.no9.sle.ast.typeless.ConstantList -> {
+                val initial: Expression =
+                        IdReference(ast.location, QualifiedID(ast.location, null, "Nil"))
+
+                ast.expressions.foldRight(initial) { a, b ->
+                    BinaryOpExpression(b.location, transform(a), ID(a.location, "::"), b)
+                }
+            }
+
             is NotExpression ->
                 CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null, "(!)")), transform(ast.expression))
 

@@ -7,59 +7,21 @@ Module:
       LetDeclaration:
         arguments: []
         expression:
-          BinaryOpExpression:
-            left:
-              ConstantInt:
-                value: 1
-            operator:
-              ID:
-                name: ::
-            right:
-              BinaryOpExpression:
-                left:
-                  ConstantInt:
-                    value: 2
-                operator:
-                  ID:
-                    name: ::
-                right:
-                  BinaryOpExpression:
-                    left:
-                      ConstantInt:
-                        value: 3
-                    operator:
-                      ID:
-                        name: ::
-                    right:
-                      BinaryOpExpression:
-                        left:
-                          ConstantInt:
-                            value: 4
-                        operator:
-                          ID:
-                            name: ::
-                        right:
-                          BinaryOpExpression:
-                            left:
-                              ConstantInt:
-                                value: 5
-                            operator:
-                              ID:
-                                name: ::
-                            right:
-                              BinaryOpExpression:
-                                left:
-                                  ConstantInt:
-                                    value: 6
-                                operator:
-                                  ID:
-                                    name: ::
-                                right:
-                                  IdReference:
-                                    name:
-                                      QualifiedID:
-                                        name: Nil
-                                        qualifier: null
+          ConstantList:
+            expressions: [
+                ConstantInt:
+                  value: 1
+                ConstantInt:
+                  value: 2
+                ConstantInt:
+                  value: 3
+                ConstantInt:
+                  value: 4
+                ConstantInt:
+                  value: 5
+                ConstantInt:
+                  value: 6
+              ]
         id:
           LowerIDDeclarationID:
             name:
