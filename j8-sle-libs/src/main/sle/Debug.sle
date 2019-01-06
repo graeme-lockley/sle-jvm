@@ -1,0 +1,14 @@
+export
+  error
+, info
+
+
+error : String -> a -> a
+error message value =
+  i_BuiltinValue "za.co.no9.sle.runtime.DEBUG.error" message value
+
+
+
+info : String -> a -> a
+info message value =
+  i_BuiltinValue "za.co.no9.sle.runtime.DEBUG.info" message value 

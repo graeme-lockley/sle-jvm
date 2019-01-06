@@ -1,0 +1,19 @@
+export
+  fromCode
+, isDigit
+, toCode
+
+
+isDigit : Char -> Bool
+isDigit c =
+  c >= '0' && c <= '9'
+
+
+fromCode : Int -> Char
+fromCode =
+  i_BuiltinValue "za.co.no9.sle.runtime.CharUtil.fromCode"
+
+
+toCode : Char -> Int
+toCode =
+  i_BuiltinValue "za.co.no9.sle.runtime.CharUtil.toCode"

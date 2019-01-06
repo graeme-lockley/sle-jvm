@@ -1,0 +1,11 @@
+export
+  first
+, second
+
+
+first : Tuple a b -> a
+first (Tuple a b) = a
+
+
+second : Tuple a b -> b
+second (Tuple a b) = b

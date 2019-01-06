@@ -1,0 +1,39 @@
+export
+  suite
+
+
+import file:../Test/Unit exposing Suite(..)
+import file:./String exposing toInt
+import file:./Option exposing withDefault, map, andThen
+
+
+parseMonth : String -> Option Int
+parseMonth userInput =
+    toInt userInput
+      |> andThen toValidMonth
+
+
+toValidMonth : Int -> Option Int
+toValidMonth month =
+    if (1 <= month) && (month <= 12) then
+        Some month
+    else
+        None
+
+
+suite =
+  Describe "Data.Option"
+  [ Describe "withDefault"
+    [ Test "withDefault 100 (toInt \"42\")" <| withDefault 100 (toInt "42") == 42
+    , Test "withDefault 100 (toInt \"42a\")" <| withDefault 100 (toInt "42a") == 100
+    ]
+    , Describe "map"
+    [ Test "map (\\x -> x + x) (toInt \"42\")" <| map (\x -> x + x) (toInt "42") == Some 84
+    , Test "map (\\x -> x + x) (toInt \"42a\")" <| map (\x -> x + x) (toInt "42a") == None
+    ]
+    , Describe "andThen"
+    [ Test "parseMonth \"8\"" <| parseMonth "8" == Some 8
+    , Test "parseMonth \"20\"" <| parseMonth "20" == None
+    , Test "parseMonth \"12abc\"" <| parseMonth "12abc" == None
+    ]
+  ]

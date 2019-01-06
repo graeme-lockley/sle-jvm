@@ -1,0 +1,6 @@
+export Suite(..)
+
+
+type Suite
+	= Describe String (List Suite)
+	| Test String Bool

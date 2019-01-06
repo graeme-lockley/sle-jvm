@@ -1,0 +1,39 @@
+export
+  none
+, state
+, msg
+, stateMsg
+, msgs
+, stateMsgs
+
+import file:../Actor exposing Cmd, Response
+
+
+none : Response s
+none =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.none"
+
+
+state : s -> Response s
+state =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.state"
+
+
+msg : Cmd -> Response s
+msg =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.msg"
+
+
+stateMsg : s -> Cmd -> Response s
+stateMsg =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.stateMsg"
+
+
+msgs : List Cmd -> Response s
+msgs =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.msgs"
+
+
+stateMsgs : s -> List Cmd -> Response s
+stateMsgs =
+  i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.stateMsgs"

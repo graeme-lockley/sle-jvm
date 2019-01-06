@@ -1,0 +1,13 @@
+export suite
+
+import file:../Test/Unit exposing Suite(..)
+import file:./List as List
+
+
+suite =
+  Describe "Data.List"
+  [ Describe "singleton"
+    [ Test "1234" <| List.singleton 1234 == [1234]
+    , Test "\"abc\"" <| List.singleton "abc" == ["abc"]
+    ]
+  ]

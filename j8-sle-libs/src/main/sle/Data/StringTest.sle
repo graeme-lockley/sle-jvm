@@ -1,0 +1,244 @@
+export suite
+
+import file:../Test/Unit exposing Suite(..)
+import file:./String as S
+import file:./Char as C
+import file:../Debug as D
+
+
+not : Bool -> Bool
+not b =
+  if b then
+    False
+  else
+    True
+
+
+suite =
+  Describe "Data.String"
+  [ Describe "isEmpty"
+    [ Test "blank string" <| S.isEmpty ""
+    , Test "non-bank string" <| not <| S.isEmpty "hello"
+    ]
+  , Describe "length"
+    [ Test "blank string" <| S.length "" == 0
+    , Test "5 character string" <| S.length "hello" == 5
+    ]
+  , Describe "at"
+    [ Test "2 \"\"" <| S.at 0 "" == None
+    , Test "2 \"hello\"" <| S.at 2 "hello" == Some 'l'
+    ]
+  , Describe "reverse"
+    [ Test "blank string" <| S.reverse "" == ""
+    , Test "\"stressed\"" <| S.reverse "stressed" == "desserts"
+    ]
+  , Describe "repeat"
+    [ Test "blank string" <| S.repeat 10 "" == ""
+    , Test "\"ha\" 0 times" <| S.repeat 0 "ha" == ""
+    , Test "\"ha\" once" <| S.repeat 1 "ha" == "ha"
+    , Test "\"ha\" 5 times" <| S.repeat 5 "ha" == "hahahahaha"
+    , Test "\"ha\" -5 times" <| S.repeat -5 "ha" == ""
+    ]
+  , Describe "append"
+    [ Test "blank onto a blank" <| S.append "" "" == ""
+    , Test "blank onto a value" <| S.append "hello" "" == "hello"
+    , Test "value onto a blank" <| S.append "" "world" == "world"
+    , Test "value onto a value" <| S.append "hello" "world" == "helloworld"
+    ]
+  , Describe "join"
+    [ Test "[\"tom\", \"dick\", \"harry\"] with a \", \"" <| S.join ", " ["tom", "dick", "harry"] == "tom, dick, harry"
+    , Test "[] with a \", \"" <| S.join ", " [] == ""
+    , Test "[\"tom\", \"dick\", \"harry\"] with a \"\"" <| S.join "" ["tom", "dick", "harry"] == "tomdickharry"
+    ]
+  , Describe "split"
+    [ Test "blank string using \"|\"" <| S.split "|" "" == [""]
+    , Test "\"bye|bye|love\" string using \"|\"" <| S.split "|" "bye|bye|love" == ["bye", "bye", "love"]
+    , Test "\"tom, dick, harry\" string using \", \"" <| S.split ", " "tom, dick, harry" == ["tom", "dick", "harry"]
+    ]
+  , Describe "replace"
+    [ Test "\"\" with \"xx\" in \"hello\"" <| S.replace "" "xx" "hello" == "hxxexxlxxlxxo"
+    , Test "\"xx\" with \"/\" in \"hexxlxlxxo\"" <| S.replace "xx" "/" "hexxlxlxxo" == "he/lxl/o"
+    , Test "\"xx\" with \"/\" in \"helxlo\"" <| S.replace "xx" "/" "helxlo" == "helxlo"
+    , Test "\"\" with \"/\" in \"\"" <| S.replace "" "/" "" == ""
+    ]
+  , Describe "concat"
+    [ Test "[]" <| S.concat [] == ""
+    , Test "[\"\", \"\"]" <| S.concat ["", ""] == ""
+    , Test "[\"hello\", \"world\"]" <| S.concat ["hello", "world"] == "helloworld"
+    , Test "[\"bye\", \"bye\", \"love\"]" <| S.concat ["bye", "bye", "love"] == "byebyelove"
+    ]
+  , Describe "slice"
+    [ Test "7 9 \"snakes on a plane!\"" <| S.slice 7 9 "snakes on a plane!" == "on"
+    , Test "0 6 \"snakes on a plane!\"" <| S.slice 0 6 "snakes on a plane!" == "snakes"
+    , Test "0 -7 \"snakes on a plane!\"" <| S.slice 0 -7 "snakes on a plane!" == "snakes on a"
+    , Test "-6 -1 \"snakes on a plane!\"" <| S.slice -6 -1 "snakes on a plane!" == "plane"
+    , Test "30 40 \"snakes on a plane!\"" <| S.slice 30 40 "snakes on a plane!" == ""
+    , Test "5 2 \"snakes on a plane!\"" <| S.slice 5 2 "snakes on a plane!" == ""
+    ]
+  , Describe "takeLeft"
+    [ Test "2 \"hello\"" <| S.takeLeft 2 "hello" == "he"
+    , Test "5 \"hello\"" <| S.takeLeft 5 "hello" == "hello"
+    , Test "10 \"hello\"" <| S.takeLeft 10 "hello" == "hello"
+    , Test "-1 \"hello\"" <| S.takeLeft -1 "hello" == ""
+    , Test "4 \"\"" <| S.takeLeft 4 "" == ""
+    ]
+  , Describe "dropLeft"
+    [ Test "2 \"hello\"" <| S.dropLeft 2 "hello" == "llo"
+    , Test "5 \"hello\"" <| S.dropLeft 5 "hello" == ""
+    , Test "10 \"hello\"" <| S.dropLeft 10 "hello" == ""
+    , Test "-1 \"hello\"" <| S.dropLeft -1 "hello" == "hello"
+    , Test "4 \"\"" <| S.dropLeft 4 "" == ""
+    ]
+  , Describe "takeRight"
+    [ Test "2 \"hello\"" <| S.takeRight 2 "hello" == "lo"
+    , Test "5 \"hello\"" <| S.takeRight 5 "hello" == "hello"
+    , Test "10 \"hello\"" <| S.takeRight 10 "hello" == "hello"
+    , Test "-1 \"hello\"" <| S.takeRight -1 "hello" == ""
+    , Test "4 \"\"" <| S.takeRight 4 "" == ""
+    ]
+  , Describe "dropRight"
+    [ Test "2 \"hello\"" <| S.dropRight 2 "hello" == "hel"
+    , Test "5 \"hello\"" <| S.dropRight 5 "hello" == ""
+    , Test "10 \"hello\"" <| S.dropRight 10 "hello" == ""
+    , Test "-1 \"hello\"" <| S.dropRight -1 "hello" == "hello"
+    , Test "4 \"\"" <| S.dropRight 4 "" == ""
+    ]
+  , Describe "contains"
+    [ Test "\"heo\" \"theory\"" <| S.contains "heo" "theory"
+    , Test "\"cat\" \"theory\"" <| not <| S.contains "cat" "theory"
+    , Test "\"He\" \"theory\"" <| not <| S.contains "He" "theory"
+    , Test "\"\" \"theory\"" <| S.contains "" "theory"
+    ]
+  , Describe "startsWith"
+    [ Test "\"the\" \"theory\"" <| S.startsWith "the" "theory"
+    , Test "\"cat\" \"theory\"" <| not <| S.startsWith "cat" "theory"
+    , Test "\"eo\" \"theory\"" <| not <| S.startsWith "eo" "theory"
+    , Test "\"The\" \"theory\"" <| not <| S.startsWith "The" "theory"
+    , Test "\"\" \"theory\"" <| S.startsWith "" "theory"
+    ]
+  , Describe "endsWith"
+    [ Test "\"ory\" \"theory\"" <| S.endsWith "ory" "theory"
+    , Test "\"cat\" \"theory\"" <| not <| S.endsWith "cat" "theory"
+    , Test "\"eo\" \"theory\"" <| not <| S.endsWith "eo" "theory"
+    , Test "\"Ry\" \"theory\"" <| not <| S.endsWith "Ry" "theory"
+    , Test "\"\" \"theory\"" <| S.endsWith "" "theory"
+    ]
+  , Describe "indexes"
+    [ Test "\"i\" \"Mississippi\"" <| S.indexes "i" "Mississippi" == [1,4,7,10]
+    , Test "\"ss\" \"Mississippi\"" <| S.indexes "ssi" "Mississippi" == [2, 5]
+    , Test "\"bob\" \"Mississippi\"" <| S.indexes "bob" "Mississippi" == []
+    , Test "\"\" \"Mississippi\"" <| S.indexes "" "Mississippi" == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    , Test "\"\" \"\"" <| S.indexes "" "" == []
+    ]
+    , Describe "toUpper"
+    [ Test "\"hello\"" <| S.toUpper "hello" == "HELLO"
+    , Test "\"\"" <| S.toUpper "" == ""
+    , Test "\"HELLO\"" <| S.toUpper "HELLO" == "HELLO"
+    ]
+    , Describe "toLower"
+    [ Test "\"hello\"" <| S.toLower "hello" == "hello"
+    , Test "\"\"" <| S.toLower "" == ""
+    , Test "\"HELLO\"" <| S.toLower "HELLO" == "hello"
+    ]
+    , Describe "pad"
+    [ Test "3 \"hello\"" <| S.pad 3 "hello" == "hello"
+    , Test "5 \"hello\"" <| S.pad 5 "hello" == "hello"
+    , Test "6 \"hello\"" <| S.pad 6 "hello" == " hello"
+    , Test "7 \"hello\"" <| S.pad 7 "hello" == " hello "
+    , Test "8 \"hello\"" <| S.pad 8 "hello" == "  hello "
+    ]
+    , Describe "padLeft"
+    [ Test "3 \"hello\"" <| S.padLeft 3 "hello" == "hello"
+    , Test "5 \"hello\"" <| S.padLeft 5 "hello" == "hello"
+    , Test "6 \"hello\"" <| S.padLeft 6 "hello" == " hello"
+    , Test "7 \"hello\"" <| S.padLeft 7 "hello" == "  hello"
+    , Test "8 \"hello\"" <| S.padLeft 8 "hello" == "   hello"
+    ]
+    , Describe "padRight"
+    [ Test "3 \"hello\"" <| S.padRight 3 "hello" == "hello"
+    , Test "5 \"hello\"" <| S.padRight 5 "hello" == "hello"
+    , Test "6 \"hello\"" <| S.padRight 6 "hello" == "hello "
+    , Test "7 \"hello\"" <| S.padRight 7 "hello" == "hello  "
+    , Test "8 \"hello\"" <| S.padRight 8 "hello" == "hello   "
+    ]
+    , Describe "trim"
+    [ Test "\"\"" <| S.trim "" == ""
+    , Test "\"hello\"" <| S.trim "hello" == "hello"
+    , Test "\"  hello\"" <| S.trim "  hello" == "hello"
+    , Test "\"hello  \"" <| S.trim "hello  " == "hello"
+    , Test "\"  hello  \"" <| S.trim "  hello  " == "hello"
+    ]
+    , Describe "trimLeft"
+    [ Test "\"\"" <| S.trimLeft "" == ""
+    , Test "\"hello\"" <| S.trimLeft "hello" == "hello"
+    , Test "\"  hello\"" <| S.trimLeft "  hello" == "hello"
+    , Test "\"hello  \"" <| S.trimLeft "hello  " == "hello  "
+    , Test "\"  hello  \"" <| S.trimLeft "  hello  " == "hello  "
+    ]
+    , Describe "trimRight"
+    [ Test "\"\"" <| S.trimRight "" == ""
+    , Test "\"hello\"" <| S.trimRight "hello" == "hello"
+    , Test "\"  hello\"" <| S.trimRight "  hello" == "  hello"
+    , Test "\"hello  \"" <| S.trimRight "hello  " == "hello"
+    , Test "\"  hello  \"" <| S.trimRight "  hello  " == "  hello"
+    ]
+    , Describe "cons"
+    [ Test "'a' \"hello\"" <| S.cons 'a' "hello" == "ahello"
+    , Test "'a' \"\"" <| S.cons 'a' "" == "a"
+    ]
+    , Describe "uncons"
+    [ Test "\"\"" <| S.uncons "" == None
+    , Test "\"a\"" <| S.uncons "a" == Some (Tuple 'a' "")
+    , Test "\"hello\"" <| S.uncons "hello" == Some (Tuple 'h' "ello")
+    ]
+    , Describe "fromList"
+    [ Test "['a', 'e', 'i', 'o', 'u']" <| S.fromList ['a', 'e', 'i', 'o', 'u'] == "aeiou"
+    , Test "[]" <| S.fromList [] == ""
+    ]
+    , Describe "toList"
+    [ Test "\"aeiou\"" <| S.toList "aeiou" == ['a', 'e', 'i', 'o', 'u']
+    , Test "\"\"" <| S.toList "" == []
+    ]
+    , Describe "fromInt"
+    [ Test "-10" <| S.fromInt -10 == "-10"
+    , Test "0" <| S.fromInt 0 == "0"
+    , Test "32" <| S.fromInt 32 == "32"
+    ]
+    , Describe "fromChar"
+    [ Test "'a'" <| S.fromChar 'a' == "a"
+    ]
+    , Describe "toInt"
+    [ Test "\"-10\"" <| S.toInt "-10" == Some -10
+    , Test "\"0\"" <| S.toInt "0" == Some 0
+    , Test "\"3.2\"" <| S.toInt "3.2" == None
+    , Test "\"32b\"" <| S.toInt "32b" == None
+    ]
+    , Describe "foldLeft"
+    [ Test "Cons [] \"time\"" <| S.foldLeft (\s c -> Cons c s) [] "time" == ['e', 'm', 'i', 't']
+    , Test "Cons [] \"\"" <| S.foldLeft (\s c -> Cons c s) [] "" == []
+    ]
+    , Describe "foldRight"
+    [ Test "Cons [] \"time\"" <| S.foldRight Cons [] "time" == ['t', 'i', 'm', 'e']
+    , Test "Cons [] \"\"" <| S.foldRight Cons [] "" == []
+    ]
+    , Describe "map"
+    [ Test "(c -> toChar <| 1 + (toInt c)) \"\"" <| S.map (\c -> C.fromCode <| 1 + (C.toCode c)) "" == ""
+    , Test "(c -> toChar <| 1 + (toInt c)) \"hal\"" <| S.map (\c -> C.fromCode <| 1 + (C.toCode c)) "hal" == "ibm"
+    ]
+    , Describe "filter"
+    [ Test "C.isDigit \"\"" <| S.filter C.isDigit "" == ""
+    , Test "C.isDigit \"R2-D2\"" <| S.filter C.isDigit "R2-D2" == "22"
+    ]
+    , Describe "any"
+    [ Test "C.isDigit \"\"" <| S.any C.isDigit "" == False
+    , Test "C.isDigit \"90210\"" <| S.any C.isDigit "90210" == True
+    , Test "C.isDigit \"R2-D2\"" <| S.any C.isDigit "R2-D2" == True
+    , Test "C.isDigit \"Luke\"" <| S.any C.isDigit "Luke" == False
+    ]
+    , Describe "all"
+    [ Test "C.isDigit \"\"" <| S.all C.isDigit "" == True
+    , Test "C.isDigit \"90210\"" <| S.all C.isDigit "90210" == True
+    , Test "C.isDigit \"R2-D2\"" <| S.all C.isDigit "R2-D2" == False
+    , Test "C.isDigit \"Luke\"" <| S.all C.isDigit "Luke" == False
+    ]
+  ]

@@ -31,6 +31,7 @@
         <module>j8-maven-plugin</module>
         <module>j8-maven-plugin-test</module>
         <module>j8-tools</module>
+        <module>j8-sle-libs</module>
     </modules>
 
     <dependencies>

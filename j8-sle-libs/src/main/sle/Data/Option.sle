@@ -1,0 +1,16 @@
+export
+  withDefault
+  , map
+  , andThen
+
+withDefault : a -> Option a -> a
+withDefault def None = def
+withDefault def (Some value) = value
+
+map : (a -> b) -> Option a -> Option b
+map f None = None
+map f (Some value) = Some (f value)
+
+andThen : (a -> Option b) -> Option a -> Option b
+andThen f None = None
+andThen f (Some value) = f value

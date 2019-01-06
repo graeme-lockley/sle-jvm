@@ -1,0 +1,278 @@
+export
+  any
+, all
+, at
+, append
+, concat
+, cons
+, contains
+, dropLeft
+, dropRight
+, endsWith
+, filter
+, foldLeft
+, foldRight
+, fromChar
+, fromInt
+, fromList
+, indexes
+, isEmpty
+, join
+, length
+, map
+, pad
+, padLeft
+, padRight
+, repeat
+, replace
+, reverse
+, slice
+, split
+, startsWith
+, takeLeft
+, takeRight
+, toInt
+, toList
+, toLower
+, toUpper
+, trim
+, trimLeft
+, trimRight
+, uncons
+
+
+import file:./Bitwise
+import file:../Debug as D
+
+isEmpty : String -> Bool
+isEmpty s =
+  s == ""
+
+
+length : String -> Int
+length =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.length"
+
+
+at : Int -> String -> Option Char
+at =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.at"
+
+
+reverse : String -> String
+reverse =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.reverse"
+
+
+append : String -> String -> String
+append =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.append"
+
+
+repeat : Int -> String -> String
+repeat n chunk =
+  repeatHelp n chunk ""
+
+
+repeatHelp : Int -> String -> String -> String
+repeatHelp n chunk result =
+  if n <= 0 then
+    result
+  else
+    repeatHelp (Bitwise.shiftRightBy 1 n) (append chunk chunk)
+      <| if Bitwise.and n 1 == 0 then result else (append result chunk)
+
+
+join : String -> List String -> String
+join =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.join"
+
+
+split : String -> String -> List String
+split =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.split"
+
+
+replace : String -> String -> String -> String
+replace from to text =
+  split from text
+    |> join to
+
+
+concat : List String -> String
+concat =
+  join ""
+
+
+slice : Int -> Int -> String -> String
+slice =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.slice"
+
+
+takeLeft : Int -> String -> String
+takeLeft n string =
+  if n < 1 then
+    ""
+  else
+    slice 0 n string
+
+
+dropLeft : Int -> String -> String
+dropLeft n string =
+  if n < 1 then
+    string
+  else
+    slice n (length string) string
+
+
+takeRight : Int -> String -> String
+takeRight n string =
+  if n < 1 then
+    ""
+  else
+    slice (0 - n) (length string) string
+
+
+dropRight : Int -> String -> String
+dropRight n string =
+  if n < 1 then
+    string
+  else
+    slice 0 (0 - n) string
+
+
+contains : String -> String -> Bool
+contains =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.contains"
+
+
+startsWith : String -> String -> Bool
+startsWith =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.startsWith"
+
+
+endsWith : String -> String -> Bool
+endsWith =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.endsWith"
+
+
+indexes : String -> String -> List Int
+indexes =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.indexes"
+
+
+toLower : String -> String
+toLower =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.toLower"
+
+
+toUpper : String -> String
+toUpper =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.toUpper"
+
+
+pad : Int -> String -> String
+pad n string =
+  if (n <= length string) then
+    string
+  else
+    padHelp n ((n - (length string)) / 2) string
+
+
+padHelp : Int -> Int -> String -> String
+padHelp width right string =
+  concat
+  [ repeat ((width - (length string)) - right) " "
+  , string
+  , repeat right " "
+  ]
+
+
+padLeft : Int -> String -> String
+padLeft  n s =
+  append (repeat (n - (length s)) " ") s
+
+
+padRight : Int -> String -> String
+padRight  n s =
+  append s (repeat (n - (length s)) " ")
+
+
+trim : String -> String
+trim =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.trim"
+
+
+trimLeft : String -> String
+trimLeft =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.trimLeft"
+
+
+trimRight : String -> String
+trimRight =
+    i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.trimRight"
+
+
+cons : Char -> String -> String
+cons =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.cons"
+
+
+uncons : String -> Option (Tuple Char String)
+uncons =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.uncons"
+
+
+fromInt : Int -> String
+fromInt =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.fromInt"
+
+
+fromChar : Char -> String
+fromChar c =
+  cons c ""
+
+
+toInt : String -> Option Int
+toInt =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.toInt"
+
+
+foldLeft : (a -> Char -> a) -> a -> String -> a
+foldLeft =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.foldLeft"
+
+
+foldRight : (Char -> a -> a) -> a -> String -> a
+foldRight =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.foldRight"
+
+
+fromList : List Char -> String
+fromList Nil = ""
+fromList (Cons c cs) = cons c <| fromList cs
+
+
+toList : String -> List Char
+toList =
+  foldRight Cons []
+
+
+map : (Char -> Char) -> String -> String
+map =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.map"
+
+
+filter : (Char -> Bool) -> String -> String
+filter =
+  i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.filter"
+
+
+any : (Char -> Bool) -> String -> Bool
+any f =
+  foldLeft (\r c -> r || (f c)) False
+
+
+all : (Char -> Bool) -> String -> Bool
+all f =
+    foldLeft (\r c -> r && (f c)) True

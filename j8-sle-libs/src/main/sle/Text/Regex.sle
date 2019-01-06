@@ -1,0 +1,30 @@
+export
+  Regex
+  , fromString
+  , never
+  , quote
+  , contains
+  , split
+
+type Regex =
+    Regex
+
+fromString : String -> Option Regex
+fromString =
+  i_BuiltinValue "za.co.no9.sle.runtime.RegexUtil.fromString"
+
+never : Regex
+never =
+  i_BuiltinValue "za.co.no9.sle.runtime.RegexUtil.never"
+
+quote : String -> String
+quote =
+  i_BuiltinValue "za.co.no9.sle.runtime.RegexUtil.quote"
+
+contains : Regex -> String -> Bool
+contains =
+  i_BuiltinValue "za.co.no9.sle.runtime.RegexUtil.contains"
+
+split : Regex -> String -> List String
+split =
+  i_BuiltinValue "za.co.no9.sle.runtime.RegexUtil.split"

@@ -1,0 +1,36 @@
+export
+  suite
+
+import file:../Test/Unit exposing Suite(..)
+import file:./List
+import file:./Tuple as T
+import file:../Debug as D
+import file:./Stream exposing Stream(..), integers, integersFrom, fibonacci, head, tail, take, unconsWhile
+
+
+suite =
+  Describe "Data.Stream"
+  [ Describe "integers"
+    [ Test "take 10 integers" <| take 10 integers == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    , Test "integersFrom 2147483646 |> take 4" <| (integersFrom 2147483646 |> take 4) == [2147483646, 2147483647, -2147483648, -2147483647]
+    ]
+  , Describe "fibonacci"
+    [ Test "take 10 fibonacci" <| take 10 fibonacci == [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+    ]
+  , Describe "head"
+    [ Test "integers" <| head integers == 0
+    , Test "fibonacci" <| head fibonacci == 0
+    ]
+  , Describe "tail"
+    [ Test "integers" <| (head <| tail integers) == 1
+    , Test "fibonacci" <| (head <| tail <| tail <| tail fibonacci) == 2
+    ]
+  , Describe "take"
+    [ Test "6 integers" <| take 6 integers == [0, 1, 2, 3, 4, 5]
+    , Test "6 fibonacci" <| take 6 fibonacci == [0, 1, 1, 2, 3, 5]
+    ]
+  , Describe "unconsWhile"
+    [ Test "Tuple.first <| (\\c -> c < 10) fibonacci" <| (T.first <| unconsWhile (\c -> c < 10) fibonacci) == [0, 1, 1, 2, 3, 5, 8]
+    , Test "take 5 <| Tuple.second <| (\\c -> c < 10) fibonacci" <| (take 5 <| T.second <| unconsWhile (\c -> c < 10) <| fibonacci) == [13, 21, 34, 55, 89]
+    ]
+  ]

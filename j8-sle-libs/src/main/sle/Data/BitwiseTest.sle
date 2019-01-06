@@ -1,0 +1,48 @@
+export suite
+
+import file:../Test/Unit exposing Suite(..)
+import file:./Bitwise
+
+
+suite =
+  Describe "Data.Bitwise"
+  [ Describe "and"
+    [ Test "and with 32 bit integers" <| Bitwise.and 5 3 == 1
+    , Test "and with 0 as first argument" <| Bitwise.and 0 1450 == 0
+    , Test "and with 0 as second argument" <| Bitwise.and 274 0 == 0
+    , Test "and with -1 as first argument" <| Bitwise.and -1 2671 == 2671
+    , Test "and with -1 as second argument" <| Bitwise.and 96 -1 == 96
+    ]
+  , Describe "or"
+    [ Test "or with 32 bit integers" <| Bitwise.or 9 14 == 15
+    , Test "or with 0 as first argument" <| Bitwise.or 0 843 == 843
+    , Test "or with 0 as second argument" <| Bitwise.or 19 0 == 19
+    , Test "or with -1 as first argument" <| Bitwise.or -1 2360 == -1
+    , Test "or with -1 as second argument" <| Bitwise.or 3 -1 == -1
+    ]
+  , Describe "xor"
+    [ Test "xor with 32 bit integers" <| Bitwise.xor 580 24 == 604
+    , Test "xor with 0 as first argument" <| Bitwise.xor 0 56 == 56
+    , Test "xor with 0 as second argument" <| Bitwise.xor -268 0 == -268
+    , Test "xor with -1 as first argument" <| Bitwise.xor -1 24 == -25
+    , Test "xor with -1 as second argument" <| Bitwise.xor -25602 -1 == 25601
+    ]
+  , Describe "complement"
+    [ Test "complement a positive" <| Bitwise.complement 8 == -9
+    , Test "complement a negative" <| Bitwise.complement -279 == 278
+    ]
+  , Describe "shiftLeftBy"
+    [ Test "8 |> shiftLeftBy 1 == 16" <| (8 |> Bitwise.shiftLeftBy 1) == 16
+    , Test "8 |> shiftLeftBy 2 == 32" <| (8 |> Bitwise.shiftLeftBy 2) == 32
+    ]
+  , Describe "shiftRightBy"
+    [ Test "32 |> shiftRight 1 == 16" <| (32 |> Bitwise.shiftRightBy 1) == 16
+    , Test "32 |> shiftRight 2 == 8" <| (32 |> Bitwise.shiftRightBy 2) == 8
+    , Test "-32 |> shiftRight 1 == -16" <| (-32 |> Bitwise.shiftRightBy 1) == -16
+    ]
+  , Describe "shiftRightZfBy"
+    [ Test "32 |> shiftRightZfBy 1 == 16" <| (32 |> Bitwise.shiftRightZfBy 1) == 16
+    , Test "32 |> shiftRightZfBy 2 == 8" <| (32 |> Bitwise.shiftRightZfBy 2) == 8
+    , Test "-32 |> shiftRightZfBy 1 == 2147483632" <| (-32 |> Bitwise.shiftRightZfBy 1) == 2147483632
+    ]
+  ]

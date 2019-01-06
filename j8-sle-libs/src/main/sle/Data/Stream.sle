@@ -1,0 +1,61 @@
+export
+  Stream(..)
+  , integers
+  , integersFrom
+  , fibonacci
+  , head
+  , tail
+  , take
+  , unconsWhile
+
+import file:./List
+
+
+type Stream a =
+    Stream a (() -> Stream a)
+
+
+integersFrom : Int -> Stream Int
+integersFrom n =
+  Stream n (\() -> integersFrom (n + 1))
+
+integers =
+  integersFrom 0
+
+
+nextFibonacci : Int -> Int -> Stream Int
+nextFibonacci a b =
+  Stream a (\() -> nextFibonacci b (a + b))
+
+fibonacci =
+  nextFibonacci 0 1
+
+
+head : Stream a -> a
+head (Stream x xs) = x
+
+
+tail : Stream a -> Stream a
+tail (Stream x xs) =
+  xs ()
+
+
+take : Int -> Stream a -> List a
+take n stream =
+  if n < 1 then
+    []
+  else
+    head stream :: take (n - 1) (tail stream)
+
+
+unconsWhile : (a -> Bool) -> Stream a -> Tuple (List a) (Stream a)
+unconsWhile f stream =
+  unconsWhileHelper f [] stream
+
+
+unconsWhileHelper : (a -> Bool) -> List a -> Stream a -> Tuple (List a) (Stream a)
+unconsWhileHelper f result (Stream x xs) =
+  if f x then
+    unconsWhileHelper f (x :: result) (xs ())
+  else
+    Tuple (List.reverse result) (Stream x xs)

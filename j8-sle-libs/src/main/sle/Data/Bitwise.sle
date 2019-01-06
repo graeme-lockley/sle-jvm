@@ -1,0 +1,43 @@
+export
+  and
+, complement
+, or
+, shiftLeftBy
+, shiftRightBy
+, shiftRightZfBy
+, xor
+
+
+and : Int -> Int -> Int
+and =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.and"
+
+
+or : Int -> Int -> Int
+or =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.or"
+
+
+xor : Int -> Int -> Int
+xor =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.xor"
+
+
+complement : Int -> Int
+complement =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.complement"
+
+
+shiftLeftBy : Int -> Int -> Int
+shiftLeftBy =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.shiftLeftBy"
+
+
+shiftRightBy : Int -> Int -> Int
+shiftRightBy =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.shiftRightBy"
+
+
+shiftRightZfBy : Int -> Int -> Int
+shiftRightZfBy =
+  i_BuiltinValue "za.co.no9.sle.runtime.Bitwise.shiftRightZfBy"
