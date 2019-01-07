@@ -14,11 +14,6 @@ console =
   Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
 
 
-intConsole : Actor.Actor Int
-intConsole =
-  Actor.map String.fromInt console
-
-
 mod n m =
   n - ((n / m) * m)
 
