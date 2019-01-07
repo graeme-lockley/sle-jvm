@@ -17,7 +17,7 @@ separator =
 parse : String -> List String
 parse input =
 	if S.startsWith "//" input then
-		S.split (S.takeLeft 1 (S.dropLeft 2 input)) (S.dropLeft 4 input)
+		S.split (S.slice 2 3 input) (S.dropLeft 4 input)
 	else
 		Regex.split separator input
 
