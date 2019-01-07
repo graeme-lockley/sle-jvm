@@ -74,22 +74,23 @@ Module:
               ID:
                 name: +
             right:
-              NestedExpression:
-                expression:
-                  CallExpression:
-                    operands: [
+              NestedExpressions:
+                expressions: [
+                    CallExpression:
+                      operands: [
+                          IdReference:
+                            name:
+                              QualifiedID:
+                                name: xs
+                                qualifier: null
+                        ]
+                      operator:
                         IdReference:
                           name:
                             QualifiedID:
-                              name: xs
+                              name: length
                               qualifier: null
-                      ]
-                    operator:
-                      IdReference:
-                        name:
-                          QualifiedID:
-                            name: length
-                            qualifier: null
+                  ]
         id:
           LowerIDDeclarationID:
             name:

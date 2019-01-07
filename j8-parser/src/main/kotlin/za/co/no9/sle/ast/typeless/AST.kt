@@ -174,9 +174,9 @@ data class BinaryOpExpression(
         val operator: ID,
         val right: Expression) : Expression(location)
 
-data class NestedExpression(
+data class NestedExpressions(
         override val location: Location,
-        val expression: Expression) : Expression(location)
+        val expressions: List<Expression>) : Expression(location)
 
 data class CallExpression(
         override val location: Location,

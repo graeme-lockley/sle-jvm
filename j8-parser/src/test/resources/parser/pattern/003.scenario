@@ -162,52 +162,54 @@ Module:
                   expression:
                     BinaryOpExpression:
                       left:
-                        NestedExpression:
-                          expression:
-                            CallExpression:
-                              operands: [
+                        NestedExpressions:
+                          expressions: [
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: x
+                                          qualifier: null
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: y
+                                          qualifier: null
+                                  ]
+                                operator:
                                   IdReference:
                                     name:
                                       QualifiedID:
-                                        name: x
+                                        name: f
                                         qualifier: null
-                                  IdReference:
-                                    name:
-                                      QualifiedID:
-                                        name: y
-                                        qualifier: null
-                                ]
-                              operator:
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: f
-                                      qualifier: null
+                            ]
                       operator:
                         ID:
                           name: ::
                       right:
-                        NestedExpression:
-                          expression:
-                            CallExpression:
-                              operands: [
+                        NestedExpressions:
+                          expressions: [
+                              CallExpression:
+                                operands: [
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: xs
+                                          qualifier: null
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: ys
+                                          qualifier: null
+                                  ]
+                                operator:
                                   IdReference:
                                     name:
                                       QualifiedID:
-                                        name: xs
+                                        name: map2
                                         qualifier: null
-                                  IdReference:
-                                    name:
-                                      QualifiedID:
-                                        name: ys
-                                        qualifier: null
-                                ]
-                              operator:
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: map2
-                                      qualifier: null
+                            ]
                   pattern:
                     ConstructorReferencePattern:
                       name:

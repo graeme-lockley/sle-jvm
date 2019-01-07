@@ -615,7 +615,7 @@ class Parser(private val lexer: Lexer) {
                         val closeParen =
                                 matchOperator(")")
 
-                        NestedExpression(openParen.location + closeParen.location, expression)
+                        NestedExpressions(openParen.location + closeParen.location, listOf(expression))
                     }
                 }
 

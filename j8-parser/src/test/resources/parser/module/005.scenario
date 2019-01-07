@@ -73,21 +73,22 @@ Module:
                   right:
                     CallExpression:
                       operands: [
-                          NestedExpression:
-                            expression:
-                              BinaryOpExpression:
-                                left:
-                                  IdReference:
-                                    name:
-                                      QualifiedID:
-                                        name: n
-                                        qualifier: null
-                                operator:
-                                  ID:
-                                    name: -
-                                right:
-                                  ConstantInt:
-                                    value: 1
+                          NestedExpressions:
+                            expressions: [
+                                BinaryOpExpression:
+                                  left:
+                                    IdReference:
+                                      name:
+                                        QualifiedID:
+                                          name: n
+                                          qualifier: null
+                                  operator:
+                                    ID:
+                                      name: -
+                                  right:
+                                    ConstantInt:
+                                      value: 1
+                              ]
                         ]
                       operator:
                         IdReference:
