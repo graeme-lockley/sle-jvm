@@ -1,4 +1,4 @@
--- Nested pattern
+-- Nested pattern with list syntactic sugar
 type List a =
     Nil
   | Cons a (List a)
@@ -10,14 +10,14 @@ type Tuple a b =
 map2 : (a -> b -> c) -> List a -> List b -> List c
 map2 f a b =
     case Tuple a b of
-        Tuple Nil Nil ->
-            Nil
+        Tuple [] [] ->
+            []
 
-        Tuple (Cons x xs) (Cons y ys) ->
-            Cons (f x y) (map2 xs ys)
+        Tuple (x :: xs) (y :: ys) ->
+            (f x y) :: (map2 xs ys)
 
         any ->
-            Nil
+            []
 -- ast
 Module:
   declarations: [
@@ -144,11 +144,8 @@ Module:
             items: [
                 CaseItem:
                   expression:
-                    ConstructorReference:
-                      name:
-                        QualifiedID:
-                          name: Nil
-                          qualifier: null
+                    ConstantList:
+                      expressions: []
                   pattern:
                     ConstructorReferencePattern:
                       name:
@@ -156,72 +153,61 @@ Module:
                           name: Tuple
                           qualifier: null
                       parameters: [
-                          ConstructorReferencePattern:
-                            name:
-                              QualifiedID:
-                                name: Nil
-                                qualifier: null
-                            parameters: []
-                          ConstructorReferencePattern:
-                            name:
-                              QualifiedID:
-                                name: Nil
-                                qualifier: null
-                            parameters: []
+                          ConstantListPattern:
+                            values: []
+                          ConstantListPattern:
+                            values: []
                         ]
                 CaseItem:
                   expression:
-                    CallExpression:
-                      operands: [
-                          NestedExpression:
-                            expression:
-                              CallExpression:
-                                operands: [
-                                    IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: x
-                                          qualifier: null
-                                    IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: y
-                                          qualifier: null
-                                  ]
-                                operator:
+                    BinaryOpExpression:
+                      left:
+                        NestedExpression:
+                          expression:
+                            CallExpression:
+                              operands: [
                                   IdReference:
                                     name:
                                       QualifiedID:
-                                        name: f
+                                        name: x
                                         qualifier: null
-                          NestedExpression:
-                            expression:
-                              CallExpression:
-                                operands: [
-                                    IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: xs
-                                          qualifier: null
-                                    IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: ys
-                                          qualifier: null
-                                  ]
-                                operator:
                                   IdReference:
                                     name:
                                       QualifiedID:
-                                        name: map2
+                                        name: y
                                         qualifier: null
-                        ]
+                                ]
+                              operator:
+                                IdReference:
+                                  name:
+                                    QualifiedID:
+                                      name: f
+                                      qualifier: null
                       operator:
-                        ConstructorReference:
-                          name:
-                            QualifiedID:
-                              name: Cons
-                              qualifier: null
+                        ID:
+                          name: ::
+                      right:
+                        NestedExpression:
+                          expression:
+                            CallExpression:
+                              operands: [
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: xs
+                                        qualifier: null
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: ys
+                                        qualifier: null
+                                ]
+                              operator:
+                                IdReference:
+                                  name:
+                                    QualifiedID:
+                                      name: map2
+                                      qualifier: null
                   pattern:
                     ConstructorReferencePattern:
                       name:
@@ -229,36 +215,25 @@ Module:
                           name: Tuple
                           qualifier: null
                       parameters: [
-                          ConstructorReferencePattern:
-                            name:
-                              QualifiedID:
-                                name: Cons
-                                qualifier: null
-                            parameters: [
-                                IdReferencePattern:
-                                  name: x
-                                IdReferencePattern:
-                                  name: xs
-                              ]
-                          ConstructorReferencePattern:
-                            name:
-                              QualifiedID:
-                                name: Cons
-                                qualifier: null
-                            parameters: [
-                                IdReferencePattern:
-                                  name: y
-                                IdReferencePattern:
-                                  name: ys
-                              ]
+                          ConsOperatorPattern:
+                            head:
+                              IdReferencePattern:
+                                name: x
+                            tail:
+                              IdReferencePattern:
+                                name: xs
+                          ConsOperatorPattern:
+                            head:
+                              IdReferencePattern:
+                                name: y
+                            tail:
+                              IdReferencePattern:
+                                name: ys
                         ]
                 CaseItem:
                   expression:
-                    ConstructorReference:
-                      name:
-                        QualifiedID:
-                          name: Nil
-                          qualifier: null
+                    ConstantList:
+                      expressions: []
                   pattern:
                     IdReferencePattern:
                       name: any

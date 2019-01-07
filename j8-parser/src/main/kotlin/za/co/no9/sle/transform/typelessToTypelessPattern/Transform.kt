@@ -276,6 +276,14 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
             is za.co.no9.sle.ast.typeless.ConstantUnitPattern ->
                 ConstantUnitPattern(pattern.location)
 
+            is za.co.no9.sle.ast.typeless.ConstantListPattern ->
+                pattern.values.foldRight(ConstructorReferencePattern(pattern.location, QualifiedID(pattern.location, null, "Nil"), emptyList())) { carPattern, patternList ->
+                    ConstructorReferencePattern(carPattern.location, QualifiedID(carPattern.location, null, "Cons"), listOf(transform(carPattern), patternList))
+                }
+
+            is za.co.no9.sle.ast.typeless.ConsOperatorPattern ->
+                ConstructorReferencePattern(pattern.location, QualifiedID(pattern.location, null, "Cons"), listOf(transform(pattern.head), transform(pattern.tail)))
+
             is za.co.no9.sle.ast.typeless.IdReferencePattern ->
                 IdReferencePattern(pattern.location, pattern.name)
 

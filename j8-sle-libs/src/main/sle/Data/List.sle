@@ -11,29 +11,29 @@ export
 
 singleton : a -> List a
 singleton element =
-  Cons element Nil
+  [element]
 
 
 foldLeft : (b -> a -> b) -> b -> List a -> b
-foldLeft f z Nil = z
-foldLeft f z (Cons x xs) = foldLeft f (f z x) xs
+foldLeft f z [] = z
+foldLeft f z x::xs = foldLeft f (f z x) xs
 
 
 foldRight : (a -> b -> b) -> b -> List a -> b
-foldRight f z Nil = z
-foldRight f z (Cons x xs) = f x (foldRight f z xs)
+foldRight f z [] = z
+foldRight f z x::xs = f x (foldRight f z xs)
 
 
 reverse : List a -> List a
 reverse =
-  foldLeft (\xs x -> Cons x xs) []
+  foldLeft (\xs x -> x :: xs) []
 
 
 map : (a -> b) -> List a -> List b
-map f Nil =
-  Nil
-map f (Cons x xs) =
-  Cons (f x) (map f xs)
+map f [] =
+  []
+map f x::xs =
+  (f x) :: (map f xs)
 
 
 sum : List Int -> Int
@@ -42,10 +42,10 @@ sum =
 
 
 length : List a -> Int
-length Nil = 0
-length (Cons x xs) = 1 + length xs
+length [] = 0
+length x::xs = 1 + length xs
 
 
 repeat : a -> Int -> List a
-repeat e 0 = Nil
-repeat e n = Cons e (repeat e (n - 1))
+repeat e 0 = []
+repeat e n = e :: (repeat e (n - 1))

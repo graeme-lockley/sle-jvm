@@ -1,15 +1,15 @@
--- A nested case expression
+-- A nested case expression with list pattern syntactic sugar
 nested a b =
     case a of
-        Nil ->
+        [] ->
             case b of
-                Nil ->
+                [] ->
                     Nil
 
-                Cons bh bt ->
+                bh :: bt ->
                     bt
 
-        Cons ah at ->
+        ah :: at ->
             at
 -- ast
 Module:

@@ -730,46 +730,45 @@ class Parser(private val lexer: Lexer) {
                     isOperator("(")
 
 
-    fun parseTermType(): TType {
-        when {
-            isToken(Token.LowerID) -> {
-                val lowerID =
-                        lexer.next()
+    fun parseTermType(): TType =
+            when {
+                isToken(Token.LowerID) -> {
+                    val lowerID =
+                            lexer.next()
 
-                return TVarReference(lowerID.location, lowerID.text)
-            }
+                    TVarReference(lowerID.location, lowerID.text)
+                }
 
-            isToken(Token.UpperID) -> {
-                val qualifiedUpperID =
-                        parseQualifiedUpperID()
+                isToken(Token.UpperID) -> {
+                    val qualifiedUpperID =
+                            parseQualifiedUpperID()
 
-                return TTypeReference(qualifiedUpperID.location, qualifiedUpperID, emptyList())
-            }
+                    TTypeReference(qualifiedUpperID.location, qualifiedUpperID, emptyList())
+                }
 
-            isOperator("(") -> {
-                val openParenSymbol =
-                        matchOperator("(")
+                isOperator("(") -> {
+                    val openParenSymbol =
+                            matchOperator("(")
 
-                return if (isOperator(")")) {
-                    val closeParenSymbol =
-                            matchOperator(")")
+                    if (isOperator(")")) {
+                        val closeParenSymbol =
+                                matchOperator(")")
 
-                    TUnit(openParenSymbol.location + closeParenSymbol.location)
-                } else {
-                    val type =
-                            parseType()
+                        TUnit(openParenSymbol.location + closeParenSymbol.location)
+                    } else {
+                        val type =
+                                parseType()
 
-                    matchOperator(")")
+                        matchOperator(")")
 
-                    type
+                        type
+                    }
+                }
+
+                else -> {
+                    throw syntaxError("Expected lower ID, upper ID or '('")
                 }
             }
-
-            else -> {
-                throw syntaxError("Expected lower ID, upper ID or '('")
-            }
-        }
-    }
 
 
     fun parsePattern(): Pattern =
@@ -793,7 +792,7 @@ class Parser(private val lexer: Lexer) {
                 }
 
                 else ->
-                    parseTermPattern()
+                    parseConsOperatorPattern()
             }
 
 
@@ -813,83 +812,133 @@ class Parser(private val lexer: Lexer) {
             isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" || isFirstPattern()
 
 
-    fun parseTermPattern(): Pattern {
-        when {
-            isToken(Token.ConstantInt) -> {
-                val constantIntSymbol =
-                        lexer.next()
+    fun parseConsOperatorPattern() : Pattern {
+        val pattern =
+                parseTermPattern()
 
-                return ConstantIntPattern(constantIntSymbol.location, constantIntSymbol.text.toInt())
+        return if (isOperator("::")) {
+            val patterns =
+                    mutableListOf<Pattern>()
+
+            patterns.add(pattern)
+            while(isOperator("::")) {
+                lexer.next()
+                patterns.add(parseTermPattern())
             }
 
-            isToken(Token.UpperID) && lexer.text == "True" -> {
-                val trueSymbol =
-                        lexer.next()
-
-                return ConstantBoolPattern(trueSymbol.location, true)
+            patterns.dropLast(1).foldRight(patterns.last()){a, b->
+                ConsOperatorPattern(a.location + b.location, a, b)
             }
-
-            isToken(Token.UpperID) && lexer.text == "False" -> {
-                val trueSymbol =
-                        lexer.next()
-
-                return ConstantBoolPattern(trueSymbol.location, false)
-            }
-
-            isToken(Token.ConstantString) -> {
-                val constantStringSymbol =
-                        lexer.next()
-
-                val text =
-                        resolveStringEscape(constantStringSymbol.text
-                                .drop(1)
-                                .dropLast(1))
-
-                return ConstantStringPattern(constantStringSymbol.location, text)
-            }
-
-            isToken(Token.ConstantChar) -> {
-                val constantCharSymbol =
-                        lexer.next()
-
-                val text =
-                        resolveStringEscape(constantCharSymbol.text
-                                .drop(1)
-                                .dropLast(1))
-
-                return ConstantCharPattern(constantCharSymbol.location, text[0])
-            }
-
-            isOperator("(") -> {
-                val openParenSymbol =
-                        lexer.next()
-
-                return if (isOperator(")")) {
-                    val closeParenSymbol =
-                            lexer.next()
-
-                    ConstantUnitPattern(openParenSymbol.location + closeParenSymbol.location)
-                } else {
-                    val pattern =
-                            parsePattern()
-
-                    matchOperator(")")
-
-                    pattern
-                }
-            }
-
-            isToken(Token.LowerID) -> {
-                val lowerIDSymbol =
-                        lexer.next()
-
-                return IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
-            }
-
-            else ->
-                throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
+        } else {
+            pattern
         }
     }
+
+
+    fun parseTermPattern(): Pattern =
+            when {
+                isToken(Token.ConstantInt) -> {
+                    val constantIntSymbol =
+                            lexer.next()
+
+                    ConstantIntPattern(constantIntSymbol.location, constantIntSymbol.text.toInt())
+                }
+
+                isToken(Token.UpperID) && lexer.text == "True" -> {
+                    val trueSymbol =
+                            lexer.next()
+
+                    ConstantBoolPattern(trueSymbol.location, true)
+                }
+
+                isToken(Token.UpperID) && lexer.text == "False" -> {
+                    val trueSymbol =
+                            lexer.next()
+
+                    ConstantBoolPattern(trueSymbol.location, false)
+                }
+
+                isToken(Token.ConstantString) -> {
+                    val constantStringSymbol =
+                            lexer.next()
+
+                    val text =
+                            resolveStringEscape(constantStringSymbol.text
+                                    .drop(1)
+                                    .dropLast(1))
+
+                    ConstantStringPattern(constantStringSymbol.location, text)
+                }
+
+                isToken(Token.ConstantChar) -> {
+                    val constantCharSymbol =
+                            lexer.next()
+
+                    val text =
+                            resolveStringEscape(constantCharSymbol.text
+                                    .drop(1)
+                                    .dropLast(1))
+
+                    ConstantCharPattern(constantCharSymbol.location, text[0])
+                }
+
+                isOperator("[]") -> {
+                    val nilSymbol =
+                            lexer.next()
+                    ConstantListPattern(nilSymbol.location, emptyList())
+                }
+
+                isOperator("[") -> {
+                    val openSquare =
+                            lexer.next()
+
+                    val items =
+                            mutableListOf<Pattern>()
+
+                    if (!isOperator("]")) {
+                        items.add(parsePattern())
+
+                        while (isOperator(",")) {
+                            lexer.next()
+                            items.add(parsePattern())
+                        }
+                    }
+
+                    val endSquare =
+                            matchOperator("]")
+
+                    ConstantListPattern(openSquare.location + endSquare.location, items)
+                }
+
+                isOperator("(") -> {
+                    val openParenSymbol =
+                            lexer.next()
+
+                    if (isOperator(")")) {
+                        val closeParenSymbol =
+                                lexer.next()
+
+                        ConstantUnitPattern(openParenSymbol.location + closeParenSymbol.location)
+                    } else {
+                        val pattern =
+                                parsePattern()
+
+                        matchOperator(")")
+
+                        pattern
+                    }
+                }
+
+                isToken(Token.LowerID) -> {
+                    val lowerIDSymbol =
+                            lexer.next()
+
+                    IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
+                }
+
+                else ->
+                    throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
+            }
 
 
     fun isFirstPattern(): Boolean =
@@ -898,7 +947,9 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.ConstantChar) ||
                     isToken(Token.UpperID) ||
                     isToken(Token.LowerID) ||
-                    isOperator("(")
+                    isOperator("(") ||
+                    isOperator("[") ||
+                    isOperator("[]")
 
 
     private fun isOperator(text: String): Boolean =
