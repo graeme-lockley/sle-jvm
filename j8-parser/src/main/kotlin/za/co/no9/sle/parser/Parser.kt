@@ -3,7 +3,6 @@ package za.co.no9.sle.parser
 import org.apache.commons.text.StringEscapeUtils
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.typeless.*
-import za.co.no9.sle.ast.typeless.Unit
 import za.co.no9.sle.typing.Left
 import za.co.no9.sle.typing.None
 import za.co.no9.sle.typing.Right
@@ -607,7 +606,7 @@ class Parser(private val lexer: Lexer) {
                         val closeParen =
                                 lexer.next()
 
-                        Unit(openParen.location + closeParen.location)
+                        NestedExpressions(openParen.location + closeParen.location, emptyList())
                     } else {
                         val expressions =
                                 mutableListOf<Expression>()

@@ -10,7 +10,8 @@ Module:
               name: x
           ]
         expression:
-          Unit:
+          NestedExpressions:
+            expressions: []
         id:
           LowerIDDeclarationID:
             name:

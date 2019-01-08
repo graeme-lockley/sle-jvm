@@ -40,7 +40,8 @@ Module:
         expression:
           CallExpression:
             operands: [
-                Unit:
+                NestedExpressions:
+                  expressions: []
               ]
             operator:
               IdReference:

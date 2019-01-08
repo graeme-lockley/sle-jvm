@@ -6,7 +6,6 @@ import za.co.no9.sle.ast.typeless.LetSignature
 import za.co.no9.sle.ast.typeless.NotExpression
 import za.co.no9.sle.ast.typeless.True
 import za.co.no9.sle.ast.typelessPattern.*
-import za.co.no9.sle.ast.typelessPattern.Unit
 import za.co.no9.sle.parser.Lexer
 import za.co.no9.sle.parser.parseModule
 
@@ -203,9 +202,6 @@ private fun transform(qualifiedID: za.co.no9.sle.ast.typeless.QualifiedID): Qual
 
 private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
         when (ast) {
-            is za.co.no9.sle.ast.typeless.Unit ->
-                Unit(ast.location)
-
             is True ->
                 ConstantBool(ast.location, true)
 

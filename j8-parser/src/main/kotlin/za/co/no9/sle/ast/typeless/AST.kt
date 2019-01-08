@@ -120,9 +120,6 @@ data class QualifiedID(
 sealed class Expression(
         location: Location) : Node(location)
 
-data class Unit(
-        override val location: Location) : Expression(location)
-
 data class True(
         override val location: Location) : Expression(location)
 

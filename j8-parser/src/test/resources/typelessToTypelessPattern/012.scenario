@@ -33,7 +33,8 @@ Module:
         expressions: [
             CallExpression:
               operand:
-                Unit:
+                NestedExpressions:
+                  expressions: []
               operator:
                 IdReference:
                   name:
