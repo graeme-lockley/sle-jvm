@@ -569,6 +569,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         pattern.patterns.size == 1 ->
                             infer(pattern.patterns[0])
 
+                        pattern.patterns.size > 10 -> {
+                            errors.add(TooManyTupleArguments(pattern.location, 10, pattern.patterns.size))
+
+                            infer(pattern.patterns[0])
+                        }
+
                         else -> {
                             val constructorName =
                                     tupleConstructorName(pattern.patterns.size)
