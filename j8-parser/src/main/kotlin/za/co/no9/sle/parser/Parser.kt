@@ -818,7 +818,7 @@ class Parser(private val lexer: Lexer) {
             isToken(Token.UpperID) && lexer.text != "True" && lexer.text != "False" || isFirstPattern()
 
 
-    fun parseConsOperatorPattern() : Pattern {
+    fun parseConsOperatorPattern(): Pattern {
         val pattern =
                 parseTermPattern()
 
@@ -827,12 +827,12 @@ class Parser(private val lexer: Lexer) {
                     mutableListOf<Pattern>()
 
             patterns.add(pattern)
-            while(isOperator("::")) {
+            while (isOperator("::")) {
                 lexer.next()
                 patterns.add(parseTermPattern())
             }
 
-            patterns.dropLast(1).foldRight(patterns.last()){a, b->
+            patterns.dropLast(1).foldRight(patterns.last()) { a, b ->
                 ConsOperatorPattern(a.location + b.location, a, b)
             }
         } else {
@@ -905,7 +905,7 @@ class Parser(private val lexer: Lexer) {
                         items.add(parsePattern())
 
                         while (isOperator(",")) {
-                            lexer.next()
+                            lexer.skip()
                             items.add(parsePattern())
                         }
                     }
@@ -920,19 +920,22 @@ class Parser(private val lexer: Lexer) {
                     val openParenSymbol =
                             lexer.next()
 
-                    if (isOperator(")")) {
-                        val closeParenSymbol =
-                                lexer.next()
+                    val patterns =
+                            mutableListOf<Pattern>()
 
-                        ConstantUnitPattern(openParenSymbol.location + closeParenSymbol.location)
-                    } else {
-                        val pattern =
-                                parsePattern()
+                    if (!isOperator(")")) {
+                        patterns.add(parsePattern())
 
-                        matchOperator(")")
+                        while (isOperator(",")) {
+                            lexer.skip()
+                            patterns.add(parsePattern())
 
-                        pattern
+                        }
                     }
+                    val closeParenSymbol =
+                            matchOperator(")")
+
+                    ConstantNTuplePattern(openParenSymbol.location + closeParenSymbol.location, patterns)
                 }
 
                 isToken(Token.LowerID) -> {

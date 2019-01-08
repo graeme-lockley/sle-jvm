@@ -217,20 +217,26 @@ Module:
                           name: Tuple
                           qualifier: null
                       parameters: [
-                          ConsOperatorPattern:
-                            head:
-                              IdReferencePattern:
-                                name: x
-                            tail:
-                              IdReferencePattern:
-                                name: xs
-                          ConsOperatorPattern:
-                            head:
-                              IdReferencePattern:
-                                name: y
-                            tail:
-                              IdReferencePattern:
-                                name: ys
+                          ConstantNTuplePattern:
+                            patterns: [
+                                ConsOperatorPattern:
+                                  head:
+                                    IdReferencePattern:
+                                      name: x
+                                  tail:
+                                    IdReferencePattern:
+                                      name: xs
+                              ]
+                          ConstantNTuplePattern:
+                            patterns: [
+                                ConsOperatorPattern:
+                                  head:
+                                    IdReferencePattern:
+                                      name: y
+                                  tail:
+                                    IdReferencePattern:
+                                      name: ys
+                              ]
                         ]
                 CaseItem:
                   expression:

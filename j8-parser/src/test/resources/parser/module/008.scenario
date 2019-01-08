@@ -73,16 +73,19 @@ Module:
         arguments: [
             IdReferencePattern:
               name: f
-            ConstructorReferencePattern:
-              name:
-                QualifiedID:
-                  name: Cons
-                  qualifier: null
-              parameters: [
-                  IdReferencePattern:
-                    name: x
-                  IdReferencePattern:
-                    name: xs
+            ConstantNTuplePattern:
+              patterns: [
+                  ConstructorReferencePattern:
+                    name:
+                      QualifiedID:
+                        name: Cons
+                        qualifier: null
+                    parameters: [
+                        IdReferencePattern:
+                          name: x
+                        IdReferencePattern:
+                          name: xs
+                      ]
                 ]
           ]
         expression:

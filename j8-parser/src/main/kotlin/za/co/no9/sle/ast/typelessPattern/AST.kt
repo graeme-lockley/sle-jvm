@@ -187,8 +187,9 @@ data class ConstantCharPattern(
         override val location: Location,
         val value: Char) : Pattern(location)
 
-data class ConstantUnitPattern(
-        override val location: Location) : Pattern(location)
+data class ConstantNTuplePattern(
+        override val location: Location,
+        val values: List<Pattern>) : Pattern(location)
 
 data class IdReferencePattern(
         override val location: Location,

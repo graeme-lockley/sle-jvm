@@ -192,14 +192,17 @@ Module:
             precedence: 5
       LetDeclaration:
         arguments: [
-            ConstructorReferencePattern:
-              name:
-                QualifiedID:
-                  name: Just
-                  qualifier: null
-              parameters: [
-                  IdReferencePattern:
-                    name: x
+            ConstantNTuplePattern:
+              patterns: [
+                  ConstructorReferencePattern:
+                    name:
+                      QualifiedID:
+                        name: Just
+                        qualifier: null
+                    parameters: [
+                        IdReferencePattern:
+                          name: x
+                      ]
                 ]
             IdReferencePattern:
               name: d

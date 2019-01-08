@@ -13,7 +13,6 @@ import za.co.no9.sle.ast.typedPattern.ConstantInt
 import za.co.no9.sle.ast.typedPattern.ConstantIntPattern
 import za.co.no9.sle.ast.typedPattern.ConstantString
 import za.co.no9.sle.ast.typedPattern.ConstantStringPattern
-import za.co.no9.sle.ast.typedPattern.ConstantUnitPattern
 import za.co.no9.sle.ast.typedPattern.Constructor
 import za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern
 import za.co.no9.sle.ast.typedPattern.Expression
@@ -565,8 +564,24 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is za.co.no9.sle.ast.typelessPattern.ConstantCharPattern ->
                     ConstantCharPattern(pattern.location, typeString, pattern.value)
 
-                is za.co.no9.sle.ast.typelessPattern.ConstantUnitPattern ->
-                    ConstantUnitPattern(pattern.location, typeUnit)
+                is za.co.no9.sle.ast.typelessPattern.ConstantNTuplePattern ->
+                    when {
+                        pattern.values.isEmpty() ->
+                            ConstantUnitPattern(pattern.location, typeUnit)
+
+                        pattern.values.size == 1 ->
+                            infer(pattern.values[0])
+
+                        else -> {
+                            val constructorName =
+                                    if (pattern.values.size == 2)
+                                        "Tuple"
+                                    else
+                                        "Tuple${pattern.values.size}"
+
+                            infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.values))
+                        }
+                    }
 
                 is za.co.no9.sle.ast.typelessPattern.IdReferencePattern -> {
                     val idType =

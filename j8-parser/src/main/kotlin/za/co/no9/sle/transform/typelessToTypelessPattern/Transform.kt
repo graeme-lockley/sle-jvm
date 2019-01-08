@@ -269,8 +269,8 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
             is za.co.no9.sle.ast.typeless.ConstantCharPattern ->
                 ConstantCharPattern(pattern.location, pattern.value)
 
-            is za.co.no9.sle.ast.typeless.ConstantUnitPattern ->
-                ConstantUnitPattern(pattern.location)
+            is za.co.no9.sle.ast.typeless.ConstantNTuplePattern ->
+                ConstantNTuplePattern(pattern.location, pattern.patterns.map { transform(it) })
 
             is za.co.no9.sle.ast.typeless.ConstantListPattern ->
                 pattern.values.foldRight(ConstructorReferencePattern(pattern.location, QualifiedID(pattern.location, null, "Nil"), emptyList())) { carPattern, patternList ->

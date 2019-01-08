@@ -43,16 +43,19 @@ Module:
               expression:
                 LambdaExpression:
                   argument:
-                    ConstructorReferencePattern:
-                      name:
-                        QualifiedID:
-                          name: Cons
-                          qualifier: LL
-                      parameters: [
-                          IdReferencePattern:
-                            name: x
-                          IdReferencePattern:
-                            name: xs
+                    ConstantNTuplePattern:
+                      values: [
+                          ConstructorReferencePattern:
+                            name:
+                              QualifiedID:
+                                name: Cons
+                                qualifier: LL
+                            parameters: [
+                                IdReferencePattern:
+                                  name: x
+                                IdReferencePattern:
+                                  name: xs
+                              ]
                         ]
                   expression:
                     IfExpression:

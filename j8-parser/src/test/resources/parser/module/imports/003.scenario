@@ -51,16 +51,19 @@ Module:
                 name: length
       LetDeclaration:
         arguments: [
-            ConstructorReferencePattern:
-              name:
-                QualifiedID:
-                  name: Cons
-                  qualifier: List
-              parameters: [
-                  IdReferencePattern:
-                    name: x
-                  IdReferencePattern:
-                    name: xs
+            ConstantNTuplePattern:
+              patterns: [
+                  ConstructorReferencePattern:
+                    name:
+                      QualifiedID:
+                        name: Cons
+                        qualifier: List
+                    parameters: [
+                        IdReferencePattern:
+                          name: x
+                        IdReferencePattern:
+                          name: xs
+                      ]
                 ]
           ]
         expression:
