@@ -80,6 +80,9 @@ fun build(log: Log, sourceFile: File, targetFile: File) {
                             is IncorrectNumberOfConstructorArguments ->
                                 "Incorrect Number of Constructor Arguments: $sourceName: ${error.location}: ${error.name}: actual ${error.actual}: expected ${error.expected}"
 
+                            is TooManyTupleArguments ->
+                                "Too Many Tuple Arguments: $sourceName: ${error.location}: actual ${error.actual}: maximum ${error.maximum}"
+
                             is IncompatibleDeclarationSignature ->
                                 "Incompatible Declaration Signature: $sourceName: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}"
 

@@ -485,6 +485,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         expression.expressions.size == 1 ->
                             infer(expression.expressions[0])
 
+                        expression.expressions.size > 10 -> {
+                            errors.add(TooManyTupleArguments(expression.location, 10, expression.expressions.size))
+
+                            infer(expression.expressions[0])
+                        }
+
                         else -> {
                             val constructorName =
                                     if (expression.expressions.size == 2)

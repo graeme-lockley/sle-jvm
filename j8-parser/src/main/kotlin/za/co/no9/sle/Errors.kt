@@ -73,6 +73,11 @@ data class IncorrectNumberOfConstructorArguments(
         val expected: Int,
         val actual: Int) : LocationError(location)
 
+data class TooManyTupleArguments(
+        override val location: Location,
+        val maximum: Int,
+        val actual: Int) : LocationError(location)
+
 data class IncompatibleDeclarationSignature(
         override val location: Location,
         val name: String,
