@@ -492,10 +492,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                         else -> {
                             val constructorName =
-                                    if (expression.expressions.size == 2)
-                                        "Tuple"
-                                    else
-                                        "Tuple${expression.expressions.size}"
+                                    tupleConstructorName(expression.expressions.size)
 
                             val initial: za.co.no9.sle.ast.typelessPattern.Expression =
                                     za.co.no9.sle.ast.typelessPattern.ConstructorReference(expression.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(expression.location, null, constructorName))
@@ -574,10 +571,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                         else -> {
                             val constructorName =
-                                    if (pattern.patterns.size == 2)
-                                        "Tuple"
-                                    else
-                                        "Tuple${pattern.patterns.size}"
+                                    tupleConstructorName(pattern.patterns.size)
 
                             infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.patterns))
                         }
@@ -1036,10 +1030,7 @@ private fun transform(env: Environment, source: Item, ttype: TType, substitution
 
                     else -> {
                         val constructorName =
-                                if (ttype.types.size == 2)
-                                    "Tuple"
-                                else
-                                    "Tuple${ttype.types.size}"
+                                tupleConstructorName(ttype.types.size)
 
                         transform(env, source,
                                 TTypeReference(ttype.location, QualifiedID(ttype.location, null, constructorName), ttype.types), substitution)
@@ -1096,10 +1087,7 @@ private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype
 
                         else -> {
                             val constructorName =
-                                    if (ttype.types.size == 2)
-                                        "Tuple"
-                                    else
-                                        "Tuple${ttype.types.size}"
+                                    tupleConstructorName(ttype.types.size)
 
                             map(TTypeReference(ttype.location, QualifiedID(ttype.location, null, constructorName), ttype.types))
                         }
@@ -1181,3 +1169,10 @@ private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(source: Ite
 
     return Pair(Scheme(parameters, TCon(this.name.location, source.resolveConstructor(this.name.name), this.arguments.map { argument -> substitution[argument.name]!! })), substitution)
 }
+
+
+private fun tupleConstructorName(numberOfArguments: Int): String =
+        if (numberOfArguments == 2)
+            "Tuple"
+        else
+            "Tuple$numberOfArguments"
