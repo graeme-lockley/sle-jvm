@@ -87,29 +87,30 @@ Module:
               expression:
                 CallExpression:
                   operand:
-                    NestedExpression:
-                      expression:
-                        CallExpression:
-                          operand:
-                            ConstructorReference:
-                              name:
-                                QualifiedID:
-                                  name: Nil
-                                  qualifier: null
-                          operator:
-                            CallExpression:
-                              operand:
-                                IdReference:
-                                  name:
-                                    QualifiedID:
-                                      name: x
-                                      qualifier: null
-                              operator:
-                                ConstructorReference:
-                                  name:
-                                    QualifiedID:
-                                      name: Cons
-                                      qualifier: null
+                    NestedExpressions:
+                      expressions: [
+                          CallExpression:
+                            operand:
+                              ConstructorReference:
+                                name:
+                                  QualifiedID:
+                                    name: Nil
+                                    qualifier: null
+                            operator:
+                              CallExpression:
+                                operand:
+                                  IdReference:
+                                    name:
+                                      QualifiedID:
+                                        name: x
+                                        qualifier: null
+                                operator:
+                                  ConstructorReference:
+                                    name:
+                                      QualifiedID:
+                                        name: Cons
+                                        qualifier: null
+                        ]
                   operator:
                     CallExpression:
                       operand:

@@ -480,8 +480,24 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     infer(za.co.no9.sle.ast.typelessPattern.CallExpression(expressionWithAppliedOperatorRules.location, operator, expressionWithAppliedOperatorRules.right))
                 }
 
-                is za.co.no9.sle.ast.typelessPattern.NestedExpression ->
-                    infer(expression.expression)
+                is za.co.no9.sle.ast.typelessPattern.NestedExpressions ->
+                    if (expression.expressions.size == 1) {
+                        infer(expression.expressions[0])
+                    } else {
+                        val constructorName =
+                                if (expression.expressions.size == 2)
+                                    "Tuple"
+                                else
+                                    "Tuple${expression.expressions.size}"
+
+                        val initial: za.co.no9.sle.ast.typelessPattern.Expression =
+                                za.co.no9.sle.ast.typelessPattern.ConstructorReference(expression.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(expression.location, null, constructorName))
+
+                        infer(expression.expressions.fold(initial) { a, b ->
+                            za.co.no9.sle.ast.typelessPattern.CallExpression(a.location + b.location, a, b)
+
+                        })
+                    }
 
                 is za.co.no9.sle.ast.typelessPattern.CallExpression -> {
                     val t1 =

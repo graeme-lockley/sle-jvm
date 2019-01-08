@@ -188,21 +188,22 @@ Module:
                                 operator:
                                   CallExpression:
                                     operand:
-                                      NestedExpression:
-                                        expression:
-                                          CallExpression:
-                                            operand:
-                                              IdReference:
-                                                name:
-                                                  QualifiedID:
-                                                    name: a
-                                                    qualifier: null
-                                            operator:
-                                              IdReference:
-                                                name:
-                                                  QualifiedID:
-                                                    name: f
-                                                    qualifier: null
+                                      NestedExpressions:
+                                        expressions: [
+                                            CallExpression:
+                                              operand:
+                                                IdReference:
+                                                  name:
+                                                    QualifiedID:
+                                                      name: a
+                                                      qualifier: null
+                                              operator:
+                                                IdReference:
+                                                  name:
+                                                    QualifiedID:
+                                                      name: f
+                                                      qualifier: null
+                                          ]
                                     operator:
                                       ConstructorReference:
                                         name:
@@ -288,21 +289,22 @@ Module:
                             expression:
                               CallExpression:
                                 operand:
-                                  NestedExpression:
-                                    expression:
-                                      CallExpression:
-                                        operand:
-                                          IdReference:
-                                            name:
-                                              QualifiedID:
-                                                name: b
-                                                qualifier: null
-                                        operator:
-                                          IdReference:
-                                            name:
-                                              QualifiedID:
-                                                name: f
-                                                qualifier: null
+                                  NestedExpressions:
+                                    expressions: [
+                                        CallExpression:
+                                          operand:
+                                            IdReference:
+                                              name:
+                                                QualifiedID:
+                                                  name: b
+                                                  qualifier: null
+                                          operator:
+                                            IdReference:
+                                              name:
+                                                QualifiedID:
+                                                  name: f
+                                                  qualifier: null
+                                      ]
                                 operator:
                                   CallExpression:
                                     operand:

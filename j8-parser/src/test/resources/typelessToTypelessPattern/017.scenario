@@ -30,31 +30,33 @@ Module:
                     ID:
                       name: *
                   right:
-                    NestedExpression:
-                      expression:
-                        CallExpression:
-                          operand:
-                            NestedExpression:
-                              expression:
-                                BinaryOpExpression:
-                                  left:
-                                    IdReference:
-                                      name:
-                                        QualifiedID:
-                                          name: n
-                                          qualifier: null
-                                  operator:
-                                    ID:
-                                      name: -
-                                  right:
-                                    ConstantInt:
-                                      value: 1
-                          operator:
-                            IdReference:
-                              name:
-                                QualifiedID:
-                                  name: factorial
-                                  qualifier: null
+                    NestedExpressions:
+                      expressions: [
+                          CallExpression:
+                            operand:
+                              NestedExpressions:
+                                expressions: [
+                                    BinaryOpExpression:
+                                      left:
+                                        IdReference:
+                                          name:
+                                            QualifiedID:
+                                              name: n
+                                              qualifier: null
+                                      operator:
+                                        ID:
+                                          name: -
+                                      right:
+                                        ConstantInt:
+                                          value: 1
+                                  ]
+                            operator:
+                              IdReference:
+                                name:
+                                  QualifiedID:
+                                    name: factorial
+                                    qualifier: null
+                        ]
           ]
         id:
           LowerIDDeclarationID:

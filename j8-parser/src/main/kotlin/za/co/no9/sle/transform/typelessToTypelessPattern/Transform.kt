@@ -249,7 +249,7 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
                 BinaryOpExpression(ast.location, transform(ast.left), transform(ast.operator), transform(ast.right))
 
             is za.co.no9.sle.ast.typeless.NestedExpressions ->
-                NestedExpression(ast.location, transform(ast.expressions[0]))
+                NestedExpressions(ast.location, ast.expressions.map { transform(it) })
 
             is za.co.no9.sle.ast.typeless.CallExpression ->
                 ast.operands.fold(transform(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, transform(operand)) }
