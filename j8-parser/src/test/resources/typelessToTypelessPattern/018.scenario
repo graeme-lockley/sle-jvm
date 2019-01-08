@@ -44,7 +44,7 @@ Module:
                 LambdaExpression:
                   argument:
                     ConstantNTuplePattern:
-                      values: [
+                      patterns: [
                           ConstructorReferencePattern:
                             name:
                               QualifiedID:

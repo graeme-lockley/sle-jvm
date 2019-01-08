@@ -566,20 +566,20 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantNTuplePattern ->
                     when {
-                        pattern.values.isEmpty() ->
+                        pattern.patterns.isEmpty() ->
                             ConstantUnitPattern(pattern.location, typeUnit)
 
-                        pattern.values.size == 1 ->
-                            infer(pattern.values[0])
+                        pattern.patterns.size == 1 ->
+                            infer(pattern.patterns[0])
 
                         else -> {
                             val constructorName =
-                                    if (pattern.values.size == 2)
+                                    if (pattern.patterns.size == 2)
                                         "Tuple"
                                     else
-                                        "Tuple${pattern.values.size}"
+                                        "Tuple${pattern.patterns.size}"
 
-                            infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.values))
+                            infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.patterns))
                         }
                     }
 

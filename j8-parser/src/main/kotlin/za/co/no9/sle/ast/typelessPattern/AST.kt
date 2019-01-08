@@ -189,7 +189,7 @@ data class ConstantCharPattern(
 
 data class ConstantNTuplePattern(
         override val location: Location,
-        val values: List<Pattern>) : Pattern(location)
+        val patterns: List<Pattern>) : Pattern(location)
 
 data class IdReferencePattern(
         override val location: Location,
