@@ -33,15 +33,13 @@ sssActor () =
 incActor : Actor.Actor Int -> Int -> Actor.Actor ()
 incActor next initValue =
   Actor.create
-    (\self -> Tuple (Tuple initValue self) [
-      Actor.cmd self ()
-    ])
+    (\self -> ((initValue, self), [ Actor.cmd self () ]))
     (\(Tuple state self) message ->
       if (mod state 100000) == 0 then
         Response.none
       else
         Response.stateMsgs
-          (Tuple (state + 1) self)
+          (state + 1, self)
           [ Actor.cmd next state
           , Actor.cmd self ()
           ])

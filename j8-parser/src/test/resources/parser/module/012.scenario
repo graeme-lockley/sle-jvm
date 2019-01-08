@@ -1,0 +1,148 @@
+-- Syntactic sugar of tuple expressions
+type Tuple a b =
+    Tuple a b
+
+type Tuple3 a b c =
+    Tuple3 a b c
+
+type Tuple4 a b c d =
+    Tuple4 a b c d
+
+t2 = (1, "hello")
+
+t3 = (2, "world", True)
+
+t4 = (3, "love", False, 'h')
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+            ID:
+              name: c
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
+                  TVarReference:
+                    name: c
+                ]
+              name:
+                ID:
+                  name: Tuple3
+          ]
+        name:
+          ID:
+            name: Tuple3
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+            ID:
+              name: c
+            ID:
+              name: d
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
+                  TVarReference:
+                    name: c
+                  TVarReference:
+                    name: d
+                ]
+              name:
+                ID:
+                  name: Tuple4
+          ]
+        name:
+          ID:
+            name: Tuple4
+      LetDeclaration:
+        arguments: []
+        expression:
+          NestedExpressions:
+            expressions: [
+                ConstantInt:
+                  value: 1
+                ConstantString:
+                  value: hello
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t2
+      LetDeclaration:
+        arguments: []
+        expression:
+          NestedExpressions:
+            expressions: [
+                ConstantInt:
+                  value: 2
+                ConstantString:
+                  value: world
+                True:
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t3
+      LetDeclaration:
+        arguments: []
+        expression:
+          NestedExpressions:
+            expressions: [
+                ConstantInt:
+                  value: 3
+                ConstantString:
+                  value: love
+                False:
+                ConstantChar:
+                  value: h
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t4
+    ]
+  exports: []
+  imports: []

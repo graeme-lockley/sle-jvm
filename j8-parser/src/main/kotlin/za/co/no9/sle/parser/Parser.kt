@@ -609,13 +609,20 @@ class Parser(private val lexer: Lexer) {
 
                         Unit(openParen.location + closeParen.location)
                     } else {
-                        val expression =
-                                parseExpression(leftEdge)
+                        val expressions =
+                                mutableListOf<Expression>()
+
+                        expressions.add(parseExpression(leftEdge))
+
+                        while (isOperator(",")) {
+                            lexer.skip()
+                            expressions.add(parseExpression(leftEdge))
+                        }
 
                         val closeParen =
                                 matchOperator(")")
 
-                        NestedExpressions(openParen.location + closeParen.location, listOf(expression))
+                        NestedExpressions(openParen.location + closeParen.location, expressions)
                     }
                 }
 

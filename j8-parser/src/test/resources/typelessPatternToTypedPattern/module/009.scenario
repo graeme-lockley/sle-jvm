@@ -1,0 +1,578 @@
+-- Syntactic sugar of tuple expressions
+type Tuple a b =
+    Tuple a b
+
+type Tuple3 a b c =
+    Tuple3 a b c
+
+type Tuple4 a b c d =
+    Tuple4 a b c d
+
+t2 = (1, "hello")
+
+t3 = (2, "world", True)
+
+t4 = (3, "love", False, 'h')
+-- typeAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                  ]
+                name: file.package.name.File.Tuple
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                  TVar:
+                    variable: 2
+                ]
+              name:
+                ID:
+                  name: Tuple3
+          ]
+        name:
+          ID:
+            name: Tuple3
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+                2
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                    TVar:
+                      variable: 2
+                  ]
+                name: file.package.name.File.Tuple3
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                  TVar:
+                    variable: 2
+                  TVar:
+                    variable: 3
+                ]
+              name:
+                ID:
+                  name: Tuple4
+          ]
+        name:
+          ID:
+            name: Tuple4
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+                2
+                3
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                    TVar:
+                      variable: 2
+                    TVar:
+                      variable: 3
+                  ]
+                name: file.package.name.File.Tuple4
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                ConstantString:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                  value: hello
+              operator:
+                CallExpression:
+                  operand:
+                    ConstantInt:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      value: 1
+                  operator:
+                    IdReference:
+                      name: Tuple
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                    ]
+                                  name: file.package.name.File.Tuple
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: file.package.name.File.Tuple
+              type:
+                TCon:
+                  arguments: [
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    ]
+                  name: file.package.name.File.Tuple
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t2
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                  ]
+                name: file.package.name.File.Tuple
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                ConstantBool:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+                  value: true
+              operator:
+                CallExpression:
+                  operand:
+                    ConstantString:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      value: world
+                  operator:
+                    CallExpression:
+                      operand:
+                        ConstantInt:
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                          value: 2
+                      operator:
+                        IdReference:
+                          name: Tuple3
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Bool
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Int
+                                              TCon:
+                                                arguments: []
+                                                name: Data.String
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Bool
+                                            ]
+                                          name: file.package.name.File.Tuple3
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Bool
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Bool
+                                    ]
+                                  name: file.package.name.File.Tuple3
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                              TCon:
+                                arguments: []
+                                name: Data.Bool
+                            ]
+                          name: file.package.name.File.Tuple3
+              type:
+                TCon:
+                  arguments: [
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                      TCon:
+                        arguments: []
+                        name: Data.Bool
+                    ]
+                  name: file.package.name.File.Tuple3
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t3
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+                  ]
+                name: file.package.name.File.Tuple3
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                ConstantChar:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Char
+                  value: h
+              operator:
+                CallExpression:
+                  operand:
+                    ConstantBool:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+                      value: false
+                  operator:
+                    CallExpression:
+                      operand:
+                        ConstantString:
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          value: love
+                      operator:
+                        CallExpression:
+                          operand:
+                            ConstantInt:
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              value: 3
+                          operator:
+                            IdReference:
+                              name: Tuple4
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Bool
+                                          range:
+                                            TArr:
+                                              domain:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Char
+                                              range:
+                                                TCon:
+                                                  arguments: [
+                                                      TCon:
+                                                        arguments: []
+                                                        name: Data.Int
+                                                      TCon:
+                                                        arguments: []
+                                                        name: Data.String
+                                                      TCon:
+                                                        arguments: []
+                                                        name: Data.Bool
+                                                      TCon:
+                                                        arguments: []
+                                                        name: Data.Char
+                                                    ]
+                                                  name: file.package.name.File.Tuple4
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Bool
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Char
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Int
+                                              TCon:
+                                                arguments: []
+                                                name: Data.String
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Bool
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Char
+                                            ]
+                                          name: file.package.name.File.Tuple4
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.Bool
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Char
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Bool
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Char
+                                    ]
+                                  name: file.package.name.File.Tuple4
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Char
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                              TCon:
+                                arguments: []
+                                name: Data.Bool
+                              TCon:
+                                arguments: []
+                                name: Data.Char
+                            ]
+                          name: file.package.name.File.Tuple4
+              type:
+                TCon:
+                  arguments: [
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                      TCon:
+                        arguments: []
+                        name: Data.Bool
+                      TCon:
+                        arguments: []
+                        name: Data.Char
+                    ]
+                  name: file.package.name.File.Tuple4
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: t4
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                    TCon:
+                      arguments: []
+                      name: Data.Bool
+                    TCon:
+                      arguments: []
+                      name: Data.Char
+                  ]
+                name: file.package.name.File.Tuple4
+    ]
+  exports: []
