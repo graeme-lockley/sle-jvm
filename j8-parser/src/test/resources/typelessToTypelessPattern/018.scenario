@@ -118,17 +118,20 @@ Module:
         ttype:
           TArrow:
             domain:
-              TArrow:
-                domain:
-                  TVarReference:
-                    name: a
-                range:
-                  TTypeReference:
-                    arguments: []
-                    name:
-                      QualifiedID:
-                        name: Bool
-                        qualifier: null
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: a
+                      range:
+                        TTypeReference:
+                          arguments: []
+                          name:
+                            QualifiedID:
+                              name: Bool
+                              qualifier: null
+                  ]
             range:
               TArrow:
                 domain:

@@ -945,6 +945,12 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
             null -> {
             }
 
+            is TNTuple -> {
+                ttype.types.forEach {
+                    validateTType(it)
+                }
+            }
+
             is TTypeReference -> {
                 val qualifiedName =
                         QString(ttype.name.qualifier, ttype.name.name)
@@ -1020,8 +1026,25 @@ private fun Type.last(): Type =
 
 private fun transform(env: Environment, source: Item, ttype: TType, substitution: Map<String, TVar> = emptyMap()): Type =
         when (ttype) {
-            is TUnit ->
-                typeUnit
+            is TNTuple ->
+                when {
+                    ttype.types.isEmpty() ->
+                        typeUnit
+
+                    ttype.types.size == 1 ->
+                        transform(env, source, ttype.types[0], substitution)
+
+                    else -> {
+                        val constructorName =
+                                if (ttype.types.size == 2)
+                                    "Tuple"
+                                else
+                                    "Tuple${ttype.types.size}"
+
+                        transform(env, source,
+                                TTypeReference(ttype.location, QualifiedID(ttype.location, null, constructorName), ttype.types), substitution)
+                    }
+                }
 
             is TVarReference ->
                 substitution[ttype.name]!!
@@ -1063,8 +1086,24 @@ private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype
 
     fun map(ttype: TType): Type =
             when (ttype) {
-                is TUnit ->
-                    typeUnit
+                is TNTuple ->
+                    when {
+                        ttype.types.isEmpty() ->
+                            typeUnit
+
+                        ttype.types.size == 1 ->
+                            map(ttype.types[0])
+
+                        else -> {
+                            val constructorName =
+                                    if (ttype.types.size == 2)
+                                        "Tuple"
+                                    else
+                                        "Tuple${ttype.types.size}"
+
+                            map(TTypeReference(ttype.location, QualifiedID(ttype.location, null, constructorName), ttype.types))
+                        }
+                    }
 
                 is TVarReference -> {
                     val varRef =

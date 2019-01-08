@@ -36,15 +36,18 @@ Module:
               arguments: [
                   TVarReference:
                     name: a
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                            ]
+                          name:
+                            QualifiedID:
+                              name: List
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: List
-                        qualifier: null
                 ]
               name:
                 ID:
@@ -84,18 +87,21 @@ Module:
         type:
           TArrow:
             domain:
-              TArrow:
-                domain:
-                  TVarReference:
-                    name: a
-                range:
-                  TArrow:
-                    domain:
-                      TVarReference:
-                        name: b
-                    range:
-                      TVarReference:
-                        name: c
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: a
+                      range:
+                        TArrow:
+                          domain:
+                            TVarReference:
+                              name: b
+                          range:
+                            TVarReference:
+                              name: c
+                  ]
             range:
               TArrow:
                 domain:

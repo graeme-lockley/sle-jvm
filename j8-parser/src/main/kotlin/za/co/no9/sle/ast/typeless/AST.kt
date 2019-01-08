@@ -236,8 +236,9 @@ data class ConstructorReferencePattern(
 sealed class TType(
         override val location: Location) : Node(location)
 
-data class TUnit(
-        override val location: Location) : TType(location)
+data class TNTuple(
+        override val location: Location,
+        val types: List<TType>) : TType(location)
 
 data class TVarReference(
         override val location: Location,

@@ -112,13 +112,16 @@ Module:
         ttype:
           TArrow:
             domain:
-              TArrow:
-                domain:
-                  TVarReference:
-                    name: a
-                range:
-                  TVarReference:
-                    name: b
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: a
+                      range:
+                        TVarReference:
+                          name: b
+                  ]
             range:
               TArrow:
                 domain:

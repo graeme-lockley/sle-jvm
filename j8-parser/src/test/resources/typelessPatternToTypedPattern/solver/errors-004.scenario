@@ -8,5 +8,5 @@ type ListB a =
   | Cons a (ListB a)
 -- errors
 [
-  DuplicateConstructorDeclaration(location=[(7, 5) (7, 19)], name=Cons)
+  DuplicateConstructorDeclaration(location=[(7, 5) (7, 20)], name=Cons)
 ]

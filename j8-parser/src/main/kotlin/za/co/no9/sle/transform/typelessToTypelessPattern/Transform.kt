@@ -296,8 +296,8 @@ private fun transformNullable(type: za.co.no9.sle.ast.typeless.TType?): TType? =
 
 private fun transform(type: za.co.no9.sle.ast.typeless.TType): TType =
         when (type) {
-            is za.co.no9.sle.ast.typeless.TUnit ->
-                TUnit(type.location)
+            is za.co.no9.sle.ast.typeless.TNTuple ->
+                TNTuple(type.location, type.types.map { transform(it) })
 
             is za.co.no9.sle.ast.typeless.TVarReference ->
                 TVarReference(type.location, type.name)

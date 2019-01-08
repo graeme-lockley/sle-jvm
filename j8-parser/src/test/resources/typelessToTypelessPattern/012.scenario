@@ -21,7 +21,8 @@ Module:
         ttype:
           TArrow:
             domain:
-              TUnit:
+              TNTuple:
+                types: []
             range:
               TTypeReference:
                 arguments: []

@@ -26,15 +26,18 @@ Module:
               arguments: [
                   TVarReference:
                     name: a
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                            ]
+                          name:
+                            QualifiedID:
+                              name: List
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: List
-                        qualifier: null
                 ]
               name:
                 ID:

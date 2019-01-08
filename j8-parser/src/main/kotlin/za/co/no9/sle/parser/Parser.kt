@@ -756,19 +756,21 @@ class Parser(private val lexer: Lexer) {
                     val openParenSymbol =
                             matchOperator("(")
 
-                    if (isOperator(")")) {
-                        val closeParenSymbol =
-                                matchOperator(")")
+                    val types =
+                            mutableListOf<TType>()
 
-                        TUnit(openParenSymbol.location + closeParenSymbol.location)
-                    } else {
-                        val type =
-                                parseType()
+                    if (!isOperator(")")) {
+                        types.add(parseType())
 
-                        matchOperator(")")
-
-                        type
+                        while (isOperator(",")) {
+                            lexer.skip()
+                            types.add(parseType())
+                        }
                     }
+                    val closeParenSymbol =
+                            matchOperator(")")
+
+                    TNTuple(openParenSymbol.location + closeParenSymbol.location, types)
                 }
 
                 else -> {

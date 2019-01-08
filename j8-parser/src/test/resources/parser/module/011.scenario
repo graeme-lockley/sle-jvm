@@ -26,19 +26,22 @@ Module:
                       QualifiedID:
                         name: String
                         qualifier: null
-                  TTypeReference:
-                    arguments: [
+                  TNTuple:
+                    types: [
                         TTypeReference:
-                          arguments: []
+                          arguments: [
+                              TTypeReference:
+                                arguments: []
+                                name:
+                                  QualifiedID:
+                                    name: Suite
+                                    qualifier: null
+                            ]
                           name:
                             QualifiedID:
-                              name: Suite
+                              name: List
                               qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: List
-                        qualifier: null
                 ]
               name:
                 ID:

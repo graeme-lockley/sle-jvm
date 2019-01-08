@@ -90,17 +90,20 @@ Module:
         ttype:
           TArrow:
             domain:
-              TTypeReference:
-                arguments: [
-                    TVarReference:
-                      name: a
-                    TVarReference:
-                      name: b
+              TNTuple:
+                types: [
+                    TTypeReference:
+                      arguments: [
+                          TVarReference:
+                            name: a
+                          TVarReference:
+                            name: b
+                        ]
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                   ]
-                name:
-                  QualifiedID:
-                    name: Tuple
-                    qualifier: null
             range:
               TVarReference:
                 name: a
@@ -148,17 +151,20 @@ Module:
         ttype:
           TArrow:
             domain:
-              TTypeReference:
-                arguments: [
-                    TVarReference:
-                      name: a
-                    TVarReference:
-                      name: b
+              TNTuple:
+                types: [
+                    TTypeReference:
+                      arguments: [
+                          TVarReference:
+                            name: a
+                          TVarReference:
+                            name: b
+                        ]
+                      name:
+                        QualifiedID:
+                          name: Tuple
+                          qualifier: null
                   ]
-                name:
-                  QualifiedID:
-                    name: Tuple
-                    qualifier: null
             range:
               TVarReference:
                 name: b
@@ -238,39 +244,48 @@ Module:
         ttype:
           TArrow:
             domain:
-              TArrow:
-                domain:
-                  TVarReference:
-                    name: a
-                range:
-                  TVarReference:
-                    name: c
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: a
+                      range:
+                        TVarReference:
+                          name: c
+                  ]
             range:
               TArrow:
                 domain:
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
-                        TVarReference:
-                          name: b
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: Tuple
-                        qualifier: null
                 range:
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: c
-                        TVarReference:
-                          name: b
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: c
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: Tuple
-                        qualifier: null
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -347,39 +362,48 @@ Module:
         ttype:
           TArrow:
             domain:
-              TArrow:
-                domain:
-                  TVarReference:
-                    name: b
-                range:
-                  TVarReference:
-                    name: c
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: b
+                      range:
+                        TVarReference:
+                          name: c
+                  ]
             range:
               TArrow:
                 domain:
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
-                        TVarReference:
-                          name: b
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: Tuple
-                        qualifier: null
                 range:
-                  TTypeReference:
-                    arguments: [
-                        TVarReference:
-                          name: a
-                        TVarReference:
-                          name: c
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: c
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
                       ]
-                    name:
-                      QualifiedID:
-                        name: Tuple
-                        qualifier: null
     ]
   exports: []
   imports: []
