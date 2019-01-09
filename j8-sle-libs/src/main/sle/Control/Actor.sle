@@ -31,7 +31,7 @@ msgs =
   i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.msgs"
 
 
-create : (Actor m -> Tuple s (List Cmd)) -> (s -> m -> Response s) -> Actor m
+create : (Actor m -> (s, List Cmd)) -> (s -> m -> Response s) -> Actor m
 create =
   i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.create"
 
@@ -41,7 +41,7 @@ createBuiltin =
   i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.createBuiltin"
 
 
-createBuiltinWithInit : String -> (Actor m -> Tuple s (List Cmd)) -> Actor m
+createBuiltinWithInit : String -> (Actor m -> (s, List Cmd)) -> Actor m
 createBuiltinWithInit =
   i_BuiltinValue "za.co.no9.sle.runtime.ActorUtil.createBuiltinWithInit"
 
