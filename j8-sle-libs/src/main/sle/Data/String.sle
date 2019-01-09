@@ -43,6 +43,7 @@ export
 
 import file:./Bitwise
 import file:../Debug as D
+import file:./Option
 
 isEmpty : String -> Bool
 isEmpty s =
@@ -176,7 +177,13 @@ pad n string =
   if (n <= length string) then
     string
   else
-    padHelp n ((n - (length string)) / 2) string
+    padHelp n (padWidth n string) string
+
+
+padWidth : Int -> String -> Int
+padWidth n string =
+    (n - (length string)) / 2
+        |> Option.withDefault 0
 
 
 padHelp : Int -> Int -> String -> String

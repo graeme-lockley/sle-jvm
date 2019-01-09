@@ -2,7 +2,6 @@ package samples
 
 import file.samples.First
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import java.util.function.Function
 
@@ -22,13 +21,27 @@ class FirstTests : StringSpec({
 
 
     "Divide 10 2" {
-        ((file.samples.First.divide as Function<Any, Any>).apply(10) as Function<Int, Int>).apply(2)
+        val result =
+                ((file.samples.First.divide as Function<Any, Any>).apply(10) as Function<Int, Int>).apply(2) as Array<Any>
+
+        result.size
+                .shouldBe(2)
+
+        result[0]
+                .shouldBe(1)
+        result[1]
                 .shouldBe(5)
     }
 
 
     "Divide 10 0" {
-        shouldThrow<ArithmeticException> { ((file.samples.First.divide as Function<Any, Any>).apply(10) as Function<Any, Any>).apply(0) }
+        val result =
+                ((file.samples.First.divide as Function<Any, Any>).apply(10) as Function<Any, Any>).apply(0) as Array<Any>
+
+        result.size
+                .shouldBe(1)
+        result[0]
+                .shouldBe(0)
     }
 
     "maxInt" {

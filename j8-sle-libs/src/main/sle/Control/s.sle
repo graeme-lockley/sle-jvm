@@ -15,7 +15,7 @@ console =
 
 
 mod n m =
-  n - ((n / m) * m)
+  n - ((Option.withDefault 1 (n / m)) * m)
 
 
 isDivisibleBy1000 n =

@@ -92,7 +92,13 @@ public class Builtin {
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((int) a) * ((int) b);
 
     public static final Object SLASH =
-            (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((int) a) / ((int) b);
+            (Function<Object, Object>) a -> (Function<Object, Object>) b -> {
+                if ((int) b == 0) {
+                    return Maybe.nothing;
+                } else {
+                    return Maybe.just(((int) a) / ((int) b));
+                }
+            };
 
     public static final Object MINUS =
             (Function<Object, Object>) a -> (Function<Object, Object>) b -> ((int) a) - ((int) b);

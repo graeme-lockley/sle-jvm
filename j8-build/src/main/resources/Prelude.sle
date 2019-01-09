@@ -91,7 +91,7 @@ type Tuple10 a b c d e f g h i j
 (* 7 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.STAR"
 
-(/ 7 left) : Int -> Int -> Int
+(/ 7 left) : Int -> Int -> Option Int
 (/ 7 left) =
     i_BuiltinValue "za.co.no9.sle.runtime.Builtin.SLASH"
 
