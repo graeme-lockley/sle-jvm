@@ -14,6 +14,9 @@ class Item(
     val packageName =
             derivePackage(repository, urn)
 
+    val javaPackageName =
+            packageName.joinToString(".")
+
     val className =
             File(urn.name).nameWithoutExtension
 
@@ -121,7 +124,7 @@ class Item(
                     if (packageName.isEmpty())
                         "$className.$name"
                     else
-                        "${packageName.joinToString(".")}.$className.$name"
+                        "$javaPackageName.$className.$name"
             }
 
 
@@ -129,7 +132,7 @@ class Item(
             if (packageName.isEmpty())
                 "$className.$name"
             else
-                "${packageName.joinToString(".")}.$className.$name"
+                "$javaPackageName.$className.$name"
 }
 
 
@@ -150,7 +153,7 @@ private fun derivePackage(repository: Repository, urn: URN): List<String> {
         File -> "file"
         Github -> "github"
         Resource -> "resource"
-    }) + innerPath.map { it.filter { c -> c.isLetterOrDigit() } }
+    }) + innerPath.map { it.filter { c -> c.isLetterOrDigit() } }.map { it.toLowerCase() }
 }
 
 

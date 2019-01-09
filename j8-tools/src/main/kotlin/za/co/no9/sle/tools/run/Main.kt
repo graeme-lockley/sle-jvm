@@ -73,7 +73,7 @@ fun main(arguments: Array<String>) =
 
                 if (rightItem != null) {
                     val className =
-                            rightItem.packageName.joinToString(".") + "." + rightItem.className
+                            rightItem.javaPackageName + "." + rightItem.className
 
                     val clazz =
                             Class.forName(className)

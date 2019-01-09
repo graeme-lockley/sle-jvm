@@ -92,7 +92,7 @@ fun runTest(repository: Repository, urn: URN, listener: TestEvents) {
 
     if (rightItem != null) {
         val className =
-                rightItem.packageName.joinToString(".") + "." + rightItem.className
+                rightItem.javaPackageName + "." + rightItem.className
 
         val clazz =
                 Class.forName(className)

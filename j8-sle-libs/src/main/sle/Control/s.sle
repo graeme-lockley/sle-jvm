@@ -5,7 +5,7 @@ import file:../Data/List
 import file:../Data/Option
 import file:../Data/String
 import file:./Actor
-import file:./actor/Response
+import file:./Actor/Response
 
 import file:../Debug as D
 

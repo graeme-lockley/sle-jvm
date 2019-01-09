@@ -71,7 +71,7 @@ class TargetFileTests : StringSpec({
                 item("/home/gjl/src/Data/List.sle")
 
         item.resolveConstructor("Cons")
-                .shouldBe("file.Data.List.Cons")
+                .shouldBe("file.data.List.Cons")
     }
 })
 

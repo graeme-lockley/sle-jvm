@@ -71,7 +71,7 @@ class BuildRepository(override val sourcePrefix: File,
             compiling.add(item.sourceURN())
 
             val packageName =
-                    item.packageName.joinToString(".")
+                    item.javaPackageName
 
             val className =
                     item.className
