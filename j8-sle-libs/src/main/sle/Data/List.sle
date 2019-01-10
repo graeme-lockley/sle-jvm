@@ -38,12 +38,11 @@ map f x::xs =
 
 sum : List Int -> Int
 sum =
-  foldLeft (\a b -> a + b) 0
+  foldLeft (+) 0
 
 
 length : List a -> Int
-length [] = 0
-length x::xs = 1 + length xs
+length = foldLeft (\length item -> 1 + length) 0
 
 
 repeat : a -> Int -> List a
