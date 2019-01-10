@@ -195,6 +195,9 @@ data class IdReferencePattern(
         override val location: Location,
         val name: String) : Pattern(location)
 
+data class IgnorePattern(
+        override val location: Location) : Pattern(location)
+
 data class ConstructorReferencePattern(
         override val location: Location,
         val name: QualifiedID,

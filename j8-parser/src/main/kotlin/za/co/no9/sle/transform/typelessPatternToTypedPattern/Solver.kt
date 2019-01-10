@@ -215,6 +215,9 @@ private class ApplyContext(private val environment: Environment) {
                 is IdReferencePattern ->
                     IdReferencePattern(pattern.location, pattern.type.apply(substitution), pattern.name)
 
+                is IgnorePattern ->
+                    pattern
+
                 is ConstructorReferencePattern ->
                     ConstructorReferencePattern(pattern.location, pattern.type.apply(substitution), pattern.name, pattern.parameters.map { apply(it, substitution) })
             }

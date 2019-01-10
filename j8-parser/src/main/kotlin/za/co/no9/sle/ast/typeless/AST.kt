@@ -222,6 +222,9 @@ data class IdReferencePattern(
         override val location: Location,
         val name: String) : Pattern(location)
 
+data class IgnorePattern(
+        override val location: Location) : Pattern(location)
+
 data class ConsOperatorPattern(
         override val location: Location,
         val head: Pattern,

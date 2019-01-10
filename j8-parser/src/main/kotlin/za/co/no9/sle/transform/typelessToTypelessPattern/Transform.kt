@@ -283,6 +283,9 @@ private fun transform(pattern: za.co.no9.sle.ast.typeless.Pattern): Pattern =
             is za.co.no9.sle.ast.typeless.IdReferencePattern ->
                 IdReferencePattern(pattern.location, pattern.name)
 
+            is za.co.no9.sle.ast.typeless.IgnorePattern ->
+                IgnorePattern(pattern.location)
+
             is za.co.no9.sle.ast.typeless.ConstructorReferencePattern ->
                 ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
         }

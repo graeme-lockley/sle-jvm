@@ -47,12 +47,15 @@ private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.D
 
 
 private fun markupName(name: String): String =
-        name.fold("") { a, b ->
-            if (b.isJavaIdentifierPart() || b == '.')
-                a + b
-            else
-                a + "$" + java.lang.Integer.toHexString(b.toInt())
-        }
+        if (name == "_")
+            "\$underscore"
+        else
+            name.fold("") { a, b ->
+                if (b.isJavaIdentifierPart() || b == '.')
+                    a + b
+                else
+                    a + "$" + java.lang.Integer.toHexString(b.toInt())
+            }
 
 
 private fun translateTypeDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<za.co.no9.sle.pass4.Declaration> =
@@ -179,7 +182,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                         false,
                                         "apply",
                                         "java.lang.Object",
-                                        listOf(Parameter(expression.argument.name, "java.lang.Object")),
+                                        listOf(Parameter(markupName(expression.argument.name), "java.lang.Object")),
                                         StatementBlock(listOf(
                                                 ReturnStatement(translate(expression.expression))
                                         ))
@@ -210,7 +213,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                         BlockStatement(
                                                 it.variables.mapIndexed { index, s ->
                                                     VariableDeclarationStatement("java.lang.Object", s, ArrayAccessExpression(NameExpression(fullSelectorName), IntegerLiteralExpression(index + 1)))
-                                                } + ReturnStatement(translate(it.expression))
+                                                }.filter { variableDeclarationStatement -> variableDeclarationStatement.name != "_" } + ReturnStatement(translate(it.expression))
                                         )
                             )
                         }

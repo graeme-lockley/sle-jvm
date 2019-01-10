@@ -141,7 +141,17 @@ private class Transform(val environment: Environment, private var counter: Int =
                         LambdaExpression(expression.location, expression.type,
                                 ID(expression.argument.location, name),
                                 CaseExpression(expression.location, expression.type, name, listOf(
-                                        CaseExpressionClause(argument.name, argument.parameters.map { (it as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name },
+                                        CaseExpressionClause(
+                                                argument.name,
+                                                argument.parameters.map {
+                                                    when (it) {
+                                                        is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
+                                                            it.name
+
+                                                        else ->
+                                                            "_"
+                                                    }
+                                                },
                                                 transform(expression.expression))
                                 ))
                         )
@@ -319,8 +329,17 @@ private class Transform(val environment: Environment, private var counter: Int =
                     CaseExpression(e.location, e.type, us[0], clauses)
                 } else {
                     match(us.drop(1), qs.map {
+                        val variable =
+                                it.first[0]
+
                         val variableName =
-                                (it.first[0] as za.co.no9.sle.ast.enrichedCore.IdReferencePattern).name
+                                    when (variable) {
+                                        is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
+                                            variable.name
+
+                                        else ->
+                                            "_"
+                                    }
 
                         Pair(it.first.drop(1), substitute(it.second, variableName, us[0]))
                     }, e)
@@ -467,6 +486,9 @@ private class Transform(val environment: Environment, private var counter: Int =
             when (pattern) {
                 is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
                     ID(pattern.location, pattern.name)
+
+                is za.co.no9.sle.ast.enrichedCore.IgnorePattern ->
+                    ID(pattern.location, "_")
 
                 else ->
                     TODO("transform enrichedCore to Core: $pattern")

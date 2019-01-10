@@ -17,6 +17,7 @@ enum class Token {
 
     LowerID,
     UpperID,
+    Unknown,
 
     AS,
     CASE,
@@ -251,6 +252,9 @@ class Lexer(private val input: String) {
                         markEnd(startIndex, startPosition, Token.ConstantOperator)
                     }
                 }
+
+                currentCh == '_' ->
+                    markEnd(currentIndex, position(), Token.Unknown)
 
                 singleOperatorCharacters.contains(currentCh) ->
                     markEnd(currentIndex, position(), Token.ConstantOperator)

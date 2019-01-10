@@ -42,9 +42,9 @@ sum =
 
 
 length : List a -> Int
-length = foldLeft (\length item -> 1 + length) 0
+length = foldLeft (\length _ -> 1 + length) 0
 
 
 repeat : a -> Int -> List a
-repeat e 0 = []
+repeat _ 0 = []
 repeat e n = e :: (repeat e (n - 1))

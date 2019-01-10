@@ -955,8 +955,15 @@ class Parser(private val lexer: Lexer) {
                     IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
                 }
 
+                isToken(Token.Unknown) -> {
+                    val unknownSymbol =
+                            lexer.next()
+
+                    IgnorePattern(unknownSymbol.location)
+                }
+
                 else ->
-                    throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False or '('")
+                    throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False, '(' or '_'")
             }
 
 
@@ -968,7 +975,8 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.LowerID) ||
                     isOperator("(") ||
                     isOperator("[") ||
-                    isOperator("[]")
+                    isOperator("[]") ||
+                    isToken(Token.Unknown)
 
 
     private fun isOperator(text: String): Boolean =

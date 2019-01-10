@@ -20,6 +20,7 @@ import za.co.no9.sle.ast.typedPattern.ID
 import za.co.no9.sle.ast.typedPattern.IdReference
 import za.co.no9.sle.ast.typedPattern.IdReferencePattern
 import za.co.no9.sle.ast.typedPattern.IfExpression
+import za.co.no9.sle.ast.typedPattern.IgnorePattern
 import za.co.no9.sle.ast.typedPattern.LambdaExpression
 import za.co.no9.sle.ast.typedPattern.LetDeclaration
 import za.co.no9.sle.ast.typedPattern.LowerIDDeclarationID
@@ -590,6 +591,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     env = env.newValue(pattern.name, VariableBinding(Scheme(emptyList(), idType)))
 
                     IdReferencePattern(pattern.location, idType, pattern.name)
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.IgnorePattern -> {
+                    val idType =
+                            varPump.fresh(pattern.location)
+
+                    IgnorePattern(pattern.location, idType)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern -> {

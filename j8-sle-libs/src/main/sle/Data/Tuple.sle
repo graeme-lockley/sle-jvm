@@ -4,8 +4,8 @@ export
 
 
 first : Tuple a b -> a
-first (a, b) = a
+first (a, _) = a
 
 
 second : Tuple a b -> b
-second (a, b) = b
+second (_, b) = b

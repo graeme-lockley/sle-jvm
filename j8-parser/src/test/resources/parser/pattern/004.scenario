@@ -1,0 +1,303 @@
+-- Patterns over a product type
+type Tuple a b =
+    Tuple a b
+
+first : (a, b) -> a
+first (a, _) = a
+
+second : (a, b) -> b
+second (_, b) = b
+
+mapFirst : (a -> c) -> (Tuple a b) -> (Tuple c b)
+mapFirst f (a, b) = (f a, b)
+
+mapSecond : (b -> c) -> (Tuple a b) -> (Tuple a c)
+mapSecond f (a, b) = (a, f b)
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        arguments: [
+            ID:
+              name: a
+            ID:
+              name: b
+          ]
+        constructors: [
+            TypeConstructor:
+              arguments: [
+                  TVarReference:
+                    name: a
+                  TVarReference:
+                    name: b
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: first
+        type:
+          TArrow:
+            domain:
+              TNTuple:
+                types: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+            range:
+              TVarReference:
+                name: a
+      LetDeclaration:
+        arguments: [
+            ConstantNTuplePattern:
+              patterns: [
+                  IdReferencePattern:
+                    name: a
+                  IgnorePattern:
+                ]
+          ]
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: a
+                qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: first
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
+        type:
+          TArrow:
+            domain:
+              TNTuple:
+                types: [
+                    TVarReference:
+                      name: a
+                    TVarReference:
+                      name: b
+                  ]
+            range:
+              TVarReference:
+                name: b
+      LetDeclaration:
+        arguments: [
+            ConstantNTuplePattern:
+              patterns: [
+                  IgnorePattern:
+                  IdReferencePattern:
+                    name: b
+                ]
+          ]
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: b
+                qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapFirst
+        type:
+          TArrow:
+            domain:
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: a
+                      range:
+                        TVarReference:
+                          name: c
+                  ]
+            range:
+              TArrow:
+                domain:
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
+                      ]
+                range:
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: c
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
+                      ]
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: f
+            ConstantNTuplePattern:
+              patterns: [
+                  IdReferencePattern:
+                    name: a
+                  IdReferencePattern:
+                    name: b
+                ]
+          ]
+        expression:
+          NestedExpressions:
+            expressions: [
+                CallExpression:
+                  operands: [
+                      IdReference:
+                        name:
+                          QualifiedID:
+                            name: a
+                            qualifier: null
+                    ]
+                  operator:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: f
+                          qualifier: null
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: b
+                      qualifier: null
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapFirst
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapSecond
+        type:
+          TArrow:
+            domain:
+              TNTuple:
+                types: [
+                    TArrow:
+                      domain:
+                        TVarReference:
+                          name: b
+                      range:
+                        TVarReference:
+                          name: c
+                  ]
+            range:
+              TArrow:
+                domain:
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: b
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
+                      ]
+                range:
+                  TNTuple:
+                    types: [
+                        TTypeReference:
+                          arguments: [
+                              TVarReference:
+                                name: a
+                              TVarReference:
+                                name: c
+                            ]
+                          name:
+                            QualifiedID:
+                              name: Tuple
+                              qualifier: null
+                      ]
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: f
+            ConstantNTuplePattern:
+              patterns: [
+                  IdReferencePattern:
+                    name: a
+                  IdReferencePattern:
+                    name: b
+                ]
+          ]
+        expression:
+          NestedExpressions:
+            expressions: [
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: a
+                      qualifier: null
+                CallExpression:
+                  operands: [
+                      IdReference:
+                        name:
+                          QualifiedID:
+                            name: b
+                            qualifier: null
+                    ]
+                  operator:
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: f
+                          qualifier: null
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: mapSecond
+    ]
+  exports: []
+  imports: []

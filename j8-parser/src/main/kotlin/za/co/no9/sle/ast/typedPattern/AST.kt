@@ -190,6 +190,11 @@ data class IdReferencePattern(
         override val type: Type,
         val name: String) : Pattern(location, type)
 
+data class IgnorePattern(
+        override val location: Location,
+        override val type: Type) : Pattern(location, type)
+
+
 data class ConstructorReferencePattern(
         override val location: Location,
         override val type: Type,

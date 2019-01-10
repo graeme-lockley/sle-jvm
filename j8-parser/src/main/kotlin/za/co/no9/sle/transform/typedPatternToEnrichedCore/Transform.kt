@@ -304,6 +304,9 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
                     PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, pattern.name), state)
 
+                is za.co.no9.sle.ast.typedPattern.IgnorePattern ->
+                    PatternTransformResult(IgnorePattern(pattern.location, pattern.type), state)
+
                 is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern -> {
                     val initialState =
                             PatternTransformResult(emptyList<Pattern>(), state)

@@ -229,6 +229,9 @@ fun Pattern.asString(): String =
             is IdReferencePattern ->
                 name
 
+            is IgnorePattern ->
+                "_"
+
             is ConstructorReferencePattern ->
                 "$name${parameters.joinToString("") { " " + it.type.toString() }}"
         }
