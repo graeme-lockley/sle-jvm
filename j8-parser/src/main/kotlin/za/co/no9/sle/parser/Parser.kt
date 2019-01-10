@@ -607,6 +607,14 @@ class Parser(private val lexer: Lexer) {
                                 lexer.next()
 
                         NestedExpressions(openParen.location + closeParen.location, emptyList())
+                    } else if (isOperator() && !isOperator("\\") && !isOperator("(") && !isOperator("[") && !isOperator("!")) {
+                        val operator =
+                                lexer.next()
+
+                        val closeParen =
+                                matchOperator(")")
+
+                        IdReference(openParen.location + closeParen.location, QualifiedID(operator.location, null, operator.text))
                     } else {
                         val expressions =
                                 mutableListOf<Expression>()

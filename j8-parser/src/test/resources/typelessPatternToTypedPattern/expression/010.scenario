@@ -1,0 +1,178 @@
+-- Convert an infix operator into a prefix function
+plus : Int -> Int -> Int
+plus =
+    (+)
+
+sum a b =
+    (+) a b
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            IdReference:
+              name: +
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: plus
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: b
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: a
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                          operator:
+                            IdReference:
+                              name: +
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      range:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: sum
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+    ]
+  exports: []

@@ -1,0 +1,89 @@
+-- Convert an infix operator into a prefix function
+plus : Int -> Int -> Int
+plus =
+    (+)
+
+sum a b =
+    (+) a b
+-- ast
+Module:
+  declarations: [
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: plus
+        type:
+          TArrow:
+            domain:
+              TTypeReference:
+                arguments: []
+                name:
+                  QualifiedID:
+                    name: Int
+                    qualifier: null
+            range:
+              TArrow:
+                domain:
+                  TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Int
+                        qualifier: null
+                range:
+                  TTypeReference:
+                    arguments: []
+                    name:
+                      QualifiedID:
+                        name: Int
+                        qualifier: null
+      LetDeclaration:
+        arguments: []
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: +
+                qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: plus
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: a
+            IdReferencePattern:
+              name: b
+          ]
+        expression:
+          CallExpression:
+            operands: [
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: a
+                      qualifier: null
+                IdReference:
+                  name:
+                    QualifiedID:
+                      name: b
+                      qualifier: null
+              ]
+            operator:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: +
+                    qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: sum
+    ]
+  exports: []
+  imports: []
