@@ -162,16 +162,16 @@ fun NameDeclaration.asString(): String =
         }
 
 
-fun Declaration.asString(): String =
+fun Declaration.asString(indent: Int = 0): String =
         when (this) {
             is LetDeclaration ->
-                "${id.name.name} : ${scheme.normalize()}\n${id.name.name} =\n${expression.asString(2)}\n"
+                "${spaces(indent)}${id.name.name} : ${scheme.normalize()}\n${spaces(indent)}${id.name.name} =\n${expression.asString(indent + 2)}\n"
 
             is TypeAliasDeclaration ->
-                "typealias ${name.name} =\n  $scheme\n"
+                "${spaces(indent)}typealias ${name.name} =\n  $scheme\n"
 
             is TypeDeclaration ->
-                "type ${name.name} =\n  " + constructors.joinToString("| ") { it.asString() } + "\n"
+                "${spaces(indent)}type ${name.name} =\n  " + constructors.joinToString("| ") { it.asString() } + "\n"
         }
 
 
@@ -204,6 +204,12 @@ fun Expression.asString(indent: Int = 0): String =
 
             is IdReference ->
                 spaces(indent) + name + "\n"
+
+            is LetExpression ->
+                "${spaces(indent)}(LET\n" +
+                        this.declarations.joinToString("\n") { it.asString(indent + 2) } +
+                        expression.asString(indent + 2) +
+                        "${spaces(indent)})\n"
 
             is IfExpression ->
                 "${spaces(indent)}(IF\n" +

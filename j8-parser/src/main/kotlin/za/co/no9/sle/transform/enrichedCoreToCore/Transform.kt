@@ -91,7 +91,7 @@ private class Transform(val environment: Environment, private var counter: Int =
     private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.Declaration): Declaration =
             when (declaration) {
                 is za.co.no9.sle.ast.enrichedCore.LetDeclaration ->
-                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expression))
+                    transform(declaration)
 
                 is za.co.no9.sle.ast.enrichedCore.TypeAliasDeclaration ->
                     TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
@@ -101,8 +101,8 @@ private class Transform(val environment: Environment, private var counter: Int =
             }
 
 
-//    private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.LetDeclaration): LetDeclaration =
-//            LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expression))
+    private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.LetDeclaration): LetDeclaration =
+            LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expression))
 
 
     private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Expression =
@@ -132,8 +132,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     IdReference(expression.location, expression.type, expression.name)
 
                 is za.co.no9.sle.ast.enrichedCore.LetExpression ->
-                    transform(expression.expression)
-//                    LetExpression(expression.location, expression.type, expression.declarations.map { transform(it) }, transform(expression.expression))
+                    LetExpression(expression.location, expression.type, expression.declarations.map { transform(it) }, transform(expression.expression))
 
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
@@ -394,6 +393,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is IdReference ->
                     haystack
 
+                is LetExpression ->
+                    LetExpression(haystack.location, haystack.type, haystack.declarations, replaceFailWith(haystack.expression, needle))
+
                 is IfExpression ->
                     IfExpression(haystack.location, haystack.type, replaceFailWith(haystack.guardExpression, needle), replaceFailWith(haystack.thenExpression, needle), replaceFailWith(haystack.elseExpression, needle))
 
@@ -455,7 +457,8 @@ private class Transform(val environment: Environment, private var counter: Int =
 
 
     private fun substitute(e: za.co.no9.sle.ast.enrichedCore.LetDeclaration, old: String, new: String): za.co.no9.sle.ast.enrichedCore.LetDeclaration =
-            TODO()
+            za.co.no9.sle.ast.enrichedCore.LetDeclaration(e.location, e.scheme, e.id, substitute(e.expression, old, new))
+    
 
     private fun canFail(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
             when (e) {

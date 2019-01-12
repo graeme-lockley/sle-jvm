@@ -170,6 +170,9 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                 }
             }
 
+            is LetExpression ->
+                translate(expression.expression)
+
             is IfExpression ->
                 ConditionalExpression(TypeCastExpression("java.lang.Boolean", translate(expression.guardExpression)), translate(expression.thenExpression), translate(expression.elseExpression))
 
