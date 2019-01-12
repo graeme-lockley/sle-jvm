@@ -174,23 +174,24 @@ toUpper =
 
 pad : Int -> String -> String
 pad n string =
-  if (n <= length string) then
-    string
-  else
-    let
-      stringLength =
-        length string
-
-      padWidth : Int
-      padWidth =
-          (n - stringLength) / 2
-              |> Option.withDefault 0
-    in
-      concat
-      [ repeat (n - stringLength - padWidth) " "
-      , string
-      , repeat padWidth " "
-      ]
+  let
+    stringLength =
+      length string
+  in
+    if n <= stringLength then
+      string
+    else
+      let
+        padWidth : Int
+        padWidth =
+            (n - stringLength) / 2
+                |> Option.withDefault 0
+      in
+        concat
+        [ repeat (n - stringLength - padWidth) " "
+        , string
+        , repeat padWidth " "
+        ]
 
 
 padLeft : Int -> String -> String
