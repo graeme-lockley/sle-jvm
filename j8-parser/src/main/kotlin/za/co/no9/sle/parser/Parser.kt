@@ -227,11 +227,11 @@ class Parser(private val lexer: Lexer) {
                     val typeConstructors =
                             mutableListOf<TypeConstructor>()
 
-                    typeConstructors.add(parseTypeConstructor())
+                    typeConstructors.add(parseTypeConstructor(typeSymbol.column))
 
                     while (isOperator("|")) {
                         matchOperator("|")
-                        typeConstructors.add(parseTypeConstructor())
+                        typeConstructors.add(parseTypeConstructor(typeSymbol.column))
                     }
 
                     TypeDeclaration(typeSymbol.location + locationFrom(typeConstructors), upperID, arguments, typeConstructors)
@@ -247,7 +247,7 @@ class Parser(private val lexer: Lexer) {
                     matchOperator("=")
 
                     val type =
-                            parseType()
+                            parseType(typealiasSymbol.column)
 
                     TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
                 }
@@ -273,7 +273,7 @@ class Parser(private val lexer: Lexer) {
             matchOperator(":")
 
             val type =
-                    parseType()
+                    parseType(id.column)
 
             return LetSignature(id.location + type.location, id, type)
         } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
@@ -369,7 +369,7 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parseTypeConstructor(): TypeConstructor {
+    fun parseTypeConstructor(leftEdge: Int): TypeConstructor {
         val upperID =
                 matchToken(Token.UpperID, "Expected UpperID").toID()
 
@@ -380,7 +380,7 @@ class Parser(private val lexer: Lexer) {
                         isToken(Token.LowerID) ||
                                 isToken(Token.UpperID) ||
                                 isOperator("("))) {
-            arguments.add(parseTermType())
+            arguments.add(parseTermType(leftEdge))
         }
 
         return TypeConstructor(upperID.location + locationFrom(arguments), upperID, arguments)
@@ -409,7 +409,7 @@ class Parser(private val lexer: Lexer) {
                     matchToken(Token.IN, "Expected in")
 
                     val expression =
-                            parseLetExpression(0)
+                            parseLetExpression(leftEdge)
 
                     LetExpression(letSymbol.location + expression.location, componentLetDeclarations, expression)
                 }
@@ -711,15 +711,15 @@ class Parser(private val lexer: Lexer) {
                     isOperator("[]")
 
 
-    fun parseType(): TType {
+    fun parseType(leftEdge: Int): TType {
         val bType =
-                parseADTType()
+                parseADTType(leftEdge)
 
         return if (isOperator("->")) {
             matchOperator("->")
 
             val type =
-                    parseType()
+                    parseType(leftEdge)
 
             TArrow(bType.location + type.location, bType, type)
         } else {
@@ -728,7 +728,7 @@ class Parser(private val lexer: Lexer) {
     }
 
 
-    fun parseADTType(): TType =
+    fun parseADTType(leftEdge: Int): TType =
             when {
                 isToken(Token.UpperID) -> {
                     val qualifiedUpperID =
@@ -737,15 +737,15 @@ class Parser(private val lexer: Lexer) {
                     val arguments =
                             mutableListOf<TType>()
 
-                    while (lexer.column > 1 && isFirstADTType()) {
-                        arguments.add(parseTermType())
+                    while (lexer.column > leftEdge && isFirstADTType()) {
+                        arguments.add(parseTermType(leftEdge))
                     }
 
                     TTypeReference(qualifiedUpperID.location + locationFrom(arguments), qualifiedUpperID, arguments)
                 }
 
                 else ->
-                    parseTermType()
+                    parseTermType(leftEdge)
             }
 
 
@@ -776,7 +776,7 @@ class Parser(private val lexer: Lexer) {
                     isOperator("(")
 
 
-    fun parseTermType(): TType =
+    fun parseTermType(leftEdge: Int): TType =
             when {
                 isToken(Token.LowerID) -> {
                     val lowerID =
@@ -800,11 +800,11 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<TType>()
 
                     if (!isOperator(")")) {
-                        types.add(parseType())
+                        types.add(parseType(leftEdge))
 
                         while (isOperator(",")) {
                             lexer.skip()
-                            types.add(parseType())
+                            types.add(parseType(leftEdge))
                         }
                     }
                     val closeParenSymbol =

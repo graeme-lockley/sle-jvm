@@ -4,6 +4,7 @@ parseSingleCharacterSeparator input =
     separator =
       String.slice 2 3 input
 
+    text : String
     text =
       String.dropLeft 4 text
 
@@ -46,6 +47,19 @@ Module:
                       name:
                         ID:
                           name: separator
+                LetSignature:
+                  id:
+                    LowerIDDeclarationID:
+                      name:
+                        ID:
+                          name: text
+                  type:
+                    TTypeReference:
+                      arguments: []
+                      name:
+                        QualifiedID:
+                          name: String
+                          qualifier: null
                 LetDeclaration:
                   arguments: []
                   expression:
