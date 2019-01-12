@@ -206,111 +206,115 @@ class Parser(private val lexer: Lexer) {
             }
 
 
-    fun parseDeclaration(): Declaration {
-        when {
-            isToken(Token.TYPE) -> {
-                val typeSymbol =
-                        lexer.next()
+    fun parseDeclaration(): Declaration =
+            when {
+                isToken(Token.TYPE) -> {
+                    val typeSymbol =
+                            lexer.next()
 
-                val upperID =
-                        matchToken(Token.UpperID, "Expected UpperID").toID()
+                    val upperID =
+                            matchToken(Token.UpperID, "Expected UpperID").toID()
 
-                val arguments =
-                        mutableListOf<ID>()
+                    val arguments =
+                            mutableListOf<ID>()
 
-                while (isToken(Token.LowerID)) {
-                    arguments.add(lexer.next().toID())
-                }
+                    while (isToken(Token.LowerID)) {
+                        arguments.add(lexer.next().toID())
+                    }
 
-                matchOperator("=")
+                    matchOperator("=")
 
-                val typeConstructors =
-                        mutableListOf<TypeConstructor>()
+                    val typeConstructors =
+                            mutableListOf<TypeConstructor>()
 
-                typeConstructors.add(parseTypeConstructor())
-
-                while (isOperator("|")) {
-                    matchOperator("|")
                     typeConstructors.add(parseTypeConstructor())
+
+                    while (isOperator("|")) {
+                        matchOperator("|")
+                        typeConstructors.add(parseTypeConstructor())
+                    }
+
+                    TypeDeclaration(typeSymbol.location + locationFrom(typeConstructors), upperID, arguments, typeConstructors)
                 }
 
-                return TypeDeclaration(typeSymbol.location + locationFrom(typeConstructors), upperID, arguments, typeConstructors)
-            }
+                isToken(Token.TYPEALIAS) -> {
+                    val typealiasSymbol =
+                            lexer.next()
 
-            isToken(Token.TYPEALIAS) -> {
-                val typealiasSymbol =
-                        lexer.next()
+                    val upperID =
+                            matchToken(Token.UpperID, "Expected UpperID").toID()
 
-                val upperID =
-                        matchToken(Token.UpperID, "Expected UpperID").toID()
-
-                matchOperator("=")
-
-                val type =
-                        parseType()
-
-                return TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
-            }
-
-            isFirstValueDeclarationID() -> {
-                val id =
-                        parseValueDeclarationID()
-
-                if (isOperator(":")) {
-                    matchOperator(":")
+                    matchOperator("=")
 
                     val type =
                             parseType()
 
-                    return LetSignature(id.location + type.location, id, type)
-                } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
-                    val arguments =
-                            mutableListOf<Pattern>()
-
-                    while (isFirstArgumentPattern()) {
-                        arguments.add(parseArgumentPattern())
-                    }
-
-                    if (isOperator("|")) {
-                        val guardedExpressions =
-                                mutableListOf<Pair<Expression, Expression>>()
-
-                        while (isOperator("|")) {
-                            matchOperator("|")
-
-                            val guard =
-                                    parseExpression(id.column)
-
-                            matchOperator("=")
-
-                            val expression =
-                                    parseExpression(id.column)
-
-                            guardedExpressions.add(Pair(guard, expression))
-                        }
-
-                        return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
-                    } else {
-                        matchOperator("=")
-
-                        val expression =
-                                parseExpression(id.column)
-
-                        return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
-                    }
-                } else {
-                    TODO()
+                    TypeAliasDeclaration(typealiasSymbol.location + type.location, upperID, type)
                 }
+
+                isFirstLetDeclaration() -> {
+                    parseLetDeclaration()
+                }
+
+                else ->
+                    throw syntaxError("Expected typealias, type, LowerID or '('")
             }
 
-            else ->
-                throw syntaxError("Expected typealias, type, LowerID or '('")
+
+    fun isFirstLetDeclaration(): Boolean =
+            isToken(Token.LowerID) || isOperator("(")
+
+
+    fun parseLetDeclaration(): ComponentLetDeclaration {
+        val id =
+                parseValueDeclarationID()
+
+        if (isOperator(":")) {
+            matchOperator(":")
+
+            val type =
+                    parseType()
+
+            return LetSignature(id.location + type.location, id, type)
+        } else if (isFirstArgumentPattern() || isOperator("=") || isOperator("|")) {
+            val arguments =
+                    mutableListOf<Pattern>()
+
+            while (isFirstArgumentPattern()) {
+                arguments.add(parseArgumentPattern())
+            }
+
+            if (isOperator("|")) {
+                val guardedExpressions =
+                        mutableListOf<Pair<Expression, Expression>>()
+
+                while (isOperator("|")) {
+                    matchOperator("|")
+
+                    val guard =
+                            parseExpression(id.column)
+
+                    matchOperator("=")
+
+                    val expression =
+                            parseExpression(id.column)
+
+                    guardedExpressions.add(Pair(guard, expression))
+                }
+
+                return LetGuardDeclaration(id.location + locationFrom(guardedExpressions.map { it.second }), id, arguments, guardedExpressions)
+            } else {
+                matchOperator("=")
+
+                val expression =
+                        parseExpression(id.column)
+
+                return LetDeclaration(locationFrom(listOf(id, expression))!!, id, arguments, expression)
+            }
+        } else {
+            TODO()
         }
     }
-
-
-    fun isFirstValueDeclarationID(): Boolean =
-            isToken(Token.LowerID) || isOperator("(")
 
 
     fun parseValueDeclarationID(): ValueDeclarationID =
