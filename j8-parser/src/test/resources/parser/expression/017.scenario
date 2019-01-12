@@ -1,0 +1,101 @@
+-- Simple let expression
+parseSingleCharacterSeparator input =
+  let
+    separator =
+      String.slice 2 3 input
+
+    text =
+      String.dropLeft 4 text
+
+  in
+    String.split separator text
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: input
+          ]
+        expression:
+          LetExpression:
+            declarations: [
+                LetDeclaration:
+                  arguments: []
+                  expression:
+                    CallExpression:
+                      operands: [
+                          ConstantInt:
+                            value: 2
+                          ConstantInt:
+                            value: 3
+                          IdReference:
+                            name:
+                              QualifiedID:
+                                name: input
+                                qualifier: null
+                        ]
+                      operator:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: slice
+                              qualifier: String
+                  id:
+                    LowerIDDeclarationID:
+                      name:
+                        ID:
+                          name: separator
+                LetDeclaration:
+                  arguments: []
+                  expression:
+                    CallExpression:
+                      operands: [
+                          ConstantInt:
+                            value: 4
+                          IdReference:
+                            name:
+                              QualifiedID:
+                                name: text
+                                qualifier: null
+                        ]
+                      operator:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: dropLeft
+                              qualifier: String
+                  id:
+                    LowerIDDeclarationID:
+                      name:
+                        ID:
+                          name: text
+              ]
+            expression:
+              CallExpression:
+                operands: [
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: separator
+                          qualifier: null
+                    IdReference:
+                      name:
+                        QualifiedID:
+                          name: text
+                          qualifier: null
+                  ]
+                operator:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: split
+                        qualifier: String
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: parseSingleCharacterSeparator
+    ]
+  exports: []
+  imports: []

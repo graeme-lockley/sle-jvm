@@ -388,7 +388,35 @@ class Parser(private val lexer: Lexer) {
 
 
     fun parseExpression(leftEdge: Int): Expression =
-            parseCaseExpression(leftEdge)
+            parseLetExpression(leftEdge)
+
+
+    fun parseLetExpression(leftEdge: Int): Expression =
+            when {
+                isToken(Token.LET) -> {
+                    val letSymbol =
+                            lexer.next()
+
+                    val componentLetDeclarations =
+                            mutableListOf<ComponentLetDeclaration>()
+
+                    componentLetDeclarations.add(parseLetDeclaration())
+
+                    while (isFirstLetDeclaration()) {
+                        componentLetDeclarations.add(parseLetDeclaration())
+                    }
+
+                    matchToken(Token.IN, "Expected in")
+
+                    val expression =
+                            parseLetExpression(0)
+
+                    LetExpression(letSymbol.location + expression.location, componentLetDeclarations, expression)
+                }
+
+                else ->
+                    parseCaseExpression(leftEdge)
+            }
 
 
     fun parseCaseExpression(leftEdge: Int): Expression =
