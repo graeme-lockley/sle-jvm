@@ -177,6 +177,9 @@ private class ApplyContext(private val environment: Environment) {
                 is IdReference ->
                     IdReference(expression.location, expression.type.apply(substitution), expression.name)
 
+                is LetExpression ->
+                    LetExpression(expression.location, expression.type.apply(substitution), expression.declarations.map { apply(it, substitution) }, apply(expression.expression, substitution))
+
                 is IfExpression ->
                     IfExpression(expression.location, expression.type.apply(substitution), apply(expression.guardExpression, substitution), apply(expression.thenExpression, substitution), apply(expression.elseExpression, substitution))
 

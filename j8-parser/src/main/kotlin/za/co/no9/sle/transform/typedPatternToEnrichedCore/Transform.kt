@@ -156,6 +156,10 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.IdReference ->
                     IdReference(expression.location, expression.type, expression.name)
 
+                is za.co.no9.sle.ast.typedPattern.LetExpression ->
+                    // TODO plugin let expression transformation
+                    transform(expression.expression)
+
                 is za.co.no9.sle.ast.typedPattern.IfExpression ->
                     IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
 
