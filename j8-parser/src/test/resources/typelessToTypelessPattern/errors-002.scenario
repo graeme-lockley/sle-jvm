@@ -1,0 +1,17 @@
+-- Simple let expression with a duplicate signature
+parseSingleCharacterSeparator input =
+  let
+    text : String
+    separator =
+      String.slice 2 3 input
+
+    text : String
+    text =
+      String.dropLeft 4 text
+
+  in
+    String.split separator text
+-- errors
+[
+  DuplicateLetSignature(location=[(7, 5) (7, 17)], otherLocation=[(3, 5) (3, 17)], name=text)
+]

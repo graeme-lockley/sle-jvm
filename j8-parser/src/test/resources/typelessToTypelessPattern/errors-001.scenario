@@ -1,0 +1,16 @@
+-- Simple let expression with a signature that has no let declaration
+parseSingleCharacterSeparator input =
+  let
+    separator =
+      String.slice 2 3 input
+
+    texts : String
+    text =
+      String.dropLeft 4 text
+
+  in
+    String.split separator text
+-- errors
+[
+  LetSignatureWithoutDeclaration(location=[(6, 5) (6, 18)], name=texts)
+]

@@ -27,6 +27,14 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
             result.shouldBeTypeOf<Either.Value<Module>>()
             result.right()!!.shouldBeEqual(astTest)
         }
+
+        val errors =
+                fileContent["errors"]
+
+        if (errors != null) {
+            result.shouldBeTypeOf<Either.Error<Errors>>()
+            result.left()!!.map { it.toString() }.shouldBeEqual(errors)
+        }
     }
 }
 
