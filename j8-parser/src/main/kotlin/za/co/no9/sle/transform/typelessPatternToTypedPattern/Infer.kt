@@ -437,6 +437,10 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     }
                 }
 
+                is za.co.no9.sle.ast.typelessPattern.LetExpression ->
+                    // TODO plugin let expression transformation
+                    infer(expression.expression)
+
                 is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
                     val t1 =
                             infer(expression.guardExpression)

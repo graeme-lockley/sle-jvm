@@ -131,6 +131,11 @@ data class ConstructorReference(
         override val location: Location,
         val name: QualifiedID) : Expression(location)
 
+data class LetExpression(
+        override val location: Location,
+        val declarations: List<LetDeclaration>,
+        val expression: Expression) : Expression(location)
+
 data class IfExpression(
         override val location: Location,
         val guardExpression: Expression,
