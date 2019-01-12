@@ -250,9 +250,19 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Expression): Expression =
             is za.co.no9.sle.ast.typeless.ConstructorReference ->
                 ConstructorReference(ast.location, transform(ast.name))
 
-            is za.co.no9.sle.ast.typeless.LetExpression ->
-                // TODO plugin let expression transformation
-                transform(ast.expression)
+            is za.co.no9.sle.ast.typeless.LetExpression -> {
+                val letSignatureDict: Either<Errors, Map<String, LetSignature>> =
+                        letSignatureDictionary(ast.declarations)
+
+                val letDeclarations =
+                        letSignatureDict.map { transformComponentLetDeclaration(it, ast.declarations) }
+
+                letDeclarations.fold({
+                    transform(ast.expression)
+                }, {
+                    LetExpression(ast.location, it, transform(ast.expression))
+                })
+            }
 
             is za.co.no9.sle.ast.typeless.IfExpression ->
                 IfExpression(ast.location, transform(ast.guardExpression), transform(ast.thenExpression), transform(ast.elseExpression))
