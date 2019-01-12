@@ -60,7 +60,7 @@ private class Transform(val environment: Environment) {
     private fun transform(declaration: za.co.no9.sle.ast.typedPattern.Declaration): Declaration =
             when (declaration) {
                 is za.co.no9.sle.ast.typedPattern.LetDeclaration ->
-                    LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expressions))
+                    transform(declaration)
 
                 is za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration ->
                     TypeAliasDeclaration(declaration.location, transform(declaration.name), declaration.scheme)
@@ -68,6 +68,10 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.TypeDeclaration ->
                     TypeDeclaration(declaration.location, transform(declaration.name), declaration.scheme, declaration.constructors.map { transform(it) })
             }
+
+
+    private fun transform(declaration: za.co.no9.sle.ast.typedPattern.LetDeclaration): LetDeclaration =
+            LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expressions))
 
 
     private fun transform(expressions: List<za.co.no9.sle.ast.typedPattern.Expression>): Expression =
@@ -157,8 +161,7 @@ private class Transform(val environment: Environment) {
                     IdReference(expression.location, expression.type, expression.name)
 
                 is za.co.no9.sle.ast.typedPattern.LetExpression ->
-                    // TODO plugin let expression transformation
-                    transform(expression.expression)
+                    LetExpression(expression.location, expression.type, expression.declarations.map { transform(it) }, transform(expression.expression))
 
                 is za.co.no9.sle.ast.typedPattern.IfExpression ->
                     IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))

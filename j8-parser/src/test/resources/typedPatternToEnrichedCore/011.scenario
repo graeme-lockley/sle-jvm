@@ -1,0 +1,87 @@
+-- Simple let expression
+type Tuple a b =
+  Tuple a b
+
+
+slice : Int -> Int -> String -> String
+slice a b c =
+  c
+
+dropLeft : Int -> String -> String
+dropLeft a b =
+  b
+
+
+parseSingleCharacterSeparator input =
+  let
+    separator =
+      slice 2 3 input
+
+    text : String
+    text =
+      dropLeft 4 text
+
+  in
+    (separator, text)
+-- enrichedASTpp
+type Tuple =
+  Tuple '0 '1
+
+
+slice : <> Data.Int -> Data.Int -> Data.String -> Data.String
+slice =
+  (LAMBDA a ->
+    (LAMBDA b ->
+      (LAMBDA c ->
+        c
+      )
+    )
+  )
+
+
+dropLeft : <> Data.Int -> Data.String -> Data.String
+dropLeft =
+  (LAMBDA a ->
+    (LAMBDA b ->
+      b
+    )
+  )
+
+
+parseSingleCharacterSeparator : <> Data.String -> file.package.name.File.Tuple Data.String Data.String
+parseSingleCharacterSeparator =
+  (LAMBDA input ->
+    (LET
+      separator : <> Data.String
+      separator =
+        (CALL
+          (CALL
+            (CALL
+              slice
+              2
+            )
+            3
+          )
+          input
+        )
+
+
+      text : <> Data.String
+      text =
+        (CALL
+          (CALL
+            dropLeft
+            4
+          )
+          text
+        )
+
+      (CALL
+        (CALL
+          Tuple
+          separator
+        )
+        text
+      )
+    )
+  )
