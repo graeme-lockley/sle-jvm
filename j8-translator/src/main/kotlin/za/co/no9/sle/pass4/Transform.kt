@@ -171,7 +171,24 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
             }
 
             is LetExpression ->
-                translate(expression.expression)
+                MethodCallExpression(
+                        AnonymousObjectCreationExpression(
+                                AnonymousClassDeclaration(
+                                        "java.util.function.Supplier<java.lang.Object>",
+                                        listOf(za.co.no9.sle.pass4.MethodDeclaration(
+                                                true, false, false,
+                                                "get",
+                                                "java.lang.Object",
+                                                emptyList(),
+                                                StatementBlock(
+                                                        expression.declarations.map {
+                                                            VariableDeclarationStatement("java.lang.Object", it.id.name.name, translate(it.expression))
+                                                        } + ReturnStatement(translate(expression.expression))
+                                                ))
+                                        ))
+                        ),
+                        "get",
+                        emptyList())
 
             is IfExpression ->
                 ConditionalExpression(TypeCastExpression("java.lang.Boolean", translate(expression.guardExpression)), translate(expression.thenExpression), translate(expression.elseExpression))
