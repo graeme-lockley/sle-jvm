@@ -73,22 +73,27 @@ data class OperatorDeclarationID(
 sealed class Declaration(
         location: Location) : Node(location)
 
+
+sealed class ComponentLetDeclaration(
+        override val location: Location,
+        open val id: ValueDeclarationID): Declaration(location)
+
 data class LetSignature(
         override val location: Location,
-        val id: ValueDeclarationID,
-        val type: TType) : Declaration(location)
+        override val id: ValueDeclarationID,
+        val type: TType) : ComponentLetDeclaration(location, id)
 
 data class LetDeclaration(
         override val location: Location,
-        val id: ValueDeclarationID,
+        override val id: ValueDeclarationID,
         val arguments: List<Pattern>,
-        val expression: Expression) : Declaration(location)
+        val expression: Expression) : ComponentLetDeclaration(location, id)
 
 data class LetGuardDeclaration(
         override val location: Location,
-        val id: ValueDeclarationID,
+        override val id: ValueDeclarationID,
         val arguments: List<Pattern>,
-        val guardedExpressions: List<Pair<Expression, Expression>>) : Declaration(location)
+        val guardedExpressions: List<Pair<Expression, Expression>>) : ComponentLetDeclaration(location, id)
 
 data class TypeAliasDeclaration(
         override val location: Location,
@@ -153,6 +158,11 @@ data class IdReference(
 data class ConstructorReference(
         override val location: Location,
         val name: QualifiedID) : Expression(location)
+
+data class LetExpression(
+        override val location: Location,
+        val declarations: List<ComponentLetDeclaration>,
+        val expression: Expression) : Expression(location)
 
 data class IfExpression(
         override val location: Location,
