@@ -32,45 +32,8 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
             ast.imports.map { transform(it) }
 
 
-    val letDeclarationNames =
-            ast.declarations.fold(emptySet<String>()) { names, declaration ->
-                when (declaration) {
-                    is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                        names + declaration.id.name.name
-
-                    is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                        names + declaration.id.name.name
-
-                    else ->
-                        names
-                }
-            }
-
     val letSignatureDict: Either<Errors, Map<String, LetSignature>> =
-            ast.declarations.fold(value(emptyMap())) { letSignatureDict, declaration ->
-                when (declaration) {
-                    is LetSignature ->
-                        letSignatureDict.andThen {
-                            val nameOfLetSignature =
-                                    declaration.id.name.name
-
-                            if (letDeclarationNames.contains(nameOfLetSignature)) {
-                                val other =
-                                        it[nameOfLetSignature]
-
-                                if (other == null)
-                                    value(it + Pair(nameOfLetSignature, declaration))
-                                else
-                                    za.co.no9.sle.error(setOf(DuplicateLetSignature(declaration.location, other.location, nameOfLetSignature)))
-                            } else {
-                                za.co.no9.sle.error(setOf(LetSignatureWithoutDeclaration(declaration.location, nameOfLetSignature)))
-                            }
-                        }
-
-                    else ->
-                        letSignatureDict
-                }
-            }
+            letSignatureDictionary(ast.declarations)
 
     return letSignatureDict.map {
         val typeAndAliasDeclarations =
@@ -95,64 +58,116 @@ private fun transform(ast: za.co.no9.sle.ast.typeless.Module): Either<Errors, Mo
                         }
 
         val letDeclarations =
-                ast.declarations
-                        .filter { ast -> ast is za.co.no9.sle.ast.typeless.LetDeclaration || ast is za.co.no9.sle.ast.typeless.LetGuardDeclaration }
-                        .groupBy { ast ->
-                            when (ast) {
-                                is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                    ast.id.name.name
-
-                                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                    ast.id.name.name
-
-                                else ->
-                                    ""
-                            }
-                        }
-                        .map { asts ->
-                            val ast0 =
-                                    asts.value[0]
-
-                            val declarationID =
-                                    when (ast0) {
-                                        is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                            ast0.id
-
-                                        is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                            ast0.id
-
-                                        else ->
-                                            null
-                                    }
-
-                            LetDeclaration(
-                                    locationFrom(asts.value)!!,
-                                    transform(declarationID!!),
-                                    transformNullable(it[asts.key]?.type),
-                                    asts.value.map { letDeclaration ->
-                                        when (letDeclaration) {
-                                            is za.co.no9.sle.ast.typeless.LetDeclaration ->
-                                                letDeclaration.arguments.foldRight(transform(letDeclaration.expression)) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
-
-                                            is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
-                                                letDeclaration.arguments.foldRight(
-                                                        letDeclaration.guardedExpressions.dropLast(1).foldRight(
-                                                                transform(letDeclaration.guardedExpressions.last().second)
-                                                        ) { a, b ->
-                                                            IfExpression(ast.location, transform(a.first), transform(a.second), b)
-                                                        }
-                                                ) { name, expression -> LambdaExpression(ast.location, transform(name), expression) }
-                                            else ->
-                                                throw Exception("Illegal outcome")
-
-                                        }
-                                    })
-                        }
+                transformComponentLetDeclaration(it, ast.declarations)
 
         Module(ast.location, exports, imports, typeAndAliasDeclarations + letDeclarations)
     }
 }
 
+
+private fun letNames(declarations: List<za.co.no9.sle.ast.typeless.Declaration>): Set<String> =
+        declarations.fold(emptySet()) { names, declaration ->
+            when (declaration) {
+                is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                    names + declaration.id.name.name
+
+                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                    names + declaration.id.name.name
+
+                else ->
+                    names
+            }
+        }
+
+private fun letSignatureDictionary(declarations: List<za.co.no9.sle.ast.typeless.Declaration>): Either<Errors, Map<String, LetSignature>> {
+    val letDeclarationNames =
+            letNames(declarations)
+
+    return declarations.fold(value(emptyMap())) { letSignatureDict, declaration ->
+        when (declaration) {
+            is LetSignature ->
+                letSignatureDict.andThen {
+                    val nameOfLetSignature =
+                            declaration.id.name.name
+
+                    if (letDeclarationNames.contains(nameOfLetSignature)) {
+                        val other =
+                                it[nameOfLetSignature]
+
+                        if (other == null)
+                            value(it + Pair(nameOfLetSignature, declaration))
+                        else
+                            za.co.no9.sle.error(setOf(DuplicateLetSignature(declaration.location, other.location, nameOfLetSignature)))
+                    } else {
+                        za.co.no9.sle.error(setOf(LetSignatureWithoutDeclaration(declaration.location, nameOfLetSignature)))
+                    }
+                }
+
+            else ->
+                letSignatureDict
+        }
+    }
+}
+
+
+private fun transformComponentLetDeclaration(signatureDictionary: Map<String, LetSignature>, declarations: List<za.co.no9.sle.ast.typeless.Declaration>): List<LetDeclaration> {
+    return declarations
+            .filter { ast -> ast is za.co.no9.sle.ast.typeless.LetDeclaration || ast is za.co.no9.sle.ast.typeless.LetGuardDeclaration }
+            .groupBy { ast ->
+                when (ast) {
+                    is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                        ast.id.name.name
+
+                    is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                        ast.id.name.name
+
+                    else ->
+                        ""
+                }
+            }
+            .map { asts ->
+                val ast0 =
+                        asts.value[0]
+
+                val declarationID =
+                        when (ast0) {
+                            is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                                ast0.id
+
+                            is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                                ast0.id
+
+                            else ->
+                                null
+                        }!!
+
+                val location =
+                        asts.value.fold(declarationID.location) { a, b -> a + b.location }
+
+                LetDeclaration(
+                        locationFrom(asts.value)!!,
+                        transform(declarationID),
+                        transformNullable(signatureDictionary[asts.key]?.type),
+                        asts.value.map { letDeclaration ->
+                            when (letDeclaration) {
+                                is za.co.no9.sle.ast.typeless.LetDeclaration ->
+                                    letDeclaration.arguments.foldRight(transform(letDeclaration.expression)) { name, expression -> LambdaExpression(location, transform(name), expression) }
+
+                                is za.co.no9.sle.ast.typeless.LetGuardDeclaration ->
+                                    letDeclaration.arguments.foldRight(
+                                            letDeclaration.guardedExpressions.dropLast(1).foldRight(
+                                                    transform(letDeclaration.guardedExpressions.last().second)
+                                            ) { a, b ->
+                                                IfExpression(location, transform(a.first), transform(a.second), b)
+                                            }
+                                    ) { name, expression -> LambdaExpression(location, transform(name), expression) }
+                                else ->
+                                    throw Exception("Illegal outcome")
+
+                            }
+                        })
+            }
+}
 
 private fun transform(valueDeclarationID: za.co.no9.sle.ast.typeless.ValueDeclarationID): ValueDeclarationID =
         when (valueDeclarationID) {
