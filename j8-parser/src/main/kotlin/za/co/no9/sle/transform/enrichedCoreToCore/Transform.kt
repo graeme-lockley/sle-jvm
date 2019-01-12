@@ -101,6 +101,10 @@ private class Transform(val environment: Environment, private var counter: Int =
             }
 
 
+//    private fun transform(declaration: za.co.no9.sle.ast.enrichedCore.LetDeclaration): LetDeclaration =
+//            LetDeclaration(declaration.location, declaration.scheme, transform(declaration.id), transform(declaration.expression))
+
+
     private fun transform(expression: za.co.no9.sle.ast.enrichedCore.Expression): Expression =
             when (expression) {
                 is za.co.no9.sle.ast.enrichedCore.Unit ->
@@ -126,6 +130,10 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.IdReference ->
                     IdReference(expression.location, expression.type, expression.name)
+
+                is za.co.no9.sle.ast.enrichedCore.LetExpression ->
+                    transform(expression.expression)
+//                    LetExpression(expression.location, expression.type, expression.declarations.map { transform(it) }, transform(expression.expression))
 
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
@@ -333,13 +341,13 @@ private class Transform(val environment: Environment, private var counter: Int =
                                 it.first[0]
 
                         val variableName =
-                                    when (variable) {
-                                        is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
-                                            variable.name
+                                when (variable) {
+                                    is za.co.no9.sle.ast.enrichedCore.IdReferencePattern ->
+                                        variable.name
 
-                                        else ->
-                                            "_"
-                                    }
+                                    else ->
+                                        "_"
+                                }
 
                         Pair(it.first.drop(1), substitute(it.second, variableName, us[0]))
                     }, e)
@@ -428,6 +436,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                         za.co.no9.sle.ast.enrichedCore.IdReference(e.location, e.type, new)
                     else
                         e
+                is za.co.no9.sle.ast.enrichedCore.LetExpression ->
+                    za.co.no9.sle.ast.enrichedCore.LetExpression(e.location, e.type, e.declarations.map { substitute(it, old, new) }, substitute(e.expression, old, new))
+
 
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     za.co.no9.sle.ast.enrichedCore.IfExpression(e.location, e.type, substitute(e.guardExpression, old, new), substitute(e.thenExpression, old, new), substitute(e.elseExpression, old, new))
@@ -442,6 +453,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                     za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
             }
 
+
+    private fun substitute(e: za.co.no9.sle.ast.enrichedCore.LetDeclaration, old: String, new: String): za.co.no9.sle.ast.enrichedCore.LetDeclaration =
+            TODO()
 
     private fun canFail(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
             when (e) {
@@ -467,6 +481,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.IdReference ->
                     false
+
+                is za.co.no9.sle.ast.enrichedCore.LetExpression ->
+                    canFail(e.expression)
 
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     canFail(e.guardExpression) || canFail(e.thenExpression) || canFail(e.elseExpression)

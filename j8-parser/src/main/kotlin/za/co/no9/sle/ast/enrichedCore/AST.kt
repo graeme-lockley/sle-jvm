@@ -134,6 +134,12 @@ data class IdReference(
         override val type: Type,
         val name: String) : Expression(location, type)
 
+data class LetExpression(
+        override val location: Location,
+        override val type: Type,
+        val declarations: List<LetDeclaration>,
+        val expression: Expression) : Expression(location, type)
+
 data class IfExpression(
         override val location: Location,
         override val type: Type,

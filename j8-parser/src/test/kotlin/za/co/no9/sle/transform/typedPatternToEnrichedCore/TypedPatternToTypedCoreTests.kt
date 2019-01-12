@@ -206,6 +206,12 @@ fun Expression.asString(indent: Int = 0): String =
             is IdReference ->
                 spaces(indent) + name + "\n"
 
+            is LetExpression ->
+                "${spaces(indent)}(LET\n" +
+                        this.declarations.joinToString("\n") { it.asString() } +
+                        expression.asString(indent + 2) +
+                        "${spaces(indent)})\n"
+
             is IfExpression ->
                 "${spaces(indent)}(IF\n" +
                         guardExpression.asString(indent + 2) +
