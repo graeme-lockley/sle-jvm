@@ -1,0 +1,553 @@
+-- Simple let expression
+type Tuple a b =
+  Tuple a b
+
+
+slice : Int -> Int -> String -> String
+slice a b c =
+  c
+
+dropLeft : Int -> String -> String
+dropLeft a b =
+  b
+
+
+parseSingleCharacterSeparator input =
+  let
+    separator =
+      slice 2 3 input
+
+    text : String
+    text =
+      dropLeft 4 text
+
+  in
+    (separator, text)
+-- typeAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                  ]
+                name: file.package.name.File.Tuple
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  expression:
+                    LambdaExpression:
+                      argument:
+                        IdReferencePattern:
+                          name: c
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      expression:
+                        IdReference:
+                          name: c
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                      range:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: slice
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.Int
+                    range:
+                      TArr:
+                        domain:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        range:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  expression:
+                    IdReference:
+                      name: b
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: dropLeft
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: input
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+              expression:
+                LetExpression:
+                  declarations: [
+                      LetDeclaration:
+                        expressions: [
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: input
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                              operator:
+                                CallExpression:
+                                  operand:
+                                    ConstantInt:
+                                      type:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      value: 3
+                                  operator:
+                                    CallExpression:
+                                      operand:
+                                        ConstantInt:
+                                          type:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                          value: 2
+                                      operator:
+                                        IdReference:
+                                          name: slice
+                                          type:
+                                            TArr:
+                                              domain:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Int
+                                              range:
+                                                TArr:
+                                                  domain:
+                                                    TCon:
+                                                      arguments: []
+                                                      name: Data.Int
+                                                  range:
+                                                    TArr:
+                                                      domain:
+                                                        TCon:
+                                                          arguments: []
+                                                          name: Data.String
+                                                      range:
+                                                        TCon:
+                                                          arguments: []
+                                                          name: Data.String
+                                      type:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                          range:
+                                            TArr:
+                                              domain:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                              range:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                      range:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                          ]
+                        id:
+                          LowerIDDeclarationID:
+                            name:
+                              ID:
+                                name: separator
+                        scheme:
+                          Scheme:
+                            parameters: []
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                      LetDeclaration:
+                        expressions: [
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: text
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                              operator:
+                                CallExpression:
+                                  operand:
+                                    ConstantInt:
+                                      type:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      value: 4
+                                  operator:
+                                    IdReference:
+                                      name: dropLeft
+                                      type:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                          range:
+                                            TArr:
+                                              domain:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                              range:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                      range:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                          ]
+                        id:
+                          LowerIDDeclarationID:
+                            name:
+                              ID:
+                                name: text
+                        scheme:
+                          Scheme:
+                            parameters: []
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                    ]
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: text
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      operator:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: separator
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                          operator:
+                            IdReference:
+                              name: Tuple
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TCon:
+                                                arguments: []
+                                                name: Data.String
+                                              TCon:
+                                                arguments: []
+                                                name: Data.String
+                                            ]
+                                          name: file.package.name.File.Tuple
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                    ]
+                                  name: file.package.name.File.Tuple
+                      type:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: file.package.name.File.Tuple
+                  type:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        ]
+                      name: file.package.name.File.Tuple
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                  range:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        ]
+                      name: file.package.name.File.Tuple
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: parseSingleCharacterSeparator
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+                range:
+                  TCon:
+                    arguments: [
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      ]
+                    name: file.package.name.File.Tuple
+    ]
+  exports: []

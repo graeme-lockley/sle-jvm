@@ -24,6 +24,7 @@ import za.co.no9.sle.ast.typedPattern.IfExpression
 import za.co.no9.sle.ast.typedPattern.IgnorePattern
 import za.co.no9.sle.ast.typedPattern.LambdaExpression
 import za.co.no9.sle.ast.typedPattern.LetDeclaration
+import za.co.no9.sle.ast.typedPattern.LetExpression
 import za.co.no9.sle.ast.typedPattern.LowerIDDeclarationID
 import za.co.no9.sle.ast.typedPattern.Module
 import za.co.no9.sle.ast.typedPattern.OperatorDeclarationID
@@ -75,9 +76,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
         env = addDeclarationsIntoEnvironment(resolvedImports.environment, module.declarations)
 
         val declarations =
-                module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
-                    ds + infer(d)
-                }
+                infer(module.declarations)
 
         val exports =
                 module.exports.map {
@@ -161,6 +160,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 exports,
                 declarations)
     }
+
+
+    private fun infer(declarations: List<za.co.no9.sle.ast.typelessPattern.Declaration>): List<Declaration> =
+            declarations.fold(emptyList()) { ds, d ->
+                ds + infer(d)
+            }
 
 
     private fun infer(d: za.co.no9.sle.ast.typelessPattern.Declaration): Declaration =
@@ -447,8 +452,22 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.LetExpression -> {
+                    val currentEnv =
+                            env
 
-                    infer(expression.expression)
+                    errors.addAll(validateDeclarationTTypes(env, expression.declarations))
+
+                    env = addDeclarationsIntoEnvironment(env, expression.declarations)
+
+                    val declarations =
+                                infer(expression.declarations)
+
+                    val resultExpression =
+                            infer(expression.expression)
+
+                    env = currentEnv
+
+                    LetExpression(expression.location, resultExpression.type, declarations as List<LetDeclaration>, resultExpression)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
@@ -944,6 +963,10 @@ fun importAll(environment: Environment, location: Location, importedItem: Item):
 
 private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.ast.typelessPattern.Module): Errors =
         ValidateTTypes(env).validate(module)
+
+
+private fun validateDeclarationTTypes(env: Environment, declarations: List<za.co.no9.sle.ast.typelessPattern.Declaration>): Errors =
+        ValidateTTypes(env).validate(declarations)
 
 
 private class ValidateTTypes(val env: Environment) {
