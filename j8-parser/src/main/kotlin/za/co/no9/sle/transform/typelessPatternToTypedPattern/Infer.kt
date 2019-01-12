@@ -15,6 +15,7 @@ import za.co.no9.sle.ast.typedPattern.ConstantString
 import za.co.no9.sle.ast.typedPattern.ConstantStringPattern
 import za.co.no9.sle.ast.typedPattern.Constructor
 import za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern
+import za.co.no9.sle.ast.typedPattern.Declaration
 import za.co.no9.sle.ast.typedPattern.Expression
 import za.co.no9.sle.ast.typedPattern.ID
 import za.co.no9.sle.ast.typedPattern.IdReference
@@ -71,80 +72,11 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
         errors.addAll(validateDeclarationTTypes(resolvedImports.environment, module))
 
-        env = module.declarations.fold(resolvedImports.environment) { e, d -> addDeclarationIntoEnvironment(e, d) }
+        env = addDeclarationsIntoEnvironment(resolvedImports.environment, module.declarations)
 
         val declarations =
                 module.declarations.fold(emptyList<za.co.no9.sle.ast.typedPattern.Declaration>()) { ds, d ->
-                    when (d) {
-                        is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                            val es =
-                                    d.expressions.map { infer(it) }
-
-                            val dScheme =
-                                    env.variable(d.id.name.name)
-
-                            if (dScheme == null) {
-                                for (e in es.drop(1)) {
-                                    unify(es[0].type, e.type)
-                                }
-
-                                val unifiesResult =
-                                        unifies(varPump, constraints, env)
-
-                                val unifyErrors =
-                                        unifiesResult.left()
-
-                                val substitution =
-                                        unifiesResult.right()
-
-                                if (unifyErrors != null) {
-                                    errors.addAll(unifyErrors)
-                                }
-
-                                val scheme =
-                                        if (substitution == null)
-                                            generalise(es[0].type)
-                                        else
-                                            generalise(es[0].type, substitution)
-
-                                val declaration =
-                                        if (substitution == null)
-                                            value(LetDeclaration(d.location, scheme, transform(d.id), es))
-                                        else
-                                            LetDeclaration(d.location, scheme, transform(d.id), es).apply(env, substitution)
-
-                                errors.addAll(declaration.left() ?: listOf())
-
-                                env = env.newValue(d.id.name.name, VariableBinding(scheme))
-
-                                declaration.fold({ ds }, { ds + it })
-                            } else {
-                                val type =
-                                        dScheme.instantiate(varPump)
-
-                                for (e in es) {
-                                    unify(type, e.type)
-                                }
-
-                                ds + LetDeclaration(d.location, dScheme, transform(d.id), es)
-                            }
-                        }
-
-                        is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
-                            ds + TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), env.alias(d.name.name)!!)
-
-                        is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
-                            val scheme =
-                                    d.scheme(source)
-
-                            ds + TypeDeclaration(
-                                    d.location,
-                                    ID(d.name.location, d.name.name),
-                                    scheme.first,
-                                    d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(env, source, it, scheme.second) }) }
-                            )
-                        }
-                    }
+                    ds + infer(d)
                 }
 
         val exports =
@@ -231,6 +163,79 @@ private class InferContext(private val source: Item, private val varPump: VarPum
     }
 
 
+    private fun infer(d: za.co.no9.sle.ast.typelessPattern.Declaration): Declaration =
+            when (d) {
+                is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
+                    val es =
+                            d.expressions.map { infer(it) }
+
+                    val dScheme =
+                            env.variable(d.id.name.name)
+
+                    if (dScheme == null) {
+                        for (e in es.drop(1)) {
+                            unify(es[0].type, e.type)
+                        }
+
+                        val unifiesResult =
+                                unifies(varPump, constraints, env)
+
+                        val unifyErrors =
+                                unifiesResult.left()
+
+                        val substitution =
+                                unifiesResult.right()
+
+                        if (unifyErrors != null) {
+                            errors.addAll(unifyErrors)
+                        }
+
+                        val scheme =
+                                if (substitution == null)
+                                    generalise(es[0].type)
+                                else
+                                    generalise(es[0].type, substitution)
+
+                        val declaration =
+                                if (substitution == null)
+                                    value(LetDeclaration(d.location, scheme, transform(d.id), es))
+                                else
+                                    LetDeclaration(d.location, scheme, transform(d.id), es).apply(env, substitution)
+
+                        errors.addAll(declaration.left() ?: listOf())
+
+                        env = env.newValue(d.id.name.name, VariableBinding(scheme))
+
+                        declaration.fold({ LetDeclaration(d.location, scheme, transform(d.id), es) }, { it })
+                    } else {
+                        val type =
+                                dScheme.instantiate(varPump)
+
+                        for (e in es) {
+                            unify(type, e.type)
+                        }
+
+                        LetDeclaration(d.location, dScheme, transform(d.id), es)
+                    }
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
+                    TypeAliasDeclaration(d.location, ID(d.name.location, d.name.name), env.alias(d.name.name)!!)
+
+                is za.co.no9.sle.ast.typelessPattern.TypeDeclaration -> {
+                    val scheme =
+                            d.scheme(source)
+
+                    TypeDeclaration(
+                            d.location,
+                            ID(d.name.location, d.name.name),
+                            scheme.first,
+                            d.constructors.map { Constructor(it.location, ID(it.name.location, it.name.name), it.arguments.map { transform(env, source, it, scheme.second) }) }
+                    )
+                }
+            }
+
+
     private fun listOfVars(cardinality: Int): List<Var> {
         val result =
                 mutableListOf<Var>()
@@ -241,6 +246,10 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
         return result
     }
+
+
+    private fun addDeclarationsIntoEnvironment(e: Environment, declarations: List<za.co.no9.sle.ast.typelessPattern.Declaration>): Environment =
+            declarations.fold(e) { environment, declaration -> addDeclarationIntoEnvironment(environment, declaration) }
 
 
     private fun addDeclarationIntoEnvironment(e: Environment, d: za.co.no9.sle.ast.typelessPattern.Declaration): Environment =
@@ -437,9 +446,10 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessPattern.LetExpression ->
-                    // TODO plugin let expression transformation
+                is za.co.no9.sle.ast.typelessPattern.LetExpression -> {
+
                     infer(expression.expression)
+                }
 
                 is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
                     val t1 =
@@ -932,27 +942,75 @@ fun importAll(environment: Environment, location: Location, importedItem: Item):
 }
 
 
-private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.ast.typelessPattern.Module): Errors {
+private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.ast.typelessPattern.Module): Errors =
+        ValidateTTypes(env).validate(module)
+
+
+private class ValidateTTypes(val env: Environment) {
     val errors =
             mutableSetOf<Error>()
 
+    private var numberOfTypeParameters: Map<String, Int> =
+            emptyMap()
 
-    val numberOfTypeParameters =
-            module.declarations.fold(emptyMap<String, Int>()) { m, d ->
-                when (d) {
-                    is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
-                        m + Pair(d.name.name, 0)
 
-                    is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
-                        m + Pair(d.name.name, d.arguments.size)
+    fun validate(module: za.co.no9.sle.ast.typelessPattern.Module): Errors {
+        numberOfTypeParameters =
+                module.declarations.fold(emptyMap()) { m, d ->
+                    when (d) {
+                        is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
+                            m + Pair(d.name.name, 0)
 
-                    else ->
-                        m
+                        is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
+                            m + Pair(d.name.name, d.arguments.size)
+
+                        else ->
+                            m
+                    }
                 }
-            }
 
 
-    fun validateTType(ttype: TType?) {
+        validateDeclarations(module.declarations)
+
+        return errors
+    }
+
+
+    fun validate(declarations: List<za.co.no9.sle.ast.typelessPattern.Declaration>): Errors {
+        numberOfTypeParameters =
+                emptyMap()
+
+        validateDeclarations(declarations)
+
+        return errors
+    }
+
+
+    private fun validateDeclarations(declarations: List<za.co.no9.sle.ast.typelessPattern.Declaration>) {
+        declarations.forEach { declaration ->
+            validateDeclaration(declaration)
+        }
+    }
+
+
+    private fun validateDeclaration(declaration: za.co.no9.sle.ast.typelessPattern.Declaration) {
+        when (declaration) {
+            is za.co.no9.sle.ast.typelessPattern.LetDeclaration ->
+                validateTType(declaration.ttype)
+
+            is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
+                validateTType(declaration.ttype)
+
+            is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
+                for (constructor in declaration.constructors) {
+                    for (type in constructor.arguments) {
+                        validateTType(type)
+                    }
+                }
+        }
+    }
+
+    private fun validateTType(ttype: TType?) {
         when (ttype) {
             null -> {
             }
@@ -993,26 +1051,6 @@ private fun validateDeclarationTTypes(env: Environment, module: za.co.no9.sle.as
             }
         }
     }
-
-
-    for (declaration in module.declarations) {
-        when (declaration) {
-            is za.co.no9.sle.ast.typelessPattern.LetDeclaration ->
-                validateTType(declaration.ttype)
-
-            is za.co.no9.sle.ast.typelessPattern.TypeAliasDeclaration ->
-                validateTType(declaration.ttype)
-
-            is za.co.no9.sle.ast.typelessPattern.TypeDeclaration ->
-                for (constructor in declaration.constructors) {
-                    for (type in constructor.arguments) {
-                        validateTType(type)
-                    }
-                }
-        }
-    }
-
-    return errors
 }
 
 
