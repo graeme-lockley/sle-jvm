@@ -177,22 +177,20 @@ pad n string =
   if (n <= length string) then
     string
   else
-    padHelp n (padWidth n string) string
+    let
+      stringLength =
+        length string
 
-
-padWidth : Int -> String -> Int
-padWidth n string =
-    (n - (length string)) / 2
-        |> Option.withDefault 0
-
-
-padHelp : Int -> Int -> String -> String
-padHelp width right string =
-  concat
-  [ repeat ((width - (length string)) - right) " "
-  , string
-  , repeat right " "
-  ]
+      padWidth : Int
+      padWidth =
+          (n - stringLength) / 2
+              |> Option.withDefault 0
+    in
+      concat
+      [ repeat (n - stringLength - padWidth) " "
+      , string
+      , repeat padWidth " "
+      ]
 
 
 padLeft : Int -> String -> String
