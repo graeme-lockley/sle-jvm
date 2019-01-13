@@ -8,6 +8,7 @@ export
 , createStateless
 , filter
 , map
+, sink
 , Response
 
 
