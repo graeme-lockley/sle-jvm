@@ -34,7 +34,7 @@ incActor : Actor.Actor Int -> Int -> Actor.Actor ()
 incActor next initValue =
   Actor.create
     (\self -> ((initValue, self), [ Actor.cmd self () ]))
-    (\(Tuple state self) message ->
+    (\(state, self) message ->
       if (mod state 100000) == 0 then
         Response.none
       else
