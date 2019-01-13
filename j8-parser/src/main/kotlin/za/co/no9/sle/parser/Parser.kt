@@ -49,7 +49,7 @@ class Parser(private val lexer: Lexer) {
         val exports =
                 mutableListOf<Export>()
 
-        matchToken(Token.EXPORT, "export expected")
+        matchToken(Token.EXPORT, "export")
 
         exports.add(parseExportedName())
         while (isOperator(",")) {
@@ -120,10 +120,10 @@ class Parser(private val lexer: Lexer) {
 
     fun parseImport(): Import {
         val importToken =
-                matchToken(Token.IMPORT, "Expected import")
+                matchToken(Token.IMPORT, "import")
 
         val importURN =
-                matchToken(Token.ImportURN, "Expected a import URN").toID()
+                matchToken(Token.ImportURN, "Import URN").toID()
 
         var lastLocation =
                 importURN.location
@@ -131,7 +131,7 @@ class Parser(private val lexer: Lexer) {
         val asName = if (isToken(Token.AS)) {
             skip()
             val result =
-                    matchToken(Token.UpperID, "Expected UpperID").toID()
+                    matchToken(Token.UpperID, "UpperID").toID()
 
             lastLocation =
                     result.location
@@ -213,7 +213,7 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val upperID =
-                            matchToken(Token.UpperID, "Expected UpperID").toID()
+                            matchToken(Token.UpperID, "UpperID").toID()
 
                     val arguments =
                             mutableListOf<ID>()
@@ -242,7 +242,7 @@ class Parser(private val lexer: Lexer) {
                             lexer.next()
 
                     val upperID =
-                            matchToken(Token.UpperID, "Expected UpperID").toID()
+                            matchToken(Token.UpperID, "UpperID").toID()
 
                     matchOperator("=")
 
@@ -371,7 +371,7 @@ class Parser(private val lexer: Lexer) {
 
     fun parseTypeConstructor(leftEdge: Int): TypeConstructor {
         val upperID =
-                matchToken(Token.UpperID, "Expected UpperID").toID()
+                matchToken(Token.UpperID, "UpperID").toID()
 
         val arguments =
                 mutableListOf<TType>()
@@ -406,7 +406,7 @@ class Parser(private val lexer: Lexer) {
                         componentLetDeclarations.add(parseLetDeclaration())
                     }
 
-                    matchToken(Token.IN, "Expected in")
+                    matchToken(Token.IN, "in")
 
                     val expression =
                             parseLetExpression(leftEdge)

@@ -7,6 +7,7 @@ import com.xenomachina.argparser.mainBody
 import za.co.no9.sle.right
 import za.co.no9.sle.tools.build.BuildRepository
 import za.co.no9.sle.tools.build.Repository
+import za.co.no9.sle.tools.build.displayBuildErrors
 import java.io.File
 
 
@@ -52,12 +53,12 @@ fun main(args: Array<String>): Unit =
                     log.info("target: $target")
                 }
 
-                build(source, target, javac, verbose)
+                build(log, source, target, javac, verbose)
             }
         }
 
 
-fun build(source: String, target: String, javac: String, verbose: Boolean): Repository {
+fun build(log: Log, source: String, target: String, javac: String, verbose: Boolean): Repository {
     File(target).mkdirs()
 
     val repository =
@@ -90,7 +91,7 @@ fun build(source: String, target: String, javac: String, verbose: Boolean): Repo
         if (verbose || exitWith != 0)
             println("Error: javac exited with $exitWith")
     } else {
-        println("Errors: ${repository.buildErrors}")
+        displayBuildErrors(log, repository.buildErrors)
     }
 
     return repository
@@ -99,7 +100,7 @@ fun build(source: String, target: String, javac: String, verbose: Boolean): Repo
 
 class Log : za.co.no9.sle.tools.build.Log {
     override fun error(message: String) {
-        println("Error: $message")
+        println(message)
     }
 
     override fun info(message: String) {
