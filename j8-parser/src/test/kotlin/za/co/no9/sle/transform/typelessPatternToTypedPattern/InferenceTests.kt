@@ -73,8 +73,11 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
         val fileContent =
                 param.second
 
+        val parseCallbackContainer =
+                ParseCallbackContainer()
+
         val parseWithDetail =
-                parseWithDetail(TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
+                parse(parseCallbackContainer, TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
                         ?: ""), environment)
 
 
@@ -82,8 +85,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["constraints"]
 
         if (constraints != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
-            parseWithDetail.right()!!.constraints.state.map { it.toString() }.shouldBeEqual(constraints)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallbackContainer.constraints!!.state.map { it.toString() }.shouldBeEqual(constraints)
         }
 
 
@@ -91,8 +94,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["substitution"]
 
         if (expectedSubstitution != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
-            parseWithDetail.right()!!.substitution.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallbackContainer.substitution!!.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
         }
 
 
@@ -100,8 +103,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["ast"]
 
         if (astTest != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
-            parseWithDetail.right()!!.unresolvedModule.shouldBeEqual(astTest)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallbackContainer.unresolvedModule!!.shouldBeEqual(astTest)
         }
 
 
@@ -109,8 +112,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["typeAST"]
 
         if (typeAST != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<InferenceDetail>>()
-            parseWithDetail.right()!!.resolvedModule.shouldBeEqual(typeAST)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseWithDetail.right()!!.module.shouldBeEqual(typeAST)
         }
 
 
@@ -118,10 +121,39 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["errors"]
 
         if (errors != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Error<InferenceDetail>>()
+            parseWithDetail.shouldBeTypeOf<Either.Error<Any>>()
             parseWithDetail.left()!!.map { it.toString() }.shouldBeEqual(errors)
         }
     }
 }
+
+
+class ParseCallbackContainer: ParseCallback {
+    var unresolvedModule: za.co.no9.sle.ast.typedPattern.Module? =
+            null
+
+    var constraints: Constraints? =
+            null
+
+    var substitution: Substitution? =
+            null
+
+
+    override fun unresolvedModule(unresolvedModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.unresolvedModule = unresolvedModule
+    }
+
+    override fun constraints(constraints: Constraints) {
+        this.constraints = constraints
+    }
+
+    override fun substitution(substitution: Substitution) {
+        this.substitution = substitution
+    }
+
+}
+
+
+
 
 

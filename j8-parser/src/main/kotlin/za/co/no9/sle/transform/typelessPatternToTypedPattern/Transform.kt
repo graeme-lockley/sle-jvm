@@ -12,40 +12,7 @@ import za.co.no9.sle.typing.Substitution
 import za.co.no9.sle.typing.VarPump
 
 
-data class InferenceDetail(
-        val environment: Environment,
-        val constraints: Constraints,
-        val substitution: Substitution,
-        val unresolvedModule: Module,
-        val resolvedModule: Module)
-
-
-private data class Tuple4<out A, out B, out C, out D>(
-        val v1: A,
-        val v2: B,
-        val v3: C,
-        val v4: D)
-
-
-fun parseWithDetail(source: Item, __env: Environment): Either<Errors, InferenceDetail> {
-    val varPump =
-            VarPump()
-
-    return source.sourceCode()
-            .andThen { parse(it) }
-            .andThen { infer(source, varPump, it, __env) }
-            .andThen { (unresolvedModule, constraints, environment) ->
-                unifies(varPump, constraints, environment).map { Tuple4(unresolvedModule, constraints, it, environment) }
-            }.andThen { (unresolvedModule, constraints, substitution, environment) ->
-                val resolveModule =
-                        unresolvedModule.apply(environment, substitution)
-
-                resolveModule.map { InferenceDetail(environment, constraints, substitution, unresolvedModule, it) }
-            }
-}
-
-
-fun parse(source: Item, environment: Environment): Either<Errors, InferResult> {
+fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, InferResult> {
     val varPump =
             VarPump()
 
@@ -53,4 +20,27 @@ fun parse(source: Item, environment: Environment): Either<Errors, InferResult> {
     return source.sourceCode()
             .andThen { parse(it) }
             .andThen { infer(source, varPump, it, environment) }
+            .andThen { inferResult ->
+                callback.unresolvedModule(inferResult.module)
+                callback.constraints(inferResult.constaints)
+
+                unifies(varPump, inferResult.constaints, inferResult.environment)
+                        .andThen { substitution ->
+                            callback.substitution(substitution)
+
+                            inferResult.module.apply(inferResult.environment, substitution)
+                                    .map { resolvedModule ->
+                                        InferResult(resolvedModule, inferResult.constaints, inferResult.environment)
+                                    }
+                        }
+            }
+}
+
+
+interface ParseCallback {
+    fun unresolvedModule(module: Module)
+
+    fun constraints(constraints: Constraints)
+
+    fun substitution(substitution: Substitution)
 }

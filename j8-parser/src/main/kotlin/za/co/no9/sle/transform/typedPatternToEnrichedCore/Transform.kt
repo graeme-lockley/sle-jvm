@@ -8,6 +8,7 @@ import za.co.no9.sle.ast.enrichedCore.Unit
 import za.co.no9.sle.map
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
+import za.co.no9.sle.transform.typelessPatternToTypedPattern.ParseCallback
 import za.co.no9.sle.typing.*
 
 
@@ -20,18 +21,44 @@ data class Detail(
         val enrichedModule: Module)
 
 
-fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Detail> {
-    val typePatternDetail =
-            za.co.no9.sle.transform.typelessPatternToTypedPattern.parseWithDetail(source, environment)
+class ParseCallbackContainer: ParseCallback {
+    var module: za.co.no9.sle.ast.typedPattern.Module? =
+            null
 
-    return typePatternDetail.map {
-        Detail(it.environment, it.constraints, it.substitution, it.unresolvedModule, it.resolvedModule, Transform(environment).transform(it.resolvedModule))
+    var constraints: Constraints? =
+            null
+
+    var substitution: Substitution? =
+            null
+
+
+    override fun unresolvedModule(module: za.co.no9.sle.ast.typedPattern.Module) {
+        this.module = module
     }
+
+    override fun constraints(constraints: Constraints) {
+        this.constraints = constraints
+    }
+
+    override fun substitution(substitution: Substitution) {
+        this.substitution = substitution
+    }
+
 }
 
 
-fun parse(source: Item, environment: Environment): Either<Errors, Module> =
-        za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(source, environment).map { Transform(environment).transform(it.module) }
+
+fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Detail> {
+    val parseCallbackContainer =
+            ParseCallbackContainer()
+
+    val typePatternDetail =
+            za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(parseCallbackContainer, source, environment)
+
+    return typePatternDetail.map {
+        Detail(it.environment, parseCallbackContainer.constraints!!, parseCallbackContainer.substitution!!, parseCallbackContainer.module!!, it.module, Transform(environment).transform(it.module))
+    }
+}
 
 
 private class Transform(val environment: Environment) {
