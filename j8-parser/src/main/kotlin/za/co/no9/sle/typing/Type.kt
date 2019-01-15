@@ -71,7 +71,9 @@ data class TCon(
 
 
     override fun toString(): String =
-            if (arguments.isEmpty())
+            if (name == "Tuple" || name == "Tuple${arguments.size}")
+                "(${arguments.joinToString(", ") { it.toString() }})"
+            else if (arguments.isEmpty())
                 name
             else
                 "$name ${arguments.joinToString(" ") { it.toString() }}"

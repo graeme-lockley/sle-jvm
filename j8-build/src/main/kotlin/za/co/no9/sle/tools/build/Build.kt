@@ -1,6 +1,7 @@
 package za.co.no9.sle.tools.build
 
 import za.co.no9.sle.*
+import za.co.no9.sle.typing.*
 import java.io.File
 
 
@@ -56,6 +57,103 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                     "resource:" + urn.name
             }
 
+
+    fun commonPrefix(s1: String?, s2: String?): String? =
+            when {
+                s1 == null ->
+                    s2
+
+                s2 == null ->
+                    s1
+
+                else -> {
+                    s1.commonPrefixWith(s2)
+                }
+            }
+
+    fun calculatePrefix(type: Type): String? =
+            when (type) {
+                is TCon -> {
+                    val initial: String? =
+                            when {
+                                type.name.startsWith("Data.") || type.name.startsWith("resource.Prelude.") ->
+                                    null
+
+                                else -> {
+                                    type.name
+                                }
+                            }
+
+                    type.arguments.fold(initial) { accumulator, t ->
+                        commonPrefix(accumulator, calculatePrefix(t))
+                    }
+                }
+
+                is TVar ->
+                    null
+
+                is TAlias ->
+                    null
+
+                is TArr ->
+                    commonPrefix(calculatePrefix(type.domain), calculatePrefix(type.range))
+            }
+
+
+    fun ppType(prefix: String, type: Type): Type =
+            when (type) {
+                is TCon -> {
+                    val name =
+                            when {
+                                type.name.startsWith("Data.") ->
+                                    type.name.drop(5)
+
+                                type.name.startsWith("resource.Prelude.") ->
+                                    type.name.drop(17)
+
+                                type.name == prefix -> {
+                                    val indexOf =
+                                            type.name.lastIndexOf(".")
+
+                                    if (indexOf == -1)
+                                        type.name
+                                    else
+                                        type.name.substring(indexOf + 1)
+                                }
+
+                                type.name.startsWith(prefix) ->
+                                    type.name.drop(prefix.length)
+
+                                else ->
+                                    type.name
+                            }
+
+                    TCon(type.location, name, type.arguments.map { ppType(prefix, it) })
+                }
+
+                is TVar ->
+                    type
+
+                is TAlias ->
+                    TAlias(type.location, type.name, type.arguments.map { ppType(prefix, it) })
+
+                is TArr ->
+                    TArr(type.location, ppType(prefix, type.domain), ppType(prefix, type.range))
+            }
+
+
+    fun ppType(type: Type): Type =
+            ppType(calculatePrefix(type) ?: "", type)
+
+
+    fun ppScheme(scheme: Scheme): Scheme {
+        val normalizedScheme =
+                scheme.normalize()
+
+        return Scheme(normalizedScheme.parameters, ppType(normalizedScheme.type))
+    }
+
+
     for (buildError in buildErrors) {
         if (buildError.value.isNotEmpty()) {
             buildError.value.forEach { error ->
@@ -81,10 +179,10 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                                 "Duplicate Let Signature: ${error.location}: ${error.otherLocation}: ${error.name}"
 
                             is UnificationFail ->
-                                "Unification Fail: ${error.t1} ${error.t2}"
+                                "Unification Fail: ${ppType(error.t1)} ${ppType(error.t2)}"
 
                             is UnificationMismatch ->
-                                "Unification Mismatch: ${error.t1s}: ${error.t2s}"
+                                "Unification Mismatch: ${error.t1s.map { ppType(it) }}: ${error.t2s.map { ppType(it) }}"
 
                             is UnknownTypeReference ->
                                 "Unknown Type Reference: ${error.location}: ${error.name}"
@@ -117,7 +215,7 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                                 "Too Many Tuple Arguments: ${error.location}: actual ${error.actual}: maximum ${error.maximum}"
 
                             is IncompatibleDeclarationSignature ->
-                                "Incompatible Declaration Signature: ${error.location}: ${error.name}: inferred ${error.inferred}: expected ${error.expected}"
+                                "Incompatible Declaration Signature: ${error.location}: ${error.name}: inferred ${ppScheme(error.inferred)}: expected ${ppScheme(error.expected)}"
 
                             is UnknownType ->
                                 "Unknown Type: ${error.location}: ${error.name}"
