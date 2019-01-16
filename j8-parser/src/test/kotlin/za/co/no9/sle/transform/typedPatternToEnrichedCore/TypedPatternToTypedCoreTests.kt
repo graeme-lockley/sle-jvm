@@ -154,12 +154,12 @@ class TestParseCallback : za.co.no9.sle.transform.typedPatternToEnrichedCore.Par
             null
 
 
-    override fun resolvedTypedPatternModule(module: za.co.no9.sle.ast.typedPattern.Module) {
-        this.resolvedTypedPatternModule = module
+    override fun resolvedTypedPatternModule(resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.resolvedTypedPatternModule = resolvedTypedPatternModule
     }
 
-    override fun unresolvedTypedPatternModule(module: za.co.no9.sle.ast.typedPattern.Module) {
-        this.unresolvedModule = module
+    override fun unresolvedTypedPatternModule(unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.unresolvedModule = unresolvedTypedPatternModule
     }
 
     override fun constraints(constraints: Constraints) {
