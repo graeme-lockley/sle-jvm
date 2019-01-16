@@ -7,57 +7,28 @@ import za.co.no9.sle.ast.enrichedCore.*
 import za.co.no9.sle.ast.enrichedCore.Unit
 import za.co.no9.sle.map
 import za.co.no9.sle.repository.Item
-import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
-import za.co.no9.sle.transform.typelessPatternToTypedPattern.ParseCallback
 import za.co.no9.sle.typing.*
 
 
-data class Detail(
-        val environment: Environment,
-        val constraints: Constraints,
-        val substitution: Substitution,
-        val unresolvedModule: za.co.no9.sle.ast.typedPattern.Module,
-        val resolvedModule: za.co.no9.sle.ast.typedPattern.Module,
-        val enrichedModule: Module)
 
+fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, Module> {
+    val typePatternDetail =
+            za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(callback, source, environment)
 
-class ParseCallbackContainer: ParseCallback {
-    var module: za.co.no9.sle.ast.typedPattern.Module? =
-            null
+    return typePatternDetail.map {
+        callback.environment(it.environment)
 
-    var constraints: Constraints? =
-            null
+        callback.resolvedTypedPatternModule(it.module)
 
-    var substitution: Substitution? =
-            null
-
-
-    override fun unresolvedModule(module: za.co.no9.sle.ast.typedPattern.Module) {
-        this.module = module
+        Transform(environment).transform(it.module)
     }
-
-    override fun constraints(constraints: Constraints) {
-        this.constraints = constraints
-    }
-
-    override fun substitution(substitution: Substitution) {
-        this.substitution = substitution
-    }
-
 }
 
 
+interface ParseCallback : za.co.no9.sle.transform.typelessPatternToTypedPattern.ParseCallback {
+    fun resolvedTypedPatternModule(resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module)
 
-fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Detail> {
-    val parseCallbackContainer =
-            ParseCallbackContainer()
-
-    val typePatternDetail =
-            za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(parseCallbackContainer, source, environment)
-
-    return typePatternDetail.map {
-        Detail(it.environment, parseCallbackContainer.constraints!!, parseCallbackContainer.substitution!!, parseCallbackContainer.module!!, it.module, Transform(environment).transform(it.module))
-    }
+    fun environment(environment: Environment)
 }
 
 

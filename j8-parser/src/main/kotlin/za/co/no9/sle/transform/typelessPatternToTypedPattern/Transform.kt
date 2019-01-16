@@ -21,7 +21,7 @@ fun parse(callback: ParseCallback, source: Item, environment: Environment): Eith
             .andThen { parse(it) }
             .andThen { infer(source, varPump, it, environment) }
             .andThen { inferResult ->
-                callback.unresolvedModule(inferResult.module)
+                callback.unresolvedTypedPatternModule(inferResult.module)
                 callback.constraints(inferResult.constaints)
 
                 unifies(varPump, inferResult.constaints, inferResult.environment)
@@ -38,7 +38,7 @@ fun parse(callback: ParseCallback, source: Item, environment: Environment): Eith
 
 
 interface ParseCallback {
-    fun unresolvedModule(module: Module)
+    fun unresolvedTypedPatternModule(unresolvedTypedPatternModule: Module)
 
     fun constraints(constraints: Constraints)
 

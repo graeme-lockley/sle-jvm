@@ -28,17 +28,58 @@ data class Detail(
 
 
 fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Detail> {
+    val parseCallback =
+            ParseCallback()
+
     val typePatternDetail =
-            za.co.no9.sle.transform.typedPatternToEnrichedCore.parseWithDetail(source, environment)
+            za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(parseCallback, source, environment)
 
-    return typePatternDetail.andThen { detail ->
+    return typePatternDetail.andThen { enrichedCoreModule ->
         val coreModule =
-                transform(detail.environment, detail.enrichedModule)
+                transform(parseCallback.environment!!, enrichedCoreModule)
 
-        coreModule.map { Detail(detail.constraints, detail.substitution, detail.unresolvedModule, detail.resolvedModule, detail.enrichedModule, it) }
+        coreModule.map { Detail(parseCallback.constraints!!, parseCallback.substitution!!, parseCallback.unresolvedTypedPatternModule!!, parseCallback.resolvedTypedPatternModule!!, enrichedCoreModule, it) }
     }
 }
 
+
+class ParseCallback : za.co.no9.sle.transform.typedPatternToEnrichedCore.ParseCallback {
+    var resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
+            null
+
+    var unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
+            null
+
+    var constraints: Constraints? =
+            null
+
+    var substitution: Substitution? =
+            null
+
+    var environment: Environment? =
+            null
+
+
+    override fun resolvedTypedPatternModule(resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.resolvedTypedPatternModule = resolvedTypedPatternModule
+    }
+
+    override fun unresolvedTypedPatternModule(unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.unresolvedTypedPatternModule = unresolvedTypedPatternModule
+    }
+
+    override fun constraints(constraints: Constraints) {
+        this.constraints = constraints
+    }
+
+    override fun substitution(substitution: Substitution) {
+        this.substitution = substitution
+    }
+
+    override fun environment(environment: Environment) {
+        this.environment = environment
+    }
+}
 
 private fun transform(environment: Environment, module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
     val transform =
@@ -458,7 +499,7 @@ private class Transform(val environment: Environment, private var counter: Int =
 
     private fun substitute(e: za.co.no9.sle.ast.enrichedCore.LetDeclaration, old: String, new: String): za.co.no9.sle.ast.enrichedCore.LetDeclaration =
             za.co.no9.sle.ast.enrichedCore.LetDeclaration(e.location, e.scheme, e.id, substitute(e.expression, old, new))
-    
+
 
     private fun canFail(e: za.co.no9.sle.ast.enrichedCore.Expression): Boolean =
             when (e) {

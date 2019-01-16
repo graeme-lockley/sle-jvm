@@ -139,7 +139,7 @@ class ParseCallbackContainer: ParseCallback {
             null
 
 
-    override fun unresolvedModule(unresolvedModule: za.co.no9.sle.ast.typedPattern.Module) {
+    override fun unresolvedTypedPatternModule(unresolvedModule: za.co.no9.sle.ast.typedPattern.Module) {
         this.unresolvedModule = unresolvedModule
     }
 

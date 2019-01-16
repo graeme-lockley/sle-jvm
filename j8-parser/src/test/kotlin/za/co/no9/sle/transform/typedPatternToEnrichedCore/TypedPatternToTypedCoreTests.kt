@@ -4,6 +4,7 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.*
 import za.co.no9.sle.ast.enrichedCore.*
+import za.co.no9.sle.transform.typelessPatternToTypedPattern.Constraints
 import za.co.no9.sle.typing.*
 import java.util.function.Consumer
 
@@ -62,17 +63,21 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
         val fileContent =
                 param.second
 
-        val parseWithDetail =
-                parseWithDetail(TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
-                        ?: ""), environment)
 
+        val parseCallback =
+        TestParseCallback()
+        
+
+        val parseWithDetail =
+                parse(parseCallback, TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
+                        ?: ""), environment)
 
         val constraints =
                 fileContent["constraints"]
 
         if (constraints != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.constraints.state.map { it.toString() }.shouldBeEqual(constraints)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallback.constraints!!.state.map { it.toString() }.shouldBeEqual(constraints)
         }
 
 
@@ -80,8 +85,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["substitution"]
 
         if (expectedSubstitution != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.substitution.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallback.substitution!!.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
         }
 
 
@@ -89,8 +94,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["ast"]
 
         if (astTest != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.unresolvedModule.shouldBeEqual(astTest)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallback.unresolvedModule!!.shouldBeEqual(astTest)
         }
 
 
@@ -98,8 +103,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["typeAST"]
 
         if (typeAST != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.resolvedModule.shouldBeEqual(typeAST)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseCallback.resolvedTypedPatternModule!!.shouldBeEqual(typeAST)
         }
 
 
@@ -107,8 +112,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["enrichedAST"]
 
         if (enrichedAST != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.enrichedModule.shouldBeEqual(enrichedAST)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseWithDetail.right()!!.shouldBeEqual(enrichedAST)
         }
 
 
@@ -116,8 +121,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["enrichedASTpp"]
 
         if (enrichedASTpp != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Value<Detail>>()
-            parseWithDetail.right()!!.enrichedModule.asString().shouldBeEqual(enrichedASTpp)
+            parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
+            parseWithDetail.right()!!.asString().shouldBeEqual(enrichedASTpp)
         }
 
 
@@ -125,9 +130,48 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 fileContent["errors"]
 
         if (errors != null) {
-            parseWithDetail.shouldBeTypeOf<Either.Error<Detail>>()
+            parseWithDetail.shouldBeTypeOf<Either.Error<Any>>()
             parseWithDetail.left()!!.map { it.toString() }.shouldBeEqual(errors)
         }
+    }
+}
+
+
+class TestParseCallback : za.co.no9.sle.transform.typedPatternToEnrichedCore.ParseCallback {
+    var resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
+            null
+
+    var unresolvedModule: za.co.no9.sle.ast.typedPattern.Module? =
+            null
+
+    var constraints: Constraints? =
+            null
+
+    var substitution: Substitution? =
+            null
+
+    var environment: Environment? =
+            null
+
+
+    override fun resolvedTypedPatternModule(module: za.co.no9.sle.ast.typedPattern.Module) {
+        this.resolvedTypedPatternModule = module
+    }
+
+    override fun unresolvedTypedPatternModule(module: za.co.no9.sle.ast.typedPattern.Module) {
+        this.unresolvedModule = module
+    }
+
+    override fun constraints(constraints: Constraints) {
+        this.constraints = constraints
+    }
+
+    override fun substitution(substitution: Substitution) {
+        this.substitution = substitution
+    }
+
+    override fun environment(environment: Environment) {
+        this.environment = environment
     }
 }
 
