@@ -74,7 +74,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 param.second
 
         val parseCallbackContainer =
-                ParseCallbackContainer()
+                TestParseCallback()
 
         val parseWithDetail =
                 parse(parseCallbackContainer, TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
@@ -128,7 +128,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 }
 
 
-class ParseCallbackContainer: ParseCallback {
+class TestParseCallback: ParseCallback {
     var unresolvedModule: za.co.no9.sle.ast.typedPattern.Module? =
             null
 
