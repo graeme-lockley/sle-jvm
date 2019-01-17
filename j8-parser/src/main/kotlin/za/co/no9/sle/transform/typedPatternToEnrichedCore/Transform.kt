@@ -11,7 +11,10 @@ import za.co.no9.sle.typing.*
 
 
 
-fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, Module> {
+data class ParseResult (val module: Module, val environment: Environment)
+
+
+fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, ParseResult> {
     val typePatternDetail =
             za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(callback, source, environment)
 
@@ -20,7 +23,7 @@ fun parse(callback: ParseCallback, source: Item, environment: Environment): Eith
 
         callback.resolvedTypedPatternModule(it.module)
 
-        Transform(environment).transform(it.module)
+        ParseResult(Transform(environment).transform(it.module), it.environment)
     }
 }
 

@@ -18,68 +18,43 @@ private typealias Qs =
         List<Q>
 
 
-data class Detail(
-        val constraints: Constraints,
-        val substitution: Substitution,
-        val unresolvedModule: za.co.no9.sle.ast.typedPattern.Module,
-        val resolvedModule: za.co.no9.sle.ast.typedPattern.Module,
-        val enrichedCore: za.co.no9.sle.ast.enrichedCore.Module,
-        val coreModule: Module)
-
-
-fun parseWithDetail(source: Item, environment: Environment): Either<Errors, Detail> {
-    val parseCallback =
-            ParseCallback()
-
+fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, Module> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(parseCallback, source, environment)
+            za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(callback, source, environment)
 
-    return typePatternDetail.andThen { enrichedCoreModule ->
-        val coreModule =
-                transform(parseCallback.environment!!, enrichedCoreModule)
+    return typePatternDetail.andThen { parseResult ->
+        callback.enrichedCoreModule(parseResult.module)
 
-        coreModule.map { Detail(parseCallback.constraints!!, parseCallback.substitution!!, parseCallback.unresolvedTypedPatternModule!!, parseCallback.resolvedTypedPatternModule!!, enrichedCoreModule, it) }
+        transform(parseResult.environment, parseResult.module)
     }
 }
 
 
-class ParseCallback : za.co.no9.sle.transform.typedPatternToEnrichedCore.ParseCallback {
-    var resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
-            null
-
-    var unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
-            null
-
-    var constraints: Constraints? =
-            null
-
-    var substitution: Substitution? =
-            null
-
-    var environment: Environment? =
-            null
+interface ParseCallback : za.co.no9.sle.transform.typedPatternToEnrichedCore.ParseCallback {
+    fun enrichedCoreModule(enrichedCoreModule: za.co.no9.sle.ast.enrichedCore.Module)
+}
 
 
+class EmptyParseCallback : za.co.no9.sle.transform.enrichedCoreToCore.ParseCallback {
     override fun resolvedTypedPatternModule(resolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
-        this.resolvedTypedPatternModule = resolvedTypedPatternModule
     }
 
     override fun unresolvedTypedPatternModule(unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
-        this.unresolvedTypedPatternModule = unresolvedTypedPatternModule
+    }
+
+    override fun enrichedCoreModule(enrichedCoreModule: za.co.no9.sle.ast.enrichedCore.Module) {
     }
 
     override fun constraints(constraints: Constraints) {
-        this.constraints = constraints
     }
 
     override fun substitution(substitution: Substitution) {
-        this.substitution = substitution
     }
 
     override fun environment(environment: Environment) {
-        this.environment = environment
     }
 }
+
 
 private fun transform(environment: Environment, module: za.co.no9.sle.ast.enrichedCore.Module): Either<Errors, Module> {
     val transform =

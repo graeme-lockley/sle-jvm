@@ -113,7 +113,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (enrichedAST != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseWithDetail.right()!!.shouldBeEqual(enrichedAST)
+            parseWithDetail.right()!!.module.shouldBeEqual(enrichedAST)
         }
 
 
@@ -122,7 +122,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (enrichedASTpp != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseWithDetail.right()!!.asString().shouldBeEqual(enrichedASTpp)
+            parseWithDetail.right()!!.module.asString().shouldBeEqual(enrichedASTpp)
         }
 
 
