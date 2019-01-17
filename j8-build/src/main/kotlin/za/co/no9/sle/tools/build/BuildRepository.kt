@@ -78,15 +78,13 @@ class BuildRepository(override val sourcePrefix: File,
                     item.className
 
             val parseDetail =
-                    parse(EmptyParseCallback(), item, environment)
+                    parse(item, environment)
 
             val compiledFile =
-                    parseDetail
-                            .map { translate(it, packageName, className) }
+                    parseDetail.map { translate(it, packageName, className) }
 
             val output =
-                    compiledFile
-                            .map { it.toString() }
+                    compiledFile.map { it.toString() }
 
             val errors =
                     output.left()

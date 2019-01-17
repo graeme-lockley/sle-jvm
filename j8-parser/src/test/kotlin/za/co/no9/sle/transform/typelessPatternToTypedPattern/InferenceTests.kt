@@ -73,12 +73,12 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
         val fileContent =
                 param.second
 
-        val parseCallbackContainer =
+        val callback =
                 TestParseCallback()
 
         val parseWithDetail =
-                parse(parseCallbackContainer, TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
-                        ?: ""), environment)
+                parse(TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
+                        ?: ""), environment, callback)
 
 
         val constraints =
@@ -86,7 +86,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (constraints != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseCallbackContainer.constraints!!.state.map { it.toString() }.shouldBeEqual(constraints)
+            callback.constraints!!.state.map { it.toString() }.shouldBeEqual(constraints)
         }
 
 
@@ -95,7 +95,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (expectedSubstitution != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseCallbackContainer.substitution!!.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
+            callback.substitution!!.state.map { it.toString() }.shouldBeEqual(expectedSubstitution)
         }
 
 
@@ -104,7 +104,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (astTest != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseCallbackContainer.unresolvedModule!!.shouldBeEqual(astTest)
+            callback.unresolvedModule!!.shouldBeEqual(astTest)
         }
 
 

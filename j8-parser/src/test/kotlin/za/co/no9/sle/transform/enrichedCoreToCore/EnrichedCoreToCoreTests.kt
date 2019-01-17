@@ -67,8 +67,8 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
                 TestParseCallback()
 
         val parseWithDetail =
-                parse(callback, TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
-                        ?: ""), environment)
+                parse(TestItem(sourceFile, fileContent["src"]?.joinToString("\n")
+                        ?: ""), environment, callback)
 
 
         val constraints =

@@ -18,9 +18,9 @@ private typealias Qs =
         List<Q>
 
 
-fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, Module> {
+fun parse(source: Item, environment: Environment, callback: ParseCallback = EmptyParseCallback()): Either<Errors, Module> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(callback, source, environment)
+            za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(source, environment, callback)
 
     return typePatternDetail.andThen { parseResult ->
         callback.enrichedCoreModule(parseResult.module)

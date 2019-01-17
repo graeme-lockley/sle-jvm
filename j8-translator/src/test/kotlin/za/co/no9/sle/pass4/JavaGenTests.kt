@@ -47,7 +47,7 @@ class JavaGenTests : StringSpec({
                 File(".", "./src/test/resources/test/$name.sle")
 
         val result =
-                parse(EmptyParseCallback(), TestItem(inputFile), environment)
+                parse(TestItem(inputFile), environment)
                         .map { translate(it, "test", name) }
                         .map { it.toString() }
 

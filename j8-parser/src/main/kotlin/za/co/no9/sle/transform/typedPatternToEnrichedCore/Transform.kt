@@ -14,9 +14,9 @@ import za.co.no9.sle.typing.*
 data class ParseResult (val module: Module, val environment: Environment)
 
 
-fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, ParseResult> {
+fun parse(source: Item, environment: Environment, callback: ParseCallback): Either<Errors, ParseResult> {
     val typePatternDetail =
-            za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(callback, source, environment)
+            za.co.no9.sle.transform.typelessPatternToTypedPattern.parse(source, environment, callback)
 
     return typePatternDetail.map {
         callback.environment(it.environment)

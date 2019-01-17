@@ -12,7 +12,7 @@ import za.co.no9.sle.typing.Substitution
 import za.co.no9.sle.typing.VarPump
 
 
-fun parse(callback: ParseCallback, source: Item, environment: Environment): Either<Errors, InferResult> {
+fun parse(source: Item, environment: Environment, callback: ParseCallback): Either<Errors, InferResult> {
     val varPump =
             VarPump()
 
