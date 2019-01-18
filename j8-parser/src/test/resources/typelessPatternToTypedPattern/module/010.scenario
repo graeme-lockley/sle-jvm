@@ -1,0 +1,398 @@
+-- Nested aliases
+type List a = Nil | Cons a (List a)
+
+type Tuple a b = Tuple a b
+
+typealias Msg =
+  ()
+
+typealias ActorRef =
+  List Msg
+
+typealias State =
+  (Int, ActorRef)
+
+init : ActorRef -> ((Int, ActorRef), List String)
+init self =
+  ((123, self), [ ])
+-- typeAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: file.package.name.File.List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                  ]
+                name: file.package.name.File.List
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TVar:
+                    variable: 1
+                ]
+              name:
+                ID:
+                  name: Tuple
+          ]
+        name:
+          ID:
+            name: Tuple
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                    TVar:
+                      variable: 1
+                  ]
+                name: file.package.name.File.Tuple
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: Msg
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.Unit
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: ActorRef
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TAlias:
+                      arguments: []
+                      name: Msg
+                  ]
+                name: file.package.name.File.List
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: State
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+                    TAlias:
+                      arguments: []
+                      name: ActorRef
+                  ]
+                name: file.package.name.File.Tuple
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: self
+                  type:
+                    TAlias:
+                      arguments: []
+                      name: ActorRef
+              expression:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: Nil
+                      type:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: file.package.name.File.List
+                  operator:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: self
+                              type:
+                                TAlias:
+                                  arguments: []
+                                  name: ActorRef
+                          operator:
+                            CallExpression:
+                              operand:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 123
+                              operator:
+                                IdReference:
+                                  name: Tuple
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TAlias:
+                                              arguments: []
+                                              name: ActorRef
+                                          range:
+                                            TCon:
+                                              arguments: [
+                                                  TCon:
+                                                    arguments: []
+                                                    name: Data.Int
+                                                  TAlias:
+                                                    arguments: []
+                                                    name: ActorRef
+                                                ]
+                                              name: file.package.name.File.Tuple
+                              type:
+                                TArr:
+                                  domain:
+                                    TAlias:
+                                      arguments: []
+                                      name: ActorRef
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TCon:
+                                            arguments: []
+                                            name: Data.Int
+                                          TAlias:
+                                            arguments: []
+                                            name: ActorRef
+                                        ]
+                                      name: file.package.name.File.Tuple
+                          type:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TAlias:
+                                    arguments: []
+                                    name: ActorRef
+                                ]
+                              name: file.package.name.File.Tuple
+                      operator:
+                        IdReference:
+                          name: Tuple
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TAlias:
+                                        arguments: []
+                                        name: ActorRef
+                                    ]
+                                  name: file.package.name.File.Tuple
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                        ]
+                                      name: file.package.name.File.List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TCon:
+                                            arguments: [
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Int
+                                                TAlias:
+                                                  arguments: []
+                                                  name: ActorRef
+                                              ]
+                                            name: file.package.name.File.Tuple
+                                          TCon:
+                                            arguments: [
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                              ]
+                                            name: file.package.name.File.List
+                                        ]
+                                      name: file.package.name.File.Tuple
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                                ]
+                              name: file.package.name.File.List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: [
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                        TAlias:
+                                          arguments: []
+                                          name: ActorRef
+                                      ]
+                                    name: file.package.name.File.Tuple
+                                  TCon:
+                                    arguments: [
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                      ]
+                                    name: file.package.name.File.List
+                                ]
+                              name: file.package.name.File.Tuple
+                  type:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                                TAlias:
+                                  arguments: []
+                                  name: ActorRef
+                              ]
+                            name: file.package.name.File.Tuple
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              ]
+                            name: file.package.name.File.List
+                        ]
+                      name: file.package.name.File.Tuple
+              type:
+                TArr:
+                  domain:
+                    TAlias:
+                      arguments: []
+                      name: ActorRef
+                  range:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                                TAlias:
+                                  arguments: []
+                                  name: ActorRef
+                              ]
+                            name: file.package.name.File.Tuple
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              ]
+                            name: file.package.name.File.List
+                        ]
+                      name: file.package.name.File.Tuple
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: init
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TAlias:
+                    arguments: []
+                    name: ActorRef
+                range:
+                  TCon:
+                    arguments: [
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TAlias:
+                                arguments: []
+                                name: ActorRef
+                            ]
+                          name: file.package.name.File.Tuple
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: file.package.name.File.List
+                      ]
+                    name: file.package.name.File.Tuple
+    ]
+  exports: []

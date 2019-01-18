@@ -71,9 +71,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
         errors.addAll(resolvedImports.errors)
 
-        errors.addAll(validateDeclarationTTypes(resolvedImports.environment, module))
-
         env = addDeclarationsIntoEnvironment(resolvedImports.environment, module.declarations)
+
+        errors.addAll(validateDeclarationTTypes(env, module))
 
         val declarations =
                 infer(module.declarations)
@@ -455,9 +455,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     val currentEnv =
                             env
 
-                    errors.addAll(validateDeclarationTTypes(env, expression.declarations))
-
                     env = addDeclarationsIntoEnvironment(env, expression.declarations)
+
+                    errors.addAll(validateDeclarationTTypes(env, expression.declarations))
 
                     val declarations =
                                 infer(expression.declarations)
