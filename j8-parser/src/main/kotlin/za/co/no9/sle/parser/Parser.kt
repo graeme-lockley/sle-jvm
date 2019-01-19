@@ -672,7 +672,7 @@ class Parser(private val lexer: Lexer) {
                                 lexer.next()
 
                         NestedExpressions(openParen.location + closeParen.location, emptyList())
-                    } else if (isOperator() && !isOperator("\\") && !isOperator("(") && !isOperator("[") && !isOperator("!")) {
+                    } else if (isOperator() && !isOperator("\\") && !isOperator("(") && !isOperator("[") && !isOperator("!") && !isOperator("{")) {
                         val operator =
                                 lexer.next()
 
