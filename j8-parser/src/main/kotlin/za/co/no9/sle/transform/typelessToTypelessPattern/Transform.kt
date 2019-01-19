@@ -258,6 +258,9 @@ private class Transformer {
                     }
                 }
 
+                is za.co.no9.sle.ast.typeless.ConstantRecord ->
+                    TODO("Record")
+
                 is NotExpression ->
                     CallExpression(ast.location, IdReference(ast.location, QualifiedID(ast.location, null, "(!)")), transform(ast.expression))
 

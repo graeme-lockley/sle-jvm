@@ -76,7 +76,7 @@ sealed class Declaration(
 
 sealed class ComponentLetDeclaration(
         override val location: Location,
-        open val id: ValueDeclarationID): Declaration(location)
+        open val id: ValueDeclarationID) : Declaration(location)
 
 data class LetSignature(
         override val location: Location,
@@ -146,6 +146,15 @@ data class ConstantChar(
 data class ConstantList(
         override val location: Location,
         val expressions: List<Expression>) : Expression(location)
+
+data class ConstantRecord(
+        override val location: Location,
+        val fields: List<ConstantField>) : Expression(location)
+
+data class ConstantField(
+        override val location: Location,
+        val name: String,
+        val value: Expression) : Node(location)
 
 data class NotExpression(
         override val location: Location,
