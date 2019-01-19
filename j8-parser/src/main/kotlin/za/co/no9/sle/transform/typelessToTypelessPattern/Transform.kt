@@ -289,7 +289,7 @@ private class Transformer {
                     ast.operands.fold(transform(ast.operator)) { expression, operand -> CallExpression(ast.location, expression, transform(operand)) }
 
                 is za.co.no9.sle.ast.typeless.FieldProjectionExpression ->
-                    TODO("Record")
+                    FieldProjectionExpression(ast.location, transform(ast.record), transform(ast.name))
 
                 is za.co.no9.sle.ast.typeless.CaseExpression ->
                     CaseExpression(ast.location, transform(ast.operator), ast.items.map { item -> CaseItem(item.location, transform(item.pattern), transform(item.expression)) })

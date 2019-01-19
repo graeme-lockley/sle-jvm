@@ -562,6 +562,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     CallExpression(expression.location, tv, t1, t2)
                 }
 
+                is za.co.no9.sle.ast.typelessPattern.FieldProjectionExpression ->
+                    TODO("Record")
+
                 is za.co.no9.sle.ast.typelessPattern.CaseExpression -> {
                     val tp =
                             infer(expression.operator)
