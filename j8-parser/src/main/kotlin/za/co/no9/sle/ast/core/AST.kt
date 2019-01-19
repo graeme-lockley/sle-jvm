@@ -121,6 +121,16 @@ data class ConstantChar(
         override val type: Type,
         val value: Char) : Expression(location, type)
 
+data class ConstantRecord(
+        override val location: Location,
+        override val type: Type,
+        val fields: List<ConstantField>) : Expression(location, type)
+
+data class ConstantField(
+        override val location: Location,
+        val name: ID,
+        val value: Expression) : Node(location)
+
 data class IdReference(
         override val location: Location,
         override val type: Type,

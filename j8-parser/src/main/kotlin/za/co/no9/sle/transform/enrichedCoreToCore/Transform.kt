@@ -139,7 +139,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     ConstantChar(expression.location, expression.type, expression.value)
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
-                    TODO("Record")
+                    ConstantRecord(expression.location, expression.type, expression.fields.map { ConstantField(it.location, transform(it.name), transform(it.value)) })
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     FAIL(expression.location, expression.type)
@@ -402,6 +402,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is ConstantChar ->
                     haystack
+
+                is ConstantRecord ->
+                    ConstantRecord(haystack.location, haystack.type, haystack.fields.map { ConstantField(it.location, it.name, replaceFailWith(it.value, needle)) })
 
                 is FAIL ->
                     needle
