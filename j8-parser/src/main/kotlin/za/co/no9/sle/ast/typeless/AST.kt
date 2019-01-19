@@ -199,6 +199,11 @@ data class CallExpression(
         val operator: Expression,
         val operands: List<Expression>) : Expression(location)
 
+data class FieldProjectionExpression(
+        override val location: Location,
+        val record: Expression,
+        val name: ID): Expression(location)
+
 data class CaseExpression(
         override val location: Location,
         val operator: Expression,

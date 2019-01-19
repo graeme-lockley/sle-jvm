@@ -531,19 +531,36 @@ class Parser(private val lexer: Lexer) {
 
     fun parseCall(leftEdge: Int): Expression {
         val operator =
-                parseTerm(leftEdge)
+                parseFieldProjection(leftEdge)
 
         val operands =
                 mutableListOf<Expression>()
 
         while (lexer.column > leftEdge && isFirstTerm()) {
-            operands.add(parseTerm(leftEdge))
+            operands.add(parseFieldProjection(leftEdge))
         }
 
         return if (operands.isEmpty())
             operator
         else
             CallExpression(operator.location + locationFrom(operands), operator, operands)
+    }
+
+
+    fun parseFieldProjection(leftEdge: Int): Expression {
+        var result =
+                parseTerm(leftEdge)
+
+        while (isOperator(".")) {
+            lexer.skip()
+
+            val name =
+                    matchToken(Token.LowerID, "Lower ID")
+
+            result = FieldProjectionExpression(result.location + name.location, result, name.toID())
+        }
+
+        return result
     }
 
 

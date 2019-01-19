@@ -1,0 +1,114 @@
+-- Field projection
+value1 arb =
+  arb.name
+
+value2 arb =
+  \f -> f arb.name 100
+
+value3 f someInput =
+  (f someInput).dateOfBirth.age
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: arb
+          ]
+        expression:
+          FieldProjectionExpression:
+            name:
+              ID:
+                name: name
+            record:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: arb
+                    qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value1
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: arb
+          ]
+        expression:
+          LambdaExpression:
+            arguments: [
+                IdReferencePattern:
+                  name: f
+              ]
+            expression:
+              CallExpression:
+                operands: [
+                    FieldProjectionExpression:
+                      name:
+                        ID:
+                          name: name
+                      record:
+                        IdReference:
+                          name:
+                            QualifiedID:
+                              name: arb
+                              qualifier: null
+                    ConstantInt:
+                      value: 100
+                  ]
+                operator:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: f
+                        qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value2
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: f
+            IdReferencePattern:
+              name: someInput
+          ]
+        expression:
+          FieldProjectionExpression:
+            name:
+              ID:
+                name: age
+            record:
+              FieldProjectionExpression:
+                name:
+                  ID:
+                    name: dateOfBirth
+                record:
+                  NestedExpressions:
+                    expressions: [
+                        CallExpression:
+                          operands: [
+                              IdReference:
+                                name:
+                                  QualifiedID:
+                                    name: someInput
+                                    qualifier: null
+                            ]
+                          operator:
+                            IdReference:
+                              name:
+                                QualifiedID:
+                                  name: f
+                                  qualifier: null
+                      ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value3
+    ]
+  exports: []
+  imports: []
