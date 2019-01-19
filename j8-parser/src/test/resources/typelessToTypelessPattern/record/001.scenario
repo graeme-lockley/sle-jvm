@@ -1,0 +1,63 @@
+-- Constant record of the form { name = value, name = value }
+value =
+  { name = "graeme"
+  , dateOfBirth =
+    { day = 9
+    , month = 4
+    , year = 1968
+    }
+  }
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            ConstantRecord:
+              fields: [
+                  ConstantField:
+                    name:
+                      ID:
+                        name: name
+                    value:
+                      ConstantString:
+                        value: graeme
+                  ConstantField:
+                    name:
+                      ID:
+                        name: dateOfBirth
+                    value:
+                      ConstantRecord:
+                        fields: [
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: day
+                              value:
+                                ConstantInt:
+                                  value: 9
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: month
+                              value:
+                                ConstantInt:
+                                  value: 4
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: year
+                              value:
+                                ConstantInt:
+                                  value: 1968
+                          ]
+                ]
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        ttype: null
+    ]
+  exports: []
+  imports: []

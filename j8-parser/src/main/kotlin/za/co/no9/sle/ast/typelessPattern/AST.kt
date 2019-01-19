@@ -107,6 +107,7 @@ data class QualifiedID(
 sealed class Expression(
         location: Location) : Node(location)
 
+
 data class ConstantBool(
         override val location: Location,
         val value: Boolean) : Expression(location)
@@ -122,6 +123,16 @@ data class ConstantString(
 data class ConstantChar(
         override val location: Location,
         val value: Char) : Expression(location)
+
+data class ConstantRecord(
+        override val location: Location,
+        val fields: List<ConstantField>) : Expression(location)
+
+data class ConstantField(
+        override val location: Location,
+        val name: ID,
+        val value: Expression) : Node(location)
+
 
 data class IdReference(
         override val location: Location,

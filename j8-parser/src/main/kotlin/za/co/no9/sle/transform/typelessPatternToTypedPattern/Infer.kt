@@ -353,6 +353,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is za.co.no9.sle.ast.typelessPattern.ConstantChar ->
                     ConstantChar(expression.location, typeChar, expression.value)
 
+                is za.co.no9.sle.ast.typelessPattern.ConstantRecord ->
+                    TODO("Record")
+
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val valueBinding =
                             env.value(expression.name.asQString())
