@@ -151,8 +151,15 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
             is ConstantChar ->
                 CharLiteralExpression(expression.value)
 
-            is ConstantRecord ->
-                TODO("Record")
+            is ConstantRecord -> {
+                val indexFields =
+                        expression.fields.sortedBy { it.name.name }
+
+                ArrayInitialisationExpression(
+                        "java.lang.Object[]",
+                        indexFields.map { translate(it.value) }
+                )
+            }
 
             is ERROR ->
                 TODO()
