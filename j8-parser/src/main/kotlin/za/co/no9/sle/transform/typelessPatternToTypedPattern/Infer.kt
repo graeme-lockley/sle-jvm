@@ -9,8 +9,10 @@ import za.co.no9.sle.ast.typedPattern.ConstantBool
 import za.co.no9.sle.ast.typedPattern.ConstantBoolPattern
 import za.co.no9.sle.ast.typedPattern.ConstantChar
 import za.co.no9.sle.ast.typedPattern.ConstantCharPattern
+import za.co.no9.sle.ast.typedPattern.ConstantField
 import za.co.no9.sle.ast.typedPattern.ConstantInt
 import za.co.no9.sle.ast.typedPattern.ConstantIntPattern
+import za.co.no9.sle.ast.typedPattern.ConstantRecord
 import za.co.no9.sle.ast.typedPattern.ConstantString
 import za.co.no9.sle.ast.typedPattern.ConstantStringPattern
 import za.co.no9.sle.ast.typedPattern.Constructor
@@ -353,8 +355,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is za.co.no9.sle.ast.typelessPattern.ConstantChar ->
                     ConstantChar(expression.location, typeChar, expression.value)
 
-                is za.co.no9.sle.ast.typelessPattern.ConstantRecord ->
-                    TODO("Record")
+                is za.co.no9.sle.ast.typelessPattern.ConstantRecord -> {
+                    val fields =
+                            expression.fields.map { ConstantField(it.location, transform(it.name), infer(it.value)) }
+
+                    ConstantRecord(expression.location, TRec(expression.location, true, fields.map { Pair(it.name.name, it.value.type) }), fields)
+                }
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
                     val valueBinding =
@@ -463,7 +469,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     errors.addAll(validateDeclarationTTypes(env, expression.declarations))
 
                     val declarations =
-                                infer(expression.declarations)
+                            infer(expression.declarations)
 
                     val resultExpression =
                             infer(expression.expression)

@@ -1,0 +1,175 @@
+-- Constant record of the form { name = value, name = value }
+value =
+  { name = "graeme"
+  , dateOfBirth =
+    { day = 9
+    , month = 4
+    , year = 1968
+    }
+  }
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            ConstantRecord:
+              fields: [
+                  ConstantField:
+                    name:
+                      ID:
+                        name: name
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: graeme
+                  ConstantField:
+                    name:
+                      ID:
+                        name: dateOfBirth
+                    value:
+                      ConstantRecord:
+                        fields: [
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: day
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 9
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: month
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 4
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: year
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 1968
+                          ]
+                        type:
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: day
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: month
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: year
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                              ]
+                            fixed: true
+                ]
+              type:
+                TRec:
+                  fields: [
+                      Pair:
+                        first: name
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                      Pair:
+                        first: dateOfBirth
+                        second:
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: day
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: month
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: year
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                              ]
+                            fixed: true
+                    ]
+                  fixed: true
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TRec:
+                fields: [
+                    Pair:
+                      first: name
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                    Pair:
+                      first: dateOfBirth
+                      second:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: day
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                              Pair:
+                                first: month
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                              Pair:
+                                first: year
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                            ]
+                          fixed: true
+                  ]
+                fixed: true
+    ]
+  exports: []

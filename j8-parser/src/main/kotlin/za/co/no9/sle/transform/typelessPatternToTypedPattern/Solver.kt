@@ -177,6 +177,9 @@ private class ApplyContext(private val environment: Environment) {
                 is ConstantChar ->
                     expression
 
+                is za.co.no9.sle.ast.typedPattern.ConstantRecord ->
+                    ConstantRecord(expression.location, expression.type.apply(substitution), expression.fields.map { ConstantField(it.location, it.name, apply(it.value, substitution)) })
+
                 is IdReference ->
                     IdReference(expression.location, expression.type.apply(substitution), expression.name)
 

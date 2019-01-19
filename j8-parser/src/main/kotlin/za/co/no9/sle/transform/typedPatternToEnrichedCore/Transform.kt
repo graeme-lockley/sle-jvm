@@ -158,6 +158,9 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.ConstantChar ->
                     ConstantChar(expression.location, expression.type, expression.value)
 
+                is za.co.no9.sle.ast.typedPattern.ConstantRecord ->
+                    TODO("Record")
+
                 is za.co.no9.sle.ast.typedPattern.IdReference ->
                     IdReference(expression.location, expression.type, expression.name)
 
