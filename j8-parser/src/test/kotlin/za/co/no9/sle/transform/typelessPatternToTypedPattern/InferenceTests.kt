@@ -104,7 +104,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (astTest != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            callback.unresolvedModule!!.shouldBeEqual(astTest)
+            callback.unresolvedTypedPatternModule!!.shouldBeEqual(astTest)
         }
 
 
@@ -129,7 +129,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
 
 class TestParseCallback: ParseCallback {
-    var unresolvedModule: za.co.no9.sle.ast.typedPattern.Module? =
+    var unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module? =
             null
 
     var constraints: Constraints? =
@@ -139,8 +139,8 @@ class TestParseCallback: ParseCallback {
             null
 
 
-    override fun unresolvedTypedPatternModule(unresolvedModule: za.co.no9.sle.ast.typedPattern.Module) {
-        this.unresolvedModule = unresolvedModule
+    override fun unresolvedTypedPatternModule(unresolvedTypedPatternModule: za.co.no9.sle.ast.typedPattern.Module) {
+        this.unresolvedTypedPatternModule = unresolvedTypedPatternModule
     }
 
     override fun constraints(constraints: Constraints) {
