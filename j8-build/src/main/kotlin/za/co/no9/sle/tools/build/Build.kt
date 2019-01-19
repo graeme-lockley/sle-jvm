@@ -98,8 +98,14 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                 is TArr ->
                     commonPrefix(calculatePrefix(type.domain), calculatePrefix(type.range))
 
-                is TRec ->
-                    TODO("TRec")
+                is TRec -> {
+                    val initial: String? =
+                            null
+
+                    type.fields.fold(initial) { accumulator, field ->
+                        commonPrefix(accumulator, calculatePrefix(field.second))
+                    }
+                }
             }
 
 
@@ -144,7 +150,7 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                     TArr(type.location, ppType(prefix, type.domain), ppType(prefix, type.range))
 
                 is TRec ->
-                    TODO("TRec")
+                    TRec(type.location, type.fixed, type.fields.map { Pair(it.first, ppType(prefix, it.second)) })
             }
 
 
@@ -189,6 +195,12 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
 
                             is UnificationMismatch ->
                                 "Unification Mismatch: ${error.t1s.map { ppType(it) }}: ${error.t2s.map { ppType(it) }}"
+
+                            is DifferingRecordSize ->
+                                "Record Unification Fail: ${ppType(error.t1)}: ${ppType(error.t2)}"
+
+                            is RecordFieldNamesMismatch ->
+                                "Record Unification Fail: ${error.t1}: ${error.t2}"
 
                             is UnknownTypeReference ->
                                 "Unknown Type Reference: ${error.location}: ${error.name}"

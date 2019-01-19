@@ -156,7 +156,7 @@ private class ApplyContext(private val environment: Environment) {
                     TArr(domain.expandAliases(environment), range.expandAliases(environment))
 
                 is TRec ->
-                    TODO("TRec")
+                    TRec(location, fixed, fields.map { Pair(it.first, it.second.expandAliases(environment)) })
             }
 
 
@@ -278,6 +278,48 @@ private class SolverContext(private var varPump: VarPump, private var constraint
                 t1 is TArr && t2 is TArr ->
                     unifyMany(listOf(t1.domain, t1.range), listOf(t2.domain, t2.range))
 
+                t1 is TRec && t2 is TRec -> {
+                    val t1Map =
+                            mapOf<String, Type>() + t1.fields
+
+                    val t2Map =
+                            mapOf<String, Type>() + t2.fields
+
+                    if (t1.fixed && t2.fixed) {
+                        if (t1.fields.size == t2.fields.size) {
+                            if (t1Map.keys == t2Map.keys) {
+                                unifyMany(t1Map.toSortedMap().values, t2Map.toSortedMap().values)
+                            } else {
+                                errors.add(RecordFieldNamesMismatch(t1, t2))
+
+                                Pair(nullSubstitution, noConstraints)
+                            }
+                        } else {
+                            errors.add(DifferingRecordSize(t1, t2))
+
+                            Pair(nullSubstitution, noConstraints)
+                        }
+                    } else {
+                        if (t1.fields.size < t2.fields.size) {
+                            if (t2Map.keys.containsAll(t1Map.keys)) {
+                                unifyMany(t1Map.toSortedMap().values, t2Map.filterKeys { k -> t1Map.containsKey(k) }.toSortedMap().values)
+                            } else {
+                                errors.add(RecordFieldNamesMismatch(t1, t2))
+
+                                Pair(nullSubstitution, noConstraints)
+                            }
+                        } else {
+                            if (t1Map.keys.containsAll(t2Map.keys)) {
+                                unifyMany(t1Map.filterKeys { k -> t2Map.containsKey(k) }.toSortedMap().values, t2Map.toSortedMap().values)
+                            } else {
+                                errors.add(RecordFieldNamesMismatch(t1, t2))
+
+                                Pair(nullSubstitution, noConstraints)
+                            }
+                        }
+                    }
+                }
+
                 t1 is TAlias -> {
                     val type =
                             environment.instantiateAlias(t1.name, varPump)!!
@@ -300,17 +342,17 @@ private class SolverContext(private var varPump: VarPump, private var constraint
             }
 
 
-    private fun unifyMany(t1s: List<Type>, t2s: List<Type>): Unifier =
+    private fun unifyMany(t1s: Collection<Type>, t2s: Collection<Type>): Unifier =
             when {
                 t1s.isEmpty() && t2s.isEmpty() ->
                     Pair(nullSubstitution, noConstraints)
 
                 t1s.isNotEmpty() && t2s.isNotEmpty() -> {
                     val t1 =
-                            t1s[0]
+                            t1s.first()
 
                     val t2 =
-                            t2s[0]
+                            t2s.first()
 
                     val u1 =
                             unifies(t1, t2)

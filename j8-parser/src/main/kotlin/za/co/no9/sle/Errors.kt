@@ -1,6 +1,7 @@
 package za.co.no9.sle
 
 import za.co.no9.sle.typing.Scheme
+import za.co.no9.sle.typing.TRec
 import za.co.no9.sle.typing.Type
 import java.io.File
 
@@ -89,8 +90,18 @@ data class UnificationFail(
         val t2: Type) : Error()
 
 data class UnificationMismatch(
-        val t1s: List<Type>,
-        val t2s: List<Type>) : Error()
+        val t1s: Collection<Type>,
+        val t2s: Collection<Type>) : Error()
+
+data class DifferingRecordSize (
+        val t1: TRec,
+        val t2: TRec): Error()
+
+data class RecordFieldNamesMismatch (
+        val t1: TRec,
+        val t2: TRec): Error()
+
+
 
 data class UnknownType(
         override val location: Location,
