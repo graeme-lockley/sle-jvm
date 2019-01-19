@@ -10,8 +10,7 @@ import za.co.no9.sle.repository.Item
 import za.co.no9.sle.typing.*
 
 
-
-data class ParseResult (val module: Module, val environment: Environment)
+data class ParseResult(val module: Module, val environment: Environment)
 
 
 fun parse(source: Item, environment: Environment, callback: ParseCallback): Either<Errors, ParseResult> {
@@ -159,7 +158,7 @@ private class Transform(val environment: Environment) {
                     ConstantChar(expression.location, expression.type, expression.value)
 
                 is za.co.no9.sle.ast.typedPattern.ConstantRecord ->
-                    TODO("Record")
+                    ConstantRecord(expression.location, expression.type, expression.fields.map { ConstantField(it.location, transform(it.name), transform(it.value)) })
 
                 is za.co.no9.sle.ast.typedPattern.IdReference ->
                     IdReference(expression.location, expression.type, expression.name)

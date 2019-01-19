@@ -138,6 +138,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     ConstantChar(expression.location, expression.type, expression.value)
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
+                    TODO("Record")
+
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     FAIL(expression.location, expression.type)
 
@@ -443,6 +446,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     e
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
+                    za.co.no9.sle.ast.enrichedCore.ConstantRecord(e.location, e.type, e.fields.map { za.co.no9.sle.ast.enrichedCore.ConstantField(it.location, it.name, substitute(it.value, old, new)) })
+
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     e
 
@@ -492,6 +498,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     false
+
+                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
+                    e.fields.fold(false) { accumulator, field -> accumulator || canFail(field.value) }
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     true

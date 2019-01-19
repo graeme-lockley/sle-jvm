@@ -241,6 +241,11 @@ fun Expression.asString(indent: Int = 0): String =
             is ConstantChar ->
                 "${spaces(indent)}'$value'\n"
 
+            is ConstantRecord ->
+                "${spaces(indent)}{\n" +
+                        fields.joinToString("") { "${spaces(indent + 1)}${it.name.name} =\n${it.value.asString(indent + 2)}" } +
+                        "${spaces(indent)}}\n"
+
             is FAIL ->
                 "${spaces(indent)}FAIL\n"
 
