@@ -97,6 +97,9 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
 
                 is TArr ->
                     commonPrefix(calculatePrefix(type.domain), calculatePrefix(type.range))
+
+                is TRec ->
+                    TODO("TRec")
             }
 
 
@@ -139,6 +142,9 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
 
                 is TArr ->
                     TArr(type.location, ppType(prefix, type.domain), ppType(prefix, type.range))
+
+                is TRec ->
+                    TODO("TRec")
             }
 
 

@@ -47,5 +47,8 @@ private fun toClass(type: za.co.no9.sle.typing.Type): Type =
 
             is za.co.no9.sle.typing.TArr ->
                 Arrow(toClass(type.domain), toClass(type.range))
+
+            is za.co.no9.sle.typing.TRec ->
+                TODO("TRec")
         }
 

@@ -154,6 +154,9 @@ private class ApplyContext(private val environment: Environment) {
 
                 is TArr ->
                     TArr(domain.expandAliases(environment), range.expandAliases(environment))
+
+                is TRec ->
+                    TODO("TRec")
             }
 
 

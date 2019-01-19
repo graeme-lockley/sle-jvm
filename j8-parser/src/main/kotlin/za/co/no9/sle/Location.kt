@@ -23,3 +23,10 @@ data class Location(
 val homeLocation =
         Location(Position(0, 0))
 
+
+fun deriveLocation(nodes: List<Location>): Location? =
+        if (nodes.isEmpty())
+            null
+        else
+            nodes.fold(nodes[0]) { a, b -> a + b }
+

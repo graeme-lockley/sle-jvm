@@ -2,6 +2,7 @@ package za.co.no9.sle.typing
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.QString
+import za.co.no9.sle.deriveLocation
 import za.co.no9.sle.homeLocation
 
 
@@ -102,6 +103,37 @@ data class TArr(
                     "($domain) -> $range"
                 else ->
                     "$domain -> $range"
+            }
+}
+
+
+data class TRec(
+        override val location: Location,
+        val fixed: Boolean,
+        val fields: List<Pair<String, Type>>) : Type(location) {
+
+    constructor(fixed: Boolean, fields: List<Pair<String, Type>>) : this(deriveLocation(fields.map { it.second.location })
+            ?: homeLocation, fixed, fields)
+
+
+    override fun apply(s: Substitution) =
+            TRec(location, fixed, fields.map { Pair(it.first, it.second.apply(s)) })
+
+
+    override fun ftv() =
+            fields.fold(emptySet<Var>()) { a, b -> a + b.second.ftv() }
+
+
+    override fun toString(): String =
+            when {
+                fixed ->
+                    "{${fields.joinToString(", ") { "${it.first} : ${it.second}" }}}"
+
+                fields.isEmpty() ->
+                    "{..}"
+
+                else ->
+                    "{${fields.joinToString(", ") { "${it.first} : ${it.second}" }}, ..}"
             }
 }
 
