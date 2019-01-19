@@ -454,7 +454,7 @@ class Parser(private val lexer: Lexer) {
 
 
     private val excludeOperators =
-            setOf("(", ")", "|", "=", ",", "[", "]")
+            setOf("(", ")", "|", "=", ",", "[", "]", "{", "}")
 
 
     fun parseBinaryOperators(leftEdge: Int): Expression {
@@ -613,6 +613,39 @@ class Parser(private val lexer: Lexer) {
                     ConstantList(openSquare.location + endSquare.location, items)
                 }
 
+                isOperator("{") -> {
+                    val fields =
+                            mutableListOf<ConstantField>()
+
+                    val openCurley =
+                            lexer.next()
+
+                    if (isToken(Token.LowerID)) {
+                        while(true) {
+                            val name =
+                                    matchToken(Token.LowerID, "Lower ID")
+
+                            matchOperator("=")
+
+                            val expression =
+                                    parseExpression(leftEdge)
+
+                            fields.add(ConstantField(name.location + expression.location, name.toID(), expression))
+
+                            if (isOperator(",")) {
+                                lexer.skip()
+                            } else {
+                                break
+                            }
+                        }
+                    }
+
+                    val closeCurley =
+                            matchOperator("}")
+
+                    ConstantRecord(openCurley.location + closeCurley.location, fields)
+                }
+
                 isOperator("!") -> {
                     val bangSymbol =
                             lexer.next()
@@ -708,7 +741,8 @@ class Parser(private val lexer: Lexer) {
                     isToken(Token.LowerID) ||
                     isToken(Token.UpperID) ||
                     isOperator("[") ||
-                    isOperator("[]")
+                    isOperator("[]") ||
+                    isOperator("{")
 
 
     fun parseType(leftEdge: Int): TType {

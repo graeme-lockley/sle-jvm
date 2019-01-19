@@ -52,7 +52,7 @@ val keywords =
         )
 
 val singleOperatorCharacters =
-        setOf('(', ')')
+        setOf('(', ')', '{', '}')
 
 val operatorCharacters =
         setOf('-', '=', '|', '*', '/', '=', '!', '<', '>', '&', '\\', '+', ':', ',', '.', '?', '[', ']')

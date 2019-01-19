@@ -153,7 +153,7 @@ data class ConstantRecord(
 
 data class ConstantField(
         override val location: Location,
-        val name: String,
+        val name: ID,
         val value: Expression) : Node(location)
 
 data class NotExpression(
