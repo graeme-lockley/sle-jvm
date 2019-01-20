@@ -2,7 +2,7 @@ package za.co.no9.sle.typing
 
 import za.co.no9.sle.Location
 import za.co.no9.sle.QString
-import za.co.no9.sle.deriveLocation
+import za.co.no9.sle.location
 import za.co.no9.sle.homeLocation
 
 
@@ -114,7 +114,7 @@ data class TRec(
         val fixed: Boolean,
         val fields: List<Pair<String, Type>>) : Type(location) {
 
-    constructor(fixed: Boolean, fields: List<Pair<String, Type>>) : this(deriveLocation(fields.map { it.second.location })
+    constructor(fixed: Boolean, fields: List<Pair<String, Type>>) : this(location(fields.map { it.second.location })
             ?: homeLocation, fixed, fields)
 
 

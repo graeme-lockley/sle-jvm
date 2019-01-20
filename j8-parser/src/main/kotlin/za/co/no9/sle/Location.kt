@@ -24,7 +24,7 @@ val homeLocation =
         Location(Position(0, 0))
 
 
-fun deriveLocation(nodes: List<Location>): Location? =
+fun location(nodes: List<Location>): Location? =
         if (nodes.isEmpty())
             null
         else

@@ -65,14 +65,14 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.LowerID) -> {
                     val lowerID =
-                            lexer.next().toID()
+                            next().toID()
 
                     LetExport(lowerID.location, lowerID)
                 }
 
                 isToken(Token.UpperID) -> {
                     val upperID =
-                            lexer.next().toID()
+                            next().toID()
 
                     if (isOperator("(")) {
                         skip()
@@ -90,7 +90,7 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("(") -> {
                     val openParen =
-                            skip()
+                            next()
 
                     val op =
                             matchOperator()
@@ -168,17 +168,17 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.LowerID) -> {
                     val lowerID =
-                            lexer.next()
+                            next()
 
                     LetNamedDeclaration(lowerID.location, lowerID.toID())
                 }
 
                 isToken(Token.UpperID) -> {
                     val upperID =
-                            lexer.next().toID()
+                            next().toID()
 
                     if (isOperator("(")) {
-                        lexer.next()
+                        next()
                         matchOperator("..")
                         val closingParenthesis =
                                 matchOperator(")")
@@ -190,7 +190,7 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("(") -> {
                     val openParen =
-                            skip()
+                            next()
 
                     val operator =
                             matchOperator()
@@ -210,7 +210,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.TYPE) -> {
                     val typeSymbol =
-                            lexer.next()
+                            next()
 
                     val upperID =
                             matchToken(Token.UpperID, "UpperID").toID()
@@ -219,7 +219,7 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<ID>()
 
                     while (isToken(Token.LowerID)) {
-                        arguments.add(lexer.next().toID())
+                        arguments.add(next().toID())
                     }
 
                     matchOperator("=")
@@ -239,7 +239,7 @@ class Parser(private val lexer: Lexer) {
 
                 isToken(Token.TYPEALIAS) -> {
                     val typealiasSymbol =
-                            lexer.next()
+                            next()
 
                     val upperID =
                             matchToken(Token.UpperID, "UpperID").toID()
@@ -321,7 +321,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.LowerID) -> {
                     val id =
-                            lexer.next().toID()
+                            next().toID()
 
                     LowerIDDeclarationID(id.location, id)
                 }
@@ -395,7 +395,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.LET) -> {
                     val letSymbol =
-                            lexer.next()
+                            next()
 
                     val componentLetDeclarations =
                             mutableListOf<ComponentLetDeclaration>()
@@ -423,7 +423,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.CASE) -> {
                     val caseSymbol =
-                            lexer.next()
+                            next()
 
                     val expression =
                             parseExpression(leftEdge)
@@ -463,7 +463,7 @@ class Parser(private val lexer: Lexer) {
 
         return if (isOperatorExcluded(excludeOperators)) {
             val operator =
-                    lexer.next()
+                    next()
 
             val right =
                     parseBinaryOperators(leftEdge)
@@ -478,7 +478,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isOperator("\\") -> {
                     val lambdaSymbol =
-                            lexer.next()
+                            next()
 
                     val arguments =
                             mutableListOf<Pattern>()
@@ -506,7 +506,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.IF) -> {
                     val ifSymbol =
-                            lexer.next()
+                            next()
 
                     val guardExpression =
                             parseExpression(leftEdge)
@@ -552,7 +552,7 @@ class Parser(private val lexer: Lexer) {
                 parseTerm(leftEdge)
 
         while (isOperator(".")) {
-            lexer.skip()
+            skip()
 
             val name =
                     matchToken(Token.LowerID, "Lower ID")
@@ -568,20 +568,20 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.ConstantInt) -> {
                     val token =
-                            lexer.next()
+                            next()
 
                     ConstantInt(token.location, token.text.toInt())
                 }
 
                 isToken(Token.UpperID) && lexer.text == "True" ->
-                    True(lexer.next().location)
+                    True(next().location)
 
                 isToken(Token.UpperID) && lexer.text == "False" ->
-                    False(lexer.next().location)
+                    False(next().location)
 
                 isToken(Token.ConstantString) -> {
                     val constantStringSymbol =
-                            lexer.next()
+                            next()
 
                     val text =
                             resolveStringEscape(constantStringSymbol.text
@@ -592,7 +592,7 @@ class Parser(private val lexer: Lexer) {
                 }
                 isToken(Token.ConstantChar) -> {
                     val constantCharSymbol =
-                            lexer.next()
+                            next()
 
                     val text =
                             resolveStringEscape(constantCharSymbol.text
@@ -604,13 +604,13 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("[]") -> {
                     val nilSymbol =
-                            lexer.next()
+                            next()
                     ConstantList(nilSymbol.location, emptyList())
                 }
 
                 isOperator("[") -> {
                     val openSquare =
-                            lexer.next()
+                            next()
 
                     val items =
                             mutableListOf<Expression>()
@@ -619,7 +619,7 @@ class Parser(private val lexer: Lexer) {
                         items.add(parseExpression(leftEdge))
 
                         while (isOperator(",")) {
-                            lexer.next()
+                            next()
                             items.add(parseExpression(leftEdge))
                         }
                     }
@@ -635,10 +635,10 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<ConstantField>()
 
                     val openCurley =
-                            lexer.next()
+                            next()
 
                     if (isToken(Token.LowerID)) {
-                        while(true) {
+                        while (true) {
                             val name =
                                     matchToken(Token.LowerID, "Lower ID")
 
@@ -650,7 +650,7 @@ class Parser(private val lexer: Lexer) {
                             fields.add(ConstantField(name.location + expression.location, name.toID(), expression))
 
                             if (isOperator(",")) {
-                                lexer.skip()
+                                skip()
                             } else {
                                 break
                             }
@@ -665,7 +665,7 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("!") -> {
                     val bangSymbol =
-                            lexer.next()
+                            next()
 
                     val expression =
                             parseExpression(leftEdge)
@@ -675,23 +675,23 @@ class Parser(private val lexer: Lexer) {
 
                 isToken(Token.LowerID) -> {
                     val lowerIDSymbol =
-                            lexer.next()
+                            next()
 
                     IdReference(lowerIDSymbol.location, QualifiedID(lowerIDSymbol.location, null, lowerIDSymbol.text))
                 }
 
                 isOperator("(") -> {
                     val openParen =
-                            lexer.next()
+                            next()
 
                     if (isOperator(")")) {
                         val closeParen =
-                                lexer.next()
+                                next()
 
                         NestedExpressions(openParen.location + closeParen.location, emptyList())
                     } else if (isOperator() && !isOperator("\\") && !isOperator("(") && !isOperator("[") && !isOperator("!") && !isOperator("{")) {
                         val operator =
-                                lexer.next()
+                                next()
 
                         val closeParen =
                                 matchOperator(")")
@@ -704,7 +704,7 @@ class Parser(private val lexer: Lexer) {
                         expressions.add(parseExpression(leftEdge))
 
                         while (isOperator(",")) {
-                            lexer.skip()
+                            skip()
                             expressions.add(parseExpression(leftEdge))
                         }
 
@@ -717,7 +717,7 @@ class Parser(private val lexer: Lexer) {
 
                 isToken(Token.UpperID) -> {
                     val upperID =
-                            lexer.next()
+                            next()
 
                     if (isOperator(".")) {
                         skip()
@@ -725,14 +725,14 @@ class Parser(private val lexer: Lexer) {
                         when {
                             isToken(Token.UpperID) -> {
                                 val name =
-                                        lexer.next()
+                                        next()
 
                                 ConstructorReference(upperID.location + name.location, QualifiedID(upperID.location + name.location, upperID.text, name.text))
                             }
 
                             isToken(Token.LowerID) -> {
                                 val name =
-                                        lexer.next()
+                                        next()
 
                                 IdReference(upperID.location + name.location, QualifiedID(upperID.location + name.location, upperID.text, name.text))
                             }
@@ -746,7 +746,7 @@ class Parser(private val lexer: Lexer) {
                 }
 
                 else ->
-                    TODO(lexer.next().toString())
+                    TODO(next().toString())
             }
 
     fun isFirstTerm(): Boolean =
@@ -804,12 +804,12 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.UpperID) -> {
                     val upperID =
-                            lexer.next().toID()
+                            next().toID()
 
                     if (isOperator(".")) {
                         skip()
                         val otherUpperID =
-                                lexer.next().toID()
+                                next().toID()
                         QualifiedID(upperID.location + otherUpperID.location, upperID.name, otherUpperID.name)
                     } else {
                         QualifiedID(upperID.location, null, upperID.name)
@@ -831,7 +831,7 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.LowerID) -> {
                     val lowerID =
-                            lexer.next()
+                            next()
 
                     TVarReference(lowerID.location, lowerID.text)
                 }
@@ -854,7 +854,7 @@ class Parser(private val lexer: Lexer) {
                         types.add(parseType(leftEdge))
 
                         while (isOperator(",")) {
-                            lexer.skip()
+                            skip()
                             types.add(parseType(leftEdge))
                         }
                     }
@@ -921,7 +921,7 @@ class Parser(private val lexer: Lexer) {
 
             patterns.add(pattern)
             while (isOperator("::")) {
-                lexer.next()
+                next()
                 patterns.add(parseTermPattern())
             }
 
@@ -938,28 +938,28 @@ class Parser(private val lexer: Lexer) {
             when {
                 isToken(Token.ConstantInt) -> {
                     val constantIntSymbol =
-                            lexer.next()
+                            next()
 
                     ConstantIntPattern(constantIntSymbol.location, constantIntSymbol.text.toInt())
                 }
 
                 isToken(Token.UpperID) && lexer.text == "True" -> {
                     val trueSymbol =
-                            lexer.next()
+                            next()
 
                     ConstantBoolPattern(trueSymbol.location, true)
                 }
 
                 isToken(Token.UpperID) && lexer.text == "False" -> {
                     val trueSymbol =
-                            lexer.next()
+                            next()
 
                     ConstantBoolPattern(trueSymbol.location, false)
                 }
 
                 isToken(Token.ConstantString) -> {
                     val constantStringSymbol =
-                            lexer.next()
+                            next()
 
                     val text =
                             resolveStringEscape(constantStringSymbol.text
@@ -971,7 +971,7 @@ class Parser(private val lexer: Lexer) {
 
                 isToken(Token.ConstantChar) -> {
                     val constantCharSymbol =
-                            lexer.next()
+                            next()
 
                     val text =
                             resolveStringEscape(constantCharSymbol.text
@@ -983,13 +983,13 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("[]") -> {
                     val nilSymbol =
-                            lexer.next()
+                            next()
                     ConstantListPattern(nilSymbol.location, emptyList())
                 }
 
                 isOperator("[") -> {
                     val openSquare =
-                            lexer.next()
+                            next()
 
                     val items =
                             mutableListOf<Pattern>()
@@ -998,7 +998,7 @@ class Parser(private val lexer: Lexer) {
                         items.add(parsePattern())
 
                         while (isOperator(",")) {
-                            lexer.skip()
+                            skip()
                             items.add(parsePattern())
                         }
                     }
@@ -1011,7 +1011,7 @@ class Parser(private val lexer: Lexer) {
 
                 isOperator("(") -> {
                     val openParenSymbol =
-                            lexer.next()
+                            next()
 
                     val patterns =
                             mutableListOf<Pattern>()
@@ -1020,7 +1020,7 @@ class Parser(private val lexer: Lexer) {
                         patterns.add(parsePattern())
 
                         while (isOperator(",")) {
-                            lexer.skip()
+                            skip()
                             patterns.add(parsePattern())
 
                         }
@@ -1033,14 +1033,14 @@ class Parser(private val lexer: Lexer) {
 
                 isToken(Token.LowerID) -> {
                     val lowerIDSymbol =
-                            lexer.next()
+                            next()
 
                     IdReferencePattern(lowerIDSymbol.location, lowerIDSymbol.text)
                 }
 
                 isToken(Token.Unknown) -> {
                     val unknownSymbol =
-                            lexer.next()
+                            next()
 
                     IgnorePattern(unknownSymbol.location)
                 }
@@ -1080,7 +1080,7 @@ class Parser(private val lexer: Lexer) {
 
     private fun matchOperator(text: String): Symbol {
         if (isOperator(text)) {
-            return lexer.next()
+            return next()
         } else {
             throw syntaxError("Expected '$text'")
         }
@@ -1089,7 +1089,7 @@ class Parser(private val lexer: Lexer) {
 
     private fun matchOperator(): Symbol {
         if (isOperator()) {
-            return lexer.next()
+            return next()
         } else {
             throw syntaxError("Expected an operator")
         }
@@ -1098,7 +1098,7 @@ class Parser(private val lexer: Lexer) {
 
     private fun matchToken(token: Token, text: String): Symbol {
         if (lexer.token == token) {
-            return lexer.next()
+            return next()
         } else {
             throw syntaxError("Expected $text")
         }
@@ -1106,6 +1106,10 @@ class Parser(private val lexer: Lexer) {
 
 
     private fun skip() =
+            lexer.skip()
+
+
+    private fun next() =
             lexer.next()
 
 
@@ -1117,21 +1121,7 @@ class Parser(private val lexer: Lexer) {
 
 
 private fun locationFrom(nodes: List<Node>): Location? =
-        when {
-            nodes.isEmpty() ->
-                null
-
-            else -> {
-                var current =
-                        nodes[0].location
-
-                for (node in nodes) {
-                    current += node.location
-                }
-
-                current
-            }
-        }
+        location(nodes.map { it.location })
 
 
 private fun Symbol.toID(): ID =
