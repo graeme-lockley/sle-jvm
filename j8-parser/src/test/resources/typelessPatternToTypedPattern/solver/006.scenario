@@ -34,16 +34,16 @@ singleton x =
   4=Data.Int -> Data.Bool
   1=Data.Int
   5=Data.Bool
-  7='2
-  8=file.package.name.File.List '2 -> file.package.name.File.List '2
+  7='6
+  8=file.package.name.File.List '6 -> file.package.name.File.List '6
   10=Data.Int -> Data.Int
   11=Data.Int
-  12='2 -> file.package.name.File.List '2
-  9='2
-  13=file.package.name.File.List '2
-  14=file.package.name.File.List '2
-  6='2
-  15='2
+  12='6 -> file.package.name.File.List '6
+  9='6
+  13=file.package.name.File.List '6
+  14=file.package.name.File.List '6
+  2='6
+  15='6
   18='16 -> file.package.name.File.List '16
   17='16
   19=file.package.name.File.List '16
@@ -105,7 +105,7 @@ Module:
                       name: e
                       type:
                         TVar:
-                          variable: 2
+                          variable: 6
                   expression:
                     IfExpression:
                       elseExpression:
@@ -117,7 +117,7 @@ Module:
                                   name: e
                                   type:
                                     TVar:
-                                      variable: 2
+                                      variable: 6
                               operator:
                                 CallExpression:
                                   operand:
@@ -184,31 +184,31 @@ Module:
                                             TArr:
                                               domain:
                                                 TVar:
-                                                  variable: 2
+                                                  variable: 6
                                               range:
                                                 TCon:
                                                   arguments: [
                                                       TVar:
-                                                        variable: 2
+                                                        variable: 6
                                                     ]
                                                   name: file.package.name.File.List
                                   type:
                                     TArr:
                                       domain:
                                         TVar:
-                                          variable: 2
+                                          variable: 6
                                       range:
                                         TCon:
                                           arguments: [
                                               TVar:
-                                                variable: 2
+                                                variable: 6
                                             ]
                                           name: file.package.name.File.List
                               type:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 2
+                                        variable: 6
                                     ]
                                   name: file.package.name.File.List
                           operator:
@@ -218,7 +218,7 @@ Module:
                                   name: e
                                   type:
                                     TVar:
-                                      variable: 2
+                                      variable: 6
                               operator:
                                 IdReference:
                                   name: Cons
@@ -226,21 +226,21 @@ Module:
                                     TArr:
                                       domain:
                                         TVar:
-                                          variable: 2
+                                          variable: 6
                                       range:
                                         TArr:
                                           domain:
                                             TCon:
                                               arguments: [
                                                   TVar:
-                                                    variable: 2
+                                                    variable: 6
                                                 ]
                                               name: file.package.name.File.List
                                           range:
                                             TCon:
                                               arguments: [
                                                   TVar:
-                                                    variable: 2
+                                                    variable: 6
                                                 ]
                                               name: file.package.name.File.List
                               type:
@@ -249,21 +249,21 @@ Module:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 2
+                                            variable: 6
                                         ]
                                       name: file.package.name.File.List
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 2
+                                            variable: 6
                                         ]
                                       name: file.package.name.File.List
                           type:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 2
+                                    variable: 6
                                 ]
                               name: file.package.name.File.List
                       guardExpression:
@@ -324,26 +324,26 @@ Module:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 2
+                                    variable: 6
                                 ]
                               name: file.package.name.File.List
                       type:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 2
+                                variable: 6
                             ]
                           name: file.package.name.File.List
                   type:
                     TArr:
                       domain:
                         TVar:
-                          variable: 2
+                          variable: 6
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 2
+                                variable: 6
                             ]
                           name: file.package.name.File.List
               type:
@@ -356,12 +356,12 @@ Module:
                     TArr:
                       domain:
                         TVar:
-                          variable: 2
+                          variable: 6
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 2
+                                variable: 6
                             ]
                           name: file.package.name.File.List
           ]

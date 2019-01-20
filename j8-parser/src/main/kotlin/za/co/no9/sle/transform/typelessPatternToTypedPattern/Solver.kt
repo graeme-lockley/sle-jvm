@@ -12,7 +12,7 @@ private typealias Unifier =
 
 fun unifies(varPump: VarPump, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
     val context =
-            SolverContext(varPump, constraints, environment)
+            SolverContext(varPump, constraints.leftVar().merge(), environment)
 
     val subst =
             context.solve()
@@ -195,6 +195,9 @@ private class ApplyContext(private val environment: Environment) {
                 is CallExpression ->
                     CallExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), apply(expression.operand, substitution))
 
+                is FieldProjectionExpression ->
+                    FieldProjectionExpression(expression.location, expression.type.apply(substitution), apply(expression.record, substitution), expression.name)
+
                 is CaseExpression ->
                     CaseExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), expression.items.map { apply(it, substitution) })
             }
@@ -302,24 +305,27 @@ private class SolverContext(private var varPump: VarPump, private var constraint
 
                             Pair(nullSubstitution, noConstraints)
                         }
-                    } else {
-                        if (t1.fields.size < t2.fields.size) {
-                            if (t2Map.keys.containsAll(t1Map.keys)) {
-                                unifyMany(t1Map.toSortedMap().values, t2Map.filterKeys { k -> t1Map.containsKey(k) }.toSortedMap().values)
-                            } else {
-                                errors.add(RecordFieldNamesMismatch(t1, t2))
-
-                                Pair(nullSubstitution, noConstraints)
-                            }
+                    } else if (t1.fixed) {
+                        if (t1Map.keys.containsAll(t2Map.keys)) {
+                            unifyMany(t1Map.filterKeys { k -> t2Map.containsKey(k) }.toSortedMap().values, t2Map.toSortedMap().values)
                         } else {
-                            if (t1Map.keys.containsAll(t2Map.keys)) {
-                                unifyMany(t1Map.filterKeys { k -> t2Map.containsKey(k) }.toSortedMap().values, t2Map.toSortedMap().values)
-                            } else {
-                                errors.add(RecordFieldNamesMismatch(t1, t2))
+                            errors.add(RecordFieldNamesMismatch(t1, t2))
 
-                                Pair(nullSubstitution, noConstraints)
-                            }
+                            Pair(nullSubstitution, noConstraints)
                         }
+                    } else if (t2.fixed) {
+                        if (t2Map.keys.containsAll(t1Map.keys)) {
+                            unifyMany(t1Map.toSortedMap().values, t2Map.filterKeys { k -> t1Map.containsKey(k) }.toSortedMap().values)
+                        } else {
+                            errors.add(RecordFieldNamesMismatch(t1, t2))
+
+                            Pair(nullSubstitution, noConstraints)
+                        }
+                    } else {
+                        val keys =
+                                t2Map.keys.intersect(t1Map.keys)
+
+                        unifyMany(t1Map.filterKeys { k -> keys.contains(k) }.toSortedMap().values, t2Map.filterKeys { k -> keys.contains(k) }.toSortedMap().values)
                     }
                 }
 

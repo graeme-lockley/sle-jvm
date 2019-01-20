@@ -19,6 +19,7 @@ import za.co.no9.sle.ast.typedPattern.Constructor
 import za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern
 import za.co.no9.sle.ast.typedPattern.Declaration
 import za.co.no9.sle.ast.typedPattern.Expression
+import za.co.no9.sle.ast.typedPattern.FieldProjectionExpression
 import za.co.no9.sle.ast.typedPattern.ID
 import za.co.no9.sle.ast.typedPattern.IdReference
 import za.co.no9.sle.ast.typedPattern.IdReferencePattern
@@ -562,8 +563,17 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     CallExpression(expression.location, tv, t1, t2)
                 }
 
-                is za.co.no9.sle.ast.typelessPattern.FieldProjectionExpression ->
-                    TODO("Record")
+                is za.co.no9.sle.ast.typelessPattern.FieldProjectionExpression -> {
+                    val tr =
+                            varPump.fresh(expression.location)
+
+                    val te =
+                            infer(expression.record)
+
+                    unify(te.type, TRec(false, listOf(Pair(expression.name.name, tr))))
+
+                    FieldProjectionExpression(expression.location, tr, te, transform(expression.name))
+                }
 
                 is za.co.no9.sle.ast.typelessPattern.CaseExpression -> {
                     val tp =

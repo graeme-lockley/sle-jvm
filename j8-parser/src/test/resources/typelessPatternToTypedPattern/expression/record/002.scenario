@@ -1,0 +1,640 @@
+-- Field projection
+concat : String -> String -> String
+concat a b =
+  a
+
+fullName arb =
+  concat arb.firstname arb.surname
+
+nextDay arb =
+  arb.dateOfBirth.day + arb.dateOfBirth.month + arb.luckyNumber
+-- constraints
+[
+  Data.String -> Data.String -> Data.String : '0 -> '1 -> '0
+  '2 : {firstname : '3, ..}
+  Data.String -> Data.String -> Data.String : '3 -> '4
+  '2 : {surname : '5, ..}
+  '4 : '5 -> '6
+  '7 : {dateOfBirth : '9, ..}
+  '9 : {day : '8, ..}
+  Data.Int -> Data.Int -> Data.Int : '8 -> '10
+  '7 : {dateOfBirth : '12, ..}
+  '12 : {month : '11, ..}
+  '10 : '11 -> '13
+  Data.Int -> Data.Int -> Data.Int : '13 -> '14
+  '7 : {luckyNumber : '15, ..}
+  '14 : '15 -> '16
+]
+-- substitution
+[
+  0=Data.String
+  1=Data.String
+  2={firstname : Data.String, surname : Data.String, ..}
+  3=Data.String
+  4=Data.String -> Data.String
+  5=Data.String
+  6=Data.String
+  7={dateOfBirth : {day : Data.Int, month : Data.Int, ..}, luckyNumber : Data.Int, ..}
+  9={day : Data.Int, month : Data.Int, ..}
+  8=Data.Int
+  10=Data.Int -> Data.Int
+  11=Data.Int
+  13=Data.Int
+  14=Data.Int -> Data.Int
+  15=Data.Int
+  16=Data.Int
+]
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: a
+                  type:
+                    TVar:
+                      variable: 0
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: b
+                      type:
+                        TVar:
+                          variable: 1
+                  expression:
+                    IdReference:
+                      name: a
+                      type:
+                        TVar:
+                          variable: 0
+                  type:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 1
+                      range:
+                        TVar:
+                          variable: 0
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 0
+                  range:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 1
+                      range:
+                        TVar:
+                          variable: 0
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: concat
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: arb
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: firstname
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: surname
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+              expression:
+                CallExpression:
+                  operand:
+                    FieldProjectionExpression:
+                      name:
+                        ID:
+                          name: surname
+                      record:
+                        IdReference:
+                          name: arb
+                          type:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: firstname
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                  Pair:
+                                    first: surname
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                ]
+                              fixed: false
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  operator:
+                    CallExpression:
+                      operand:
+                        FieldProjectionExpression:
+                          name:
+                            ID:
+                              name: firstname
+                          record:
+                            IdReference:
+                              name: arb
+                              type:
+                                TRec:
+                                  fields: [
+                                      Pair:
+                                        first: firstname
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                      Pair:
+                                        first: surname
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                    ]
+                                  fixed: false
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      operator:
+                        IdReference:
+                          name: concat
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: firstname
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: surname
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: fullName
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: firstname
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                        Pair:
+                          first: surname
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      ]
+                    fixed: false
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: arb
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: dateOfBirth
+                            second:
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: day
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                    Pair:
+                                      first: month
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                  ]
+                                fixed: false
+                          Pair:
+                            first: luckyNumber
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                        ]
+                      fixed: false
+              expression:
+                CallExpression:
+                  operand:
+                    FieldProjectionExpression:
+                      name:
+                        ID:
+                          name: luckyNumber
+                      record:
+                        IdReference:
+                          name: arb
+                          type:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: dateOfBirth
+                                    second:
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: day
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Int
+                                            Pair:
+                                              first: month
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Int
+                                          ]
+                                        fixed: false
+                                  Pair:
+                                    first: luckyNumber
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                ]
+                              fixed: false
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Int
+                  operator:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            FieldProjectionExpression:
+                              name:
+                                ID:
+                                  name: month
+                              record:
+                                FieldProjectionExpression:
+                                  name:
+                                    ID:
+                                      name: dateOfBirth
+                                  record:
+                                    IdReference:
+                                      name: arb
+                                      type:
+                                        TRec:
+                                          fields: [
+                                              Pair:
+                                                first: dateOfBirth
+                                                second:
+                                                  TRec:
+                                                    fields: [
+                                                        Pair:
+                                                          first: day
+                                                          second:
+                                                            TCon:
+                                                              arguments: []
+                                                              name: Data.Int
+                                                        Pair:
+                                                          first: month
+                                                          second:
+                                                            TCon:
+                                                              arguments: []
+                                                              name: Data.Int
+                                                      ]
+                                                    fixed: false
+                                              Pair:
+                                                first: luckyNumber
+                                                second:
+                                                  TCon:
+                                                    arguments: []
+                                                    name: Data.Int
+                                            ]
+                                          fixed: false
+                                  type:
+                                    TVar:
+                                      variable: 12
+                              type:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                          operator:
+                            CallExpression:
+                              operand:
+                                FieldProjectionExpression:
+                                  name:
+                                    ID:
+                                      name: day
+                                  record:
+                                    FieldProjectionExpression:
+                                      name:
+                                        ID:
+                                          name: dateOfBirth
+                                      record:
+                                        IdReference:
+                                          name: arb
+                                          type:
+                                            TRec:
+                                              fields: [
+                                                  Pair:
+                                                    first: dateOfBirth
+                                                    second:
+                                                      TRec:
+                                                        fields: [
+                                                            Pair:
+                                                              first: day
+                                                              second:
+                                                                TCon:
+                                                                  arguments: []
+                                                                  name: Data.Int
+                                                            Pair:
+                                                              first: month
+                                                              second:
+                                                                TCon:
+                                                                  arguments: []
+                                                                  name: Data.Int
+                                                          ]
+                                                        fixed: false
+                                                  Pair:
+                                                    first: luckyNumber
+                                                    second:
+                                                      TCon:
+                                                        arguments: []
+                                                        name: Data.Int
+                                                ]
+                                              fixed: false
+                                      type:
+                                        TRec:
+                                          fields: [
+                                              Pair:
+                                                first: day
+                                                second:
+                                                  TCon:
+                                                    arguments: []
+                                                    name: Data.Int
+                                              Pair:
+                                                first: month
+                                                second:
+                                                  TCon:
+                                                    arguments: []
+                                                    name: Data.Int
+                                            ]
+                                          fixed: false
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                              operator:
+                                IdReference:
+                                  name: +
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                          range:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                              type:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                      operator:
+                        IdReference:
+                          name: +
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Int
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  range:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: dateOfBirth
+                            second:
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: day
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                    Pair:
+                                      first: month
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
+                                  ]
+                                fixed: false
+                          Pair:
+                            first: luckyNumber
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                        ]
+                      fixed: false
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.Int
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: nextDay
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: dateOfBirth
+                          second:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: day
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                  Pair:
+                                    first: month
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                ]
+                              fixed: false
+                        Pair:
+                          first: luckyNumber
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.Int
+                      ]
+                    fixed: false
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.Int
+    ]
+  exports: []

@@ -18,6 +18,8 @@ data class TVar(
         override val location: Location,
         val variable: Var) : Type(location) {
 
+    constructor(variable: Var) : this(homeLocation, variable)
+
     override fun apply(s: Substitution) =
             s[variable] ?: this
 
