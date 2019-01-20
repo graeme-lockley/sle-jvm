@@ -188,6 +188,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
+                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
+                    TODO("Record")
+
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {
                     fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
                             when (e) {
@@ -476,6 +479,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     za.co.no9.sle.ast.enrichedCore.CallExpression(e.location, e.type, substitute(e.operator, old, new), substitute(e.operand, old, new))
 
+                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
+                    za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression(e.location, e.type, substitute(e.record, old, new), e.name)
+
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
             }
@@ -524,6 +530,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     canFail(e.operator) || canFail(e.operand)
+
+                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
+                    canFail(e.record)
 
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     e.expressions.fold(false) { a, b -> a || canFail(b) }

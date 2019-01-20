@@ -1,0 +1,57 @@
+-- Field projection
+concat : String -> String -> String
+concat a b =
+  a
+
+fullName arb =
+  concat arb.firstname arb.surname
+
+nextDay arb =
+  arb.dateOfBirth.day + arb.dateOfBirth.month + arb.luckyNumber
+-- enrichedASTpp
+concat : <> Data.String -> Data.String -> Data.String
+concat =
+  (LAMBDA a ->
+    (LAMBDA b ->
+      a
+    )
+  )
+
+
+fullName : <> {firstname : Data.String, surname : Data.String, ..} -> Data.String
+fullName =
+  (LAMBDA arb ->
+    (CALL
+      (CALL
+        concat
+        arb
+         .firstname)
+      )
+      arb
+       .surname)
+    )
+  )
+
+
+nextDay : <> {dateOfBirth : {day : Data.Int, month : Data.Int, ..}, luckyNumber : Data.Int, ..} -> Data.Int
+nextDay =
+  (LAMBDA arb ->
+    (CALL
+      (CALL
+        +
+        (CALL
+          (CALL
+            +
+            arb
+             .dateOfBirth)
+             .day)
+          )
+          arb
+           .dateOfBirth)
+           .month)
+        )
+      )
+      arb
+       .luckyNumber)
+    )
+  )

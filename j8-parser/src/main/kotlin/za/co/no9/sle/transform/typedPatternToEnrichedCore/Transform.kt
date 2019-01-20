@@ -193,7 +193,7 @@ private class Transform(val environment: Environment) {
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
                 is za.co.no9.sle.ast.typedPattern.FieldProjectionExpression ->
-                    TODO("Record")
+                    FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
                 is za.co.no9.sle.ast.typedPattern.CaseExpression -> {
                     val operator =
