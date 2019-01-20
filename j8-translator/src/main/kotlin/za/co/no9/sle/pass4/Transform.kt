@@ -4,6 +4,7 @@ import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Expression
 import za.co.no9.sle.ast.core.Unit
 import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TRec
 import za.co.no9.sle.typing.Type
 import za.co.no9.sle.typing.generalise
 
@@ -220,14 +221,76 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                         ))
                 )
 
-            is CallExpression ->
-                MethodCallExpression(
-                        TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
-                        "apply",
-                        listOf(translate(expression.operand)))
+            is CallExpression -> {
+                fun standard() =
+                        MethodCallExpression(
+                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
+                                "apply",
+                                listOf(translate(expression.operand)))
 
-            is FieldProjectionExpression ->
-                TODO("Record")
+                if (expression.operand.type is TRec) {
+//                    println ("Call TREC: ${(expression.operator.type as TArr).domain} -- ${expression.operand.type}")
+
+                    val domainFields =
+                            ((expression.operator.type as TArr).domain as TRec).fields.sortedBy { it.first }
+
+                    val argumentFields =
+                            (expression.operand.type as TRec).fields.sortedBy { it.first }
+
+                    if (domainFields.size == argumentFields.size)
+                        standard()
+                    else {
+                        val domainFieldNames =
+                                domainFields.map { it.first }.toSet()
+
+                        val argumentIndexes =
+                                argumentFields.mapIndexed { index, pair -> Pair(index, pair.first) }.filter { domainFieldNames.contains(it.second) }.map { it.first }
+
+                        MethodCallExpression(
+                                AnonymousObjectCreationExpression(
+                                        AnonymousClassDeclaration("java.util.function.Function<java.lang.Object[], java.lang.Object>", listOf(
+                                                za.co.no9.sle.pass4.MethodDeclaration(
+                                                        true,
+                                                        false,
+                                                        false,
+                                                        "apply",
+                                                        "java.lang.Object",
+                                                        listOf(Parameter("\$fromRecord", "java.lang.Object[]")),
+                                                        StatementBlock(listOf(
+                                                                VariableDeclarationStatement(
+                                                                        "java.lang.Object[]",
+                                                                        "\$toRecord",
+                                                                        ArrayInitialisationExpression(
+                                                                                "java.lang.Object[]",
+                                                                                argumentIndexes.map { ArrayAccessExpression(NameExpression("\$fromRecord"), IntegerLiteralExpression(it)) }
+                                                                        )
+                                                                ),
+                                                                ReturnStatement(
+                                                                        MethodCallExpression(
+                                                                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
+                                                                                "apply",
+                                                                                listOf(NameExpression("\$toRecord")))
+                                                                )
+                                                        ))
+                                                )
+                                        ))
+                                ),
+                                "apply",
+                                listOf(TypeCastExpression("java.lang.Object[]", translate(expression.operand))))
+                    }
+                } else
+                    standard()
+            }
+
+            is FieldProjectionExpression -> {
+                val fields =
+                        (expression.record.type as TRec).fields.map { it.first }.sorted()
+
+                val fieldIndex =
+                        fields.indexOf(expression.name.name)
+
+                ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(expression.record)), IntegerLiteralExpression(fieldIndex))
+            }
 
             is CaseExpression -> {
                 val selectorName =
