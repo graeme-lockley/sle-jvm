@@ -161,6 +161,12 @@ data class CallExpression(
         val operator: Expression,
         val operand: Expression) : Expression(location, type)
 
+data class FieldProjectionExpression(
+        override val location: Location,
+        override val type: Type,
+        val record: Expression,
+        val name: ID): Expression(location, type)
+
 data class CaseExpression(
         override val location: Location,
         override val type: Type,

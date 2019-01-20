@@ -279,6 +279,9 @@ fun Expression.asString(indent: Int = 0): String =
             is CallExpression ->
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
+            is FieldProjectionExpression ->
+                "${record.asString(indent)}${spaces(indent+1)}.${name.name})\n"
+
             is CaseExpression ->
                 "${spaces(indent)}(CASE $variable\n${clauses.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"
         }

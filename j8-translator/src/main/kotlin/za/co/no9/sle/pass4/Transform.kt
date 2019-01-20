@@ -226,6 +226,9 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                         "apply",
                         listOf(translate(expression.operand)))
 
+            is FieldProjectionExpression ->
+                TODO("Record")
+
             is CaseExpression -> {
                 val selectorName =
                         expression.variable

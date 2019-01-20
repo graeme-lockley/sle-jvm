@@ -189,7 +189,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
-                    TODO("Record")
+                    FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {
                     fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
@@ -430,6 +430,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is CallExpression ->
                     CallExpression(haystack.location, haystack.type, replaceFailWith(haystack.operator, needle), replaceFailWith(haystack.operand, needle))
 
+                is FieldProjectionExpression ->
+                    FieldProjectionExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.name)
+
                 is CaseExpression ->
                     CaseExpression(haystack.location, haystack.type, haystack.variable, haystack.clauses.map { CaseExpressionClause(it.constructorName, it.variables, replaceFailWith(it.expression, needle)) })
             }
@@ -468,7 +471,6 @@ private class Transform(val environment: Environment, private var counter: Int =
                         e
                 is za.co.no9.sle.ast.enrichedCore.LetExpression ->
                     za.co.no9.sle.ast.enrichedCore.LetExpression(e.location, e.type, e.declarations.map { substitute(it, old, new) }, substitute(e.expression, old, new))
-
 
                 is za.co.no9.sle.ast.enrichedCore.IfExpression ->
                     za.co.no9.sle.ast.enrichedCore.IfExpression(e.location, e.type, substitute(e.guardExpression, old, new), substitute(e.thenExpression, old, new), substitute(e.elseExpression, old, new))
