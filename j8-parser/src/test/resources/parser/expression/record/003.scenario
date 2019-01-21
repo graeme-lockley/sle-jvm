@@ -1,0 +1,138 @@
+-- Record type signature
+typealias Person =
+  { name : String
+  , dateOfBirth :
+    { day : Int
+    , month : Int
+    , year : Int
+    }
+  }
+
+funnyCalc : Person -> Int
+funnyCalc person =
+  person.age + person.month
+-- ast
+Module:
+  declarations: [
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: Person
+        type:
+          TRecord:
+            fields: [
+                Pair:
+                  first:
+                    ID:
+                      name: name
+                  second:
+                    TTypeReference:
+                      arguments: []
+                      name:
+                        QualifiedID:
+                          name: String
+                          qualifier: null
+                Pair:
+                  first:
+                    ID:
+                      name: dateOfBirth
+                  second:
+                    TRecord:
+                      fields: [
+                          Pair:
+                            first:
+                              ID:
+                                name: day
+                            second:
+                              TTypeReference:
+                                arguments: []
+                                name:
+                                  QualifiedID:
+                                    name: Int
+                                    qualifier: null
+                          Pair:
+                            first:
+                              ID:
+                                name: month
+                            second:
+                              TTypeReference:
+                                arguments: []
+                                name:
+                                  QualifiedID:
+                                    name: Int
+                                    qualifier: null
+                          Pair:
+                            first:
+                              ID:
+                                name: year
+                            second:
+                              TTypeReference:
+                                arguments: []
+                                name:
+                                  QualifiedID:
+                                    name: Int
+                                    qualifier: null
+                        ]
+              ]
+      LetSignature:
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: funnyCalc
+        type:
+          TArrow:
+            domain:
+              TTypeReference:
+                arguments: []
+                name:
+                  QualifiedID:
+                    name: Person
+                    qualifier: null
+            range:
+              TTypeReference:
+                arguments: []
+                name:
+                  QualifiedID:
+                    name: Int
+                    qualifier: null
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: person
+          ]
+        expression:
+          BinaryOpExpression:
+            left:
+              FieldProjectionExpression:
+                name:
+                  ID:
+                    name: age
+                record:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: person
+                        qualifier: null
+            operator:
+              ID:
+                name: +
+            right:
+              FieldProjectionExpression:
+                name:
+                  ID:
+                    name: month
+                record:
+                  IdReference:
+                    name:
+                      QualifiedID:
+                        name: person
+                        qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: funnyCalc
+    ]
+  exports: []
+  imports: []
