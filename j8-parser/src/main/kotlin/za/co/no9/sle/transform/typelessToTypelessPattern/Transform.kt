@@ -351,6 +351,9 @@ private class Transformer {
 
                 is za.co.no9.sle.ast.typeless.TArrow ->
                     TArrow(type.location, transform(type.domain), transform(type.range))
+
+                is za.co.no9.sle.ast.typeless.TRecord ->
+                    TODO("Record")
             }
 
 

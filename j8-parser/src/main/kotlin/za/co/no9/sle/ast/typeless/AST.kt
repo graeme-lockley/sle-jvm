@@ -202,7 +202,7 @@ data class CallExpression(
 data class FieldProjectionExpression(
         override val location: Location,
         val record: Expression,
-        val name: ID): Expression(location)
+        val name: ID) : Expression(location)
 
 data class CaseExpression(
         override val location: Location,
@@ -280,3 +280,7 @@ data class TArrow(
         override val location: Location,
         val domain: TType,
         val range: TType) : TType(location)
+
+data class TRecord(
+        override val location: Location,
+        val fields: List<Pair<ID, TType>>) : TType(location)

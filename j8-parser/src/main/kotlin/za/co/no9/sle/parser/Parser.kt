@@ -864,8 +864,41 @@ class Parser(private val lexer: Lexer) {
                     TNTuple(openParenSymbol.location + closeParenSymbol.location, types)
                 }
 
+                isOperator("{") -> {
+                    val openCurley =
+                            matchOperator("{")
+
+                    val fields =
+                            mutableListOf<Pair<ID, TType>>()
+
+                    if (isToken(Token.LowerID)) {
+                        while(true) {
+                            val lowerID =
+                                    matchToken(Token.LowerID, "Lower ID").toID()
+
+                            matchOperator(":")
+
+                            val type =
+                                    parseType(leftEdge)
+
+                            fields.add(Pair(lowerID, type))
+
+                            if (isOperator(",")) {
+                                skip()
+                            } else {
+                                break
+                            }
+                        }
+                    }
+
+                    val closeCurley =
+                            matchOperator("}")
+
+                    TRecord(openCurley.location + closeCurley.location, fields)
+                }
+
                 else -> {
-                    throw syntaxError("Expected lower ID, upper ID or '('")
+                    throw syntaxError("Expected lower ID, upper ID, '(' or '{'")
                 }
             }
 
