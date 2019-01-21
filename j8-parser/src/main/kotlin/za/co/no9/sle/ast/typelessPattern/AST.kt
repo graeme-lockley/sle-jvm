@@ -245,3 +245,7 @@ data class TArrow(
         override val location: Location,
         val domain: TType,
         val range: TType) : TType(location)
+
+data class TRecord(
+        override val location: Location,
+        val fields: List<Pair<ID, TType>>) : TType(location)

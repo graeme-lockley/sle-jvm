@@ -1168,6 +1168,9 @@ private fun transform(env: Environment, source: Item, ttype: TType, substitution
 
             is TArrow ->
                 TArr(transform(env, source, ttype.domain, substitution), transform(env, source, ttype.range, substitution))
+
+            is TRecord ->
+                TRec(true, ttype.fields.map { Pair(it.first.name, transform(env, source, it.second, substitution)) })
         }
 
 
@@ -1237,6 +1240,9 @@ private fun typeToScheme(env: Environment, varPump: VarPump, source: Item, ttype
 
                 is TArrow ->
                     TArr(map(ttype.domain), map(ttype.range))
+
+                is TRecord ->
+                    TRec(true, ttype.fields.map { Pair(it.first.name, map(it.second)) })
             }
 
 

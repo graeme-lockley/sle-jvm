@@ -353,7 +353,7 @@ private class Transformer {
                     TArrow(type.location, transform(type.domain), transform(type.range))
 
                 is za.co.no9.sle.ast.typeless.TRecord ->
-                    TODO("Record")
+                    TRecord(type.location, type.fields.map { Pair(transform(it.first), transform(it.second)) })
             }
 
 
