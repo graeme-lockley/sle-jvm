@@ -106,10 +106,8 @@ private class ApplyContext(private val environment: Environment) {
         val schemes =
                 appliedExpressions.map { generalise(it.type).normalize() }
 
-        val letDeclarationSchemeExpandedAliases =
-                letDeclaration.scheme.expandAliases(environment)
         for (scheme in schemes) {
-            if (!letDeclarationSchemeExpandedAliases.isCompatibleWith(scheme.expandAliases(environment))) {
+            if (!scheme.isCompatibleWith(environment, letDeclaration.scheme)) {
                 errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.id.name.name, letDeclaration.scheme, scheme))
             }
         }

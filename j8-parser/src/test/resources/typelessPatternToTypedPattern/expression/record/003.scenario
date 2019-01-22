@@ -1,0 +1,309 @@
+-- Type record
+typealias Person =
+  { name : String
+  , dateOfBirth :
+    { day : Int
+    , month : Int
+    , year : Int
+    }
+  }
+
+
+extractName : Person -> String
+extractName person =
+  person.name
+
+
+value : Person
+value =
+  { name = "Graeme"
+  , dateOfBirth =
+    { day = 9
+    , month = 4
+    , year = 1968
+    }
+  }
+
+
+main =
+  extractName value
+-- constraints
+[
+  '0 : {name : '1, ..}
+  alias.Person -> Data.String : '0 -> '1
+  alias.Person : {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
+  alias.Person -> Data.String : alias.Person -> '2
+]
+-- substitution
+[
+  0={name : Data.String, ..}
+  1=Data.String
+  2=Data.String
+]
+-- ast
+Module:
+  declarations: [
+      TypeAliasDeclaration:
+        name:
+          ID:
+            name: Person
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TRec:
+                fields: [
+                    Pair:
+                      first: name
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                    Pair:
+                      first: dateOfBirth
+                      second:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: day
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                              Pair:
+                                first: month
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                              Pair:
+                                first: year
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                            ]
+                          fixed: true
+                  ]
+                fixed: true
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: person
+                  type:
+                    TVar:
+                      variable: 0
+              expression:
+                FieldProjectionExpression:
+                  name:
+                    ID:
+                      name: name
+                  record:
+                    IdReference:
+                      name: person
+                      type:
+                        TVar:
+                          variable: 0
+                  type:
+                    TVar:
+                      variable: 1
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 0
+                  range:
+                    TVar:
+                      variable: 1
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: extractName
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TAlias:
+                    arguments: []
+                    name: Person
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+      LetDeclaration:
+        expressions: [
+            ConstantRecord:
+              fields: [
+                  ConstantField:
+                    name:
+                      ID:
+                        name: name
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: Graeme
+                  ConstantField:
+                    name:
+                      ID:
+                        name: dateOfBirth
+                    value:
+                      ConstantRecord:
+                        fields: [
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: day
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 9
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: month
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 4
+                            ConstantField:
+                              name:
+                                ID:
+                                  name: year
+                              value:
+                                ConstantInt:
+                                  type:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                  value: 1968
+                          ]
+                        type:
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: day
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: month
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: year
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                              ]
+                            fixed: true
+                ]
+              type:
+                TRec:
+                  fields: [
+                      Pair:
+                        first: name
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                      Pair:
+                        first: dateOfBirth
+                        second:
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: day
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: month
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                                Pair:
+                                  first: year
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.Int
+                              ]
+                            fixed: true
+                    ]
+                  fixed: true
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TAlias:
+                arguments: []
+                name: Person
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                IdReference:
+                  name: value
+                  type:
+                    TAlias:
+                      arguments: []
+                      name: Person
+              operator:
+                IdReference:
+                  name: extractName
+                  type:
+                    TArr:
+                      domain:
+                        TAlias:
+                          arguments: []
+                          name: Person
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+              type:
+                TCon:
+                  arguments: []
+                  name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: main
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.String
+    ]
+  exports: []
