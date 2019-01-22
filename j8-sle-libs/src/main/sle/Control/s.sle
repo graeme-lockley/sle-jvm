@@ -36,11 +36,9 @@ incActor next initValue =
     atLimit state =
       (mod state 100000) == 0
 
-    init : (Actor.Actor () -> ((Int, Actor.Actor ()), List Actor.Cmd))
     init self =
       ((initValue, self), [ Actor.cmd self () ])
 
-    update : (Int, Actor.Actor ()) -> () -> Actor.Response (Int, Actor.Actor ())
     update (state, self) message =
       if atLimit state then
         Response.none

@@ -37,7 +37,7 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
         val normalizedOther =
                 other.normalize()
 
-        return normalizedThis.parameters.size == normalizedOther.parameters.size && za.co.no9.sle.typing.isCompatibleWith(environment, normalizedThis.type, normalizedOther.type)
+        return za.co.no9.sle.typing.isCompatibleWith(environment, normalizedThis.type, normalizedOther.type)
     }
 }
 
