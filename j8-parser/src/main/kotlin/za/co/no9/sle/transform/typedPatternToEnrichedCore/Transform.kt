@@ -195,6 +195,9 @@ private class Transform(val environment: Environment) {
                 is za.co.no9.sle.ast.typedPattern.FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
+                is za.co.no9.sle.ast.typedPattern.UpdateRecordExpression ->
+                    UpdateRecordExpression(expression.location, expression.type, transform(expression.record), expression.updates.map { Pair(transform(it.first), transform(it.second)) })
+
                 is za.co.no9.sle.ast.typedPattern.CaseExpression -> {
                     val operator =
                             transform(expression.operator)

@@ -280,7 +280,14 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
             is FieldProjectionExpression ->
-                "${record.asString(indent)}${spaces(indent+1)}.${name.name})\n"
+                "${record.asString(indent)}${spaces(indent + 1)}.${name.name})\n"
+
+            is UpdateRecordExpression ->
+                "${spaces(indent)}{\n" +
+                        record.asString(indent + 1) +
+                        "${spaces(indent + 1)} |\n" +
+                        updates.joinToString("") { "${spaces(indent + 2)}${it.first.name} =\n${it.second.asString(indent + 3)}" } +
+                        "${spaces(indent)}}\n"
 
             is CaseExpression ->
                 "${spaces(indent)}(CASE $variable\n${clauses.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"

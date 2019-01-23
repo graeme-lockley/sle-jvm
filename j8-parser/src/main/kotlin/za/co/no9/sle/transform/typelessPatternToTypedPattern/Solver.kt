@@ -199,6 +199,9 @@ private class ApplyContext(private val environment: Environment) {
                 is FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type.apply(substitution), apply(expression.record, substitution), expression.name)
 
+                is UpdateRecordExpression ->
+                    UpdateRecordExpression(expression.location, expression.type.apply(substitution), apply(expression.record, substitution), expression.updates.map { Pair(it.first, apply(it.second, substitution)) })
+
                 is CaseExpression ->
                     CaseExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), expression.items.map { apply(it, substitution) })
             }

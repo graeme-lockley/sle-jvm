@@ -1,0 +1,37 @@
+-- Update record
+value1 person =
+  { person | name = "Andrew" }
+
+value2 person newDay =
+  { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
+-- coreASTpp
+value1 : <> {name : Data.String, ..} -> {name : Data.String, ..}
+value1 =
+  (LAMBDA person ->
+    {
+     person
+      |
+      name =
+       "Andrew"
+    }
+  )
+
+
+value2 : <0> {dateOfBirth : {day : '0, ..}, ..} -> '0 -> {dateOfBirth : {day : '0, ..}, ..}
+value2 =
+  (LAMBDA person ->
+    (LAMBDA newDay ->
+      {
+       person
+        |
+        dateOfBirth =
+         {
+          person
+           .dateOfBirth)
+           |
+           day =
+            newDay
+         }
+      }
+    )
+  )

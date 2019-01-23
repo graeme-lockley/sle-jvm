@@ -291,6 +291,9 @@ private class Transformer {
                 is za.co.no9.sle.ast.typeless.FieldProjectionExpression ->
                     FieldProjectionExpression(ast.location, transform(ast.record), transform(ast.name))
 
+                is za.co.no9.sle.ast.typeless.UpdateRecordExpression ->
+                    UpdateRecordExpression(ast.location, transform(ast.record), ast.updates.map { Pair(transform(it.first), transform(it.second)) })
+
                 is za.co.no9.sle.ast.typeless.CaseExpression ->
                     CaseExpression(ast.location, transform(ast.operator), ast.items.map { item -> CaseItem(item.location, transform(item.pattern), transform(item.expression)) })
             }

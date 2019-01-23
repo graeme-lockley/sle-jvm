@@ -178,6 +178,11 @@ data class FieldProjectionExpression(
         val record: Expression,
         val name: ID): Expression(location)
 
+data class UpdateRecordExpression(
+        override val location: Location,
+        val record: Expression,
+        val updates: List<Pair<ID, Expression>>) : Expression(location)
+
 data class CaseExpression(
         override val location: Location,
         val operator: Expression,

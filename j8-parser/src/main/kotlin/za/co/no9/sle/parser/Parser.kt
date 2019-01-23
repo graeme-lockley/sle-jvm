@@ -631,36 +631,77 @@ class Parser(private val lexer: Lexer) {
                 }
 
                 isOperator("{") -> {
-                    val fields =
-                            mutableListOf<ConstantField>()
-
                     val openCurley =
                             next()
 
-                    if (isToken(Token.LowerID)) {
-                        while (true) {
+                    if (isOperator("}")) {
+                        val closeCurley =
+                                matchOperator("}")
+
+                        ConstantRecord(openCurley.location + closeCurley.location, emptyList())
+                    } else {
+                        val first =
+                                parseExpression(leftEdge)
+
+                        if (isOperator("|")) {
+                            skip()
+
+                            val fields =
+                                    mutableListOf<Pair<ID, Expression>>()
+
+                            while(true) {
+                                val nextName =
+                                        matchToken(Token.LowerID, "Lower ID")
+
+                                matchOperator("=")
+
+                                val nextExpression =
+                                        parseExpression(leftEdge)
+
+                                fields.add(Pair(nextName.toID(), nextExpression))
+
+                                if (isOperator(","))
+                                    skip()
+                                else
+                                    break
+                            }
+                            val closeCurley =
+                                    matchOperator("}")
+
+                            UpdateRecordExpression(openCurley.location + closeCurley.location, first, fields)
+                        } else {
                             val name =
-                                    matchToken(Token.LowerID, "Lower ID")
+                                    if (first is IdReference && first.name.qualifier == null)
+                                        ID(first.location, first.name.name)
+                                    else
+                                        throw syntaxError("Expected a Lower ID")
 
                             matchOperator("=")
-
                             val expression =
                                     parseExpression(leftEdge)
 
-                            fields.add(ConstantField(name.location + expression.location, name.toID(), expression))
+                            val fields =
+                                    mutableListOf(ConstantField(name.location + expression.location, name, expression))
 
-                            if (isOperator(",")) {
+                            while (isOperator(",")) {
                                 skip()
-                            } else {
-                                break
+
+                                val nextName =
+                                        matchToken(Token.LowerID, "Lower ID")
+
+                                matchOperator("=")
+
+                                val nextExpression =
+                                        parseExpression(leftEdge)
+
+                                fields.add(ConstantField(nextName.location + nextExpression.location, nextName.toID(), nextExpression))
                             }
+                            val closeCurley =
+                                    matchOperator("}")
+
+                            ConstantRecord(openCurley.location + closeCurley.location, fields)
                         }
                     }
-
-                    val closeCurley =
-                            matchOperator("}")
-
-                    ConstantRecord(openCurley.location + closeCurley.location, fields)
                 }
 
                 isOperator("!") -> {
@@ -872,7 +913,7 @@ class Parser(private val lexer: Lexer) {
                             mutableListOf<Pair<ID, TType>>()
 
                     if (isToken(Token.LowerID)) {
-                        while(true) {
+                        while (true) {
                             val lowerID =
                                     matchToken(Token.LowerID, "Lower ID").toID()
 

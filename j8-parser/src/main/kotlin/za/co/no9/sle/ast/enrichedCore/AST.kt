@@ -175,6 +175,12 @@ data class FieldProjectionExpression(
         val record: Expression,
         val name: ID): Expression(location, type)
 
+data class UpdateRecordExpression(
+        override val location: Location,
+        override val type: Type,
+        val record: Expression,
+        val updates: List<Pair<ID, Expression>>) : Expression(location, type)
+
 data class Bar(
         override val location: Location,
         override val type: Type,

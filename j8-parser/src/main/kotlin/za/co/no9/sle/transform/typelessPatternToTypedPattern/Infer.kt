@@ -35,6 +35,7 @@ import za.co.no9.sle.ast.typedPattern.Pattern
 import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
+import za.co.no9.sle.ast.typedPattern.UpdateRecordExpression
 import za.co.no9.sle.ast.typedPattern.ValueDeclarationID
 import za.co.no9.sle.ast.typelessPattern.*
 import za.co.no9.sle.repository.Item
@@ -573,6 +574,23 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     unify(te.type, TRec(false, listOf(Pair(expression.name.name, tr))))
 
                     FieldProjectionExpression(expression.location, tr, te, transform(expression.name))
+                }
+
+                is za.co.no9.sle.ast.typelessPattern.UpdateRecordExpression -> {
+                    val te =
+                            infer(expression.record)
+
+                    val updates =
+                            expression.updates.map{ update ->
+                        val tv =
+                                infer(update.second)
+
+                        unify(te.type, TRec(false, listOf(Pair(update.first.name, tv.type))))
+
+                                Pair(transform(update.first), tv)
+                    }
+
+                    UpdateRecordExpression(expression.location, te.type, te, updates)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.CaseExpression -> {

@@ -1,0 +1,90 @@
+-- Update record
+value1 person =
+  { person | name = "Andrew" }
+
+value2 person newDay =
+  { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: person
+          ]
+        expression:
+          UpdateRecordExpression:
+            record:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: person
+                    qualifier: null
+            updates: [
+                Pair:
+                  first:
+                    ID:
+                      name: name
+                  second:
+                    ConstantString:
+                      value: Andrew
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value1
+      LetDeclaration:
+        arguments: [
+            IdReferencePattern:
+              name: person
+            IdReferencePattern:
+              name: newDay
+          ]
+        expression:
+          UpdateRecordExpression:
+            record:
+              IdReference:
+                name:
+                  QualifiedID:
+                    name: person
+                    qualifier: null
+            updates: [
+                Pair:
+                  first:
+                    ID:
+                      name: dateOfBirth
+                  second:
+                    UpdateRecordExpression:
+                      record:
+                        FieldProjectionExpression:
+                          name:
+                            ID:
+                              name: dateOfBirth
+                          record:
+                            IdReference:
+                              name:
+                                QualifiedID:
+                                  name: person
+                                  qualifier: null
+                      updates: [
+                          Pair:
+                            first:
+                              ID:
+                                name: day
+                            second:
+                              IdReference:
+                                name:
+                                  QualifiedID:
+                                    name: newDay
+                                    qualifier: null
+                        ]
+              ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value2
+    ]
+  exports: []
+  imports: []

@@ -191,6 +191,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
+                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
+                    UpdateRecordExpression(expression.location, expression.type, transform(expression.record), expression.updates.map { Pair(transform(it.first), transform(it.second)) })
+
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {
                     fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
                             when (e) {
@@ -433,6 +436,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is FieldProjectionExpression ->
                     FieldProjectionExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.name)
 
+                is UpdateRecordExpression ->
+                    UpdateRecordExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.updates.map { Pair(it.first, replaceFailWith(it.second, needle)) })
+
                 is CaseExpression ->
                     CaseExpression(haystack.location, haystack.type, haystack.variable, haystack.clauses.map { CaseExpressionClause(it.constructorName, it.variables, replaceFailWith(it.expression, needle)) })
             }
@@ -483,6 +489,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression(e.location, e.type, substitute(e.record, old, new), e.name)
+
+                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
+                    za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression(e.location, e.type, substitute(e.record, old, new), e.updates.map { Pair(it.first, substitute(it.second, old, new)) })
 
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
@@ -535,6 +544,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     canFail(e.record)
+
+                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
+                    e.updates.fold(canFail(e.record)) { a, b -> a || canFail(b.second) }
 
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     e.expressions.fold(false) { a, b -> a || canFail(b) }

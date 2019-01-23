@@ -292,6 +292,9 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                 ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(expression.record)), IntegerLiteralExpression(fieldIndex))
             }
 
+            is UpdateRecordExpression ->
+                TODO("Record")
+
             is CaseExpression -> {
                 val selectorName =
                         expression.variable

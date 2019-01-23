@@ -1,0 +1,388 @@
+-- Update record
+value1 person =
+  { person | name = "Andrew" }
+
+value2 person newDay =
+  { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
+-- constraints
+[
+  '0 : {name : Data.String, ..}
+  '1 : {dateOfBirth : '3, ..}
+  '3 : {day : '2, ..}
+  '1 : {dateOfBirth : '3, ..}
+]
+-- substitution
+[
+  0={name : Data.String, ..}
+  1={dateOfBirth : {day : '2, ..}, ..}
+  3={day : '2, ..}
+]
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: person
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: name
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+              expression:
+                UpdateRecordExpression:
+                  record:
+                    IdReference:
+                      name: person
+                      type:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: name
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                            ]
+                          fixed: false
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: name
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+                  updates: [
+                      Pair:
+                        first:
+                          ID:
+                            name: name
+                        second:
+                          ConstantString:
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            value: Andrew
+                    ]
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: name
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+                  range:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: name
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: false
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value1
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: name
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      ]
+                    fixed: false
+                range:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: name
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      ]
+                    fixed: false
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: person
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: dateOfBirth
+                            second:
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: day
+                                      second:
+                                        TVar:
+                                          variable: 2
+                                  ]
+                                fixed: false
+                        ]
+                      fixed: false
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: newDay
+                      type:
+                        TVar:
+                          variable: 2
+                  expression:
+                    UpdateRecordExpression:
+                      record:
+                        IdReference:
+                          name: person
+                          type:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: dateOfBirth
+                                    second:
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: day
+                                              second:
+                                                TVar:
+                                                  variable: 2
+                                          ]
+                                        fixed: false
+                                ]
+                              fixed: false
+                      type:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: dateOfBirth
+                                second:
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: day
+                                          second:
+                                            TVar:
+                                              variable: 2
+                                      ]
+                                    fixed: false
+                            ]
+                          fixed: false
+                      updates: [
+                          Pair:
+                            first:
+                              ID:
+                                name: dateOfBirth
+                            second:
+                              UpdateRecordExpression:
+                                record:
+                                  FieldProjectionExpression:
+                                    name:
+                                      ID:
+                                        name: dateOfBirth
+                                    record:
+                                      IdReference:
+                                        name: person
+                                        type:
+                                          TRec:
+                                            fields: [
+                                                Pair:
+                                                  first: dateOfBirth
+                                                  second:
+                                                    TRec:
+                                                      fields: [
+                                                          Pair:
+                                                            first: day
+                                                            second:
+                                                              TVar:
+                                                                variable: 2
+                                                        ]
+                                                      fixed: false
+                                              ]
+                                            fixed: false
+                                    type:
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: day
+                                              second:
+                                                TVar:
+                                                  variable: 2
+                                          ]
+                                        fixed: false
+                                type:
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: day
+                                          second:
+                                            TVar:
+                                              variable: 2
+                                      ]
+                                    fixed: false
+                                updates: [
+                                    Pair:
+                                      first:
+                                        ID:
+                                          name: day
+                                      second:
+                                        IdReference:
+                                          name: newDay
+                                          type:
+                                            TVar:
+                                              variable: 2
+                                  ]
+                        ]
+                  type:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 2
+                      range:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: dateOfBirth
+                                second:
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: day
+                                          second:
+                                            TVar:
+                                              variable: 2
+                                      ]
+                                    fixed: false
+                            ]
+                          fixed: false
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: dateOfBirth
+                            second:
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: day
+                                      second:
+                                        TVar:
+                                          variable: 2
+                                  ]
+                                fixed: false
+                        ]
+                      fixed: false
+                  range:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 2
+                      range:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: dateOfBirth
+                                second:
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: day
+                                          second:
+                                            TVar:
+                                              variable: 2
+                                      ]
+                                    fixed: false
+                            ]
+                          fixed: false
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value2
+        scheme:
+          Scheme:
+            parameters: [
+                2
+              ]
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: dateOfBirth
+                          second:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: day
+                                    second:
+                                      TVar:
+                                        variable: 2
+                                ]
+                              fixed: false
+                      ]
+                    fixed: false
+                range:
+                  TArr:
+                    domain:
+                      TVar:
+                        variable: 2
+                    range:
+                      TRec:
+                        fields: [
+                            Pair:
+                              first: dateOfBirth
+                              second:
+                                TRec:
+                                  fields: [
+                                      Pair:
+                                        first: day
+                                        second:
+                                          TVar:
+                                            variable: 2
+                                    ]
+                                  fixed: false
+                          ]
+                        fixed: false
+    ]
+  exports: []
