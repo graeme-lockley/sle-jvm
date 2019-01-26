@@ -66,7 +66,7 @@ fun isCompatibleWith(environment: Environment, t1: Type, t2: Type): Boolean =
                             t2.fields.toMap()
 
                     t1.fields.fold(true) { a, b ->
-                        t2Map.containsKey(b.first) && isCompatibleWith(environment, b.second, t2Map[b.first]!!)
+                        a && t2Map.containsKey(b.first) && isCompatibleWith(environment, b.second, t2Map[b.first]!!)
                     }
                 }
 
@@ -74,22 +74,14 @@ fun isCompatibleWith(environment: Environment, t1: Type, t2: Type): Boolean =
                 val x =
                         environment.alias(t1.name)
 
-                if (x == null) {
-                    false
-                } else {
-                    isCompatibleWith(environment, x.type, t2)
-                }
+                x != null && isCompatibleWith(environment, x.type, t2)
             }
 
             t2 is TAlias -> {
                 val x =
                         environment.alias(t2.name)
 
-                if (x == null) {
-                    false
-                } else {
-                    isCompatibleWith(environment, t1, x.type)
-                }
+                x != null && isCompatibleWith(environment, t1, x.type)
             }
 
             else ->
