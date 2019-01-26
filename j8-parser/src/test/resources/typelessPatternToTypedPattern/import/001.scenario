@@ -24,7 +24,7 @@ Module:
                       name: x
                       type:
                         TVar:
-                          variable: 5
+                          variable: 11
                   expression:
                     IdReference:
                       name: file.package.name.File.Nil
@@ -32,19 +32,19 @@ Module:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
                   type:
                     TArr:
                       domain:
                         TVar:
-                          variable: 5
+                          variable: 11
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
               type:
@@ -57,12 +57,12 @@ Module:
                     TArr:
                       domain:
                         TVar:
-                          variable: 5
+                          variable: 11
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
             LambdaExpression:
@@ -80,7 +80,7 @@ Module:
                       name: x
                       type:
                         TVar:
-                          variable: 5
+                          variable: 11
                   expression:
                     CallExpression:
                       operand:
@@ -90,7 +90,7 @@ Module:
                               name: x
                               type:
                                 TVar:
-                                  variable: 5
+                                  variable: 11
                           operator:
                             CallExpression:
                               operand:
@@ -157,31 +157,31 @@ Module:
                                         TArr:
                                           domain:
                                             TVar:
-                                              variable: 5
+                                              variable: 11
                                           range:
                                             TCon:
                                               arguments: [
                                                   TVar:
-                                                    variable: 5
+                                                    variable: 11
                                                 ]
                                               name: file.samples.List.List
                               type:
                                 TArr:
                                   domain:
                                     TVar:
-                                      variable: 5
+                                      variable: 11
                                   range:
                                     TCon:
                                       arguments: [
                                           TVar:
-                                            variable: 5
+                                            variable: 11
                                         ]
                                       name: file.samples.List.List
                           type:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 5
+                                    variable: 11
                                 ]
                               name: file.samples.List.List
                       operator:
@@ -191,7 +191,7 @@ Module:
                               name: x
                               type:
                                 TVar:
-                                  variable: 5
+                                  variable: 11
                           operator:
                             IdReference:
                               name: file.package.name.File.Cons
@@ -199,21 +199,21 @@ Module:
                                 TArr:
                                   domain:
                                     TVar:
-                                      variable: 5
+                                      variable: 11
                                   range:
                                     TArr:
                                       domain:
                                         TCon:
                                           arguments: [
                                               TVar:
-                                                variable: 5
+                                                variable: 11
                                             ]
                                           name: file.samples.List.List
                                       range:
                                         TCon:
                                           arguments: [
                                               TVar:
-                                                variable: 5
+                                                variable: 11
                                             ]
                                           name: file.samples.List.List
                           type:
@@ -222,33 +222,33 @@ Module:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 5
+                                        variable: 11
                                     ]
                                   name: file.samples.List.List
                               range:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 5
+                                        variable: 11
                                     ]
                                   name: file.samples.List.List
                       type:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
                   type:
                     TArr:
                       domain:
                         TVar:
-                          variable: 5
+                          variable: 11
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
               type:
@@ -261,12 +261,12 @@ Module:
                     TArr:
                       domain:
                         TVar:
-                          variable: 5
+                          variable: 11
                       range:
                         TCon:
                           arguments: [
                               TVar:
-                                variable: 5
+                                variable: 11
                             ]
                           name: file.samples.List.List
           ]

@@ -5,7 +5,133 @@ test =
         predicate testValue
 -- constraints
 [
-  '0 : '1 -> '2
-  Data.String -> Data.Bool : '1 -> '2
+  '2 -> Data.Bool : '0
+  '2 : '1
+  Data.String -> Data.Bool : '1 -> Data.Bool
   (Data.String -> Data.Bool) -> Data.String -> Data.Bool : '0 -> Data.String -> Data.Bool
 ]
+-- substitution
+[
+  0=Data.String -> Data.Bool
+  2=Data.String
+  1=Data.String
+]
+-- typeAST
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: predicate
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+              expression:
+                LambdaExpression:
+                  argument:
+                    IdReferencePattern:
+                      name: testValue
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: testValue
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      operator:
+                        IdReference:
+                          name: predicate
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.Bool
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+              type:
+                TArr:
+                  domain:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.Bool
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: test
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.Bool
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    range:
+                      TCon:
+                        arguments: []
+                        name: Data.Bool
+    ]
+  exports: []

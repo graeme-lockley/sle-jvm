@@ -539,10 +539,10 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is za.co.no9.sle.ast.typelessPattern.NestedExpressions ->
                     when {
                         expression.expressions.isEmpty() ->
-                            Unit(expression.location, typeUnit)
+                            Unit(expression.location, actualUnify(actualType, typeUnit))
 
                         expression.expressions.size == 1 ->
-                            infer(expression.expressions[0])
+                            infer(expression.expressions[0], actualType)
 
                         expression.expressions.size > 10 -> {
                             errors.add(TooManyTupleArguments(expression.location, 10, expression.expressions.size))
@@ -551,6 +551,17 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         }
 
                         else -> {
+                            val actualTypes =
+                                    splitActualTuple(actualType)
+
+                            val callType =
+                                    if (actualType != null && actualTypes != null)
+                                        actualTypes.foldRight(actualType) { a, b ->
+                                            TArr(a, b)
+                                        }
+                                    else
+                                        null
+
                             val constructorName =
                                     tupleConstructorName(expression.expressions.size)
 
@@ -559,24 +570,36 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                             infer(expression.expressions.fold(initial) { a, b ->
                                 za.co.no9.sle.ast.typelessPattern.CallExpression(a.location + b.location, a, b)
-
-                            })
+                            }, callType)
                         }
                     }
 
                 is za.co.no9.sle.ast.typelessPattern.CallExpression -> {
-                    val t1 =
-                            infer(expression.operator)
+                    if (actualType == null) {
+                        val t1 =
+                                infer(expression.operator)
 
-                    val t2 =
-                            infer(expression.operand)
+                        val t2 =
+                                infer(expression.operand)
 
-                    val tv =
-                            varPump.fresh(expression.location)
+                        val tv =
+                                varPump.fresh(expression.location)
 
-                    unify(t1.type, TArr(t2.type, tv))
+                        unify(t1.type, TArr(t2.type, tv))
 
-                    CallExpression(expression.location, tv, t1, t2)
+                        CallExpression(expression.location, tv, t1, t2)
+                    } else {
+                        val tv =
+                                varPump.fresh(expression.location)
+
+                        val t1 =
+                                infer(expression.operator, TArr(tv, actualType))
+
+                        val t2 =
+                                infer(expression.operand, tv)
+
+                        CallExpression(expression.location, actualType, t1, t2)
+                    }
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.FieldProjectionExpression -> {
@@ -644,26 +667,45 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is TArr ->
                     Pair(type.domain, type.range)
 
-                is TAlias -> {
-                    val alias =
-                            env.alias(type.name)
-
-                    when (alias) {
-                        null ->
-                            null
-
-                        else -> {
-                            val substitutionMap =
-                                    alias.parameters.zip(type.arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
-
-                            splitActualArrow(alias.type.apply(Substitution(substitutionMap)))
-                        }
-                    }
-                }
+                is TAlias ->
+                    splitActualArrow(resolveAlias(type))
 
                 else ->
                     null
             }
+
+
+    private fun splitActualTuple(type: Type?): List<Type>? =
+            when (type) {
+                null ->
+                    null
+
+                is TCon ->
+                    if (type.name.startsWith("Tuple"))
+                        type.arguments
+                    else
+                        null
+
+                else ->
+                    null
+            }
+
+    private fun resolveAlias(type: TAlias): Type? {
+        val alias =
+                env.alias(type.name)
+
+        return when (alias) {
+            null ->
+                null
+
+            else -> {
+                val substitutionMap =
+                        alias.parameters.zip(type.arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
+
+                alias.type.apply(Substitution(substitutionMap))
+            }
+        }
+    }
 
 
     private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern, actualType: Type? = null): Pattern =

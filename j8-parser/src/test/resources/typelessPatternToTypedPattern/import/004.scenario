@@ -59,39 +59,23 @@ Module:
                           range:
                             TArr:
                               domain:
-                                TCon:
-                                  arguments: [
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                    ]
-                                  name: file.samples.List.List
+                                TAlias:
+                                  arguments: []
+                                  name: IntList
                               range:
-                                TCon:
-                                  arguments: [
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                    ]
-                                  name: file.samples.List.List
+                                TAlias:
+                                  arguments: []
+                                  name: IntList
                   type:
                     TArr:
                       domain:
-                        TCon:
-                          arguments: [
-                              TCon:
-                                arguments: []
-                                name: Data.Int
-                            ]
-                          name: file.samples.List.List
+                        TAlias:
+                          arguments: []
+                          name: IntList
                       range:
-                        TCon:
-                          arguments: [
-                              TCon:
-                                arguments: []
-                                name: Data.Int
-                            ]
-                          name: file.samples.List.List
+                        TAlias:
+                          arguments: []
+                          name: IntList
               type:
                 TArr:
                   domain:

@@ -372,9 +372,8 @@ Module:
                                   operand:
                                     ConstantInt:
                                       type:
-                                        TCon:
-                                          arguments: []
-                                          name: Data.Int
+                                        TVar:
+                                          variable: 10
                                       value: 4
                                   operator:
                                     IdReference:
