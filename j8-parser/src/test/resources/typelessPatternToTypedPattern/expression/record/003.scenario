@@ -32,6 +32,7 @@ main =
   '0 : {name : '1, ..}
   alias.Person -> Data.String : '0 -> '1
   alias.Person : {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
+  alias.Person : alias.Person
   alias.Person -> Data.String : alias.Person -> '2
 ]
 -- substitution
@@ -217,41 +218,9 @@ Module:
                             fixed: true
                 ]
               type:
-                TRec:
-                  fields: [
-                      Pair:
-                        first: name
-                        second:
-                          TCon:
-                            arguments: []
-                            name: Data.String
-                      Pair:
-                        first: dateOfBirth
-                        second:
-                          TRec:
-                            fields: [
-                                Pair:
-                                  first: day
-                                  second:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
-                                Pair:
-                                  first: month
-                                  second:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
-                                Pair:
-                                  first: year
-                                  second:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
-                              ]
-                            fixed: true
-                    ]
-                  fixed: true
+                TAlias:
+                  arguments: []
+                  name: Person
           ]
         id:
           LowerIDDeclarationID:

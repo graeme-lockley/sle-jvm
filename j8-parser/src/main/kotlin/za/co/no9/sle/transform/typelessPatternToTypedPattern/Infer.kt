@@ -346,25 +346,28 @@ private class InferContext(private val source: Item, private val varPump: VarPum
     }
 
 
-    private fun infer(expression: za.co.no9.sle.ast.typelessPattern.Expression, actual: Type? = null): Expression =
+    private fun infer(expression: za.co.no9.sle.ast.typelessPattern.Expression, actualType: Type? = null): Expression =
             when (expression) {
                 is za.co.no9.sle.ast.typelessPattern.ConstantBool ->
-                    ConstantBool(expression.location, typeBool, expression.value)
+                    ConstantBool(expression.location, actualUnify(actualType, typeBool), expression.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantInt ->
-                    ConstantInt(expression.location, typeInt, expression.value)
+                    ConstantInt(expression.location, actualUnify(actualType, typeInt), expression.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantString ->
-                    ConstantString(expression.location, typeString, expression.value)
+                    ConstantString(expression.location, actualUnify(actualType, typeString), expression.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantChar ->
-                    ConstantChar(expression.location, typeChar, expression.value)
+                    ConstantChar(expression.location, actualUnify(actualType, typeChar), expression.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantRecord -> {
                     val fields =
                             expression.fields.map { ConstantField(it.location, transform(it.name), infer(it.value)) }
 
-                    ConstantRecord(expression.location, TRec(expression.location, true, fields.map { Pair(it.name.name, it.value.type) }), fields)
+                    val inferredType =
+                            TRec(expression.location, true, fields.map { Pair(it.name.name, it.value.type) })
+
+                    ConstantRecord(expression.location, actualUnify(actualType, inferredType), fields)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.IdReference -> {
@@ -720,6 +723,21 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                         ConstructorReferencePattern(pattern.location, returnType, constructorName, parameters)
                     }
+                }
+            }
+
+
+    private fun actualUnify(actualType: Type?, inferredType: Type): Type =
+            when  {
+                actualType == null ->
+                    inferredType
+
+                similar(actualType, inferredType) ->
+                    inferredType
+
+                else -> {
+                    unify(actualType, inferredType)
+                    actualType
                 }
             }
 
