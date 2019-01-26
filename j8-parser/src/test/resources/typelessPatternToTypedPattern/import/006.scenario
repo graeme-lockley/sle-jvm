@@ -107,21 +107,13 @@ Module:
                   range:
                     TArr:
                       domain:
-                        TCon:
-                          arguments: [
-                              TCon:
-                                arguments: []
-                                name: Data.Int
-                            ]
-                          name: file.samples.List.List
+                        TAlias:
+                          arguments: []
+                          name: List.IntList
                       range:
-                        TCon:
-                          arguments: [
-                              TCon:
-                                arguments: []
-                                name: Data.Int
-                            ]
-                          name: file.samples.List.List
+                        TAlias:
+                          arguments: []
+                          name: List.IntList
           ]
         id:
           LowerIDDeclarationID:

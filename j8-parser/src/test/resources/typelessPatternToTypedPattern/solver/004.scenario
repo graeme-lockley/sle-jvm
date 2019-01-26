@@ -19,15 +19,15 @@ Module:
                   name: x
                   type:
                     TVar:
-                      variable: 2
+                      variable: 1
               type:
                 TArr:
                   domain:
                     TVar:
-                      variable: 2
+                      variable: 1
                   range:
                     TVar:
-                      variable: 2
+                      variable: 1
           ]
         id:
           LowerIDDeclarationID:

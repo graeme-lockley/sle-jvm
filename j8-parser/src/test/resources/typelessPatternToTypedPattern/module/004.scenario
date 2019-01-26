@@ -114,21 +114,9 @@ Module:
                           arguments: []
                           name: Data.Int
               type:
-                TArr:
-                  domain:
-                    TCon:
-                      arguments: []
-                      name: Data.Int
-                  range:
-                    TArr:
-                      domain:
-                        TCon:
-                          arguments: []
-                          name: Data.Int
-                      range:
-                        TCon:
-                          arguments: []
-                          name: Data.Int
+                TAlias:
+                  arguments: []
+                  name: IntMap
           ]
         id:
           LowerIDDeclarationID:

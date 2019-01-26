@@ -3,6 +3,4 @@ value : Int
 value =
     123
 -- constraints
-[
-    Data.Int : Data.Int
-]
+[]

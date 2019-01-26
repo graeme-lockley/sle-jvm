@@ -9,5 +9,6 @@ add a b =
 [
     Data.Int -> Data.Int -> Data.Int : '0 -> '2
     '2 : '1 -> '3
-    alias.IntMap : '0 -> '1 -> '3
+    Data.Int -> Data.Int : '1 -> '3
+    alias.IntMap : '0 -> Data.Int -> Data.Int
 ]

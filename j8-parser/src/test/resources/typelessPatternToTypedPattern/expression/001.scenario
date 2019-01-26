@@ -3,6 +3,4 @@ value : Bool
 value =
     True
 -- constraints
-[
-    Data.Bool : Data.Bool
-]
+[]

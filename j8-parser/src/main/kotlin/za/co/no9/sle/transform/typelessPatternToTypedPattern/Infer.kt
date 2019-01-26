@@ -398,7 +398,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         IdReference(expression.location, typeError, expression.name.name)
                     } else {
                         val type =
-                                scheme.instantiate(varPump)
+                                actualUnify(actualType, scheme.instantiate(varPump))
 
                         when (valueBinding) {
                             is VariableBinding ->
@@ -447,7 +447,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         IdReference(expression.location, typeError, expression.name.name)
                     } else {
                         val type =
-                                scheme.instantiate(varPump)
+                                actualUnify(actualType, scheme.instantiate(varPump))
 
                         when (valueBinding) {
                             is VariableBinding ->
@@ -482,9 +482,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     val resultExpression =
                             infer(expression.expression)
 
+                    val resultType =
+                            actualUnify(actualType, resultExpression.type)
+
                     env = currentEnv
 
-                    LetExpression(expression.location, resultExpression.type, declarations as List<LetDeclaration>, resultExpression)
+                    LetExpression(expression.location, resultType, declarations as List<LetDeclaration>, resultExpression)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
@@ -500,21 +503,27 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     unify(t1.type, typeBool)
                     unify(t2.type, t3.type)
 
-                    IfExpression(expression.location, t2.type, t1, t2, t3)
+                    val resultType =
+                            actualUnify(actualType, t2.type)
+
+                    IfExpression(expression.location, resultType, t1, t2, t3)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.LambdaExpression -> {
                     val currentEnv = env
 
+                    val actualArrowType =
+                            splitActualArrow(actualType) ?: Pair(null, null)
+
                     val tp =
-                            infer(expression.argument)
+                            infer(expression.argument, actualArrowType.first)
 
                     val t =
-                            infer(expression.expression)
+                            infer(expression.expression, actualArrowType.second)
 
                     env = currentEnv
 
-                    LambdaExpression(expression.location, TArr(tp.type, t.type), tp, t)
+                    LambdaExpression(expression.location, actualUnify(actualType, TArr(tp.type, t.type)), tp, t)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.BinaryOpExpression -> {
@@ -627,7 +636,37 @@ private class InferContext(private val source: Item, private val varPump: VarPum
             }
 
 
-    private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern): Pattern =
+    private fun splitActualArrow(type: Type?): Pair<Type, Type>? =
+            when (type) {
+                null ->
+                    null
+
+                is TArr ->
+                    Pair(type.domain, type.range)
+
+                is TAlias -> {
+                    val alias =
+                            env.alias(type.name)
+
+                    when (alias) {
+                        null ->
+                            null
+
+                        else -> {
+                            val substitutionMap =
+                                    alias.parameters.zip(type.arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
+
+                            splitActualArrow(alias.type.apply(Substitution(substitutionMap)))
+                        }
+                    }
+                }
+
+                else ->
+                    null
+            }
+
+
+    private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern, actualType: Type? = null): Pattern =
             when (pattern) {
                 is za.co.no9.sle.ast.typelessPattern.ConstantIntPattern ->
                     ConstantIntPattern(pattern.location, typeInt, pattern.value)
@@ -728,7 +767,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
 
     private fun actualUnify(actualType: Type?, inferredType: Type): Type =
-            when  {
+            when {
                 actualType == null ->
                     inferredType
 
@@ -743,7 +782,8 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
 
     private fun unify(t1: Type, t2: Type) {
-        constraints += Constraint(t1, t2)
+        if (!similar(t1, t2))
+            constraints += Constraint(t1, t2)
     }
 }
 

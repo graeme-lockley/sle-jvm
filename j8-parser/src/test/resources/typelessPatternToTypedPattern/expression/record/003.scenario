@@ -32,7 +32,6 @@ main =
   '0 : {name : '1, ..}
   alias.Person -> Data.String : '0 -> '1
   alias.Person : {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
-  alias.Person : alias.Person
   alias.Person -> Data.String : alias.Person -> '2
 ]
 -- substitution
@@ -113,11 +112,13 @@ Module:
               type:
                 TArr:
                   domain:
-                    TVar:
-                      variable: 0
+                    TAlias:
+                      arguments: []
+                      name: Person
                   range:
-                    TVar:
-                      variable: 1
+                    TCon:
+                      arguments: []
+                      name: Data.String
           ]
         id:
           LowerIDDeclarationID:

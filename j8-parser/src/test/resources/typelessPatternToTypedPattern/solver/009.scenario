@@ -9,7 +9,6 @@ factorial n = n * factorial (n - 1)
   '2 : Data.Int -> '3
   Data.Int -> Data.Int : '3 -> '4
   '1 : '4 -> '5
-  Data.Int -> Data.Int : Data.Int -> Data.Int
   Data.Int -> Data.Int : '0 -> '5
 ]
 -- substitution

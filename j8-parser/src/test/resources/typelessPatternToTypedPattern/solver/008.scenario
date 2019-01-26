@@ -13,12 +13,15 @@ map f (Cons x xs) =
     Cons (f x) (map f xs)
 -- constraints
 [
+  file.package.name.File.List '3 : file.package.name.File.List '6
+  file.package.name.File.List '2 -> file.package.name.File.List '3 : file.package.name.File.List '5 -> file.package.name.File.List '3
+  ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '4 -> file.package.name.File.List '2 -> file.package.name.File.List '3
   '10 -> file.package.name.File.List '10 -> file.package.name.File.List '10 : '8 -> '9 -> file.package.name.File.List '10
   '7 : '8 -> '12
   '11 -> file.package.name.File.List '11 -> file.package.name.File.List '11 : '12 -> '13
   ('14 -> '15) -> file.package.name.File.List '14 -> file.package.name.File.List '15 : '7 -> '16
   '16 : '9 -> '17
   '13 : '17 -> '18
-  ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '4 -> file.package.name.File.List '5 -> file.package.name.File.List '6
-  ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '7 -> file.package.name.File.List '10 -> '18
+  file.package.name.File.List '2 -> file.package.name.File.List '3 : file.package.name.File.List '10 -> '18
+  ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '7 -> file.package.name.File.List '2 -> file.package.name.File.List '3
 ]

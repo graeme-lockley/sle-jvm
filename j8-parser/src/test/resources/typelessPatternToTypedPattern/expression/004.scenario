@@ -3,6 +3,4 @@ value : String
 value =
     "Hello World"
 -- constraints
-[
-    Data.String : Data.String
-]
+[]

@@ -10,7 +10,9 @@ nextDay arb =
   arb.dateOfBirth.day + arb.dateOfBirth.month + arb.luckyNumber
 -- constraints
 [
-  Data.String -> Data.String -> Data.String : '0 -> '1 -> '0
+  Data.String : '0
+  Data.String -> Data.String : '1 -> Data.String
+  Data.String -> Data.String -> Data.String : '0 -> Data.String -> Data.String
   '2 : {firstname : '3, ..}
   Data.String -> Data.String -> Data.String : '3 -> '4
   '2 : {surname : '5, ..}
@@ -68,29 +70,35 @@ Module:
                     IdReference:
                       name: a
                       type:
-                        TVar:
-                          variable: 0
+                        TCon:
+                          arguments: []
+                          name: Data.String
                   type:
                     TArr:
                       domain:
-                        TVar:
-                          variable: 1
+                        TCon:
+                          arguments: []
+                          name: Data.String
                       range:
-                        TVar:
-                          variable: 0
+                        TCon:
+                          arguments: []
+                          name: Data.String
               type:
                 TArr:
                   domain:
-                    TVar:
-                      variable: 0
+                    TCon:
+                      arguments: []
+                      name: Data.String
                   range:
                     TArr:
                       domain:
-                        TVar:
-                          variable: 1
+                        TCon:
+                          arguments: []
+                          name: Data.String
                       range:
-                        TVar:
-                          variable: 0
+                        TCon:
+                          arguments: []
+                          name: Data.String
           ]
         id:
           LowerIDDeclarationID:
