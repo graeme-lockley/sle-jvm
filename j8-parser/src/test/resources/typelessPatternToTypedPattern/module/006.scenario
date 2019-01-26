@@ -61,7 +61,7 @@ Module:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 2
+                            variable: 3
                         ]
                       name: file.package.name.File.List
               expression:
@@ -77,7 +77,7 @@ Module:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 2
+                            variable: 3
                         ]
                       name: file.package.name.File.List
                   range:
@@ -93,14 +93,14 @@ Module:
                         name: x
                         type:
                           TVar:
-                            variable: 2
+                            variable: 3
                       IdReferencePattern:
                         name: xs
                         type:
                           TCon:
                             arguments: [
                                 TVar:
-                                  variable: 2
+                                  variable: 3
                               ]
                             name: file.package.name.File.List
                     ]
@@ -108,7 +108,7 @@ Module:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 2
+                            variable: 3
                         ]
                       name: file.package.name.File.List
               expression:
@@ -122,7 +122,7 @@ Module:
                             TCon:
                               arguments: [
                                   TVar:
-                                    variable: 2
+                                    variable: 3
                                 ]
                               name: file.package.name.File.List
                       operator:
@@ -134,7 +134,7 @@ Module:
                                 TCon:
                                   arguments: [
                                       TVar:
-                                        variable: 2
+                                        variable: 3
                                     ]
                                   name: file.package.name.File.List
                               range:
@@ -193,7 +193,7 @@ Module:
                     TCon:
                       arguments: [
                           TVar:
-                            variable: 2
+                            variable: 3
                         ]
                       name: file.package.name.File.List
                   range:

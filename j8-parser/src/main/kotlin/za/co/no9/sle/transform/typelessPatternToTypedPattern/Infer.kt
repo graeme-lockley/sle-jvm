@@ -175,13 +175,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
     private fun infer(d: za.co.no9.sle.ast.typelessPattern.Declaration): Declaration =
             when (d) {
                 is za.co.no9.sle.ast.typelessPattern.LetDeclaration -> {
-                    val es =
-                            d.expressions.map { infer(it) }
-
                     val dScheme =
                             env.variable(d.id.name.name)
 
                     if (dScheme == null) {
+                        val es =
+                                d.expressions.map { infer(it) }
+
                         for (e in es.drop(1)) {
                             unify(es[0].type, e.type)
                         }
@@ -219,6 +219,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     } else {
                         val type =
                                 dScheme.instantiate(varPump)
+
+                        val es =
+                                d.expressions.map { infer(it, type) }
 
                         for (e in es) {
                             unify(type, e.type)
@@ -343,7 +346,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
     }
 
 
-    private fun infer(expression: za.co.no9.sle.ast.typelessPattern.Expression): Expression =
+    private fun infer(expression: za.co.no9.sle.ast.typelessPattern.Expression, actual: Type? = null): Expression =
             when (expression) {
                 is za.co.no9.sle.ast.typelessPattern.ConstantBool ->
                     ConstantBool(expression.location, typeBool, expression.value)
@@ -581,14 +584,14 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             infer(expression.record)
 
                     val updates =
-                            expression.updates.map{ update ->
-                        val tv =
-                                infer(update.second)
+                            expression.updates.map { update ->
+                                val tv =
+                                        infer(update.second)
 
-                        unify(te.type, TRec(false, listOf(Pair(update.first.name, tv.type))))
+                                unify(te.type, TRec(false, listOf(Pair(update.first.name, tv.type))))
 
                                 Pair(transform(update.first), tv)
-                    }
+                            }
 
                     UpdateRecordExpression(expression.location, te.type, te, updates)
                 }

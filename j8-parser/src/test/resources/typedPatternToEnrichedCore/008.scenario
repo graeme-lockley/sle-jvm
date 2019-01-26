@@ -36,7 +36,7 @@ map =
         (CALL
           (CALL
             (LAMBDA f ->
-              (LAMBDA Cons '6 file.package.name.File.List '6 ->
+              (LAMBDA Cons '8 file.package.name.File.List '8 ->
                 (CALL
                   (CALL
                     Cons

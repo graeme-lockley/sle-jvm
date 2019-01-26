@@ -14,13 +14,13 @@ length l =
             1 + (length xs)
 -- constraints
 [
-  '1 : file.package.name.File.List '3
-  '2 : Data.Int
-  '6 -> file.package.name.File.List '6 -> file.package.name.File.List '6 : '4 -> '5 -> file.package.name.File.List '6
-  Data.Int -> Data.Int -> Data.Int : Data.Int -> '7
-  file.package.name.File.List '8 -> Data.Int : '5 -> '9
-  '7 : '9 -> '10
-  '1 : file.package.name.File.List '6
-  '2 : '10
-  file.package.name.File.List '11 -> Data.Int : '1 -> '2
+  '2 : file.package.name.File.List '4
+  '3 : Data.Int
+  '7 -> file.package.name.File.List '7 -> file.package.name.File.List '7 : '5 -> '6 -> file.package.name.File.List '7
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '8
+  file.package.name.File.List '9 -> Data.Int : '6 -> '10
+  '8 : '10 -> '11
+  '2 : file.package.name.File.List '7
+  '3 : '11
+  file.package.name.File.List '1 -> Data.Int : '2 -> '3
 ]
