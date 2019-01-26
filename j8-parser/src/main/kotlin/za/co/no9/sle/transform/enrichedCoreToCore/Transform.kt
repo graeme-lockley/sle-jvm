@@ -191,8 +191,38 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
-                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
-                    UpdateRecordExpression(expression.location, expression.type, transform(expression.record), expression.updates.map { Pair(transform(it.first), transform(it.second)) })
+                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression -> {
+                    val fields =
+                            (expression.type as TRec).fields
+
+                    val updates =
+                            expression.updates.map { Pair(it.first.name, it.second) }.toMap()
+
+
+                    LetExpression(
+                            expression.location,
+                            expression.type,
+                            listOf(LetDeclaration(
+                                    expression.record.location,
+                                    generalise(expression.record.type),
+                                    LowerIDDeclarationID(expression.record.location, ID(expression.record.location, "\$record")),
+                                    transform(expression.record))
+                            ),
+                            ConstantRecord(
+                                    expression.location,
+                                    expression.type,
+                                    fields.map {
+                                        val update =
+                                                updates[it.first]
+
+                                        if (update == null)
+                                            ConstantField(expression.location, ID(expression.location, it.first), FieldProjectionExpression(expression.location, it.second, IdReference(expression.location, it.second, "\$record"), ID(expression.location, it.first)))
+                                        else
+                                            ConstantField(expression.location, ID(expression.location, it.first), transform(update))
+                                    }
+                            )
+                    )
+                }
 
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {
                     fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
@@ -435,9 +465,6 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is FieldProjectionExpression ->
                     FieldProjectionExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.name)
-
-                is UpdateRecordExpression ->
-                    UpdateRecordExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.updates.map { Pair(it.first, replaceFailWith(it.second, needle)) })
 
                 is CaseExpression ->
                     CaseExpression(haystack.location, haystack.type, haystack.variable, haystack.clauses.map { CaseExpressionClause(it.constructorName, it.variables, replaceFailWith(it.expression, needle)) })

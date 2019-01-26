@@ -42,7 +42,7 @@ import za.co.no9.sle.repository.Item
 import za.co.no9.sle.typing.*
 
 
-data class InferResult(val module: Module, val constaints: Constraints, val environment: Environment)
+data class InferResult(val module: Module, val constraints: Constraints, val environment: Environment)
 
 
 fun infer(source: Item, varPump: VarPump, module: za.co.no9.sle.ast.typelessPattern.Module, env: Environment): Either<Errors, InferResult> {

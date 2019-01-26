@@ -22,15 +22,15 @@ fun parse(source: Item, environment: Environment, callback: ParseCallback): Eith
             .andThen { infer(source, varPump, it, environment) }
             .andThen { inferResult ->
                 callback.unresolvedTypedPatternModule(inferResult.module)
-                callback.constraints(inferResult.constaints)
+                callback.constraints(inferResult.constraints)
 
-                unifies(varPump, inferResult.constaints, inferResult.environment)
+                unifies(varPump, inferResult.constraints, inferResult.environment)
                         .andThen { substitution ->
                             callback.substitution(substitution)
 
                             inferResult.module.apply(inferResult.environment, substitution)
                                     .map { resolvedModule ->
-                                        InferResult(resolvedModule, inferResult.constaints, inferResult.environment)
+                                        InferResult(resolvedModule, inferResult.constraints, inferResult.environment)
                                     }
                         }
             }

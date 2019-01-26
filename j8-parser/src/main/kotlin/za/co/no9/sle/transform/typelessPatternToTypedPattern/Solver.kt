@@ -107,9 +107,6 @@ private class ApplyContext(private val environment: Environment) {
                 appliedExpressions.map { generalise(it.type).normalize() }
 
         for (scheme in schemes) {
-            if (scheme.toString() == "<> file.users.graemelockley.projects.slejvm.j8slelibs.src.main.sle.control.Actor.Actor Data.Unit -> resource.Prelude.Tuple resource.Prelude.Tuple Data.Int file.users.graemelockley.projects.slejvm.j8slelibs.src.main.sle.control.Actor.Actor Data.Unit resource.Prelude.List file.users.graemelockley.projects.slejvm.j8slelibs.src.main.sle.control.Actor.Cmd")
-                println("we are here")
-
             if (!scheme.isCompatibleWith(environment, letDeclaration.scheme)) {
                 errors.add(IncompatibleDeclarationSignature(letDeclaration.location, letDeclaration.id.name.name, letDeclaration.scheme, scheme))
             }

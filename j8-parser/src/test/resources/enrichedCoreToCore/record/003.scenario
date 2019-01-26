@@ -1,37 +1,62 @@
 -- Update record
+typealias Person =
+  { name : String
+  , dateOfBirth :
+    { day : Int
+    , month : Int
+    }
+  }
+
+value1 : Person -> Person
 value1 person =
   { person | name = "Andrew" }
 
+value2 : Person -> Int -> Person
 value2 person newDay =
   { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
 -- coreASTpp
-value1 : <> {name : Data.String, ..} -> {name : Data.String, ..}
+typealias Person =
+  <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int}}
+
+value1 : <> alias.Person -> alias.Person
 value1 =
   (LAMBDA person ->
-    {
-     person
-      |
-      name =
-       "Andrew"
-    }
+    (LET
+      $record : <> {name : Data.String, ..}
+      $record =
+        person
+
+      {
+       name =
+        "Andrew"
+      }
+    )
   )
 
 
-value2 : <0> {dateOfBirth : {day : '0, ..}, ..} -> '0 -> {dateOfBirth : {day : '0, ..}, ..}
+value2 : <> alias.Person -> Data.Int -> alias.Person
 value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->
-      {
-       person
-        |
-        dateOfBirth =
-         {
+      (LET
+        $record : <> {dateOfBirth : {day : Data.Int, ..}, ..}
+        $record =
           person
-           .dateOfBirth)
-           |
-           day =
-            newDay
-         }
-      }
+
+        {
+         dateOfBirth =
+          (LET
+            $record : <> {day : Data.Int, ..}
+            $record =
+              person
+               .dateOfBirth)
+
+            {
+             day =
+              newDay
+            }
+          )
+        }
+      )
     )
   )
