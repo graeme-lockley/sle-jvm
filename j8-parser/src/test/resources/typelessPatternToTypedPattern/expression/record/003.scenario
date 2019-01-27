@@ -30,7 +30,8 @@ main =
 -- constraints
 [
   '0 : {name : '1, ..}
-  alias.Person -> Data.String : '0 -> '1
+  Data.String : '1
+  alias.Person -> Data.String : '0 -> Data.String
   alias.Person : {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
   alias.Person -> Data.String : alias.Person -> '2
 ]
@@ -107,8 +108,9 @@ Module:
                         TVar:
                           variable: 0
                   type:
-                    TVar:
-                      variable: 1
+                    TCon:
+                      arguments: []
+                      name: Data.String
               type:
                 TArr:
                   domain:

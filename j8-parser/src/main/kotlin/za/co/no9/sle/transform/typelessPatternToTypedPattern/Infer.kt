@@ -611,7 +611,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                     unify(te.type, TRec(false, listOf(Pair(expression.name.name, tr))))
 
-                    FieldProjectionExpression(expression.location, tr, te, transform(expression.name))
+                    FieldProjectionExpression(expression.location, actualUnify(actualType, tr), te, transform(expression.name))
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.UpdateRecordExpression -> {
