@@ -492,13 +492,13 @@ private class InferContext(private val source: Item, private val varPump: VarPum
 
                 is za.co.no9.sle.ast.typelessPattern.IfExpression -> {
                     val t1 =
-                            infer(expression.guardExpression)
+                            infer(expression.guardExpression, typeBool)
 
                     val t2 =
-                            infer(expression.thenExpression)
+                            infer(expression.thenExpression, actualType)
 
                     val t3 =
-                            infer(expression.elseExpression)
+                            infer(expression.elseExpression, actualType)
 
                     unify(t1.type, typeBool)
                     unify(t2.type, t3.type)

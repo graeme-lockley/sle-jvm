@@ -4,9 +4,9 @@ value =
     \a b c -> if a then b else c
 -- constraints
 [
-  '0 : Data.Bool
-  '1 : '2
+  Data.Bool : '0
   Data.String : '1
+  Data.String : '2
   Data.String -> Data.String : '2 -> Data.String
   Data.String -> Data.String -> Data.String : '1 -> Data.String -> Data.String
   Data.Bool -> Data.String -> Data.String -> Data.String : '0 -> Data.String -> Data.String -> Data.String
