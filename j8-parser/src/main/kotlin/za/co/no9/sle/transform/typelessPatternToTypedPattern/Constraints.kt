@@ -39,7 +39,7 @@ data class Constraints(val state: List<Constraint> = emptyList()) {
             })
 
 
-    fun merge(): Constraints {
+    fun merge(env: Environment): Constraints {
         val constraints =
                 state.toMutableList()
 
@@ -57,10 +57,14 @@ data class Constraints(val state: List<Constraint> = emptyList()) {
 
                     if (innerConstraint.t1 == current.t1) {
                         val mergeResult =
-                                merge(current.t2, innerConstraint.t2)
+                                merge(resolveAlias(env, current.t2), resolveAlias(env, innerConstraint.t2))
 
                         if (mergeResult == null) {
-                            println("Error - can't merge")
+                            val x1 = resolveAlias(env, current.t2)
+                            val x2 = resolveAlias(env, innerConstraint.t2)
+                            val x3 =
+                                    merge(x1, x2)
+                            println("Error - can't merge: $x1   $x2   $x3")
                             inner += 1
                         } else {
                             constraints[lp] = Constraint(current.t1, mergeResult.second)
@@ -69,13 +73,16 @@ data class Constraints(val state: List<Constraint> = emptyList()) {
                             if (mergeResult.first != nullSubstitution) {
                                 var l = 0
                                 while (l < constraints.size) {
-                                    val constraint =
-                                            constraints[l]
 
-                                    constraints[l] = Constraint(constraint.t1.apply(mergeResult.first), constraint.t2.apply(mergeResult.first))
+                                    fun ff(type: Type): Type =
+                                            type.apply(mergeResult.first)
+
+                                    constraints[l] = Constraint(ff(constraints[l].t1), ff(constraints[l].t2))
 
                                     l += 1
                                 }
+
+                                constraints += mergeResult.first.state.map { Constraint(TVar(it.key), it.value) }
                             }
                         }
                     } else {
@@ -91,12 +98,15 @@ data class Constraints(val state: List<Constraint> = emptyList()) {
     }
 
 
-    private fun merge(t1: Type, t2: Type): Pair<Substitution, Type>? =
+    private fun merge(t1: Type?, t2: Type?): Pair<Substitution, Type>? =
             when {
-                t1 == t2 ->
+                t1 == null || t2 == null ->
+                    null
+
+                similar(t1, t2) ->
                     Pair(nullSubstitution, t1)
 
-                t1 is TRec && !t1.fixed && t2 is TRec && !t2.fixed -> {
+                t1 is TRec && !t1.fixed && t2 is TRec -> {
                     val t1Map =
                             t1.fields.toMap()
 
@@ -139,7 +149,7 @@ data class Constraints(val state: List<Constraint> = emptyList()) {
 
                         Pair(
                                 substitution,
-                                TRec(false, t1Fields + t2Fields + combinedFields)
+                                TRec(t2.fixed, t1Fields + t2Fields + combinedFields)
                         )
                     }
                 }

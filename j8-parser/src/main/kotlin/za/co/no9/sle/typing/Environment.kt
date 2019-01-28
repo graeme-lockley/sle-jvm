@@ -221,6 +221,32 @@ data class OpaqueImportADTBinding(
 }
 
 
+fun resolveAlias(env: Environment, type: Type?): Type? =
+        when (type) {
+            null ->
+                null
+
+            is TAlias -> {
+                val alias =
+                        env.alias(type.name)
+
+                when (alias) {
+                    null ->
+                        null
+
+                    else -> {
+                        val substitutionMap =
+                                alias.parameters.zip(type.arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
+
+                        alias.type.apply(Substitution(substitutionMap))
+                    }
+                }
+            }
+            else ->
+                type
+        }
+
+
 val emptyEnvironment =
         Environment()
 

@@ -4,6 +4,7 @@ typealias Person =
   , dateOfBirth :
     { day : Int
     , month : Int
+    , year : Int
     }
   }
 
@@ -16,19 +17,22 @@ value2 person newDay =
   { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
 -- coreASTpp
 typealias Person =
-  <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int}}
+  <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
 
 value1 : <> alias.Person -> alias.Person
 value1 =
   (LAMBDA person ->
     (LET
-      $record : <> {name : Data.String, ..}
+      $record : <> {dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}, name : Data.String}
       $record =
         person
 
       {
        name =
         "Andrew"
+       dateOfBirth =
+        $record
+         .dateOfBirth)
       }
     )
   )
@@ -39,14 +43,17 @@ value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->
       (LET
-        $record : <> {dateOfBirth : {day : Data.Int, ..}, ..}
+        $record : <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
         $record =
           person
 
         {
+         name =
+          $record
+           .name)
          dateOfBirth =
           (LET
-            $record : <> {day : Data.Int, ..}
+            $record : <> {day : Data.Int, month : Data.Int, year : Data.Int}
             $record =
               person
                .dateOfBirth)
@@ -54,6 +61,12 @@ value2 =
             {
              day =
               newDay
+             month =
+              $record
+               .month)
+             year =
+              $record
+               .year)
             }
           )
         }

@@ -2,10 +2,7 @@ package za.co.no9.sle.transform.typelessPatternToTypedPattern
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import za.co.no9.sle.typing.TRec
-import za.co.no9.sle.typing.TVar
-import za.co.no9.sle.typing.typeInt
-import za.co.no9.sle.typing.typeString
+import za.co.no9.sle.typing.*
 
 
 class ConstraintMergeTests : StringSpec({
@@ -34,7 +31,7 @@ class ConstraintMergeTests : StringSpec({
                         Constraint(TVar(1), TRec(false, listOf())),
                         Constraint(TVar(3), typeString)))
 
-        constraints.merge()
+        constraints.merge(initialEnvironment)
                 .shouldBe(
                         Constraints(listOf(
                                 Constraint(TVar(1), TRec(false, listOf())),
@@ -52,7 +49,7 @@ class ConstraintMergeTests : StringSpec({
                         Constraint(TVar(1), TRec(false, listOf(Pair("name", typeString)))),
                         Constraint(TVar(3), typeString)))
 
-        constraints.merge()
+        constraints.merge(initialEnvironment)
                 .shouldBe(
                         Constraints(listOf(
                                 Constraint(TVar(1), TRec(false, listOf(Pair("name", typeString)))),
@@ -70,7 +67,7 @@ class ConstraintMergeTests : StringSpec({
                         Constraint(TVar(1), TRec(false, listOf(Pair("surname", typeString)))),
                         Constraint(TVar(3), typeString)))
 
-        constraints.merge()
+        constraints.merge(initialEnvironment)
                 .shouldBe(
                         Constraints(listOf(
                                 Constraint(TVar(1), TRec(false, listOf(Pair("firstName", typeString), Pair("surname", typeString)))),
@@ -88,11 +85,13 @@ class ConstraintMergeTests : StringSpec({
                         Constraint(TVar(1), TRec(false, listOf(Pair("name", TVar(3))))),
                         Constraint(TVar(3), typeString)))
 
-        constraints.merge()
+        constraints.merge(initialEnvironment)
                 .shouldBe(
                         Constraints(listOf(
                                 Constraint(TVar(1), TRec(false, listOf(Pair("name", TVar(2))))),
-                                Constraint(TVar(2), typeString)))
+                                Constraint(TVar(2), typeString),
+                                Constraint(TVar(3), TVar(2)))
+                        )
                 )
     }
 })

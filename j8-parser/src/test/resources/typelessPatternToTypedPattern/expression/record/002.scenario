@@ -45,6 +45,7 @@ nextDay arb =
   14=Data.Int -> Data.Int
   15=Data.Int
   16=Data.Int
+  12={day : Data.Int, month : Data.Int, ..}
 ]
 -- ast
 Module:
@@ -425,8 +426,22 @@ Module:
                                             ]
                                           fixed: false
                                   type:
-                                    TVar:
-                                      variable: 12
+                                    TRec:
+                                      fields: [
+                                          Pair:
+                                            first: day
+                                            second:
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Int
+                                          Pair:
+                                            first: month
+                                            second:
+                                              TCon:
+                                                arguments: []
+                                                name: Data.Int
+                                        ]
+                                      fixed: false
                               type:
                                 TCon:
                                   arguments: []

@@ -192,8 +192,11 @@ private class Transform(val environment: Environment, private var counter: Int =
                     FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
 
                 is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression -> {
+                    val resolveAlias =
+                            resolveAlias(environment, expression.type)
+
                     val fields =
-                            (expression.type as TRec).fields
+                            (resolveAlias as TRec).fields
 
                     val updates =
                             expression.updates.map { Pair(it.first.name, it.second) }.toMap()

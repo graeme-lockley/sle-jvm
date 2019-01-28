@@ -12,7 +12,7 @@ private typealias Unifier =
 
 fun unifies(varPump: VarPump, constraints: Constraints, environment: Environment): Either<Errors, Substitution> {
     val context =
-            SolverContext(varPump, constraints.leftVar().merge(), environment)
+            SolverContext(varPump, constraints.leftVar().merge(environment), environment)
 
     val subst =
             context.solve()

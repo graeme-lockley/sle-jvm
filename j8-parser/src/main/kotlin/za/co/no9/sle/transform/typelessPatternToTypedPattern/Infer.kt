@@ -618,17 +618,29 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     val te =
                             infer(expression.record)
 
+                    val resolvedActualType =
+                            resolveAlias(env, actualType)
+
+                    val actualNames =
+                            when (resolvedActualType) {
+                                is TRec ->
+                                    emptyMap<String, Type>() + resolvedActualType.fields
+
+                                else ->
+                                    emptyMap()
+                            }
+
                     val updates =
                             expression.updates.map { update ->
                                 val tv =
-                                        infer(update.second)
+                                        infer(update.second, actualNames[update.first.name])
 
                                 unify(te.type, TRec(false, listOf(Pair(update.first.name, tv.type))))
 
                                 Pair(transform(update.first), tv)
                             }
 
-                    UpdateRecordExpression(expression.location, te.type, te, updates)
+                    UpdateRecordExpression(expression.location, actualUnify(actualType, te.type), te, updates)
                 }
 
                 is za.co.no9.sle.ast.typelessPattern.CaseExpression -> {
@@ -668,7 +680,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     Pair(type.domain, type.range)
 
                 is TAlias ->
-                    splitActualArrow(resolveAlias(type))
+                    splitActualArrow(resolveAlias(env, type))
 
                 else ->
                     null
@@ -689,23 +701,6 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 else ->
                     null
             }
-
-    private fun resolveAlias(type: TAlias): Type? {
-        val alias =
-                env.alias(type.name)
-
-        return when (alias) {
-            null ->
-                null
-
-            else -> {
-                val substitutionMap =
-                        alias.parameters.zip(type.arguments).fold(emptyMap<Var, Type>()) { a, b -> a + b }
-
-                alias.type.apply(Substitution(substitutionMap))
-            }
-        }
-    }
 
 
     private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern, actualType: Type? = null): Pattern =

@@ -38,6 +38,8 @@ data class TAlias(
         val name: QString,
         val arguments: List<Type> = emptyList()) : Type(location) {
 
+    constructor(name: QString, arguments: List<Type>) : this(homeLocation, name, arguments)
+
     override fun apply(s: Substitution) =
             if (arguments.isEmpty())
                 this
