@@ -23,7 +23,7 @@ value1 : <> alias.Person -> alias.Person
 value1 =
   (LAMBDA person ->
     (LET
-      $record : <> {dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}, name : Data.String}
+      $record : <> alias.Person
       $record =
         person
 
@@ -43,7 +43,7 @@ value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->
       (LET
-        $record : <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
+        $record : <> alias.Person
         $record =
           person
 

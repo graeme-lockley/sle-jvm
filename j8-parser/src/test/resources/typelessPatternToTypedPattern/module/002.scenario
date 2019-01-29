@@ -7,8 +7,10 @@ add a b =
     a + b
 -- constraints
 [
-    Data.Int -> Data.Int -> Data.Int : '0 -> '2
-    '2 : '1 -> '3
-    Data.Int -> Data.Int : '1 -> '3
-    alias.IntMap : '0 -> Data.Int -> Data.Int
+  Data.Int : '0
+  Data.Int : '1
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '2
+  '2 : Data.Int -> '3
+  Data.Int -> Data.Int : '1 -> '3
+  alias.IntMap : '0 -> Data.Int -> Data.Int
 ]

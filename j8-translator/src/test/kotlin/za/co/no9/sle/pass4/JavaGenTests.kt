@@ -6,7 +6,6 @@ import za.co.no9.sle.*
 import za.co.no9.sle.repository.Export
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.repository.fromJsonString
-import za.co.no9.sle.transform.enrichedCoreToCore.EmptyParseCallback
 import za.co.no9.sle.transform.enrichedCoreToCore.parse
 import za.co.no9.sle.typing.*
 import java.io.File
@@ -48,7 +47,7 @@ class JavaGenTests : StringSpec({
 
         val result =
                 parse(TestItem(inputFile), environment)
-                        .map { translate(it, "test", name) }
+                        .map { translate(it.environment, it.module, "test", name) }
                         .map { it.toString() }
 
         result.right().shouldBe(

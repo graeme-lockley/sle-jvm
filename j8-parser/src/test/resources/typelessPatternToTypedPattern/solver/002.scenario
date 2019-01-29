@@ -7,6 +7,7 @@ value =
     calculate ()
 -- constraints
 [
+  Data.Unit : '0
   Data.Unit -> Data.Int : '0 -> Data.Int
   Data.Unit -> Data.Int : Data.Unit -> '1
 ]

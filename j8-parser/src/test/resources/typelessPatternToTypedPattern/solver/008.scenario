@@ -13,15 +13,17 @@ map f (Cons x xs) =
     Cons (f x) (map f xs)
 -- constraints
 [
+  '2 -> '3 : '4
   file.package.name.File.List '3 : file.package.name.File.List '6
   file.package.name.File.List '2 -> file.package.name.File.List '3 : file.package.name.File.List '5 -> file.package.name.File.List '3
   ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '4 -> file.package.name.File.List '2 -> file.package.name.File.List '3
+  '2 -> '3 : '7
   '10 -> file.package.name.File.List '10 -> file.package.name.File.List '10 : '8 -> '9 -> file.package.name.File.List '10
   '12 -> '11 -> file.package.name.File.List '3 : '13 -> file.package.name.File.List '13 -> file.package.name.File.List '13
-  '14 -> '12 : '7
+  '14 -> '12 : '2 -> '3
   '14 : '8
   '16 -> '15 -> '11 : ('17 -> '18) -> file.package.name.File.List '17 -> file.package.name.File.List '18
-  '16 : '7
+  '16 : '2 -> '3
   '15 : '9
   file.package.name.File.List '2 -> file.package.name.File.List '3 : file.package.name.File.List '10 -> file.package.name.File.List '3
   ('2 -> '3) -> file.package.name.File.List '2 -> file.package.name.File.List '3 : '7 -> file.package.name.File.List '2 -> file.package.name.File.List '3

@@ -743,7 +743,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     val idType =
                             varPump.fresh(pattern.location)
 
-                    env = env.newValue(pattern.name, VariableBinding(Scheme(emptyList(), idType)))
+                    env = env.newValue(pattern.name, VariableBinding(Scheme(emptyList(), actualUnify(actualType, idType))))
 
                     IdReferencePattern(pattern.location, idType, pattern.name)
                 }

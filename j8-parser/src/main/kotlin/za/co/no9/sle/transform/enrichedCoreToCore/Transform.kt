@@ -17,8 +17,10 @@ private typealias Q =
 private typealias Qs =
         List<Q>
 
+data class ParseDetail(val environment: Environment, val module: Module)
 
-fun parse(source: Item, environment: Environment, callback: ParseCallback = EmptyParseCallback()): Either<Errors, Module> {
+
+fun parse(source: Item, environment: Environment, callback: ParseCallback = EmptyParseCallback()): Either<Errors, ParseDetail> {
     val typePatternDetail =
             za.co.no9.sle.transform.typedPatternToEnrichedCore.parse(source, environment, callback)
 
@@ -26,6 +28,7 @@ fun parse(source: Item, environment: Environment, callback: ParseCallback = Empt
         callback.enrichedCoreModule(parseResult.module)
 
         transform(parseResult.environment, parseResult.module)
+                .map { ParseDetail(parseResult.environment, it) }
     }
 }
 
@@ -193,16 +196,16 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression -> {
                     val resolveAlias =
-                            resolveAlias(environment, expression.type)
+                            resolveAlias(environment, expression.record.type)
 
                     val fields =
                             (resolveAlias as TRec).fields
 
                     val updates =
-                            expression.updates.map { Pair(it.first.name, it.second) }.toMap()
+                            expression.updates.map { Pair(it.first.name, it.second) }.toMap().toSortedMap()
 
 
-                    LetExpression(
+                    val result = LetExpression(
                             expression.location,
                             expression.type,
                             listOf(LetDeclaration(
@@ -213,18 +216,20 @@ private class Transform(val environment: Environment, private var counter: Int =
                             ),
                             ConstantRecord(
                                     expression.location,
-                                    expression.type,
+                                    expression.record.type,
                                     fields.map {
                                         val update =
                                                 updates[it.first]
 
                                         if (update == null)
-                                            ConstantField(expression.location, ID(expression.location, it.first), FieldProjectionExpression(expression.location, it.second, IdReference(expression.location, it.second, "\$record"), ID(expression.location, it.first)))
+                                            ConstantField(expression.location, ID(expression.location, it.first), FieldProjectionExpression(expression.location, it.second, IdReference(expression.location, expression.record.type, "\$record"), ID(expression.location, it.first)))
                                         else
                                             ConstantField(expression.location, ID(expression.location, it.first), transform(update))
                                     }
                             )
                     )
+
+                    result
                 }
 
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {

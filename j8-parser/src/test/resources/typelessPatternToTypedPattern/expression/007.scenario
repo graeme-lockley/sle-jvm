@@ -5,16 +5,18 @@ test =
         predicate testValue
 -- constraints
 [
-  '2 -> Data.Bool : '0
-  '2 : '1
+  Data.String -> Data.Bool : '0
+  Data.String : '1
+  '2 -> Data.Bool : Data.String -> Data.Bool
+  '2 : Data.String
   Data.String -> Data.Bool : '1 -> Data.Bool
   (Data.String -> Data.Bool) -> Data.String -> Data.Bool : '0 -> Data.String -> Data.Bool
 ]
 -- substitution
 [
   0=Data.String -> Data.Bool
-  2=Data.String
   1=Data.String
+  2=Data.String
 ]
 -- typeAST
 Module:

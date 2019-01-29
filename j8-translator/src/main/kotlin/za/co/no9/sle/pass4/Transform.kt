@@ -3,10 +3,7 @@ package za.co.no9.sle.pass4
 import za.co.no9.sle.ast.core.*
 import za.co.no9.sle.ast.core.Expression
 import za.co.no9.sle.ast.core.Unit
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.TRec
-import za.co.no9.sle.typing.Type
-import za.co.no9.sle.typing.generalise
+import za.co.no9.sle.typing.*
 
 
 private val RefMapping = mapOf(
@@ -14,18 +11,18 @@ private val RefMapping = mapOf(
 )
 
 
-fun translate(module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit {
+fun translate(environment: Environment, module: Module, packageDeclaration: String, className: String): za.co.no9.sle.pass4.CompilationUnit {
     val optimizedModule =
             optimize(module)
 
     return za.co.no9.sle.pass4.CompilationUnit(
             packageDeclaration,
             listOf(),
-            listOf(ClassDeclaration(className, translateTypeDeclarations(optimizedModule.declarations) + translateLetDeclarations(optimizedModule.declarations))))
+            listOf(ClassDeclaration(className, translateTypeDeclarations(optimizedModule.declarations) + translateLetDeclarations(environment, optimizedModule.declarations))))
 }
 
 
-private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
+private fun translateLetDeclarations(environment: Environment, declarations: List<za.co.no9.sle.ast.core.Declaration>): List<Declaration> =
         declarations.fold(emptyList()) { a, declaration ->
             when (declaration) {
                 is LetDeclaration -> {
@@ -38,7 +35,7 @@ private fun translateLetDeclarations(declarations: List<za.co.no9.sle.ast.core.D
                                     "(${declaration.id.name.name})"
                             }
 
-                    a + MemberDeclaration("$declarationCommentName: ${declaration.scheme.normalize()}", true, true, true, markupName(declaration.id.name.name), "java.lang.Object", translate(declaration.expression))
+                    a + MemberDeclaration("$declarationCommentName: ${declaration.scheme.normalize()}", true, true, true, markupName(declaration.id.name.name), "java.lang.Object", translate(environment, declaration.expression))
                 }
 
                 else ->
@@ -135,7 +132,7 @@ private fun constructorBody(declaration: TypeDeclaration, constructor: Construct
 }
 
 
-private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
+private fun translate(environment: Environment, expression: Expression): za.co.no9.sle.pass4.Expression =
         when (expression) {
             is Unit ->
                 NameExpression("za.co.no9.sle.runtime.Unit.INSTANCE")
@@ -158,7 +155,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
 
                 ArrayInitialisationExpression(
                         "java.lang.Object[]",
-                        indexFields.map { translate(it.value) }
+                        indexFields.map { translate(environment, it.value) }
                 )
             }
 
@@ -193,8 +190,8 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                                 emptyList(),
                                                 StatementBlock(
                                                         expression.declarations.map {
-                                                            VariableDeclarationStatement("java.lang.Object", it.id.name.name, translate(it.expression))
-                                                        } + ReturnStatement(translate(expression.expression))
+                                                            VariableDeclarationStatement("java.lang.Object", it.id.name.name, translate(environment, it.expression))
+                                                        } + ReturnStatement(translate(environment, expression.expression))
                                                 ))
                                         ))
                         ),
@@ -202,7 +199,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                         emptyList())
 
             is IfExpression ->
-                ConditionalExpression(TypeCastExpression("java.lang.Boolean", translate(expression.guardExpression)), translate(expression.thenExpression), translate(expression.elseExpression))
+                ConditionalExpression(TypeCastExpression("java.lang.Boolean", translate(environment, expression.guardExpression)), translate(environment, expression.thenExpression), translate(environment, expression.elseExpression))
 
             is LambdaExpression ->
                 AnonymousObjectCreationExpression(
@@ -215,7 +212,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                         "java.lang.Object",
                                         listOf(Parameter(markupName(expression.argument.name), "java.lang.Object")),
                                         StatementBlock(listOf(
-                                                ReturnStatement(translate(expression.expression))
+                                                ReturnStatement(translate(environment, expression.expression))
                                         ))
                                 )
                         ))
@@ -224,15 +221,15 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
             is CallExpression -> {
                 fun standard() =
                         MethodCallExpression(
-                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
+                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(environment, expression.operator)),
                                 "apply",
-                                listOf(translate(expression.operand)))
+                                listOf(translate(environment, expression.operand)))
 
                 if (expression.operand.type is TRec) {
 //                    println ("Call TREC: ${(expression.operator.type as TArr).domain} -- ${expression.operand.type}")
 
                     val domainFields =
-                            ((expression.operator.type as TArr).domain as TRec).fields.sortedBy { it.first }
+                            (resolveAlias(environment, (expression.operator.type as TArr).domain) as TRec).fields.sortedBy { it.first }
 
                     val argumentFields =
                             (expression.operand.type as TRec).fields.sortedBy { it.first }
@@ -267,7 +264,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                                                 ),
                                                                 ReturnStatement(
                                                                         MethodCallExpression(
-                                                                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(expression.operator)),
+                                                                                TypeCastExpression("java.util.function.Function<java.lang.Object, java.lang.Object>", translate(environment, expression.operator)),
                                                                                 "apply",
                                                                                 listOf(NameExpression("\$toRecord")))
                                                                 )
@@ -276,7 +273,7 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                                         ))
                                 ),
                                 "apply",
-                                listOf(TypeCastExpression("java.lang.Object[]", translate(expression.operand))))
+                                listOf(TypeCastExpression("java.lang.Object[]", translate(environment, expression.operand))))
                     }
                 } else
                     standard()
@@ -284,12 +281,12 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
 
             is FieldProjectionExpression -> {
                 val fields =
-                        (expression.record.type as TRec).fields.map { it.first }.sorted()
+                        (resolveAlias(environment, expression.record.type) as TRec).fields.map { it.first }.sorted()
 
                 val fieldIndex =
                         fields.indexOf(expression.name.name)
 
-                ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(expression.record)), IntegerLiteralExpression(fieldIndex))
+                ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(environment, expression.record)), IntegerLiteralExpression(fieldIndex))
             }
 
             is CaseExpression -> {
@@ -304,12 +301,12 @@ private fun translate(expression: Expression): za.co.no9.sle.pass4.Expression =
                             SwitchStatementEntry(
                                     NameExpression("${it.constructorName}$"),
                                     if (it.variables.isEmpty())
-                                        ReturnStatement(translate(it.expression))
+                                        ReturnStatement(translate(environment, it.expression))
                                     else
                                         BlockStatement(
                                                 it.variables.mapIndexed { index, s ->
                                                     VariableDeclarationStatement("java.lang.Object", s, ArrayAccessExpression(NameExpression(fullSelectorName), IntegerLiteralExpression(index + 1)))
-                                                }.filter { variableDeclarationStatement -> variableDeclarationStatement.name != "_" } + ReturnStatement(translate(it.expression))
+                                                }.filter { variableDeclarationStatement -> variableDeclarationStatement.name != "_" } + ReturnStatement(translate(environment, it.expression))
                                         )
                             )
                         }

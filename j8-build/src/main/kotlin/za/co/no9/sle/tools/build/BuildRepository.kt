@@ -81,7 +81,7 @@ class BuildRepository(override val sourcePrefix: File,
                     parse(item, environment)
 
             val compiledFile =
-                    parseDetail.map { translate(it, packageName, className) }
+                    parseDetail.map { translate(it.environment, it.module, packageName, className) }
 
             val output =
                     compiledFile.map { it.toString() }
@@ -91,7 +91,7 @@ class BuildRepository(override val sourcePrefix: File,
 
             if (errors == null) {
                 item.writeJava(output.right() ?: "")
-                item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.exports)))
+                item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.module.exports)))
             } else {
                 includeErrors(item.sourceURN(), errors)
             }

@@ -11,6 +11,7 @@ nextDay arb =
 -- constraints
 [
   Data.String : '0
+  Data.String : '1
   Data.String -> Data.String : '1 -> Data.String
   Data.String -> Data.String -> Data.String : '0 -> Data.String -> Data.String
   '2 : {firstname : '3, ..}

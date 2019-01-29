@@ -4,8 +4,9 @@ factorial 0 = 1
 factorial n = n * factorial (n - 1)
 -- constraints
 [
-  Data.Int -> Data.Int -> Data.Int : '0 -> '1
-  Data.Int -> Data.Int -> Data.Int : '0 -> '2
+  Data.Int : '0
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '1
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '2
   '2 : Data.Int -> '3
   Data.Int -> Data.Int : '3 -> '4
   '1 : '4 -> '5

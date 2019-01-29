@@ -121,7 +121,7 @@ private class RunnerConsumer : Consumer<ConsumerParam> {
 
         if (coreASTpp != null) {
             parseWithDetail.shouldBeTypeOf<Either.Value<Any>>()
-            parseWithDetail.right()!!.asString().shouldBeEqual(coreASTpp)
+            parseWithDetail.right()!!.module.asString().shouldBeEqual(coreASTpp)
         }
 
 

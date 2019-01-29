@@ -29,7 +29,8 @@ main =
   extractName value
 -- constraints
 [
-  '0 : {name : '1, ..}
+  alias.Person : '0
+  alias.Person : {name : '1, ..}
   Data.String : '1
   alias.Person -> Data.String : '0 -> Data.String
   alias.Person : {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
@@ -37,7 +38,7 @@ main =
 ]
 -- substitution
 [
-  0={name : Data.String, ..}
+  0=alias.Person
   1=Data.String
   2=Data.String
 ]
@@ -105,8 +106,9 @@ Module:
                     IdReference:
                       name: person
                       type:
-                        TVar:
-                          variable: 0
+                        TAlias:
+                          arguments: []
+                          name: Person
                   type:
                     TCon:
                       arguments: []

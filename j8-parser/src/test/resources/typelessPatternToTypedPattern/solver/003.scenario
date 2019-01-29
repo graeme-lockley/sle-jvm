@@ -5,10 +5,11 @@ factorial n
     | otherwise = n * factorial (n - 1)
 -- constraints
 [
-  '1 -> '1 -> Data.Bool : '0 -> '2
+  Data.Int : '0
+  '1 -> '1 -> Data.Bool : Data.Int -> '2
   '2 : Data.Int -> '3
-  Data.Int -> Data.Int -> Data.Int : '0 -> '4
-  Data.Int -> Data.Int -> Data.Int : '0 -> '5
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '4
+  Data.Int -> Data.Int -> Data.Int : Data.Int -> '5
   '5 : Data.Int -> '6
   Data.Int -> Data.Int : '6 -> '7
   '4 : '7 -> '8
@@ -18,9 +19,9 @@ factorial n
 ]
 -- substitution
 [
+  0=Data.Int
   1=Data.Int
   2=Data.Int -> Data.Bool
-  0=Data.Int
   3=Data.Bool
   4=Data.Int -> Data.Int
   5=Data.Int -> Data.Int
