@@ -25,7 +25,7 @@ type List =
 
 streamHead : <0> file.package.name.File.Stream '0 -> '0
 streamHead =
-  (LAMBDA Str '2 Data.Unit -> file.package.name.File.Stream '2 ->
+  (LAMBDA Str '3 Data.Unit -> file.package.name.File.Stream '3 ->
     x
   )
 

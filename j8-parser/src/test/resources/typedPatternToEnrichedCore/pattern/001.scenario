@@ -21,7 +21,7 @@ first =
       (LAMBDA $case ->
         (BAR
           (CALL
-            (LAMBDA Tuple '2 '3 ->
+            (LAMBDA Tuple '4 '5 ->
               x
             )
             $case
@@ -41,7 +41,7 @@ second =
       (LAMBDA $case ->
         (BAR
           (CALL
-            (LAMBDA Tuple '8 '9 ->
+            (LAMBDA Tuple '10 '11 ->
               y
             )
             $case

@@ -706,24 +706,24 @@ private class InferContext(private val source: Item, private val varPump: VarPum
     private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern, actualType: Type? = null): Pattern =
             when (pattern) {
                 is za.co.no9.sle.ast.typelessPattern.ConstantIntPattern ->
-                    ConstantIntPattern(pattern.location, typeInt, pattern.value)
+                    ConstantIntPattern(pattern.location, actualUnify(actualType, typeInt), pattern.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantBoolPattern ->
-                    ConstantBoolPattern(pattern.location, typeBool, pattern.value)
+                    ConstantBoolPattern(pattern.location, actualUnify(actualType, typeBool), pattern.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantStringPattern ->
-                    ConstantStringPattern(pattern.location, typeString, pattern.value)
+                    ConstantStringPattern(pattern.location, actualUnify(actualType, typeString), pattern.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantCharPattern ->
-                    ConstantCharPattern(pattern.location, typeString, pattern.value)
+                    ConstantCharPattern(pattern.location, actualUnify(actualType, typeChar), pattern.value)
 
                 is za.co.no9.sle.ast.typelessPattern.ConstantNTuplePattern ->
                     when {
                         pattern.patterns.isEmpty() ->
-                            ConstantUnitPattern(pattern.location, typeUnit)
+                            ConstantUnitPattern(pattern.location, actualUnify(actualType, typeUnit))
 
                         pattern.patterns.size == 1 ->
-                            infer(pattern.patterns[0])
+                            infer(pattern.patterns[0], actualType)
 
                         pattern.patterns.size > 10 -> {
                             errors.add(TooManyTupleArguments(pattern.location, 10, pattern.patterns.size))
@@ -735,7 +735,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             val constructorName =
                                     tupleConstructorName(pattern.patterns.size)
 
-                            infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.patterns))
+                            infer(za.co.no9.sle.ast.typelessPattern.ConstructorReferencePattern(pattern.location, za.co.no9.sle.ast.typelessPattern.QualifiedID(pattern.location, null, constructorName), pattern.patterns), actualType)
                         }
                     }
 
@@ -767,14 +767,14 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             errors.add(IncorrectNumberOfConstructorArguments(pattern.location, pattern.name.asQString(), constructor.type.arity(), pattern.parameters.size))
                         }
 
-                        val parameters =
-                                pattern.parameters.map { infer(it) }
-
                         val constructorType =
                                 constructor.instantiate(varPump)
 
+                        val parameters =
+                                pattern.parameters.map { infer(it) }
+
                         val returnType =
-                                constructorType.last()
+                                actualUnify(actualType, constructorType.last())
 
                         if (parameters.isNotEmpty()) {
                             val signature =
