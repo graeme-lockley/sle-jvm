@@ -264,6 +264,10 @@ data class ConstructorReferencePattern(
         val name: QualifiedID,
         val parameters: List<Pattern>) : Pattern(location)
 
+data class RecordPattern(
+        override val location: Location,
+        val fields: List<Pair<ID, Pattern>>) : Pattern(location)
+
 
 sealed class TType(
         override val location: Location) : Node(location)

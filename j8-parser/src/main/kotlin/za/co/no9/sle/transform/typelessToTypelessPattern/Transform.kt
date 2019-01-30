@@ -332,6 +332,9 @@ private class Transformer {
 
                 is za.co.no9.sle.ast.typeless.ConstructorReferencePattern ->
                     ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
+
+                is za.co.no9.sle.ast.typeless.RecordPattern ->
+                    TODO("Record Pattern")
             }
 
 
