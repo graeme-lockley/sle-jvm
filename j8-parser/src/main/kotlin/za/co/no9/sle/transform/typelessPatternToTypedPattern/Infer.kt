@@ -650,12 +650,12 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     val tr =
                             varPump.fresh(expression.location)
 
-                    CaseExpression(expression.location, tr, tp, expression.items.map {
+                    CaseExpression(expression.location, actualUnify(actualType, tr), tp, expression.items.map {
                         val itemPattern =
                                 infer(it.pattern)
 
                         val itemExpression =
-                                infer(it.expression)
+                                infer(it.expression, actualType)
 
                         val currentEnv =
                                 env
