@@ -334,7 +334,7 @@ private class Transformer {
                     ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
 
                 is za.co.no9.sle.ast.typeless.RecordPattern ->
-                    TODO("Record Pattern")
+                    RecordPattern(pattern.location, pattern.fields.map { Pair(transform(it.first), transform(it.second)) })
             }
 
 

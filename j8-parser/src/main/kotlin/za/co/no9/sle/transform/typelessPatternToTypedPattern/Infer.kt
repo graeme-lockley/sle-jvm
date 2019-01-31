@@ -800,6 +800,9 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                         ConstructorReferencePattern(pattern.location, returnType, constructorName, parameters)
                     }
                 }
+
+                is za.co.no9.sle.ast.typelessPattern.RecordPattern ->
+                    TODO("Record pattern")
             }
 
 
