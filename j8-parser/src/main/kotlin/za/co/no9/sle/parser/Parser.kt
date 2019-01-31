@@ -1119,6 +1119,39 @@ class Parser(private val lexer: Lexer) {
                     IgnorePattern(unknownSymbol.location)
                 }
 
+                isOperator("{") -> {
+                    val openParen =
+                            next()
+
+                    val values =
+                            mutableListOf<Pair<ID, Pattern>>()
+
+                    if (isToken(Token.LowerID)) {
+                        while (true) {
+                            val name =
+                                    matchToken(Token.LowerID, "Expected Lower ID").toID()
+
+                            matchOperator("=")
+
+                            val pattern =
+                                    parsePattern()
+
+                            values.add(Pair(name, pattern))
+
+                            if (isOperator(",")) {
+                                skip()
+                            } else {
+                                break
+                            }
+                        }
+                    }
+
+                    val closeParen =
+                            matchOperator("}")
+
+                    RecordPattern(openParen.location + closeParen.location, values)
+                }
+
                 else ->
                     throw syntaxError("Expected constant int, constant string, lower ID, upperID, True, False, '(' or '_'")
             }
@@ -1133,6 +1166,7 @@ class Parser(private val lexer: Lexer) {
                     isOperator("(") ||
                     isOperator("[") ||
                     isOperator("[]") ||
+                    isOperator("{") ||
                     isToken(Token.Unknown)
 
 
