@@ -275,7 +275,7 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
             is FieldProjectionExpression ->
-                "${record.asString(indent)}${spaces(indent+1)}.${name.name})\n"
+                "${record.asString(indent)}${spaces(indent + 1)}.${name.name})\n"
 
             is UpdateRecordExpression ->
                 "${spaces(indent)}{\n" +
@@ -299,4 +299,7 @@ fun Pattern.asString(): String =
 
             is ConstructorReferencePattern ->
                 "$name${parameters.joinToString("") { " " + it.type.toString() }}"
+
+            is RecordPattern ->
+                "{${fields.joinToString(",") { " " + it.first.name + " : " + it.second.asString() }}}"
         }

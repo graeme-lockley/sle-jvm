@@ -1,0 +1,19 @@
+-- A simple pattern match
+value { firstName = "Graeme", surname = surname } =
+  surname
+-- enrichedASTpp
+value : <0> {firstName : Data.String, surname : '0} -> '0
+value =
+  (LAMBDA { firstName : $v0, surname : surname} ->
+    (IF
+      (CALL
+        (CALL
+          ==
+          "Graeme"
+        )
+        $v0
+      )
+      surname
+      FAIL
+    )
+  )

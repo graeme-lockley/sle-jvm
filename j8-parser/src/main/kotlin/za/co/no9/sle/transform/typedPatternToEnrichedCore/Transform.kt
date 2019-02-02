@@ -339,7 +339,18 @@ private class Transform(val environment: Environment) {
                 }
 
                 is za.co.no9.sle.ast.typedPattern.RecordPattern -> {
-                    TODO()
+                    val initialState =
+                            PatternTransformResult(emptyList<Pair<ID, Pattern>>(), state)
+
+                    val fields =
+                            pattern.fields.fold(initialState){ a, b  ->
+                                val transformResult =
+                                        transform(b.second, a.state)
+
+                                PatternTransformResult(a.result + Pair(transform(b.first), transformResult.result), transformResult.state)
+                            }
+
+                    PatternTransformResult(RecordPattern(pattern.location, pattern.type, fields.result), fields.state)
                 }
             }
 }
