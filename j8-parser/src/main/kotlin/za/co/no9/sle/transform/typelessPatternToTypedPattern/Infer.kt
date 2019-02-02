@@ -32,6 +32,7 @@ import za.co.no9.sle.ast.typedPattern.LowerIDDeclarationID
 import za.co.no9.sle.ast.typedPattern.Module
 import za.co.no9.sle.ast.typedPattern.OperatorDeclarationID
 import za.co.no9.sle.ast.typedPattern.Pattern
+import za.co.no9.sle.ast.typedPattern.RecordPattern
 import za.co.no9.sle.ast.typedPattern.TypeAliasDeclaration
 import za.co.no9.sle.ast.typedPattern.TypeDeclaration
 import za.co.no9.sle.ast.typedPattern.Unit
@@ -703,6 +704,19 @@ private class InferContext(private val source: Item, private val varPump: VarPum
             }
 
 
+    private fun actualRecordFieldType(type: Type?, name: String): Type? =
+            when (type) {
+                null ->
+                    null
+
+                is TRec ->
+                    type.fields.find { it.first == name }?.second
+
+                    else ->
+                        null
+            }
+
+
     private fun infer(pattern: za.co.no9.sle.ast.typelessPattern.Pattern, actualType: Type? = null): Pattern =
             when (pattern) {
                 is za.co.no9.sle.ast.typelessPattern.ConstantIntPattern ->
@@ -801,8 +815,15 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                     }
                 }
 
-                is za.co.no9.sle.ast.typelessPattern.RecordPattern ->
-                    TODO("Record pattern")
+                is za.co.no9.sle.ast.typelessPattern.RecordPattern -> {
+                    val fields =
+                            pattern.fields.map { Pair(transform(it.first), infer(it.second, actualRecordFieldType(actualType, it.first.name))) }
+
+                    val inferredType =
+                            TRec(pattern.location, true, fields.map { Pair(it.first.name, it.second.type) })
+
+                    RecordPattern(pattern.location, actualUnify(actualType, inferredType), fields)
+                }
             }
 
 

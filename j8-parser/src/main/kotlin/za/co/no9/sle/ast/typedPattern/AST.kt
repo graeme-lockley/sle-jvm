@@ -228,3 +228,9 @@ data class ConstructorReferencePattern(
         override val type: Type,
         val name: String,
         val parameters: List<Pattern>) : Pattern(location, type)
+
+data class RecordPattern(
+        override val location: Location,
+        override val type: Type,
+        val fields: List<Pair<ID, Pattern>>) : Pattern(location, type)
+

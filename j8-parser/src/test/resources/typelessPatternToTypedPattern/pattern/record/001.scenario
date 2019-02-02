@@ -1,0 +1,111 @@
+-- A simple pattern match
+value { firstName = "Graeme", surname = surname } =
+  surname
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                RecordPattern:
+                  fields: [
+                      Pair:
+                        first:
+                          ID:
+                            name: firstName
+                        second:
+                          ConstantStringPattern:
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            value: Graeme
+                      Pair:
+                        first:
+                          ID:
+                            name: surname
+                        second:
+                          IdReferencePattern:
+                            name: surname
+                            type:
+                              TVar:
+                                variable: 0
+                    ]
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: firstName
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: surname
+                            second:
+                              TVar:
+                                variable: 0
+                        ]
+                      fixed: true
+              expression:
+                IdReference:
+                  name: surname
+                  type:
+                    TVar:
+                      variable: 0
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: firstName
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: surname
+                            second:
+                              TVar:
+                                variable: 0
+                        ]
+                      fixed: true
+                  range:
+                    TVar:
+                      variable: 0
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: firstName
+                          second:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                        Pair:
+                          first: surname
+                          second:
+                            TVar:
+                              variable: 0
+                      ]
+                    fixed: true
+                range:
+                  TVar:
+                    variable: 0
+    ]
+  exports: []

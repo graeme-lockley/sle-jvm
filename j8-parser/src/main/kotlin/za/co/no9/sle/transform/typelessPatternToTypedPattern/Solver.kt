@@ -233,6 +233,9 @@ private class ApplyContext(private val environment: Environment) {
 
                 is ConstructorReferencePattern ->
                     ConstructorReferencePattern(pattern.location, pattern.type.apply(substitution), pattern.name, pattern.parameters.map { apply(it, substitution) })
+
+                is RecordPattern ->
+                    RecordPattern(pattern.location, pattern.type.apply(substitution), pattern.fields.map { Pair(it.first, apply(it.second, substitution)) })
             }
 }
 

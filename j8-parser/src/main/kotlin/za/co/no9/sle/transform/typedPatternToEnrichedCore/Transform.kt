@@ -337,6 +337,10 @@ private class Transform(val environment: Environment) {
 
                     PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
                 }
+
+                is za.co.no9.sle.ast.typedPattern.RecordPattern -> {
+                    TODO()
+                }
             }
 }
 
