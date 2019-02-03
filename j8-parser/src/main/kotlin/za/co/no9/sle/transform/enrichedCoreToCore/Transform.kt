@@ -141,6 +141,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     ConstantChar(expression.location, expression.type, expression.value)
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
+                    TODO("Constant Constructor")
+
                 is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
                     ConstantRecord(expression.location, expression.type, expression.fields.map { ConstantField(it.location, transform(it.name), transform(it.value)) })
 
@@ -190,6 +193,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+
+                is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
+                    TODO("Projection Expression")
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
@@ -496,6 +502,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     e
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
+                    TODO("Constant Constructor")
+
                 is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
                     za.co.no9.sle.ast.enrichedCore.ConstantRecord(e.location, e.type, e.fields.map { za.co.no9.sle.ast.enrichedCore.ConstantField(it.location, it.name, substitute(it.value, old, new)) })
 
@@ -524,6 +533,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression(e.location, e.type, substitute(e.record, old, new), e.name)
+
+                is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
+                    TODO("Projection Expression")
 
                 is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
                     za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression(e.location, e.type, substitute(e.record, old, new), e.updates.map { Pair(it.first, substitute(it.second, old, new)) })
@@ -554,6 +566,9 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.ConstantChar ->
                     false
 
+                is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
+                    TODO("Constant Constructor")
+
                 is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
                     e.fields.fold(false) { accumulator, field -> accumulator || canFail(field.value) }
 
@@ -576,6 +591,9 @@ private class Transform(val environment: Environment, private var counter: Int =
 
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     canFail(e.operator) || canFail(e.operand)
+
+                is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
+                    TODO("Projection Expression")
 
                 is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     canFail(e.record)

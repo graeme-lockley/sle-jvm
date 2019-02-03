@@ -121,6 +121,12 @@ data class ConstantChar(
         override val type: Type,
         val value: Char) : Expression(location, type)
 
+data class ConstantConstructor(
+        override val location: Location,
+        override val type: Type,
+        val name: String,
+        val fields: List<Expression>) : Expression(location, type)
+
 data class ConstantRecord(
         override val location: Location,
         override val type: Type,
@@ -133,11 +139,11 @@ data class ConstantField(
 
 data class FAIL(
         override val location: Location,
-        override val type: Type): Expression(location, type)
+        override val type: Type) : Expression(location, type)
 
 data class ERROR(
         override val location: Location,
-        override val type: Type): Expression(location, type)
+        override val type: Type) : Expression(location, type)
 
 data class IdReference(
         override val location: Location,
@@ -173,7 +179,13 @@ data class FieldProjectionExpression(
         override val location: Location,
         override val type: Type,
         val record: Expression,
-        val name: ID): Expression(location, type)
+        val name: ID) : Expression(location, type)
+
+data class ProjectionExpression(
+        override val location: Location,
+        override val type: Type,
+        val record: Expression,
+        val index: Int) : Expression(location, type)
 
 data class UpdateRecordExpression(
         override val location: Location,
