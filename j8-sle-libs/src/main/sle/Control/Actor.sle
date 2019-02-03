@@ -50,7 +50,7 @@ createBuiltinWithInit =
 createStateless : (m -> List Cmd) -> Actor m
 createStateless f =
   create
-    (\self -> Tuple () [])
+    (\self -> ((), []))
     (\state message -> msgs (f message))
 
 

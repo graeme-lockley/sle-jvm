@@ -25,4 +25,4 @@ doubleBooleanList =
 
 
 intIntTuple =
-    Tuple 1 2
+    Tuple2 1 2

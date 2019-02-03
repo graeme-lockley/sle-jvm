@@ -1,6 +1,6 @@
 -- Syntactic sugar of tuple expressions
-type Tuple a b =
-    Tuple a b
+type Tuple2 a b =
+    Tuple2 a b
 
 type Tuple3 a b c =
     Tuple3 a b c
@@ -27,11 +27,11 @@ Module:
                 ]
               name:
                 ID:
-                  name: Tuple
+                  name: Tuple2
           ]
         name:
           ID:
-            name: Tuple
+            name: Tuple2
         scheme:
           Scheme:
             parameters: [
@@ -46,7 +46,7 @@ Module:
                     TVar:
                       variable: 1
                   ]
-                name: file.package.name.File.Tuple
+                name: file.package.name.File.Tuple2
       TypeDeclaration:
         constructors: [
             Constructor:
@@ -145,7 +145,7 @@ Module:
                       value: 1
                   operator:
                     IdReference:
-                      name: Tuple
+                      name: Tuple2
                       type:
                         TArr:
                           domain:
@@ -168,7 +168,7 @@ Module:
                                         arguments: []
                                         name: Data.String
                                     ]
-                                  name: file.package.name.File.Tuple
+                                  name: file.package.name.File.Tuple2
                   type:
                     TArr:
                       domain:
@@ -185,7 +185,7 @@ Module:
                                 arguments: []
                                 name: Data.String
                             ]
-                          name: file.package.name.File.Tuple
+                          name: file.package.name.File.Tuple2
               type:
                 TCon:
                   arguments: [
@@ -196,7 +196,7 @@ Module:
                         arguments: []
                         name: Data.String
                     ]
-                  name: file.package.name.File.Tuple
+                  name: file.package.name.File.Tuple2
           ]
         id:
           LowerIDDeclarationID:
@@ -216,7 +216,7 @@ Module:
                       arguments: []
                       name: Data.String
                   ]
-                name: file.package.name.File.Tuple
+                name: file.package.name.File.Tuple2
       LetDeclaration:
         expressions: [
             CallExpression:

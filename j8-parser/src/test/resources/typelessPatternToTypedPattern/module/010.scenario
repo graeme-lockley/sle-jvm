@@ -1,7 +1,7 @@
 -- Nested aliases
 type List a = Nil | Cons a (List a)
 
-type Tuple a b = Tuple a b
+type Tuple2 a b = Tuple2 a b
 
 typealias Msg =
   ()
@@ -66,11 +66,11 @@ Module:
                 ]
               name:
                 ID:
-                  name: Tuple
+                  name: Tuple2
           ]
         name:
           ID:
-            name: Tuple
+            name: Tuple2
         scheme:
           Scheme:
             parameters: [
@@ -85,7 +85,7 @@ Module:
                     TVar:
                       variable: 1
                   ]
-                name: file.package.name.File.Tuple
+                name: file.package.name.File.Tuple2
       TypeAliasDeclaration:
         name:
           ID:
@@ -129,7 +129,7 @@ Module:
                       arguments: []
                       name: ActorRef
                   ]
-                name: file.package.name.File.Tuple
+                name: file.package.name.File.Tuple2
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -175,7 +175,7 @@ Module:
                                   value: 123
                               operator:
                                 IdReference:
-                                  name: Tuple
+                                  name: Tuple2
                                   type:
                                     TArr:
                                       domain:
@@ -198,7 +198,7 @@ Module:
                                                     arguments: []
                                                     name: ActorRef
                                                 ]
-                                              name: file.package.name.File.Tuple
+                                              name: file.package.name.File.Tuple2
                               type:
                                 TArr:
                                   domain:
@@ -215,7 +215,7 @@ Module:
                                             arguments: []
                                             name: ActorRef
                                         ]
-                                      name: file.package.name.File.Tuple
+                                      name: file.package.name.File.Tuple2
                           type:
                             TCon:
                               arguments: [
@@ -226,10 +226,10 @@ Module:
                                     arguments: []
                                     name: ActorRef
                                 ]
-                              name: file.package.name.File.Tuple
+                              name: file.package.name.File.Tuple2
                       operator:
                         IdReference:
-                          name: Tuple
+                          name: Tuple2
                           type:
                             TArr:
                               domain:
@@ -242,7 +242,7 @@ Module:
                                         arguments: []
                                         name: ActorRef
                                     ]
-                                  name: file.package.name.File.Tuple
+                                  name: file.package.name.File.Tuple2
                               range:
                                 TArr:
                                   domain:
@@ -265,7 +265,7 @@ Module:
                                                   arguments: []
                                                   name: ActorRef
                                               ]
-                                            name: file.package.name.File.Tuple
+                                            name: file.package.name.File.Tuple2
                                           TCon:
                                             arguments: [
                                                 TCon:
@@ -274,7 +274,7 @@ Module:
                                               ]
                                             name: file.package.name.File.List
                                         ]
-                                      name: file.package.name.File.Tuple
+                                      name: file.package.name.File.Tuple2
                       type:
                         TArr:
                           domain:
@@ -297,7 +297,7 @@ Module:
                                           arguments: []
                                           name: ActorRef
                                       ]
-                                    name: file.package.name.File.Tuple
+                                    name: file.package.name.File.Tuple2
                                   TCon:
                                     arguments: [
                                         TCon:
@@ -306,7 +306,7 @@ Module:
                                       ]
                                     name: file.package.name.File.List
                                 ]
-                              name: file.package.name.File.Tuple
+                              name: file.package.name.File.Tuple2
                   type:
                     TCon:
                       arguments: [
@@ -319,7 +319,7 @@ Module:
                                   arguments: []
                                   name: ActorRef
                               ]
-                            name: file.package.name.File.Tuple
+                            name: file.package.name.File.Tuple2
                           TCon:
                             arguments: [
                                 TCon:
@@ -328,7 +328,7 @@ Module:
                               ]
                             name: file.package.name.File.List
                         ]
-                      name: file.package.name.File.Tuple
+                      name: file.package.name.File.Tuple2
               type:
                 TArr:
                   domain:
@@ -347,7 +347,7 @@ Module:
                                   arguments: []
                                   name: ActorRef
                               ]
-                            name: file.package.name.File.Tuple
+                            name: file.package.name.File.Tuple2
                           TCon:
                             arguments: [
                                 TCon:
@@ -356,7 +356,7 @@ Module:
                               ]
                             name: file.package.name.File.List
                         ]
-                      name: file.package.name.File.Tuple
+                      name: file.package.name.File.Tuple2
           ]
         id:
           LowerIDDeclarationID:
@@ -384,7 +384,7 @@ Module:
                                 arguments: []
                                 name: ActorRef
                             ]
-                          name: file.package.name.File.Tuple
+                          name: file.package.name.File.Tuple2
                         TCon:
                           arguments: [
                               TCon:
@@ -393,6 +393,6 @@ Module:
                             ]
                           name: file.package.name.File.List
                       ]
-                    name: file.package.name.File.Tuple
+                    name: file.package.name.File.Tuple2
     ]
   exports: []

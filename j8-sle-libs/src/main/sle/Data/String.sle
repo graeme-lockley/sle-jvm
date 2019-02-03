@@ -224,7 +224,7 @@ cons =
   i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.cons"
 
 
-uncons : String -> Option (Tuple Char String)
+uncons : String -> Option (Char, String)
 uncons =
   i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.uncons"
 

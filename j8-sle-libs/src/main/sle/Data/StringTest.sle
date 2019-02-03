@@ -188,8 +188,8 @@ suite =
     ]
     , Describe "uncons"
     [ Test "\"\"" <| S.uncons "" == None
-    , Test "\"a\"" <| S.uncons "a" == Some (Tuple 'a' "")
-    , Test "\"hello\"" <| S.uncons "hello" == Some (Tuple 'h' "ello")
+    , Test "\"a\"" <| S.uncons "a" == Some ('a', "")
+    , Test "\"hello\"" <| S.uncons "hello" == Some ('h', "ello")
     ]
     , Describe "fromList"
     [ Test "['a', 'e', 'i', 'o', 'u']" <| S.fromList ['a', 'e', 'i', 'o', 'u'] == "aeiou"

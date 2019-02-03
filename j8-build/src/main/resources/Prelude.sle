@@ -2,7 +2,8 @@ export
       List (..)
     , Option (..)
     , Result (..)
-    , Tuple (..)
+    , Tuple1 (..)
+    , Tuple2 (..)
     , Tuple3 (..)
     , Tuple4 (..)
     , Tuple5 (..)
@@ -42,8 +43,12 @@ type Result error value
     | Error error
 
 
-type Tuple a b
-    = Tuple a b
+type Tuple1 a
+    = Tuple1 a
+
+
+type Tuple2 a b
+    = Tuple2 a b
 
 
 type Tuple3 a b c

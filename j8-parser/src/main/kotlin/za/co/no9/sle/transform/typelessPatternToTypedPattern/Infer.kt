@@ -712,8 +712,8 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                 is TRec ->
                     type.fields.find { it.first == name }?.second
 
-                    else ->
-                        null
+                else ->
+                    null
             }
 
 
@@ -1419,7 +1419,4 @@ private fun za.co.no9.sle.ast.typelessPattern.TypeDeclaration.scheme(source: Ite
 
 
 private fun tupleConstructorName(numberOfArguments: Int): String =
-        if (numberOfArguments == 2)
-            "Tuple"
-        else
-            "Tuple$numberOfArguments"
+        "Tuple$numberOfArguments"
