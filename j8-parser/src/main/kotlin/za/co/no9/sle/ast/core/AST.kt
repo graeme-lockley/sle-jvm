@@ -121,10 +121,11 @@ data class ConstantChar(
         override val type: Type,
         val value: Char) : Expression(location, type)
 
-data class ConstantRecord(
+data class ConstantConstructor(
         override val location: Location,
         override val type: Type,
-        val fields: List<ConstantField>) : Expression(location, type)
+        val name: String,
+        val fields: List<Expression>) : Expression(location, type)
 
 data class ConstantField(
         override val location: Location,
@@ -161,11 +162,11 @@ data class CallExpression(
         val operator: Expression,
         val operand: Expression) : Expression(location, type)
 
-data class FieldProjectionExpression(
+data class ProjectionExpression(
         override val location: Location,
         override val type: Type,
         val record: Expression,
-        val name: ID): Expression(location, type)
+        val index: Int) : Expression(location, type)
 
 data class CaseExpression(
         override val location: Location,

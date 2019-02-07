@@ -99,12 +99,12 @@
       ]
     },
     {
-      "adt": "Tuple",
+      "adt": "Tuple2",
       "cardinality": 2,
-      "identity": "resource.Prelude.Tuple",
+      "identity": "resource.Prelude.Tuple2",
       "constructors": [
         {
-          "name": "Tuple",
+          "name": "Tuple2",
           "scheme": {
             "parameters": [
               0,
@@ -119,7 +119,7 @@
                   "variable": 1
                 },
                 "range": {
-                  "constant": "resource.Prelude.Tuple",
+                  "constant": "resource.Prelude.Tuple2",
                   "arguments": [
                     {
                       "variable": 0

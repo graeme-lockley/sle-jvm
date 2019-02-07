@@ -4,7 +4,7 @@ value { firstName = "Graeme", surname = surname } =
 -- enrichedASTpp
 value : <0> {firstName : Data.String, surname : '0} -> '0
 value =
-  (LAMBDA { firstName : $v0, surname : surname} ->
+  (LAMBDA Tuple2 Data.String '0 ->
     (IF
       (CALL
         (CALL

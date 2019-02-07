@@ -123,8 +123,7 @@ private fun constructorBody(declaration: TypeDeclaration, constructor: Construct
                                         ReturnStatement(expressionState.expression)
                                 ))
                         )
-                ))
-                )
+                )))
         )
     }
 
@@ -149,15 +148,13 @@ private fun translate(environment: Environment, expression: Expression): za.co.n
             is ConstantChar ->
                 CharLiteralExpression(expression.value)
 
-            is ConstantRecord -> {
-                val indexFields =
-                        expression.fields.sortedBy { it.name.name }
-
+            is ConstantConstructor ->
+                // TODO instantiate the first element of the arguments with the constructors constant other than 0
                 ArrayInitialisationExpression(
                         "java.lang.Object[]",
-                        indexFields.map { translate(environment, it.value) }
+                        listOf<za.co.no9.sle.pass4.Expression>(IntegerLiteralExpression(0)) +
+                                expression.fields.map { translate(environment, it) }
                 )
-            }
 
             is ERROR ->
                 TODO()
@@ -226,7 +223,7 @@ private fun translate(environment: Environment, expression: Expression): za.co.n
                                 listOf(translate(environment, expression.operand)))
 
                 if (expression.operand.type is TRec) {
-//                    println ("Call TREC: ${(expression.operator.type as TArr).domain} -- ${expression.operand.type}")
+                    println("Call TREC: ${(expression.operator.type as TArr).domain} -- ${expression.operand.type}")
 
                     val domainFields =
                             (resolveAlias(environment, (expression.operator.type as TArr).domain) as TRec).fields.sortedBy { it.first }
@@ -279,15 +276,8 @@ private fun translate(environment: Environment, expression: Expression): za.co.n
                     standard()
             }
 
-            is FieldProjectionExpression -> {
-                val fields =
-                        (resolveAlias(environment, expression.record.type) as TRec).fields.map { it.first }.sorted()
-
-                val fieldIndex =
-                        fields.indexOf(expression.name.name)
-
-                ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(environment, expression.record)), IntegerLiteralExpression(fieldIndex))
-            }
+            is ProjectionExpression ->
+                ArrayAccessExpression(TypeCastExpression("java.lang.Object[]", translate(environment, expression.record)), IntegerLiteralExpression(expression.index + 1))
 
             is CaseExpression -> {
                 val selectorName =

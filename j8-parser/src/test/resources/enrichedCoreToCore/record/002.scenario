@@ -25,10 +25,10 @@ fullName =
       (CALL
         concat
         arb
-         .firstname)
+         .0
       )
       arb
-       .surname)
+       .1
     )
   )
 
@@ -43,15 +43,15 @@ nextDay =
           (CALL
             +
             arb
-             .dateOfBirth)
-             .day)
+             .0
+             .0
           )
           arb
-           .dateOfBirth)
-           .month)
+           .0
+           .1
         )
       )
       arb
-       .luckyNumber)
+       .1
     )
   )

@@ -1,0 +1,56 @@
+-- A simple pattern match
+projection a b c =
+  c
+
+
+value { firstName = "Graeme", surname = surname, dateOfBirth = {day = 10, month = month, year = year } } =
+  projection surname month year
+
+-- enrichedASTpp
+projection : <0, 1, 2> '0 -> '1 -> '2 -> '2
+projection =
+  (LAMBDA a ->
+    (LAMBDA b ->
+      (LAMBDA c ->
+        c
+      )
+    )
+  )
+
+
+value : <0, 1, 2> {firstName : Data.String, surname : '0, dateOfBirth : {day : Data.Int, month : '1, year : '2}} -> '2
+value =
+  (LAMBDA Tuple3 (Data.Int, '4, '11) Data.String '3 ->
+    (IF
+      (CALL
+        (CALL
+          &&
+          (CALL
+            (CALL
+              ==
+              "Graeme"
+            )
+            $v0
+          )
+        )
+        (CALL
+          (CALL
+            ==
+            10
+          )
+          $v1
+        )
+      )
+      (CALL
+        (CALL
+          (CALL
+            projection
+            surname
+          )
+          month
+        )
+        year
+      )
+      FAIL
+    )
+  )

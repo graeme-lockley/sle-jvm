@@ -1,0 +1,39 @@
+-- A simple pattern match
+import file:../../List exposing Tuple2(..)
+
+
+typealias Person =
+  { name : String
+  , dateOfBirth :
+    { day : Int
+    , month : Int
+    , year : Int
+    }
+  }
+
+
+test : Person -> Bool
+test {name = "Graeme", dateOfBirth = dob } = True
+test _ = False
+-- coreASTpp
+typealias Person =
+  <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
+
+test : <> alias.Person -> Data.Bool
+test =
+  (LAMBDA $v0 ->
+    (CASE $v0
+      file.package.name.File.Tuple2 $$0 $$1 =>
+        (IF
+          (CALL
+            (CALL
+              ==
+              "Graeme"
+            )
+            $$1
+          )
+          true
+          false
+        )
+    )
+  )

@@ -142,10 +142,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     ConstantChar(expression.location, expression.type, expression.value)
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
-                    TODO("Constant Constructor")
-
-                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
-                    ConstantRecord(expression.location, expression.type, expression.fields.map { ConstantField(it.location, transform(it.name), transform(it.value)) })
+                    ConstantConstructor(expression.location, expression.type, expression.name, expression.fields.map { transform(it) })
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     FAIL(expression.location, expression.type)
@@ -195,48 +192,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
 
                 is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
-                    TODO("Projection Expression")
-
-                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
-                    FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
-
-                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression -> {
-                    val resolveAlias =
-                            resolveAlias(environment, expression.record.type)
-
-                    val fields =
-                            (resolveAlias as TRec).fields
-
-                    val updates =
-                            expression.updates.map { Pair(it.first.name, it.second) }.toMap().toSortedMap()
-
-
-                    val result = LetExpression(
-                            expression.location,
-                            expression.type,
-                            listOf(LetDeclaration(
-                                    expression.record.location,
-                                    generalise(expression.record.type),
-                                    LowerIDDeclarationID(expression.record.location, ID(expression.record.location, "\$record")),
-                                    transform(expression.record))
-                            ),
-                            ConstantRecord(
-                                    expression.location,
-                                    expression.record.type,
-                                    fields.map {
-                                        val update =
-                                                updates[it.first]
-
-                                        if (update == null)
-                                            ConstantField(expression.location, ID(expression.location, it.first), FieldProjectionExpression(expression.location, it.second, IdReference(expression.location, expression.record.type, "\$record"), ID(expression.location, it.first)))
-                                        else
-                                            ConstantField(expression.location, ID(expression.location, it.first), transform(update))
-                                    }
-                            )
-                    )
-
-                    result
-                }
+                    ProjectionExpression(expression.location, expression.type, transform(expression.record), expression.index)
 
                 is za.co.no9.sle.ast.enrichedCore.Bar -> {
                     fun extractNames(e: za.co.no9.sle.ast.enrichedCore.Expression): List<String> =
@@ -378,15 +334,15 @@ private class Transform(val environment: Environment, private var counter: Int =
                             clausesGroupedByConstructorName.keys.toList()
 
                     val constructorNamesNotInGroup =
-                            constructors[clausesConstructorNames[0]]!! - clausesConstructorNames
+                            constructors.getValue(clausesConstructorNames[0]) - clausesConstructorNames
 
                     val clauses =
-                            clausesGroupedByConstructorName.map {
+                            clausesGroupedByConstructorName.map { clause ->
                                 val constructorName =
-                                        it.key
+                                        clause.key
 
                                 val constructorQs =
-                                        it.value
+                                        clause.value
 
                                 val constructor =
                                         constructorQs[0].first[0] as za.co.no9.sle.ast.enrichedCore.ConstructorReferencePattern
@@ -453,8 +409,8 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is ConstantChar ->
                     haystack
 
-                is ConstantRecord ->
-                    ConstantRecord(haystack.location, haystack.type, haystack.fields.map { ConstantField(it.location, it.name, replaceFailWith(it.value, needle)) })
+                is ConstantConstructor ->
+                    ConstantConstructor(haystack.location, haystack.type, haystack.name, haystack.fields.map { replaceFailWith(it, needle) })
 
                 is FAIL ->
                     needle
@@ -477,8 +433,8 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is CallExpression ->
                     CallExpression(haystack.location, haystack.type, replaceFailWith(haystack.operator, needle), replaceFailWith(haystack.operand, needle))
 
-                is FieldProjectionExpression ->
-                    FieldProjectionExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.name)
+                is ProjectionExpression ->
+                    ProjectionExpression(haystack.location, haystack.type, replaceFailWith(haystack.record, needle), haystack.index)
 
                 is CaseExpression ->
                     CaseExpression(haystack.location, haystack.type, haystack.variable, haystack.clauses.map { CaseExpressionClause(it.constructorName, it.variables, replaceFailWith(it.expression, needle)) })
@@ -503,10 +459,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     e
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
-                    TODO("Constant Constructor")
-
-                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
-                    za.co.no9.sle.ast.enrichedCore.ConstantRecord(e.location, e.type, e.fields.map { za.co.no9.sle.ast.enrichedCore.ConstantField(it.location, it.name, substitute(it.value, old, new)) })
+                    za.co.no9.sle.ast.enrichedCore.ConstantConstructor(e.location, e.type, e.name, e.fields.map { substitute(it, old, new) })
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     e
@@ -519,6 +472,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                         za.co.no9.sle.ast.enrichedCore.IdReference(e.location, e.type, new)
                     else
                         e
+
                 is za.co.no9.sle.ast.enrichedCore.LetExpression ->
                     za.co.no9.sle.ast.enrichedCore.LetExpression(e.location, e.type, e.declarations.map { substitute(it, old, new) }, substitute(e.expression, old, new))
 
@@ -531,14 +485,8 @@ private class Transform(val environment: Environment, private var counter: Int =
                 is za.co.no9.sle.ast.enrichedCore.CallExpression ->
                     za.co.no9.sle.ast.enrichedCore.CallExpression(e.location, e.type, substitute(e.operator, old, new), substitute(e.operand, old, new))
 
-                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
-                    za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression(e.location, e.type, substitute(e.record, old, new), e.name)
-
                 is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
-                    TODO("Projection Expression")
-
-                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
-                    za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression(e.location, e.type, substitute(e.record, old, new), e.updates.map { Pair(it.first, substitute(it.second, old, new)) })
+                    za.co.no9.sle.ast.enrichedCore.ProjectionExpression(e.location, e.type, substitute(e.record, old, new), e.index)
 
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     za.co.no9.sle.ast.enrichedCore.Bar(e.location, e.type, e.expressions.map { substitute(it, old, new) })
@@ -567,13 +515,11 @@ private class Transform(val environment: Environment, private var counter: Int =
                     false
 
                 is za.co.no9.sle.ast.enrichedCore.ConstantConstructor ->
-                    TODO("Constant Constructor")
-
-                is za.co.no9.sle.ast.enrichedCore.ConstantRecord ->
-                    e.fields.fold(false) { accumulator, field -> accumulator || canFail(field.value) }
+                    e.fields.fold(false) { a, b -> a || canFail(b) }
 
                 is za.co.no9.sle.ast.enrichedCore.FAIL ->
                     true
+
                 is za.co.no9.sle.ast.enrichedCore.ERROR ->
                     true
 
@@ -593,13 +539,7 @@ private class Transform(val environment: Environment, private var counter: Int =
                     canFail(e.operator) || canFail(e.operand)
 
                 is za.co.no9.sle.ast.enrichedCore.ProjectionExpression ->
-                    TODO("Projection Expression")
-
-                is za.co.no9.sle.ast.enrichedCore.FieldProjectionExpression ->
                     canFail(e.record)
-
-                is za.co.no9.sle.ast.enrichedCore.UpdateRecordExpression ->
-                    e.updates.fold(canFail(e.record)) { a, b -> a || canFail(b.second) }
 
                 is za.co.no9.sle.ast.enrichedCore.Bar ->
                     e.expressions.fold(false) { a, b -> a || canFail(b) }

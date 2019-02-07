@@ -391,17 +391,32 @@ ParseDetail:
                   ID:
                     name: person
                 expression:
-                  FieldProjectionExpression:
-                    name:
-                      ID:
-                        name: name
+                  ProjectionExpression:
+                    index: 1
                     record:
                       IdReference:
                         name: person
                         type:
-                          TAlias:
-                            arguments: []
-                            name: Person
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                    ]
+                                  name: Tuple3
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              ]
+                            name: Tuple2
                     type:
                       TCon:
                         arguments: []
@@ -409,9 +424,26 @@ ParseDetail:
                 type:
                   TArr:
                     domain:
-                      TAlias:
-                        arguments: []
-                        name: Person
+                      TCon:
+                        arguments: [
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                ]
+                              name: Tuple3
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          ]
+                        name: Tuple2
                     range:
                       TCon:
                         arguments: []
@@ -436,120 +468,73 @@ ParseDetail:
                         name: Data.String
           LetDeclaration:
             expression:
-              ConstantRecord:
+              ConstantConstructor:
                 fields: [
-                    ConstantField:
-                      name:
-                        ID:
-                          name: name
-                      value:
-                        ConstantString:
-                          type:
-                            TCon:
-                              arguments: []
-                              name: Data.String
-                          value: Graeme
-                    ConstantField:
-                      name:
-                        ID:
-                          name: dateOfBirth
-                      value:
-                        ConstantRecord:
-                          fields: [
-                              ConstantField:
-                                name:
-                                  ID:
-                                    name: day
-                                value:
-                                  ConstantInt:
-                                    type:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                    value: 9
-                              ConstantField:
-                                name:
-                                  ID:
-                                    name: month
-                                value:
-                                  ConstantInt:
-                                    type:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                    value: 4
-                              ConstantField:
-                                name:
-                                  ID:
-                                    name: year
-                                value:
-                                  ConstantInt:
-                                    type:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                    value: 1968
+                    ConstantConstructor:
+                      fields: [
+                          ConstantInt:
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                            value: 9
+                          ConstantInt:
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                            value: 4
+                          ConstantInt:
+                            type:
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                            value: 1968
+                        ]
+                      name: Tuple3
+                      type:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.Int
                             ]
-                          type:
-                            TRec:
-                              fields: [
-                                  Pair:
-                                    first: day
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                  Pair:
-                                    first: month
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                  Pair:
-                                    first: year
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                ]
-                              fixed: true
+                          name: Tuple3
+                    ConstantString:
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      value: Graeme
                   ]
+                name: Tuple2
                 type:
-                  TRec:
-                    fields: [
-                        Pair:
-                          first: name
-                          second:
-                            TCon:
-                              arguments: []
-                              name: Data.String
-                        Pair:
-                          first: dateOfBirth
-                          second:
-                            TRec:
-                              fields: [
-                                  Pair:
-                                    first: day
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                  Pair:
-                                    first: month
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                  Pair:
-                                    first: year
-                                    second:
-                                      TCon:
-                                        arguments: []
-                                        name: Data.Int
-                                ]
-                              fixed: true
+                  TCon:
+                    arguments: [
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                              TCon:
+                                arguments: []
+                                name: Data.Int
+                            ]
+                          name: Tuple3
+                        TCon:
+                          arguments: []
+                          name: Data.String
                       ]
-                    fixed: true
+                    name: Tuple2
             id:
               LowerIDDeclarationID:
                 name:
@@ -598,260 +583,103 @@ ParseDetail:
             expression:
               CallExpression:
                 operand:
-                  LetExpression:
-                    declarations: [
-                        LetDeclaration:
-                          expression:
+                  ConstantConstructor:
+                    fields: [
+                        ProjectionExpression:
+                          index: 0
+                          record:
                             IdReference:
                               name: value
                               type:
-                                TRec:
-                                  fields: [
-                                      Pair:
-                                        first: name
-                                        second:
-                                          TCon:
-                                            arguments: []
-                                            name: Data.String
-                                      Pair:
-                                        first: dateOfBirth
-                                        second:
-                                          TRec:
-                                            fields: [
-                                                Pair:
-                                                  first: day
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                                Pair:
-                                                  first: month
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                                Pair:
-                                                  first: year
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                              ]
-                                            fixed: true
-                                    ]
-                                  fixed: true
-                          id:
-                            LowerIDDeclarationID:
-                              name:
-                                ID:
-                                  name: $record
-                          scheme:
-                            Scheme:
-                              parameters: []
-                              type:
-                                TRec:
-                                  fields: [
-                                      Pair:
-                                        first: name
-                                        second:
-                                          TCon:
-                                            arguments: []
-                                            name: Data.String
-                                      Pair:
-                                        first: dateOfBirth
-                                        second:
-                                          TRec:
-                                            fields: [
-                                                Pair:
-                                                  first: day
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                                Pair:
-                                                  first: month
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                                Pair:
-                                                  first: year
-                                                  second:
-                                                    TCon:
-                                                      arguments: []
-                                                      name: Data.Int
-                                              ]
-                                            fixed: true
-                                    ]
-                                  fixed: true
-                      ]
-                    expression:
-                      ConstantRecord:
-                        fields: [
-                            ConstantField:
-                              name:
-                                ID:
-                                  name: name
-                              value:
-                                ConstantString:
-                                  type:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.String
-                                  value: Andrew
-                            ConstantField:
-                              name:
-                                ID:
-                                  name: dateOfBirth
-                              value:
-                                FieldProjectionExpression:
-                                  name:
-                                    ID:
-                                      name: dateOfBirth
-                                  record:
-                                    IdReference:
-                                      name: $record
-                                      type:
-                                        TRec:
-                                          fields: [
-                                              Pair:
-                                                first: name
-                                                second:
-                                                  TCon:
-                                                    arguments: []
-                                                    name: Data.String
-                                              Pair:
-                                                first: dateOfBirth
-                                                second:
-                                                  TRec:
-                                                    fields: [
-                                                        Pair:
-                                                          first: day
-                                                          second:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: Data.Int
-                                                        Pair:
-                                                          first: month
-                                                          second:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: Data.Int
-                                                        Pair:
-                                                          first: year
-                                                          second:
-                                                            TCon:
-                                                              arguments: []
-                                                              name: Data.Int
-                                                      ]
-                                                    fixed: true
-                                            ]
-                                          fixed: true
-                                  type:
-                                    TRec:
-                                      fields: [
-                                          Pair:
-                                            first: day
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                          Pair:
-                                            first: month
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                          Pair:
-                                            first: year
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                        ]
-                                      fixed: true
-                          ]
-                        type:
-                          TRec:
-                            fields: [
-                                Pair:
-                                  first: name
-                                  second:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.String
-                                Pair:
-                                  first: dateOfBirth
-                                  second:
-                                    TRec:
-                                      fields: [
-                                          Pair:
-                                            first: day
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                          Pair:
-                                            first: month
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                          Pair:
-                                            first: year
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                        ]
-                                      fixed: true
-                              ]
-                            fixed: true
-                    type:
-                      TRec:
-                        fields: [
-                            Pair:
-                              first: name
-                              second:
                                 TCon:
-                                  arguments: []
-                                  name: Data.String
-                            Pair:
-                              first: dateOfBirth
-                              second:
-                                TRec:
-                                  fields: [
-                                      Pair:
-                                        first: day
-                                        second:
-                                          TCon:
-                                            arguments: []
-                                            name: Data.Int
-                                      Pair:
-                                        first: month
-                                        second:
-                                          TCon:
-                                            arguments: []
-                                            name: Data.Int
-                                      Pair:
-                                        first: year
-                                        second:
-                                          TCon:
-                                            arguments: []
-                                            name: Data.Int
+                                  arguments: [
+                                      TCon:
+                                        arguments: [
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
+                                          ]
+                                        name: Tuple3
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
                                     ]
-                                  fixed: true
+                                  name: Tuple2
+                          type:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                ]
+                              name: Tuple3
+                        ConstantString:
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                          value: Andrew
+                      ]
+                    name: Tuple2
+                    type:
+                      TCon:
+                        arguments: [
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                  TCon:
+                                    arguments: []
+                                    name: Data.Int
+                                ]
+                              name: Tuple3
+                            TCon:
+                              arguments: []
+                              name: Data.String
                           ]
-                        fixed: true
+                        name: Tuple2
                 operator:
                   IdReference:
                     name: extractName
                     type:
                       TArr:
                         domain:
-                          TAlias:
-                            arguments: []
-                            name: Person
+                          TCon:
+                            arguments: [
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
+                                    ]
+                                  name: Tuple3
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                              ]
+                            name: Tuple2
                         range:
                           TCon:
                             arguments: []
@@ -882,42 +710,29 @@ extractName : <> alias.Person -> Data.String
 extractName =
   (LAMBDA person ->
     person
-     .name)
+     .1
   )
 
 
 value : <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
 value =
-  {
-   name =
-    "Graeme"
-   dateOfBirth =
-    {
-     day =
+  {{{
+    {{{
       9
-     month =
       4
-     year =
       1968
-    }
-  }
+    }}}
+    "Graeme"
+  }}}
 
 
 main : <> Data.String
 main =
   (CALL
     extractName
-    (LET
-      $record : <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
-      $record =
-        value
-
-      {
-       name =
-        "Andrew"
-       dateOfBirth =
-        $record
-         .dateOfBirth)
-      }
-    )
+    {{{
+      value
+       .0
+      "Andrew"
+    }}}
   )

@@ -8,12 +8,9 @@ value2 person newDay =
 value1 : <> {name : Data.String, ..} -> {name : Data.String, ..}
 value1 =
   (LAMBDA person ->
-    {
-     person
-      |
-      name =
-       "Andrew"
-    }
+    {{{
+      "Andrew"
+    }}}
   )
 
 
@@ -21,17 +18,10 @@ value2 : <0> {dateOfBirth : {day : '0, ..}, ..} -> '0 -> {dateOfBirth : {day : '
 value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->
-      {
-       person
-        |
-        dateOfBirth =
-         {
-          person
-           .dateOfBirth)
-           |
-           day =
-            newDay
-         }
-      }
+      {{{
+        {{{
+          newDay
+        }}}
+      }}}
     )
   )

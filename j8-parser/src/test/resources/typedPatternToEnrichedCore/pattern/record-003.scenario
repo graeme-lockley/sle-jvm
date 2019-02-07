@@ -1,0 +1,63 @@
+-- A simple pattern match off of a constructor pattern
+type List a
+  = Nil
+  | Cons a (List a)
+
+
+graemeCount : List ({name: String}) -> Int
+graemeCount Nil = 0
+graemeCount (Cons {name = "Graeme"} xs) = 1 + (graemeCount xs)
+graemeCount (Cons x xs) = graemeCount xs
+-- enrichedASTpp
+type List =
+  Nil
+| Cons '0 file.package.name.File.List '0
+
+
+graemeCount : <> file.package.name.File.List {name : Data.String} -> Data.Int
+graemeCount =
+  (LAMBDA $v0 ->
+    (BAR
+      (CALL
+        (LAMBDA Nil ->
+          0
+        )
+        $v0
+      )
+      (CALL
+        (LAMBDA Cons (Data.String) file.package.name.File.List (Data.String) ->
+          (IF
+            (CALL
+              (CALL
+                ==
+                "Graeme"
+              )
+              $v0
+            )
+            (CALL
+              (CALL
+                +
+                1
+              )
+              (CALL
+                graemeCount
+                xs
+              )
+            )
+            FAIL
+          )
+        )
+        $v0
+      )
+      (CALL
+        (LAMBDA Cons (Data.String) file.package.name.File.List (Data.String) ->
+          (CALL
+            graemeCount
+            xs
+          )
+        )
+        $v0
+      )
+      ERROR
+    )
+  )

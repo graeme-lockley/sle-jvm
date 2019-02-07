@@ -22,19 +22,11 @@ typealias Person =
 value1 : <> alias.Person -> alias.Person
 value1 =
   (LAMBDA person ->
-    (LET
-      $record : <> alias.Person
-      $record =
-        person
-
-      {
-       name =
-        "Andrew"
-       dateOfBirth =
-        $record
-         .dateOfBirth)
-      }
-    )
+    {{{
+      person
+       .0
+      "Andrew"
+    }}}
   )
 
 
@@ -42,34 +34,18 @@ value2 : <> alias.Person -> Data.Int -> alias.Person
 value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->
-      (LET
-        $record : <> alias.Person
-        $record =
+      {{{
+        {{{
+          newDay
           person
-
-        {
-         name =
-          $record
-           .name)
-         dateOfBirth =
-          (LET
-            $record : <> {day : Data.Int, month : Data.Int, year : Data.Int}
-            $record =
-              person
-               .dateOfBirth)
-
-            {
-             day =
-              newDay
-             month =
-              $record
-               .month)
-             year =
-              $record
-               .year)
-            }
-          )
-        }
-      )
+           .0
+           .1
+          person
+           .0
+           .2
+        }}}
+        person
+         .1
+      }}}
     )
   )

@@ -127,11 +127,6 @@ data class ConstantConstructor(
         val name: String,
         val fields: List<Expression>) : Expression(location, type)
 
-data class ConstantRecord(
-        override val location: Location,
-        override val type: Type,
-        val fields: List<ConstantField>) : Expression(location, type)
-
 data class ConstantField(
         override val location: Location,
         val name: ID,
@@ -175,23 +170,11 @@ data class CallExpression(
         val operator: Expression,
         val operand: Expression) : Expression(location, type)
 
-data class FieldProjectionExpression(
-        override val location: Location,
-        override val type: Type,
-        val record: Expression,
-        val name: ID) : Expression(location, type)
-
 data class ProjectionExpression(
         override val location: Location,
         override val type: Type,
         val record: Expression,
         val index: Int) : Expression(location, type)
-
-data class UpdateRecordExpression(
-        override val location: Location,
-        override val type: Type,
-        val record: Expression,
-        val updates: List<Pair<ID, Expression>>) : Expression(location, type)
 
 data class Bar(
         override val location: Location,

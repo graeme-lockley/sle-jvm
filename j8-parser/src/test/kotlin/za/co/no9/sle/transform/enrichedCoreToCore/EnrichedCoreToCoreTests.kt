@@ -226,7 +226,7 @@ fun Declaration.asString(indent: Int = 0): String =
 
 
 fun Constructor.asString(): String =
-        "${name.name}${arguments.joinToString("") { " " + it.toString() }}\n"
+        "${name.name}${arguments.joinToString("") { " $it" }}\n"
 
 
 fun Expression.asString(indent: Int = 0): String =
@@ -246,10 +246,15 @@ fun Expression.asString(indent: Int = 0): String =
             is ConstantChar ->
                 "${spaces(indent)}'$value'\n"
 
-            is ConstantRecord ->
-                "${spaces(indent)}{\n" +
-                        fields.joinToString("") { "${spaces(indent + 1)}${it.name.name} =\n${it.value.asString(indent + 2)}" } +
-                        "${spaces(indent)}}\n"
+            is ConstantConstructor ->
+                "${spaces(indent)}{{{\n" +
+                        fields.joinToString("") { it.asString(indent + 2) } +
+                        "${spaces(indent)}}}}\n"
+
+//            is ConstantRecord ->
+//                "${spaces(indent)}{\n" +
+//                        fields.joinToString("") { "${spaces(indent + 1)}${it.name.name} =\n${it.value.asString(indent + 2)}" } +
+//                        "${spaces(indent)}}\n"
 
             is FAIL ->
                 "${spaces(indent)}FAIL\n"
@@ -279,8 +284,8 @@ fun Expression.asString(indent: Int = 0): String =
             is CallExpression ->
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
-            is FieldProjectionExpression ->
-                "${record.asString(indent)}${spaces(indent + 1)}.${name.name})\n"
+            is ProjectionExpression ->
+                "${record.asString(indent)}${spaces(indent + 1)}.$index\n"
 
             is CaseExpression ->
                 "${spaces(indent)}(CASE $variable\n${clauses.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"

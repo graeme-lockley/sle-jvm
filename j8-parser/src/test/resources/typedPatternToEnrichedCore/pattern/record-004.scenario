@@ -1,0 +1,59 @@
+-- A more complex pattern match off of a constructor pattern
+type List a
+  = Nil
+  | Cons a (List a)
+
+type Tuple2 a b
+  = Tuple2 a b
+
+
+graemeCount : {xs: List a, ys: List a} -> List (a, a)
+graemeCount {xs = Cons xh xt, ys = Cons yh yt} = Cons (xh, yh) (graemeCount {xs = xt, ys = yt})
+graemeCount _ = Nil
+-- enrichedASTpp
+type List =
+  Nil
+| Cons '0 file.package.name.File.List '0
+
+
+type Tuple2 =
+  Tuple2 '0 '1
+
+
+graemeCount : <0> {xs : file.package.name.File.List '0, ys : file.package.name.File.List '0} -> file.package.name.File.List file.package.name.File.Tuple2 '0 '0
+graemeCount =
+  (LAMBDA $v0 ->
+    (BAR
+      (CALL
+        (LAMBDA Tuple2 file.package.name.File.List '16 file.package.name.File.List '16 ->
+          (CALL
+            (CALL
+              Cons
+              (CALL
+                (CALL
+                  Tuple2
+                  xh
+                )
+                yh
+              )
+            )
+            (CALL
+              graemeCount
+              {{{
+                xt
+                yt
+              }}}
+            )
+          )
+        )
+        $v0
+      )
+      (CALL
+        (LAMBDA _ ->
+          Nil
+        )
+        $v0
+      )
+      ERROR
+    )
+  )

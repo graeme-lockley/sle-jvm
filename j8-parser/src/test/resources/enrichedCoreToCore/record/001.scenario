@@ -10,16 +10,11 @@ value =
 -- coreASTpp
 value : <> {name : Data.String, dateOfBirth : {day : Data.Int, month : Data.Int, year : Data.Int}}
 value =
-  {
-   name =
-    "graeme"
-   dateOfBirth =
-    {
-     day =
+  {{{
+    {{{
       9
-     month =
       4
-     year =
       1968
-    }
-  }
+    }}}
+    "graeme"
+  }}}

@@ -1,11 +1,8 @@
 package za.co.no9.sle.transform.typedPatternToEnrichedCore
 
-import za.co.no9.sle.Either
-import za.co.no9.sle.Errors
-import za.co.no9.sle.Location
+import za.co.no9.sle.*
 import za.co.no9.sle.ast.enrichedCore.*
 import za.co.no9.sle.ast.enrichedCore.Unit
-import za.co.no9.sle.map
 import za.co.no9.sle.repository.Item
 import za.co.no9.sle.typing.*
 
@@ -22,7 +19,7 @@ fun parse(source: Item, environment: Environment, callback: ParseCallback): Eith
 
         callback.resolvedTypedPatternModule(it.module)
 
-        ParseResult(Transform(environment).transform(it.module), it.environment)
+        ParseResult(Transform(it.environment).transform(it.module), it.environment)
     }
 }
 
@@ -143,67 +140,122 @@ private class Transform(val environment: Environment) {
     private fun transform(expression: za.co.no9.sle.ast.typedPattern.Expression): Expression =
             when (expression) {
                 is za.co.no9.sle.ast.typedPattern.Unit ->
-                    Unit(expression.location, expression.type)
+                    Unit(expression.location, transform(expression.type))
 
                 is za.co.no9.sle.ast.typedPattern.ConstantBool ->
-                    ConstantBool(expression.location, expression.type, expression.value)
+                    ConstantBool(expression.location, transform(expression.type), expression.value)
 
                 is za.co.no9.sle.ast.typedPattern.ConstantInt ->
-                    ConstantInt(expression.location, expression.type, expression.value)
+                    ConstantInt(expression.location, transform(expression.type), expression.value)
 
                 is za.co.no9.sle.ast.typedPattern.ConstantString ->
-                    ConstantString(expression.location, expression.type, expression.value)
+                    ConstantString(expression.location, transform(expression.type), expression.value)
 
                 is za.co.no9.sle.ast.typedPattern.ConstantChar ->
-                    ConstantChar(expression.location, expression.type, expression.value)
+                    ConstantChar(expression.location, transform(expression.type), expression.value)
 
-                is za.co.no9.sle.ast.typedPattern.ConstantRecord ->
-                    ConstantRecord(expression.location, expression.type, expression.fields.map { ConstantField(it.location, transform(it.name), transform(it.value)) })
+                is za.co.no9.sle.ast.typedPattern.ConstantRecord -> {
+                    val expressionType =
+                            transform(expression.type)
+
+                    val fieldIndex =
+                            expression.fields.fold(mapOf<String, Expression>()) { a, b ->
+                                a + Pair(b.name.name, transform(b.value))
+                            }
+
+                    val recordType =
+                            resolveAlias(environment, expression.type)!!
+
+                    val sortedFieldNames =
+                            (recordType as TRec).fields.map { it.first }.sorted()
+
+                    val fields =
+                            sortedFieldNames.map { name -> fieldIndex.getValue(name) }
+
+                    ConstantConstructor(expression.location, expressionType, "Tuple${fields.size}", fields)
+                }
 
                 is za.co.no9.sle.ast.typedPattern.IdReference ->
-                    IdReference(expression.location, expression.type, expression.name)
+                    IdReference(expression.location, transform(expression.type), expression.name)
 
                 is za.co.no9.sle.ast.typedPattern.LetExpression ->
-                    LetExpression(expression.location, expression.type, expression.declarations.map { transform(it) }, transform(expression.expression))
+                    LetExpression(expression.location, transform(expression.type), expression.declarations.map { transform(it) }, transform(expression.expression))
 
                 is za.co.no9.sle.ast.typedPattern.IfExpression ->
-                    IfExpression(expression.location, expression.type, transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
+                    IfExpression(expression.location, transform(expression.type), transform(expression.guardExpression), transform(expression.thenExpression), transform(expression.elseExpression))
 
                 is za.co.no9.sle.ast.typedPattern.LambdaExpression -> {
                     val patternTransformation =
                             transform(expression.argument, PatternTransformState(environment))
 
                     if (patternTransformation.state.expression == null) {
-                        LambdaExpression(expression.location, expression.type, patternTransformation.result, transform(expression.expression))
+                        LambdaExpression(expression.location, transform(expression.type), patternTransformation.result, transform(expression.expression))
                     } else {
                         LambdaExpression(
                                 expression.location,
-                                expression.type,
+                                transform(expression.type),
                                 patternTransformation.result,
                                 IfExpression(
                                         expression.location,
-                                        expression.expression.type,
+                                        transform(expression.expression.type),
                                         patternTransformation.state.expression,
                                         transform(expression.expression),
-                                        FAIL(expression.location, expression.expression.type)))
+                                        FAIL(expression.location, transform(expression.expression.type))))
                     }
                 }
 
                 is za.co.no9.sle.ast.typedPattern.CallExpression ->
-                    CallExpression(expression.location, expression.type, transform(expression.operator), transform(expression.operand))
+                    CallExpression(expression.location, transform(expression.type), transform(expression.operator), transform(expression.operand))
 
-                is za.co.no9.sle.ast.typedPattern.FieldProjectionExpression ->
-                    FieldProjectionExpression(expression.location, expression.type, transform(expression.record), transform(expression.name))
+                is za.co.no9.sle.ast.typedPattern.FieldProjectionExpression -> {
+                    val recordType =
+                            resolveAlias(environment, expression.record.type)!!
 
-                is za.co.no9.sle.ast.typedPattern.UpdateRecordExpression ->
-                    UpdateRecordExpression(expression.location, expression.type, transform(expression.record), expression.updates.map { Pair(transform(it.first), transform(it.second)) })
+                    val sortedFieldNames =
+                            (recordType as TRec).fields.map { it.first }.sorted()
+
+                    ProjectionExpression(expression.location, transform(expression.type), transform(expression.record), sortedFieldNames.indexOf(expression.name.name))
+                }
+
+                is za.co.no9.sle.ast.typedPattern.UpdateRecordExpression -> {
+                    val expressionType =
+                            transform(expression.type)
+
+                    val fieldIndex =
+                            expression.updates.fold(mapOf<String, Expression>()) { a, b ->
+                                a + Pair(b.first.name, transform(b.second))
+                            }
+
+
+                    val recordType =
+                            resolveAlias(environment, expression.record.type)!!
+
+                    val sortedFieldNames =
+                            (recordType as TRec).fields.map { it.first }.sorted()
+
+                    val fieldTypes =
+                            recordType.fields.fold(emptyMap<String, Type>()) { a, b ->
+                                a + b.mapSecond { transform(it) }
+                            }
+
+                    val record =
+                            transform(expression.record)
+
+                    val fields =
+                            sortedFieldNames.mapIndexed { index, name ->
+                                fieldIndex[name]
+                                        ?: ProjectionExpression(expression.location, fieldTypes.getValue(name), record, index)
+                            }
+
+                    ConstantConstructor(expression.location, expressionType, "Tuple${fields.size}", fields)
+                }
 
                 is za.co.no9.sle.ast.typedPattern.CaseExpression -> {
                     val operator =
                             transform(expression.operator)
 
                     val caseItemType =
-                            TArr(operator.type, expression.type)
+                            TArr(transform(operator.type), transform(expression.type))
 
                     fun transform(caseItem: za.co.no9.sle.ast.typedPattern.CaseItem): Expression {
                         val patternTransformation =
@@ -213,20 +265,20 @@ private class Transform(val environment: Environment) {
                                 if (patternTransformation.state.expression == null) {
                                     transform(caseItem.expression)
                                 } else {
-                                    IfExpression(caseItem.location, caseItem.expression.type, patternTransformation.state.expression, transform(caseItem.expression), FAIL(caseItem.location, caseItem.expression.type))
+                                    IfExpression(caseItem.location, transform(caseItem.expression.type), patternTransformation.state.expression, transform(caseItem.expression), FAIL(caseItem.location, transform(caseItem.expression.type)))
                                 }
 
-                        return CallExpression(caseItem.location, expression.type,
+                        return CallExpression(caseItem.location, transform(expression.type),
                                 LambdaExpression(caseItem.location, caseItemType, patternTransformation.result, caseItemExpression),
-                                IdReference(expression.location, operator.type, "\$case"))
+                                IdReference(expression.location, transform(operator.type), "\$case"))
                     }
 
                     val initial: Expression =
-                            ERROR(expression.location, expression.type)
+                            ERROR(expression.location, transform(expression.type))
 
-                    CallExpression(expression.location, expression.type,
-                            LambdaExpression(expression.location, TArr(operator.type, expression.type), IdReferencePattern(expression.location, operator.type, "\$case"),
-                                    Bar(expression.location, expression.type, expression.items.map { b -> transform(b) } + initial)),
+                    CallExpression(expression.location, transform(expression.type),
+                            LambdaExpression(expression.location, TArr(transform(operator.type), transform(expression.type)), IdReferencePattern(expression.location, transform(operator.type), "\$case"),
+                                    Bar(expression.location, transform(expression.type), expression.items.map { b -> transform(b) } + initial)),
                             operator
                     )
                 }
@@ -296,61 +348,135 @@ private class Transform(val environment: Environment) {
     private class PatternTransformResult<T>(val result: T, val state: PatternTransformState)
 
 
-    private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: PatternTransformState): PatternTransformResult<Pattern> =
-            when (pattern) {
-                is za.co.no9.sle.ast.typedPattern.ConstantIntPattern ->
-                    state.addComparison(pattern.location, pattern.type, ConstantInt(pattern.location, pattern.type, pattern.value))
+    private fun transform(pattern: za.co.no9.sle.ast.typedPattern.Pattern, state: PatternTransformState): PatternTransformResult<Pattern> {
+        val patternType =
+                transform(pattern.type)
 
-                is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
-                    state.addComparison(pattern.location, pattern.type, ConstantBool(pattern.location, pattern.type, pattern.value))
+        return when (pattern) {
+            is za.co.no9.sle.ast.typedPattern.ConstantIntPattern ->
+                state.addComparison(pattern.location, patternType, ConstantInt(pattern.location, patternType, pattern.value))
 
-                is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
-                    state.addComparison(pattern.location, pattern.type, ConstantString(pattern.location, pattern.type, pattern.value))
+            is za.co.no9.sle.ast.typedPattern.ConstantBoolPattern ->
+                state.addComparison(pattern.location, patternType, ConstantBool(pattern.location, patternType, pattern.value))
 
-                is za.co.no9.sle.ast.typedPattern.ConstantCharPattern ->
-                    state.addComparison(pattern.location, pattern.type, ConstantChar(pattern.location, pattern.type, pattern.value))
+            is za.co.no9.sle.ast.typedPattern.ConstantStringPattern ->
+                state.addComparison(pattern.location, patternType, ConstantString(pattern.location, patternType, pattern.value))
 
-                is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern -> {
-                    val id =
-                            state.newID()
+            is za.co.no9.sle.ast.typedPattern.ConstantCharPattern ->
+                state.addComparison(pattern.location, patternType, ConstantChar(pattern.location, patternType, pattern.value))
 
-                    PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, id.result), id.state)
+            is za.co.no9.sle.ast.typedPattern.ConstantUnitPattern -> {
+                val id =
+                        state.newID()
+
+                PatternTransformResult(IdReferencePattern(pattern.location, patternType, id.result), id.state)
+            }
+
+            is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
+                PatternTransformResult(IdReferencePattern(pattern.location, patternType, pattern.name), state)
+
+            is za.co.no9.sle.ast.typedPattern.IgnorePattern ->
+                PatternTransformResult(IgnorePattern(pattern.location, patternType), state)
+
+            is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern -> {
+                val initialState =
+                        PatternTransformResult(emptyList<Pattern>(), state)
+
+                val parameters =
+                        pattern.parameters.fold(initialState) { a, b ->
+                            val transformResult =
+                                    transform(b, a.state)
+
+                            PatternTransformResult(a.result + transformResult.result, transformResult.state)
+                        }
+
+                PatternTransformResult(ConstructorReferencePattern(pattern.location, patternType, pattern.name, parameters.result), parameters.state)
+            }
+
+            is za.co.no9.sle.ast.typedPattern.RecordPattern -> {
+                val expressionType =
+                        transform(pattern.type)
+
+                val initialState =
+                        PatternTransformResult(emptyList<Pair<ID, Pattern>>(), state)
+
+                val fields =
+                        pattern.fields.fold(initialState) { a, b ->
+                            val transformResult =
+                                    transform(b.second, a.state)
+
+                            PatternTransformResult(a.result + Pair(transform(b.first), transformResult.result), transformResult.state)
+                        }
+
+                val fieldIndex =
+                        fields.result.fold(mapOf<String, Pattern>()) { a, b ->
+                            a + Pair(b.first.name, b.second)
+                        }
+
+                val recordType =
+                        resolveAlias(environment, pattern.type)!!
+
+                val sortedFieldNames =
+                        (recordType as TRec).fields.map { it.first }.sorted()
+
+                val theFields =
+                        sortedFieldNames.map { name -> fieldIndex.getValue(name) }
+
+                val tupleName =
+                        "Tuple${fields.result.size}"
+
+                val tupleTypeBinding =
+                        environment.type(tupleName)
+
+                val constructorName =
+                        when (tupleTypeBinding) {
+                            is ImportADTBinding ->
+                                tupleTypeBinding.item.resolveConstructor(tupleName)
+
+                            else ->
+                                tupleName
+                        }
+
+                PatternTransformResult(ConstructorReferencePattern(pattern.location, expressionType, constructorName, theFields), fields.state)
+            }
+        }
+    }
+
+
+    private fun transform(type: Type): Type =
+            when (type) {
+                is TCon ->
+                    if (type.arguments.isEmpty())
+                        type
+                    else
+                        TCon(type.location, type.name, type.arguments.map { transform(it) })
+
+                is TArr ->
+                    TArr(type.location, transform(type.domain), transform(type.range))
+
+                is TVar ->
+                    type
+
+                is TAlias -> {
+                    val ntype =
+                            resolveAlias(environment, type)
+
+                    if (ntype == null) {
+                        type
+                    } else
+                        transform(ntype)
                 }
 
-                is za.co.no9.sle.ast.typedPattern.IdReferencePattern ->
-                    PatternTransformResult(IdReferencePattern(pattern.location, pattern.type, pattern.name), state)
-
-                is za.co.no9.sle.ast.typedPattern.IgnorePattern ->
-                    PatternTransformResult(IgnorePattern(pattern.location, pattern.type), state)
-
-                is za.co.no9.sle.ast.typedPattern.ConstructorReferencePattern -> {
-                    val initialState =
-                            PatternTransformResult(emptyList<Pattern>(), state)
-
-                    val parameters =
-                            pattern.parameters.fold(initialState) { a, b ->
-                                val transformResult =
-                                        transform(b, a.state)
-
-                                PatternTransformResult(a.result + transformResult.result, transformResult.state)
+                is TRec -> {
+                    val fieldIndex =
+                            type.fields.fold(emptyMap<String, Type>()) { a, b ->
+                                a + b.mapSecond { transform(it) }
                             }
 
-                    PatternTransformResult(ConstructorReferencePattern(pattern.location, pattern.type, pattern.name, parameters.result), parameters.state)
-                }
+                    val fieldTypes =
+                            fieldIndex.keys.toSortedSet().toList().map { fieldIndex.getValue(it) }
 
-                is za.co.no9.sle.ast.typedPattern.RecordPattern -> {
-                    val initialState =
-                            PatternTransformResult(emptyList<Pair<ID, Pattern>>(), state)
-
-                    val fields =
-                            pattern.fields.fold(initialState){ a, b  ->
-                                val transformResult =
-                                        transform(b.second, a.state)
-
-                                PatternTransformResult(a.result + Pair(transform(b.first), transformResult.result), transformResult.state)
-                            }
-
-                    PatternTransformResult(RecordPattern(pattern.location, pattern.type, fields.result), fields.state)
+                    TCon(type.location, "Tuple${fieldTypes.size}", fieldTypes)
                 }
             }
 }

@@ -221,7 +221,7 @@ fun Declaration.asString(indent: Int = 0): String =
 
 
 fun Constructor.asString(): String =
-        "${name.name}${arguments.joinToString("") { " " + it.toString() }}\n"
+        "${name.name}${arguments.joinToString("") { " $it" }}\n"
 
 
 fun Expression.asString(indent: Int = 0): String =
@@ -242,14 +242,9 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}'$value'\n"
 
             is ConstantConstructor ->
-                "${spaces(indent)}{\n" +
+                "${spaces(indent)}{{{\n" +
                         fields.joinToString("") { it.asString(indent + 2) } +
-                        "${spaces(indent)}}\n"
-
-            is ConstantRecord ->
-                "${spaces(indent)}{\n" +
-                        fields.joinToString("") { "${spaces(indent + 1)}${it.name.name} =\n${it.value.asString(indent + 2)}" } +
-                        "${spaces(indent)}}\n"
+                        "${spaces(indent)}}}}\n"
 
             is FAIL ->
                 "${spaces(indent)}FAIL\n"
@@ -280,17 +275,7 @@ fun Expression.asString(indent: Int = 0): String =
                 "${spaces(indent)}(CALL\n${operator.asString(indent + 2)}${operand.asString(indent + 2)}${spaces(indent)})\n"
 
             is ProjectionExpression ->
-                "${record.asString(indent)}${spaces(indent + 1)}.$index)\n"
-
-            is FieldProjectionExpression ->
-                "${record.asString(indent)}${spaces(indent + 1)}.${name.name})\n"
-
-            is UpdateRecordExpression ->
-                "${spaces(indent)}{\n" +
-                        record.asString(indent + 1) +
-                        "${spaces(indent + 1)} |\n" +
-                        updates.joinToString("") { "${spaces(indent + 2)}${it.first.name} =\n${it.second.asString(indent + 3)}" } +
-                        "${spaces(indent)}}\n"
+                "${record.asString(indent)}${spaces(indent + 1)}.$index\n"
 
             is Bar ->
                 "${spaces(indent)}(BAR\n${expressions.joinToString("") { it.asString(indent + 2) }}${spaces(indent)})\n"
