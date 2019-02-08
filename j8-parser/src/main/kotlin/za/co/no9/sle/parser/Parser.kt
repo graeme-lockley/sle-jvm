@@ -1124,19 +1124,23 @@ class Parser(private val lexer: Lexer) {
                             next()
 
                     val values =
-                            mutableListOf<Pair<ID, Pattern>>()
+                            mutableListOf<Pair<ID, Pattern?>>()
 
                     if (isToken(Token.LowerID)) {
                         while (true) {
                             val name =
                                     matchToken(Token.LowerID, "Expected Lower ID").toID()
 
-                            matchOperator("=")
+                            if (isOperator("=")) {
+                                matchOperator("=")
 
-                            val pattern =
-                                    parsePattern()
+                                val pattern =
+                                        parsePattern()
 
-                            values.add(Pair(name, pattern))
+                                values.add(Pair(name, pattern))
+                            } else {
+                                values.add(Pair(name, null))
+                            }
 
                             if (isOperator(",")) {
                                 skip()

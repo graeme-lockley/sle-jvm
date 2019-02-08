@@ -334,7 +334,12 @@ private class Transformer {
                     ConstructorReferencePattern(pattern.location, transform(pattern.name), pattern.parameters.map { transform(it) })
 
                 is za.co.no9.sle.ast.typeless.RecordPattern ->
-                    RecordPattern(pattern.location, pattern.fields.map { Pair(transform(it.first), transform(it.second)) })
+                    RecordPattern(pattern.location, pattern.fields.map {
+                        val fieldPattern =
+                                it.second ?: za.co.no9.sle.ast.typeless.IdReferencePattern(it.first.location, it.first.name)
+
+                        Pair(transform(it.first), transform(fieldPattern))
+                    })
             }
 
 

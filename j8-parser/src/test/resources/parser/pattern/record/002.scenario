@@ -1,0 +1,38 @@
+-- A simple pattern match with the short record field name
+value { firstName = "Graeme", surname } =
+  surname
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        arguments: [
+            RecordPattern:
+              fields: [
+                  Pair:
+                    first:
+                      ID:
+                        name: firstName
+                    second:
+                      ConstantStringPattern:
+                        value: Graeme
+                  Pair:
+                    first:
+                      ID:
+                        name: surname
+                    second: null
+                ]
+          ]
+        expression:
+          IdReference:
+            name:
+              QualifiedID:
+                name: surname
+                qualifier: null
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+    ]
+  exports: []
+  imports: []
