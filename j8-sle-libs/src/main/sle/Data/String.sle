@@ -15,6 +15,7 @@ export
 , fromChar
 , fromInt
 , fromList
+, index
 , indexes
 , isEmpty
 , join
@@ -160,6 +161,15 @@ endsWith =
 indexes : String -> String -> List Int
 indexes =
     i_BuiltinValue "za.co.no9.sle.runtime.StringUtil.indexes"
+
+
+index : String -> String -> Option Int
+index needle s =
+  case indexes needle s of
+    [] ->
+      None
+    i :: _ ->
+      Some i
 
 
 toLower : String -> String

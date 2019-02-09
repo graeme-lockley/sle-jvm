@@ -16,25 +16,64 @@ separator =
 
 parse : String -> List String
 parse input =
-	if S.startsWith "//" input then
+  if S.startsWith "//[" input then
+    S.index "\n" input
+      |> Option.map (\i ->
+            let
+              s =
+                S.slice 3 (i - 1) input
+                  |> S.split "]["
+                  |> List.map Regex.quote
+                  |> S.join "|"
+                  |> Regex.fromString
+              		|> Option.withDefault Regex.never
+              t =
+                S.dropLeft (i + 1) input
+            in
+              Regex.split s t
+          )
+      |> Option.withDefault []
+  else if S.startsWith "//" input then
 		S.split (S.slice 2 3 input) (S.dropLeft 4 input)
 	else
 		Regex.split separator input
 
 
-add : String -> Int
+add : String -> Result (List Int) Int
 add input =
-	parse input
-		|> List.map S.toInt
-		|> List.map (Option.withDefault 0)
-		|> List.sum
+  let
+    numbers =
+	    parse input
+    		|> List.map S.toInt
+    		|> List.map (Option.withDefault 0)
+
+    isNegative n =
+       n < 0
+
+    hasNegatives =
+      List.any isNegative numbers
+  in
+    if hasNegatives then
+      numbers
+        |> List.filter isNegative
+        |> Error
+    else
+      numbers
+        |> List.filter (\n -> n < 1001)
+        |> List.sum
+        |> Okay
 
 
 suite =
 	Describe "add"
-	[ Test "\"\" == 0" <| add "" == 0
-	, Test "\"123\" == 123" <| add "123" == 123
-	, Test "\"1,2,3\" == 6" <| add "1,2,3" == 6
-	, Test "\"1,2\\n3\" == 6" <| add "1,2\n3" == 6
-	, Test "\"//;\\n1;2;3\" == 6" <| add "//;\n1;2;3" == 6
+	[ Test "\"\" == Okay 0" <| add "" == Okay 0
+	, Test "\"123\" == Okay 123" <| add "123" == Okay 123
+	, Test "\"1,2,3\" == Okay 6" <| add "1,2,3" == Okay 6
+	, Test "\"1,1001,2,2001,3,3001\" == Okay 6" <| add "1,1001,2,2001,3,3001" == Okay 6
+	, Test "\"1,2\\n3\" == Okay 6" <| add "1,2\n3" == Okay 6
+	, Test "\"//;\\n1;2;3\" == Okay 6" <| add "//;\n1;2;3" == Okay 6
+	, Test "\"//[===]\\n1===2===3\" == Okay 6" <| add "//[===]\n1===2===3" == Okay 6
+	, Test "\"//[***]\\n1***2***3\" == Okay 6" <| add "//[***]\n1***2***3" == Okay 6
+	, Test "\"//[***][--]\\n1--2***3\" == Okay 6" <| add "//[***][--]\n1--2***3" == Okay 6
+	, Test "\"1,-2,3,-4\" == Error [-2, -4]" <| add "1,-2,3,-4" == Error [ -2, -4 ]
 	]

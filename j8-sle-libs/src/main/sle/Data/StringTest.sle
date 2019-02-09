@@ -123,6 +123,13 @@ suite =
     , Test "\"Ry\" \"theory\"" <| not <| S.endsWith "Ry" "theory"
     , Test "\"\" \"theory\"" <| S.endsWith "" "theory"
     ]
+  , Describe "index"
+    [ Test "\"i\" \"Mississippi\"" <| S.index "i" "Mississippi" == Some 1
+    , Test "\"ss\" \"Mississippi\"" <| S.index "ssi" "Mississippi" == Some 2
+    , Test "\"bob\" \"Mississippi\"" <| S.index "bob" "Mississippi" == None
+    , Test "\"\" \"Mississippi\"" <| S.index "" "Mississippi" == Some 0
+    , Test "\"\" \"\"" <| S.index "" "" == None
+    ]
   , Describe "indexes"
     [ Test "\"i\" \"Mississippi\"" <| S.indexes "i" "Mississippi" == [1,4,7,10]
     , Test "\"ss\" \"Mississippi\"" <| S.indexes "ssi" "Mississippi" == [2, 5]
