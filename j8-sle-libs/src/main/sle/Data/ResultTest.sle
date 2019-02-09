@@ -1,0 +1,18 @@
+export suite
+
+import file:../Test/Unit exposing Suite(..)
+
+import file:./Result exposing map
+
+
+square x =
+  x * x
+
+
+suite =
+  Describe "Data.Result"
+  [ Describe "map"
+    [ Test "square (Okay 4)" <| map square (Okay 4) == Okay 16
+    , Test "square (Error False)" <| map square (Error False) == Error False
+    ]
+  ]

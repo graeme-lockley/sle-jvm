@@ -1,0 +1,12 @@
+export
+  Result(..)
+, map
+
+
+
+map f (Okay value) =
+  f value
+    |> Okay
+
+map f (Error error) =
+  Error error
