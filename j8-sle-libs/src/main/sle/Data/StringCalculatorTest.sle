@@ -65,15 +65,17 @@ add input =
 
 
 suite =
-	Describe "add"
-	[ Test "\"\" == Okay 0" <| add "" == Okay 0
-	, Test "\"123\" == Okay 123" <| add "123" == Okay 123
-	, Test "\"1,2,3\" == Okay 6" <| add "1,2,3" == Okay 6
-	, Test "\"1,1001,2,2001,3,3001\" == Okay 6" <| add "1,1001,2,2001,3,3001" == Okay 6
-	, Test "\"1,2\\n3\" == Okay 6" <| add "1,2\n3" == Okay 6
-	, Test "\"//;\\n1;2;3\" == Okay 6" <| add "//;\n1;2;3" == Okay 6
-	, Test "\"//[===]\\n1===2===3\" == Okay 6" <| add "//[===]\n1===2===3" == Okay 6
-	, Test "\"//[***]\\n1***2***3\" == Okay 6" <| add "//[***]\n1***2***3" == Okay 6
-	, Test "\"//[***][--]\\n1--2***3\" == Okay 6" <| add "//[***][--]\n1--2***3" == Okay 6
-	, Test "\"1,-2,3,-4\" == Error [-2, -4]" <| add "1,-2,3,-4" == Error [ -2, -4 ]
-	]
+  Describe "Data.StringCalculator"
+  [ Describe "add"
+    [ Test "\"\" == Okay 0" <| add "" == Okay 0
+    , Test "\"123\" == Okay 123" <| add "123" == Okay 123
+    , Test "\"1,2,3\" == Okay 6" <| add "1,2,3" == Okay 6
+    , Test "\"1,1001,2,2001,3,3001\" == Okay 6" <| add "1,1001,2,2001,3,3001" == Okay 6
+    , Test "\"1,2\\n3\" == Okay 6" <| add "1,2\n3" == Okay 6
+    , Test "\"//;\\n1;2;3\" == Okay 6" <| add "//;\n1;2;3" == Okay 6
+    , Test "\"//[===]\\n1===2===3\" == Okay 6" <| add "//[===]\n1===2===3" == Okay 6
+    , Test "\"//[***]\\n1***2***3\" == Okay 6" <| add "//[***]\n1***2***3" == Okay 6
+    , Test "\"//[***][--]\\n1--2***3\" == Okay 6" <| add "//[***][--]\n1--2***3" == Okay 6
+    , Test "\"1,-2,3,-4\" == Error [-2, -4]" <| add "1,-2,3,-4" == Error [ -2, -4 ]
+    ]
+  ]
