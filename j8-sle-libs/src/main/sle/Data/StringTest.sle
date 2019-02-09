@@ -130,112 +130,112 @@ suite =
     , Test "\"\" \"Mississippi\"" <| S.indexes "" "Mississippi" == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     , Test "\"\" \"\"" <| S.indexes "" "" == []
     ]
-    , Describe "toUpper"
+  , Describe "toUpper"
     [ Test "\"hello\"" <| S.toUpper "hello" == "HELLO"
     , Test "\"\"" <| S.toUpper "" == ""
     , Test "\"HELLO\"" <| S.toUpper "HELLO" == "HELLO"
     ]
-    , Describe "toLower"
+  , Describe "toLower"
     [ Test "\"hello\"" <| S.toLower "hello" == "hello"
     , Test "\"\"" <| S.toLower "" == ""
     , Test "\"HELLO\"" <| S.toLower "HELLO" == "hello"
     ]
-    , Describe "pad"
+  , Describe "pad"
     [ Test "3 \"hello\"" <| S.pad 3 "hello" == "hello"
     , Test "5 \"hello\"" <| S.pad 5 "hello" == "hello"
     , Test "6 \"hello\"" <| S.pad 6 "hello" == " hello"
     , Test "7 \"hello\"" <| S.pad 7 "hello" == " hello "
     , Test "8 \"hello\"" <| S.pad 8 "hello" == "  hello "
     ]
-    , Describe "padLeft"
+  , Describe "padLeft"
     [ Test "3 \"hello\"" <| S.padLeft 3 "hello" == "hello"
     , Test "5 \"hello\"" <| S.padLeft 5 "hello" == "hello"
     , Test "6 \"hello\"" <| S.padLeft 6 "hello" == " hello"
     , Test "7 \"hello\"" <| S.padLeft 7 "hello" == "  hello"
     , Test "8 \"hello\"" <| S.padLeft 8 "hello" == "   hello"
     ]
-    , Describe "padRight"
+  , Describe "padRight"
     [ Test "3 \"hello\"" <| S.padRight 3 "hello" == "hello"
     , Test "5 \"hello\"" <| S.padRight 5 "hello" == "hello"
     , Test "6 \"hello\"" <| S.padRight 6 "hello" == "hello "
     , Test "7 \"hello\"" <| S.padRight 7 "hello" == "hello  "
     , Test "8 \"hello\"" <| S.padRight 8 "hello" == "hello   "
     ]
-    , Describe "trim"
+  , Describe "trim"
     [ Test "\"\"" <| S.trim "" == ""
     , Test "\"hello\"" <| S.trim "hello" == "hello"
     , Test "\"  hello\"" <| S.trim "  hello" == "hello"
     , Test "\"hello  \"" <| S.trim "hello  " == "hello"
     , Test "\"  hello  \"" <| S.trim "  hello  " == "hello"
     ]
-    , Describe "trimLeft"
+  , Describe "trimLeft"
     [ Test "\"\"" <| S.trimLeft "" == ""
     , Test "\"hello\"" <| S.trimLeft "hello" == "hello"
     , Test "\"  hello\"" <| S.trimLeft "  hello" == "hello"
     , Test "\"hello  \"" <| S.trimLeft "hello  " == "hello  "
     , Test "\"  hello  \"" <| S.trimLeft "  hello  " == "hello  "
     ]
-    , Describe "trimRight"
+  , Describe "trimRight"
     [ Test "\"\"" <| S.trimRight "" == ""
     , Test "\"hello\"" <| S.trimRight "hello" == "hello"
     , Test "\"  hello\"" <| S.trimRight "  hello" == "  hello"
     , Test "\"hello  \"" <| S.trimRight "hello  " == "hello"
     , Test "\"  hello  \"" <| S.trimRight "  hello  " == "  hello"
     ]
-    , Describe "cons"
+  , Describe "cons"
     [ Test "'a' \"hello\"" <| S.cons 'a' "hello" == "ahello"
     , Test "'a' \"\"" <| S.cons 'a' "" == "a"
     ]
-    , Describe "uncons"
+  , Describe "uncons"
     [ Test "\"\"" <| S.uncons "" == None
     , Test "\"a\"" <| S.uncons "a" == Some ('a', "")
     , Test "\"hello\"" <| S.uncons "hello" == Some ('h', "ello")
     ]
-    , Describe "fromList"
+  , Describe "fromList"
     [ Test "['a', 'e', 'i', 'o', 'u']" <| S.fromList ['a', 'e', 'i', 'o', 'u'] == "aeiou"
     , Test "[]" <| S.fromList [] == ""
     ]
-    , Describe "toList"
+  , Describe "toList"
     [ Test "\"aeiou\"" <| S.toList "aeiou" == ['a', 'e', 'i', 'o', 'u']
     , Test "\"\"" <| S.toList "" == []
     ]
-    , Describe "fromInt"
+  , Describe "fromInt"
     [ Test "-10" <| S.fromInt -10 == "-10"
     , Test "0" <| S.fromInt 0 == "0"
     , Test "32" <| S.fromInt 32 == "32"
     ]
-    , Describe "fromChar"
+  , Describe "fromChar"
     [ Test "'a'" <| S.fromChar 'a' == "a"
     ]
-    , Describe "toInt"
+  , Describe "toInt"
     [ Test "\"-10\"" <| S.toInt "-10" == Some -10
     , Test "\"0\"" <| S.toInt "0" == Some 0
     , Test "\"3.2\"" <| S.toInt "3.2" == None
     , Test "\"32b\"" <| S.toInt "32b" == None
     ]
-    , Describe "foldLeft"
+  , Describe "foldLeft"
     [ Test "Cons [] \"time\"" <| S.foldLeft (\s c -> Cons c s) [] "time" == ['e', 'm', 'i', 't']
     , Test "Cons [] \"\"" <| S.foldLeft (\s c -> Cons c s) [] "" == []
     ]
-    , Describe "foldRight"
+  , Describe "foldRight"
     [ Test "Cons [] \"time\"" <| S.foldRight Cons [] "time" == ['t', 'i', 'm', 'e']
     , Test "Cons [] \"\"" <| S.foldRight Cons [] "" == []
     ]
-    , Describe "map"
+  , Describe "map"
     [ Test "(c -> toChar <| 1 + (toInt c)) \"\"" <| S.map (\c -> C.fromCode <| 1 + (C.toCode c)) "" == ""
     , Test "(c -> toChar <| 1 + (toInt c)) \"hal\"" <| S.map (\c -> C.fromCode <| 1 + (C.toCode c)) "hal" == "ibm"
     ]
-    , Describe "filter"
+  , Describe "filter"
     [ Test "C.isDigit \"\"" <| S.filter C.isDigit "" == ""
     , Test "C.isDigit \"R2-D2\"" <| S.filter C.isDigit "R2-D2" == "22"
     ]
-    , Describe "any"
+  , Describe "any"
     [ Test "C.isDigit \"\"" <| S.any C.isDigit "" == False
     , Test "C.isDigit \"90210\"" <| S.any C.isDigit "90210" == True
     , Test "C.isDigit \"R2-D2\"" <| S.any C.isDigit "R2-D2" == True
     , Test "C.isDigit \"Luke\"" <| S.any C.isDigit "Luke" == False
     ]
-    , Describe "all"
+  , Describe "all"
     [ Test "C.isDigit \"\"" <| S.all C.isDigit "" == True
     , Test "C.isDigit \"90210\"" <| S.all C.isDigit "90210" == True
     , Test "C.isDigit \"R2-D2\"" <| S.all C.isDigit "R2-D2" == False
