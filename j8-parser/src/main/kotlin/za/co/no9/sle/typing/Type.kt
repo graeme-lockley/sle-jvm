@@ -6,7 +6,7 @@ import za.co.no9.sle.homeLocation
 import za.co.no9.sle.location
 
 
-sealed class Type(open val location: Location) {
+sealed class        Type(open val location: Location) {
     abstract fun apply(s: Substitution): Type
 
 

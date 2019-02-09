@@ -5,10 +5,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import za.co.no9.sle.Location
 import za.co.no9.sle.QString
-import za.co.no9.sle.typing.TAlias
-import za.co.no9.sle.typing.TArr
-import za.co.no9.sle.typing.TCon
-import za.co.no9.sle.typing.TVar
+import za.co.no9.sle.typing.*
 
 private val gson =
         GsonBuilder().setPrettyPrinting().create()
@@ -153,5 +150,10 @@ data class Alias(val constant: QString, val arguments: List<Type>) : Type() {
 
 data class Arrow(val domain: Type, val range: Type) : Type() {
     override fun asType(location: Location): za.co.no9.sle.typing.Type =
-            TArr(domain.asType(location), range.asType(location))
+            TArr(location, domain.asType(location), range.asType(location))
+}
+
+data class Record(val fixed: Boolean, val fields: List<Pair<String, Type>>) : Type() {
+    override fun asType(location: Location): za.co.no9.sle.typing.Type =
+            TRec(location, fixed, fields.map { Pair(it.first, it.second.asType(location)) })
 }
