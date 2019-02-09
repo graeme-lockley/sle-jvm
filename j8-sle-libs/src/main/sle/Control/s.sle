@@ -30,12 +30,12 @@ sssActor () =
       <| console
 
 
+atLimit state =
+  (mod state 100000) == 0
+
 incActor : Actor.Actor Int -> Int -> Actor.Actor ()
 incActor next initValue =
   let
-    atLimit state =
-      (mod state 100000) == 0
-
     init self =
       ((initValue, self), [ Actor.cmd self () ])
 
@@ -48,7 +48,27 @@ incActor next initValue =
           [ Actor.cmd next state
           , Actor.cmd self ()
           ]
+  in
+    Actor.create init update
 
+
+inc2Actor : Actor.Actor Int -> Int -> Actor.Actor ()
+inc2Actor next initValue =
+  let
+    init self =
+      ( { counter = initValue, self = self }
+      , [ Actor.cmd self () ]
+      )
+
+    update state message =
+      if atLimit state.counter then
+        Response.none
+      else
+        Response.stateMsgs
+          { state | counter = state.counter + 1 }
+          [ Actor.cmd next state.counter
+          , Actor.cmd state.self ()
+          ]
   in
     Actor.create init update
 
