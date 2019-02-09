@@ -28,8 +28,16 @@ fun fromJsonString(input: String): Export {
                     Constant(constant, type["arguments"].asJsonArray.map { jsonToType(it.asJsonObject) })
                 }
 
-                else ->
+                type.has("domain") ->
                     Arrow(jsonToType(type["domain"].asJsonObject), jsonToType(type["range"].asJsonObject))
+
+                else ->
+                    Record(type["fixed"].asBoolean, type["fields"].asJsonArray.map {
+                        val field =
+                                it.asJsonObject
+
+                        Field(field["name"].asString, jsonToType(type["type"].asJsonObject))
+                    })
             }
 
     fun jsonToScheme(scheme: JsonObject): Scheme =
@@ -153,7 +161,9 @@ data class Arrow(val domain: Type, val range: Type) : Type() {
             TArr(location, domain.asType(location), range.asType(location))
 }
 
-data class Record(val fixed: Boolean, val fields: List<Pair<String, Type>>) : Type() {
+data class Record(val fixed: Boolean, val fields: List<Field>) : Type() {
     override fun asType(location: Location): za.co.no9.sle.typing.Type =
-            TRec(location, fixed, fields.map { Pair(it.first, it.second.asType(location)) })
+            TRec(location, fixed, fields.map { Pair(it.name, it.type.asType(location)) })
 }
+
+data class Field(val name: String, val type: Type)

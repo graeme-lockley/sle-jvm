@@ -49,6 +49,6 @@ private fun toClass(type: za.co.no9.sle.typing.Type): Type =
                 Arrow(toClass(type.domain), toClass(type.range))
 
             is za.co.no9.sle.typing.TRec ->
-                Record(type.fixed, type.fields.map { Pair(it.first, toClass(it.second)) })
+                Record(type.fixed, type.fields.map { Field(it.first, toClass(it.second)) })
         }
 
