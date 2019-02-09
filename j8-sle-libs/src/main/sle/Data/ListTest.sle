@@ -1,7 +1,13 @@
 export suite
 
 import file:../Test/Unit exposing Suite(..)
+import file:./Option
+
 import file:./List as List
+
+
+isEven n =
+  n == (Option.withDefault 1 (n / 2)) * 2
 
 
 suite =
@@ -21,5 +27,15 @@ suite =
   , Describe "map"
     [ Test "((+) 1) []" <| List.map ((+) 1) [] == []
     , Test "((+) 1) [1, 2, 3, 4]" <| List.map ((+) 1) [1, 2, 3, 4] == [2, 3, 4, 5]
+    , Test "isEven [1, 2, 3, 4, 5]" <| List.map isEven [1, 2, 3, 4, 5] == [False, True, False, True, False]
+    ]
+  , Describe "any"
+    [ Test "isEven [1, 2, 3, 4, 5]" <| List.any isEven [1, 2, 3, 4, 5] == True
+    , Test "isEven [1, 3, 5, 7, 9]" <| List.any isEven [1, 3, 5, 7, 9] == False
+    ]
+  , Describe "filter"
+    [ Test "isEven []" <| List.filter isEven [] == []
+    , Test "isEven [1, 2, 3, 4, 5]" <| List.filter isEven [1, 2, 3, 4, 5] == [2, 4]
+    , Test "isEven [1, 3, 5, 7, 9]" <| List.filter isEven [1, 3, 5, 7, 9] == []
     ]
   ]

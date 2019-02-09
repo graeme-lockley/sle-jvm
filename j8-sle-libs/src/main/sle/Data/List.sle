@@ -1,5 +1,7 @@
 export
-  foldLeft
+  any
+, filter
+, foldLeft
 , foldRight
 , length
 , map
@@ -48,3 +50,21 @@ length = foldLeft (\length _ -> 1 + length) 0
 repeat : a -> Int -> List a
 repeat _ 0 = []
 repeat e n = e :: (repeat e (n - 1))
+
+
+any : (a -> Bool) -> List a -> Bool
+any f =
+  foldLeft (\acc v -> acc || (f v)) False
+
+
+filterHelper f a acc =
+  if f a then
+    a :: acc
+  else
+    acc
+
+
+filter : (a -> Bool) -> List a -> List a
+filter f =
+  foldRight (filterHelper f) []
+
