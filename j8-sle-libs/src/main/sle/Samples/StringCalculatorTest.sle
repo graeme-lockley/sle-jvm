@@ -65,7 +65,7 @@ add input =
 
 
 suite =
-  Describe "Data.StringCalculator"
+  Describe "Samples.StringCalculator"
   [ Describe "add"
     [ Test "\"\" == Okay 0" <| add "" == Okay 0
     , Test "\"123\" == Okay 123" <| add "123" == Okay 123
