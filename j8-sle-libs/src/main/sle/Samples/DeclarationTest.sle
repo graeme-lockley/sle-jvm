@@ -1,0 +1,23 @@
+export suite
+
+import file:../Test/Unit exposing Suite(..)
+import file:../Data/String
+
+
+something =
+  "Hello"
+
+
+together value =
+  let
+    something =
+      [ value, value ]
+  in
+    String.concat something
+
+
+suite =
+  Describe "Samples.Declaration"
+    [ Test "something" <| something == "Hello"
+    , Test "together something" <| together something == "HelloHello"
+    ]

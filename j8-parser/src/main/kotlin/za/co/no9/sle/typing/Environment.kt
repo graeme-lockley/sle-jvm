@@ -49,6 +49,10 @@ data class Environment(val valueBindings: Map<String, ValueBinding> = mapOf(), v
                 import(name.qualifier)?.value(name.string)
 
 
+    fun removeValue(name: String): Environment =
+            Environment(valueBindings - name, typeBindings)
+
+
     fun variable(name: String): Scheme? {
         val valueBinding =
                 value(name)

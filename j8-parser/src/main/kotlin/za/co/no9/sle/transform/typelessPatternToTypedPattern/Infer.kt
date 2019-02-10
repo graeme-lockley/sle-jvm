@@ -275,7 +275,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             typeToSchemeNullable(e, varPump, source, d.ttype)
 
                     if (scheme == null) {
-                        e
+                        e.removeValue(name)
                     } else {
                         when (d.id) {
                             is za.co.no9.sle.ast.typelessPattern.LowerIDDeclarationID ->
@@ -484,7 +484,7 @@ private class InferContext(private val source: Item, private val varPump: VarPum
                             infer(expression.expression)
 
                     val resultType =
-                            actualUnify(actualType, resultExpression.type)
+                             actualUnify(actualType, resultExpression.type)
 
                     env = currentEnv
 

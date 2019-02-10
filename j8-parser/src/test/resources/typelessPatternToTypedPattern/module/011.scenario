@@ -1,0 +1,363 @@
+-- Issue related to a let declaration interfering with an existing declaration
+type List a = Nil | Cons a (List a)
+
+
+concat : List String -> String
+concat xs =
+  "world"
+
+
+something =
+  "Hello"
+
+
+together value =
+  let
+    something =
+      Cons value (Cons value Nil)
+  in
+    concat something
+-- typeAST
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: file.package.name.File.List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                  ]
+                name: file.package.name.File.List
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: xs
+                  type:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        ]
+                      name: file.package.name.File.List
+              expression:
+                ConstantString:
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                  value: world
+              type:
+                TArr:
+                  domain:
+                    TCon:
+                      arguments: [
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        ]
+                      name: file.package.name.File.List
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: concat
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TArr:
+                domain:
+                  TCon:
+                    arguments: [
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                      ]
+                    name: file.package.name.File.List
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+      LetDeclaration:
+        expressions: [
+            ConstantString:
+              type:
+                TCon:
+                  arguments: []
+                  name: Data.String
+              value: Hello
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: something
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.String
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: value
+                  type:
+                    TVar:
+                      variable: 6
+              expression:
+                LetExpression:
+                  declarations: [
+                      LetDeclaration:
+                        expressions: [
+                            CallExpression:
+                              operand:
+                                CallExpression:
+                                  operand:
+                                    IdReference:
+                                      name: Nil
+                                      type:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 6
+                                            ]
+                                          name: file.package.name.File.List
+                                  operator:
+                                    CallExpression:
+                                      operand:
+                                        IdReference:
+                                          name: value
+                                          type:
+                                            TVar:
+                                              variable: 6
+                                      operator:
+                                        IdReference:
+                                          name: Cons
+                                          type:
+                                            TArr:
+                                              domain:
+                                                TVar:
+                                                  variable: 6
+                                              range:
+                                                TArr:
+                                                  domain:
+                                                    TCon:
+                                                      arguments: [
+                                                          TVar:
+                                                            variable: 6
+                                                        ]
+                                                      name: file.package.name.File.List
+                                                  range:
+                                                    TCon:
+                                                      arguments: [
+                                                          TVar:
+                                                            variable: 6
+                                                        ]
+                                                      name: file.package.name.File.List
+                                      type:
+                                        TArr:
+                                          domain:
+                                            TCon:
+                                              arguments: [
+                                                  TVar:
+                                                    variable: 6
+                                                ]
+                                              name: file.package.name.File.List
+                                          range:
+                                            TCon:
+                                              arguments: [
+                                                  TVar:
+                                                    variable: 6
+                                                ]
+                                              name: file.package.name.File.List
+                                  type:
+                                    TCon:
+                                      arguments: [
+                                          TVar:
+                                            variable: 6
+                                        ]
+                                      name: file.package.name.File.List
+                              operator:
+                                CallExpression:
+                                  operand:
+                                    IdReference:
+                                      name: value
+                                      type:
+                                        TVar:
+                                          variable: 6
+                                  operator:
+                                    IdReference:
+                                      name: Cons
+                                      type:
+                                        TArr:
+                                          domain:
+                                            TVar:
+                                              variable: 6
+                                          range:
+                                            TArr:
+                                              domain:
+                                                TCon:
+                                                  arguments: [
+                                                      TVar:
+                                                        variable: 6
+                                                    ]
+                                                  name: file.package.name.File.List
+                                              range:
+                                                TCon:
+                                                  arguments: [
+                                                      TVar:
+                                                        variable: 6
+                                                    ]
+                                                  name: file.package.name.File.List
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 6
+                                            ]
+                                          name: file.package.name.File.List
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 6
+                                            ]
+                                          name: file.package.name.File.List
+                              type:
+                                TCon:
+                                  arguments: [
+                                      TVar:
+                                        variable: 6
+                                    ]
+                                  name: file.package.name.File.List
+                          ]
+                        id:
+                          LowerIDDeclarationID:
+                            name:
+                              ID:
+                                name: something
+                        scheme:
+                          Scheme:
+                            parameters: [
+                                6
+                              ]
+                            type:
+                              TCon:
+                                arguments: [
+                                    TVar:
+                                      variable: 6
+                                  ]
+                                name: file.package.name.File.List
+                    ]
+                  expression:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: something
+                          type:
+                            TCon:
+                              arguments: [
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                                ]
+                              name: file.package.name.File.List
+                      operator:
+                        IdReference:
+                          name: concat
+                          type:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                    ]
+                                  name: file.package.name.File.List
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                      type:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  type:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+              type:
+                TArr:
+                  domain:
+                    TVar:
+                      variable: 6
+                  range:
+                    TCon:
+                      arguments: []
+                      name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: together
+        scheme:
+          Scheme:
+            parameters: [
+                6
+              ]
+            type:
+              TArr:
+                domain:
+                  TVar:
+                    variable: 6
+                range:
+                  TCon:
+                    arguments: []
+                    name: Data.String
+    ]
+  exports: []
