@@ -1,5 +1,6 @@
 export
-  any
+  all
+, any
 , filter
 , foldLeft
 , foldRight
@@ -55,6 +56,11 @@ repeat e n = e :: (repeat e (n - 1))
 any : (a -> Bool) -> List a -> Bool
 any f =
   foldLeft (\acc v -> acc || (f v)) False
+
+
+all : (a -> Bool) -> List a -> Bool
+all f =
+  foldLeft (\acc v -> acc && (f v)) True
 
 
 filterHelper f a acc =

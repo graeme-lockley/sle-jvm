@@ -30,8 +30,14 @@ suite =
     , Test "isEven [1, 2, 3, 4, 5]" <| List.map isEven [1, 2, 3, 4, 5] == [False, True, False, True, False]
     ]
   , Describe "any"
-    [ Test "isEven [1, 2, 3, 4, 5]" <| List.any isEven [1, 2, 3, 4, 5] == True
+    [ Test "isEven []" <| List.any isEven [] == False
+    , Test "isEven [1, 2, 3, 4, 5]" <| List.any isEven [1, 2, 3, 4, 5] == True
     , Test "isEven [1, 3, 5, 7, 9]" <| List.any isEven [1, 3, 5, 7, 9] == False
+    ]
+  , Describe "all"
+    [ Test "isEven []" <| List.all isEven [] == True
+    , Test "isEven [1, 2, 3, 4, 5]" <| List.all isEven [1, 2, 3, 4, 5] == False
+    , Test "isEven [2, 4, 6, 8, 10]" <| List.all isEven [2, 4, 6, 8, 10] == True
     ]
   , Describe "filter"
     [ Test "isEven []" <| List.filter isEven [] == []
