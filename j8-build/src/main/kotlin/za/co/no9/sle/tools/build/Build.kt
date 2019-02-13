@@ -235,6 +235,9 @@ fun displayBuildErrors(log: Log, buildErrors: Map<URN, Errors>): Int {
                             is IncompatibleDeclarationSignature ->
                                 "Incompatible Declaration Signature: ${error.location}: ${error.name}: inferred ${ppScheme(error.inferred)}: expected ${ppScheme(error.expected)}"
 
+                            is DeclarationSignatureHasOpenRecord ->
+                                "Incompatible Declaration Signature: ${error.location}: ${error.name}: ${ppScheme(error.scheme)}"
+
                             is UnknownType ->
                                 "Unknown Type: ${error.location}: ${error.name}"
 

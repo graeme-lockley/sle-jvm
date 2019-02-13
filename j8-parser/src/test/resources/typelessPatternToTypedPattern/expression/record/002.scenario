@@ -3,9 +3,11 @@ concat : String -> String -> String
 concat a b =
   a
 
+fullName : {firstname : String, surname : String} -> String
 fullName arb =
   concat arb.firstname arb.surname
 
+nextDay : {dateOfBirth : {day : Int, month : Int}, luckyNumber : Int} -> Int
 nextDay arb =
   arb.dateOfBirth.day + arb.dateOfBirth.month + arb.luckyNumber
 -- constraints
@@ -14,39 +16,46 @@ nextDay arb =
   Data.String : '1
   Data.String -> Data.String : '1 -> Data.String
   Data.String -> Data.String -> Data.String : '0 -> Data.String -> Data.String
-  '2 : {firstname : '3, ..}
-  Data.String -> Data.String -> Data.String : '3 -> '4
-  '2 : {surname : '5, ..}
-  '4 : '5 -> '6
-  '7 : {dateOfBirth : '9, ..}
+  {firstname : Data.String, surname : Data.String} : '2
+  '4 -> '3 -> Data.String : Data.String -> Data.String -> Data.String
+  {firstname : Data.String, surname : Data.String} : {firstname : '5, ..}
+  '4 : '5
+  {firstname : Data.String, surname : Data.String} : {surname : '6, ..}
+  '3 : '6
+  {firstname : Data.String, surname : Data.String} -> Data.String : '2 -> Data.String
+  {firstname : Data.String, surname : Data.String} -> Data.String : {firstname : Data.String, surname : Data.String} -> Data.String
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} : '7
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} : {dateOfBirth : '9, ..}
   '9 : {day : '8, ..}
   Data.Int -> Data.Int -> Data.Int : '8 -> '10
-  '7 : {dateOfBirth : '12, ..}
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} : {dateOfBirth : '12, ..}
   '12 : {month : '11, ..}
   '10 : '11 -> '13
   Data.Int -> Data.Int -> Data.Int : '13 -> '14
-  '7 : {luckyNumber : '15, ..}
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} : {luckyNumber : '15, ..}
   '14 : '15 -> '16
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} -> Data.Int : '7 -> '16
+  {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} -> Data.Int : {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} -> Data.Int
 ]
 -- substitution
 [
   0=Data.String
   1=Data.String
-  2={firstname : Data.String, surname : Data.String, ..}
+  2={firstname : Data.String, surname : Data.String}
+  4=Data.String
   3=Data.String
-  4=Data.String -> Data.String
   5=Data.String
   6=Data.String
-  7={dateOfBirth : {day : Data.Int, month : Data.Int, ..}, luckyNumber : Data.Int, ..}
-  9={day : Data.Int, month : Data.Int, ..}
+  7={dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int}
+  9={day : Data.Int, month : Data.Int}
   8=Data.Int
   10=Data.Int -> Data.Int
+  12={day : Data.Int, month : Data.Int}
   11=Data.Int
   13=Data.Int
   14=Data.Int -> Data.Int
   15=Data.Int
   16=Data.Int
-  12={day : Data.Int, month : Data.Int, ..}
 ]
 -- ast
 Module:
@@ -133,22 +142,8 @@ Module:
                 IdReferencePattern:
                   name: arb
                   type:
-                    TRec:
-                      fields: [
-                          Pair:
-                            first: firstname
-                            second:
-                              TCon:
-                                arguments: []
-                                name: Data.String
-                          Pair:
-                            first: surname
-                            second:
-                              TCon:
-                                arguments: []
-                                name: Data.String
-                        ]
-                      fixed: false
+                    TVar:
+                      variable: 2
               expression:
                 CallExpression:
                   operand:
@@ -175,11 +170,10 @@ Module:
                                         arguments: []
                                         name: Data.String
                                 ]
-                              fixed: false
+                              fixed: true
                       type:
-                        TCon:
-                          arguments: []
-                          name: Data.String
+                        TVar:
+                          variable: 3
                   operator:
                     CallExpression:
                       operand:
@@ -206,26 +200,23 @@ Module:
                                             arguments: []
                                             name: Data.String
                                     ]
-                                  fixed: false
+                                  fixed: true
                           type:
-                            TCon:
-                              arguments: []
-                              name: Data.String
+                            TVar:
+                              variable: 4
                       operator:
                         IdReference:
                           name: concat
                           type:
                             TArr:
                               domain:
-                                TCon:
-                                  arguments: []
-                                  name: Data.String
+                                TVar:
+                                  variable: 4
                               range:
                                 TArr:
                                   domain:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.String
+                                    TVar:
+                                      variable: 3
                                   range:
                                     TCon:
                                       arguments: []
@@ -233,9 +224,8 @@ Module:
                       type:
                         TArr:
                           domain:
-                            TCon:
-                              arguments: []
-                              name: Data.String
+                            TVar:
+                              variable: 3
                           range:
                             TCon:
                               arguments: []
@@ -262,7 +252,7 @@ Module:
                                 arguments: []
                                 name: Data.String
                         ]
-                      fixed: false
+                      fixed: true
                   range:
                     TCon:
                       arguments: []
@@ -294,7 +284,7 @@ Module:
                               arguments: []
                               name: Data.String
                       ]
-                    fixed: false
+                    fixed: true
                 range:
                   TCon:
                     arguments: []
@@ -306,35 +296,8 @@ Module:
                 IdReferencePattern:
                   name: arb
                   type:
-                    TRec:
-                      fields: [
-                          Pair:
-                            first: dateOfBirth
-                            second:
-                              TRec:
-                                fields: [
-                                    Pair:
-                                      first: day
-                                      second:
-                                        TCon:
-                                          arguments: []
-                                          name: Data.Int
-                                    Pair:
-                                      first: month
-                                      second:
-                                        TCon:
-                                          arguments: []
-                                          name: Data.Int
-                                  ]
-                                fixed: false
-                          Pair:
-                            first: luckyNumber
-                            second:
-                              TCon:
-                                arguments: []
-                                name: Data.Int
-                        ]
-                      fixed: false
+                    TVar:
+                      variable: 7
               expression:
                 CallExpression:
                   operand:
@@ -366,7 +329,7 @@ Module:
                                                   arguments: []
                                                   name: Data.Int
                                           ]
-                                        fixed: false
+                                        fixed: true
                                   Pair:
                                     first: luckyNumber
                                     second:
@@ -374,11 +337,10 @@ Module:
                                         arguments: []
                                         name: Data.Int
                                 ]
-                              fixed: false
+                              fixed: true
                       type:
-                        TCon:
-                          arguments: []
-                          name: Data.Int
+                        TVar:
+                          variable: 15
                   operator:
                     CallExpression:
                       operand:
@@ -417,7 +379,7 @@ Module:
                                                               arguments: []
                                                               name: Data.Int
                                                       ]
-                                                    fixed: false
+                                                    fixed: true
                                               Pair:
                                                 first: luckyNumber
                                                 second:
@@ -425,28 +387,13 @@ Module:
                                                     arguments: []
                                                     name: Data.Int
                                             ]
-                                          fixed: false
+                                          fixed: true
                                   type:
-                                    TRec:
-                                      fields: [
-                                          Pair:
-                                            first: day
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                          Pair:
-                                            first: month
-                                            second:
-                                              TCon:
-                                                arguments: []
-                                                name: Data.Int
-                                        ]
-                                      fixed: false
+                                    TVar:
+                                      variable: 12
                               type:
-                                TCon:
-                                  arguments: []
-                                  name: Data.Int
+                                TVar:
+                                  variable: 11
                           operator:
                             CallExpression:
                               operand:
@@ -483,7 +430,7 @@ Module:
                                                                   arguments: []
                                                                   name: Data.Int
                                                           ]
-                                                        fixed: false
+                                                        fixed: true
                                                   Pair:
                                                     first: luckyNumber
                                                     second:
@@ -491,28 +438,13 @@ Module:
                                                         arguments: []
                                                         name: Data.Int
                                                 ]
-                                              fixed: false
+                                              fixed: true
                                       type:
-                                        TRec:
-                                          fields: [
-                                              Pair:
-                                                first: day
-                                                second:
-                                                  TCon:
-                                                    arguments: []
-                                                    name: Data.Int
-                                              Pair:
-                                                first: month
-                                                second:
-                                                  TCon:
-                                                    arguments: []
-                                                    name: Data.Int
-                                            ]
-                                          fixed: false
+                                        TVar:
+                                          variable: 9
                                   type:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
+                                    TVar:
+                                      variable: 8
                               operator:
                                 IdReference:
                                   name: +
@@ -533,19 +465,11 @@ Module:
                                               arguments: []
                                               name: Data.Int
                               type:
-                                TArr:
-                                  domain:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
-                                  range:
-                                    TCon:
-                                      arguments: []
-                                      name: Data.Int
+                                TVar:
+                                  variable: 10
                           type:
-                            TCon:
-                              arguments: []
-                              name: Data.Int
+                            TVar:
+                              variable: 13
                       operator:
                         IdReference:
                           name: +
@@ -566,19 +490,11 @@ Module:
                                       arguments: []
                                       name: Data.Int
                       type:
-                        TArr:
-                          domain:
-                            TCon:
-                              arguments: []
-                              name: Data.Int
-                          range:
-                            TCon:
-                              arguments: []
-                              name: Data.Int
+                        TVar:
+                          variable: 14
                   type:
-                    TCon:
-                      arguments: []
-                      name: Data.Int
+                    TVar:
+                      variable: 16
               type:
                 TArr:
                   domain:
@@ -602,7 +518,7 @@ Module:
                                           arguments: []
                                           name: Data.Int
                                   ]
-                                fixed: false
+                                fixed: true
                           Pair:
                             first: luckyNumber
                             second:
@@ -610,7 +526,7 @@ Module:
                                 arguments: []
                                 name: Data.Int
                         ]
-                      fixed: false
+                      fixed: true
                   range:
                     TCon:
                       arguments: []
@@ -647,7 +563,7 @@ Module:
                                         arguments: []
                                         name: Data.Int
                                 ]
-                              fixed: false
+                              fixed: true
                         Pair:
                           first: luckyNumber
                           second:
@@ -655,7 +571,7 @@ Module:
                               arguments: []
                               name: Data.Int
                       ]
-                    fixed: false
+                    fixed: true
                 range:
                   TCon:
                     arguments: []

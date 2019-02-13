@@ -1,11 +1,13 @@
 -- Update record
+value1 : {name: String} -> {name: String}
 value1 person =
   { person | name = "Andrew" }
 
+value2 : {dateOfBirth: {day: Int}} -> Int -> {dateOfBirth: {day: Int}}
 value2 person newDay =
   { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
 -- enrichedASTpp
-value1 : <> {name : Data.String, ..} -> {name : Data.String, ..}
+value1 : <> {name : Data.String} -> {name : Data.String}
 value1 =
   (LAMBDA person ->
     {{{
@@ -14,7 +16,7 @@ value1 =
   )
 
 
-value2 : <0> {dateOfBirth : {day : '0, ..}, ..} -> '0 -> {dateOfBirth : {day : '0, ..}, ..}
+value2 : <> {dateOfBirth : {day : Data.Int}} -> Data.Int -> {dateOfBirth : {day : Data.Int}}
 value2 =
   (LAMBDA person ->
     (LAMBDA newDay ->

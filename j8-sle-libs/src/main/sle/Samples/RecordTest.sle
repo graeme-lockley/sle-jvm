@@ -1,0 +1,40 @@
+export suite
+
+import file:../Data/List
+import file:../Test/Unit exposing Suite(..)
+
+
+typealias Person =
+  { first : String
+  , second : String
+  }
+
+
+value =
+  { first = "Hello"
+  , second = "World"
+  }
+
+values =
+  [value, value]
+
+
+first {first, second} =
+  first
+
+
+second {first, second} =
+  second
+
+
+suite =
+  Describe "Samples.Record"
+    [ Test "value.first" <| value.first == "Hello"
+    , Test "value.second" <| value.second == "World"
+    , Test "first value" <| first value == "Hello"
+    , Test "second value" <| second value == "World"
+    , Test "List.map first values" <| List.map first values == ["Hello", "Hello"]
+    , Test "List.map second values" <| List.map second values == ["World", "World"]
+    , Test "List.map (\\v -> v.first) values" <| List.map (\v -> v.first) values == ["Hello", "Hello"]
+    , Test "List.map (\\v -> v.second) values" <| List.map (\v -> v.second) values == ["Hello", "Hello"]
+    ]

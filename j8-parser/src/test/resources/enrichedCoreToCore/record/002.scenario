@@ -3,9 +3,11 @@ concat : String -> String -> String
 concat a b =
   a
 
+fullName : {firstname : String, surname : String} -> String
 fullName arb =
   concat arb.firstname arb.surname
 
+nextDay : {dateOfBirth : {day : Int, month : Int}, luckyNumber : Int} -> Int
 nextDay arb =
   arb.dateOfBirth.day + arb.dateOfBirth.month + arb.luckyNumber
 -- coreASTpp
@@ -18,7 +20,7 @@ concat =
   )
 
 
-fullName : <> {firstname : Data.String, surname : Data.String, ..} -> Data.String
+fullName : <> {firstname : Data.String, surname : Data.String} -> Data.String
 fullName =
   (LAMBDA arb ->
     (CALL
@@ -33,7 +35,7 @@ fullName =
   )
 
 
-nextDay : <> {dateOfBirth : {day : Data.Int, month : Data.Int, ..}, luckyNumber : Data.Int, ..} -> Data.Int
+nextDay : <> {dateOfBirth : {day : Data.Int, month : Data.Int}, luckyNumber : Data.Int} -> Data.Int
 nextDay =
   (LAMBDA arb ->
     (CALL

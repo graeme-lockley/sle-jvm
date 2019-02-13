@@ -112,6 +112,10 @@ private class ApplyContext(private val environment: Environment) {
             }
         }
 
+        if (!isFixed(environment, letDeclaration.scheme)) {
+            errors.add(DeclarationSignatureHasOpenRecord(letDeclaration.location, letDeclaration.id.name.name, letDeclaration.scheme))
+        }
+
         return LetDeclaration(letDeclaration.location, letDeclaration.scheme, letDeclaration.id, appliedExpressions)
     }
 

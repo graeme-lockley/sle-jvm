@@ -42,6 +42,33 @@ data class Scheme(val parameters: List<Var>, val type: Type) {
 }
 
 
+fun isFixed(environment: Environment, scheme: Scheme): Boolean =
+        isFixed(environment, scheme.type)
+
+
+fun isFixed(environment: Environment, type: Type): Boolean =
+        when (type) {
+            is TVar ->
+                true
+
+            is TCon ->
+                type.arguments.fold(true) { a, b -> a && isFixed(environment, b) }
+
+            is TRec ->
+                type.fixed && type.fields.fold(true) { a, b -> a && isFixed(environment, b.second) }
+
+            is TArr ->
+                isFixed(environment, type.domain) && isFixed(environment, type.range)
+
+            is TAlias -> {
+                val resolvedType =
+                        resolveAlias(environment, type)
+
+                resolvedType == null || isFixed(environment, resolvedType)
+            }
+        }
+
+
 fun isCompatibleWith(environment: Environment, t1: Type, t2: Type): Boolean =
         when {
             t2 is TVar ->
@@ -59,16 +86,20 @@ fun isCompatibleWith(environment: Environment, t1: Type, t2: Type): Boolean =
                 isCompatibleWith(environment, t1.domain, t2.domain) && isCompatibleWith(environment, t1.range, t2.range)
 
             t1 is TRec && t2 is TRec ->
-                if (t1.fields == t2.fields) {
-                    true
-                } else {
-                    val t2Map =
-                            t2.fields.toMap()
-
-                    t1.fields.fold(true) { a, b ->
-                        a && t2Map.containsKey(b.first) && isCompatibleWith(environment, b.second, t2Map[b.first]!!)
-                    }
-                }
+//                if (t1.fields == t2.fields) {
+                (t1.fields.zip(t2.fields).fold(true) { a, b -> a && b.first.first == b.second.first && isCompatibleWith(environment, b.first.second, b.second.second) }
+                        && t1.fields.size == t2.fields.size)
+//            {
+//                    true
+//                } else {
+//                    val t2Map =
+//                            t2.fields.toMap()
+//
+//                    t1.fields.fold(true) { a, b ->
+//                        a && t2Map.containsKey(b.first) && isCompatibleWith(environment, b.second, t2Map[b.first]!!)
+//                    }
+//                    false
+//                }
 
             t1 is TAlias -> {
                 val x =

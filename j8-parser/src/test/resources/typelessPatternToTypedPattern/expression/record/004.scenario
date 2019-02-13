@@ -1,21 +1,35 @@
 -- Update record
+value1 : {name: String} -> {name: String}
 value1 person =
   { person | name = "Andrew" }
 
+value2 : {dateOfBirth: {day: Int}} -> Int -> {dateOfBirth: {day: Int}}
 value2 person newDay =
   { person | dateOfBirth = { person.dateOfBirth | day = newDay } }
 -- constraints
 [
-  '0 : {name : Data.String, ..}
-  '1 : {dateOfBirth : '3, ..}
-  '3 : {day : '2, ..}
-  '1 : {dateOfBirth : '3, ..}
+  {name : Data.String} : '0
+  {name : Data.String} : {name : Data.String, ..}
+  {name : Data.String} : {name : Data.String}
+  {name : Data.String} -> {name : Data.String} : '0 -> {name : Data.String}
+  {name : Data.String} -> {name : Data.String} : {name : Data.String} -> {name : Data.String}
+  {dateOfBirth : {day : Data.Int}} : '1
+  Data.Int : '2
+  {dateOfBirth : {day : Data.Int}} : {dateOfBirth : '3, ..}
+  '3 : {day : Data.Int, ..}
+  {day : Data.Int} : '3
+  {dateOfBirth : {day : Data.Int}} : {dateOfBirth : {day : Data.Int}, ..}
+  {dateOfBirth : {day : Data.Int}} : {dateOfBirth : {day : Data.Int}}
+  Data.Int -> {dateOfBirth : {day : Data.Int}} : '2 -> {dateOfBirth : {day : Data.Int}}
+  {dateOfBirth : {day : Data.Int}} -> Data.Int -> {dateOfBirth : {day : Data.Int}} : '1 -> Data.Int -> {dateOfBirth : {day : Data.Int}}
+  {dateOfBirth : {day : Data.Int}} -> Data.Int -> {dateOfBirth : {day : Data.Int}} : {dateOfBirth : {day : Data.Int}} -> Data.Int -> {dateOfBirth : {day : Data.Int}}
 ]
 -- substitution
 [
-  0={name : Data.String, ..}
-  1={dateOfBirth : {day : '2, ..}, ..}
-  3={day : '2, ..}
+  0={name : Data.String}
+  1={dateOfBirth : {day : Data.Int}}
+  2=Data.Int
+  3={day : Data.Int}
 ]
 -- ast
 Module:
@@ -27,16 +41,8 @@ Module:
                 IdReferencePattern:
                   name: person
                   type:
-                    TRec:
-                      fields: [
-                          Pair:
-                            first: name
-                            second:
-                              TCon:
-                                arguments: []
-                                name: Data.String
-                        ]
-                      fixed: false
+                    TVar:
+                      variable: 0
               expression:
                 UpdateRecordExpression:
                   record:
@@ -52,7 +58,7 @@ Module:
                                     arguments: []
                                     name: Data.String
                             ]
-                          fixed: false
+                          fixed: true
                   type:
                     TRec:
                       fields: [
@@ -63,7 +69,7 @@ Module:
                                 arguments: []
                                 name: Data.String
                         ]
-                      fixed: false
+                      fixed: true
                   updates: [
                       Pair:
                         first:
@@ -89,7 +95,7 @@ Module:
                                 arguments: []
                                 name: Data.String
                         ]
-                      fixed: false
+                      fixed: true
                   range:
                     TRec:
                       fields: [
@@ -100,7 +106,7 @@ Module:
                                 arguments: []
                                 name: Data.String
                         ]
-                      fixed: false
+                      fixed: true
           ]
         id:
           LowerIDDeclarationID:
@@ -122,7 +128,7 @@ Module:
                               arguments: []
                               name: Data.String
                       ]
-                    fixed: false
+                    fixed: true
                 range:
                   TRec:
                     fields: [
@@ -133,7 +139,7 @@ Module:
                               arguments: []
                               name: Data.String
                       ]
-                    fixed: false
+                    fixed: true
       LetDeclaration:
         expressions: [
             LambdaExpression:
@@ -141,22 +147,8 @@ Module:
                 IdReferencePattern:
                   name: person
                   type:
-                    TRec:
-                      fields: [
-                          Pair:
-                            first: dateOfBirth
-                            second:
-                              TRec:
-                                fields: [
-                                    Pair:
-                                      first: day
-                                      second:
-                                        TVar:
-                                          variable: 2
-                                  ]
-                                fixed: false
-                        ]
-                      fixed: false
+                    TVar:
+                      variable: 1
               expression:
                 LambdaExpression:
                   argument:
@@ -181,12 +173,13 @@ Module:
                                             Pair:
                                               first: day
                                               second:
-                                                TVar:
-                                                  variable: 2
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.Int
                                           ]
-                                        fixed: false
+                                        fixed: true
                                 ]
-                              fixed: false
+                              fixed: true
                       type:
                         TRec:
                           fields: [
@@ -198,12 +191,13 @@ Module:
                                         Pair:
                                           first: day
                                           second:
-                                            TVar:
-                                              variable: 2
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
                                       ]
-                                    fixed: false
+                                    fixed: true
                             ]
-                          fixed: false
+                          fixed: true
                       updates: [
                           Pair:
                             first:
@@ -230,32 +224,27 @@ Module:
                                                           Pair:
                                                             first: day
                                                             second:
-                                                              TVar:
-                                                                variable: 2
+                                                              TCon:
+                                                                arguments: []
+                                                                name: Data.Int
                                                         ]
-                                                      fixed: false
+                                                      fixed: true
                                               ]
-                                            fixed: false
+                                            fixed: true
                                     type:
-                                      TRec:
-                                        fields: [
-                                            Pair:
-                                              first: day
-                                              second:
-                                                TVar:
-                                                  variable: 2
-                                          ]
-                                        fixed: false
+                                      TVar:
+                                        variable: 3
                                 type:
                                   TRec:
                                     fields: [
                                         Pair:
                                           first: day
                                           second:
-                                            TVar:
-                                              variable: 2
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
                                       ]
-                                    fixed: false
+                                    fixed: true
                                 updates: [
                                     Pair:
                                       first:
@@ -265,15 +254,17 @@ Module:
                                         IdReference:
                                           name: newDay
                                           type:
-                                            TVar:
-                                              variable: 2
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
                                   ]
                         ]
                   type:
                     TArr:
                       domain:
-                        TVar:
-                          variable: 2
+                        TCon:
+                          arguments: []
+                          name: Data.Int
                       range:
                         TRec:
                           fields: [
@@ -285,12 +276,13 @@ Module:
                                         Pair:
                                           first: day
                                           second:
-                                            TVar:
-                                              variable: 2
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
                                       ]
-                                    fixed: false
+                                    fixed: true
                             ]
-                          fixed: false
+                          fixed: true
               type:
                 TArr:
                   domain:
@@ -304,17 +296,19 @@ Module:
                                     Pair:
                                       first: day
                                       second:
-                                        TVar:
-                                          variable: 2
+                                        TCon:
+                                          arguments: []
+                                          name: Data.Int
                                   ]
-                                fixed: false
+                                fixed: true
                         ]
-                      fixed: false
+                      fixed: true
                   range:
                     TArr:
                       domain:
-                        TVar:
-                          variable: 2
+                        TCon:
+                          arguments: []
+                          name: Data.Int
                       range:
                         TRec:
                           fields: [
@@ -326,12 +320,13 @@ Module:
                                         Pair:
                                           first: day
                                           second:
-                                            TVar:
-                                              variable: 2
+                                            TCon:
+                                              arguments: []
+                                              name: Data.Int
                                       ]
-                                    fixed: false
+                                    fixed: true
                             ]
-                          fixed: false
+                          fixed: true
           ]
         id:
           LowerIDDeclarationID:
@@ -340,9 +335,7 @@ Module:
                 name: value2
         scheme:
           Scheme:
-            parameters: [
-                2
-              ]
+            parameters: []
             type:
               TArr:
                 domain:
@@ -356,17 +349,19 @@ Module:
                                   Pair:
                                     first: day
                                     second:
-                                      TVar:
-                                        variable: 2
+                                      TCon:
+                                        arguments: []
+                                        name: Data.Int
                                 ]
-                              fixed: false
+                              fixed: true
                       ]
-                    fixed: false
+                    fixed: true
                 range:
                   TArr:
                     domain:
-                      TVar:
-                        variable: 2
+                      TCon:
+                        arguments: []
+                        name: Data.Int
                     range:
                       TRec:
                         fields: [
@@ -378,11 +373,12 @@ Module:
                                       Pair:
                                         first: day
                                         second:
-                                          TVar:
-                                            variable: 2
+                                          TCon:
+                                            arguments: []
+                                            name: Data.Int
                                     ]
-                                  fixed: false
+                                  fixed: true
                           ]
-                        fixed: false
+                        fixed: true
     ]
   exports: []

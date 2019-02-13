@@ -52,6 +52,12 @@ incActor next initValue =
     Actor.create init update
 
 
+typealias Inc2ActorState =
+  { counter: Int
+  , self: Actor.Actor ()
+  }
+
+
 inc2Actor : Actor.Actor Int -> Int -> Actor.Actor ()
 inc2Actor next initValue =
   let
@@ -60,6 +66,7 @@ inc2Actor next initValue =
       , [ Actor.cmd self () ]
       )
 
+    update : Inc2ActorState -> () -> Actor.Response Inc2ActorState
     update state message =
       if atLimit state.counter then
         Response.none

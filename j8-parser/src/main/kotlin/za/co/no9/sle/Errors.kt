@@ -85,6 +85,11 @@ data class IncompatibleDeclarationSignature(
         val expected: Scheme,
         val inferred: Scheme) : LocationError(location)
 
+data class DeclarationSignatureHasOpenRecord(
+        override val location: Location,
+        val name: String,
+        val scheme: Scheme) : LocationError(location)
+
 data class UnificationFail(
         val t1: Type,
         val t2: Type) : Error()

@@ -1,0 +1,264 @@
+-- Update record
+value1 =
+  { first = "Hello"
+  , second = "World"
+  }
+
+
+second {first = f, second = s} =
+  s
+
+
+value2 =
+  second value1
+-- constraints
+[
+  {first : '2, second : '3} -> '3 : {first : Data.String, second : Data.String} -> '4
+]
+-- substitution
+[
+  2=Data.String
+  3=Data.String
+  4=Data.String
+]
+-- ast
+Module:
+  declarations: [
+      LetDeclaration:
+        expressions: [
+            ConstantRecord:
+              fields: [
+                  ConstantField:
+                    name:
+                      ID:
+                        name: first
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: Hello
+                  ConstantField:
+                    name:
+                      ID:
+                        name: second
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: World
+                ]
+              type:
+                TRec:
+                  fields: [
+                      Pair:
+                        first: first
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                      Pair:
+                        first: second
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                    ]
+                  fixed: true
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value1
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TRec:
+                fields: [
+                    Pair:
+                      first: first
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                    Pair:
+                      first: second
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  ]
+                fixed: true
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                RecordPattern:
+                  fields: [
+                      Pair:
+                        first:
+                          ID:
+                            name: first
+                        second:
+                          IdReferencePattern:
+                            name: f
+                            type:
+                              TVar:
+                                variable: 0
+                      Pair:
+                        first:
+                          ID:
+                            name: second
+                        second:
+                          IdReferencePattern:
+                            name: s
+                            type:
+                              TVar:
+                                variable: 1
+                    ]
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: first
+                            second:
+                              TVar:
+                                variable: 0
+                          Pair:
+                            first: second
+                            second:
+                              TVar:
+                                variable: 1
+                        ]
+                      fixed: true
+              expression:
+                IdReference:
+                  name: s
+                  type:
+                    TVar:
+                      variable: 1
+              type:
+                TArr:
+                  domain:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: first
+                            second:
+                              TVar:
+                                variable: 0
+                          Pair:
+                            first: second
+                            second:
+                              TVar:
+                                variable: 1
+                        ]
+                      fixed: true
+                  range:
+                    TVar:
+                      variable: 1
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: second
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TArr:
+                domain:
+                  TRec:
+                    fields: [
+                        Pair:
+                          first: first
+                          second:
+                            TVar:
+                              variable: 0
+                        Pair:
+                          first: second
+                          second:
+                            TVar:
+                              variable: 1
+                      ]
+                    fixed: true
+                range:
+                  TVar:
+                    variable: 1
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                IdReference:
+                  name: value1
+                  type:
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: first
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: second
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: true
+              operator:
+                IdReference:
+                  name: second
+                  type:
+                    TArr:
+                      domain:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: first
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                              Pair:
+                                first: second
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                            ]
+                          fixed: true
+                      range:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+              type:
+                TCon:
+                  arguments: []
+                  name: Data.String
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value2
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: []
+                name: Data.String
+    ]
+  exports: []
