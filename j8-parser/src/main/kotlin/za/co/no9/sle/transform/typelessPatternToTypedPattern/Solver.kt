@@ -194,8 +194,13 @@ private class ApplyContext(private val environment: Environment) {
                 is LambdaExpression ->
                     LambdaExpression(expression.location, expression.type.apply(substitution), apply(expression.argument, substitution), apply(expression.expression, substitution))
 
-                is CallExpression ->
+                is CallExpression -> {
+                    if (!isFixed(environment, expression.operator.type)) {
+                        errors.add(OperatorTypeIsOpenRecord(expression.operator.location, expression.operator.type))
+                    }
+
                     CallExpression(expression.location, expression.type.apply(substitution), apply(expression.operator, substitution), apply(expression.operand, substitution))
+                }
 
                 is FieldProjectionExpression ->
                     FieldProjectionExpression(expression.location, expression.type.apply(substitution), apply(expression.record, substitution), expression.name)

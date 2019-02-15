@@ -1,0 +1,1008 @@
+-- A projection over a r3cord within a lambda is correctly typed
+type List a = Nil | Cons a (List a)
+
+value =
+  { first = "Hello"
+  , second = "World"
+  }
+
+values =
+  Cons value (Cons value Nil)
+
+
+map : (a -> b) -> List a -> List b
+map f Nil = Nil
+map f (Cons x xs) = Cons (f x) (map f xs)
+
+
+value2 =
+  map (\{first, second} -> second) values
+-- ast
+Module:
+  declarations: [
+      TypeDeclaration:
+        constructors: [
+            Constructor:
+              arguments: []
+              name:
+                ID:
+                  name: Nil
+            Constructor:
+              arguments: [
+                  TVar:
+                    variable: 0
+                  TCon:
+                    arguments: [
+                        TVar:
+                          variable: 0
+                      ]
+                    name: file.package.name.File.List
+                ]
+              name:
+                ID:
+                  name: Cons
+          ]
+        name:
+          ID:
+            name: List
+        scheme:
+          Scheme:
+            parameters: [
+                0
+              ]
+            type:
+              TCon:
+                arguments: [
+                    TVar:
+                      variable: 0
+                  ]
+                name: file.package.name.File.List
+      LetDeclaration:
+        expressions: [
+            ConstantRecord:
+              fields: [
+                  ConstantField:
+                    name:
+                      ID:
+                        name: first
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: Hello
+                  ConstantField:
+                    name:
+                      ID:
+                        name: second
+                    value:
+                      ConstantString:
+                        type:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                        value: World
+                ]
+              type:
+                TRec:
+                  fields: [
+                      Pair:
+                        first: first
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                      Pair:
+                        first: second
+                        second:
+                          TCon:
+                            arguments: []
+                            name: Data.String
+                    ]
+                  fixed: true
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TRec:
+                fields: [
+                    Pair:
+                      first: first
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                    Pair:
+                      first: second
+                      second:
+                        TCon:
+                          arguments: []
+                          name: Data.String
+                  ]
+                fixed: true
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: Nil
+                      type:
+                        TCon:
+                          arguments: [
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: first
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                    Pair:
+                                      first: second
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                  ]
+                                fixed: true
+                            ]
+                          name: file.package.name.File.List
+                  operator:
+                    CallExpression:
+                      operand:
+                        IdReference:
+                          name: value
+                          type:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: first
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                  Pair:
+                                    first: second
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                ]
+                              fixed: true
+                      operator:
+                        IdReference:
+                          name: Cons
+                          type:
+                            TArr:
+                              domain:
+                                TRec:
+                                  fields: [
+                                      Pair:
+                                        first: first
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                      Pair:
+                                        first: second
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                    ]
+                                  fixed: true
+                              range:
+                                TArr:
+                                  domain:
+                                    TCon:
+                                      arguments: [
+                                          TRec:
+                                            fields: [
+                                                Pair:
+                                                  first: first
+                                                  second:
+                                                    TCon:
+                                                      arguments: []
+                                                      name: Data.String
+                                                Pair:
+                                                  first: second
+                                                  second:
+                                                    TCon:
+                                                      arguments: []
+                                                      name: Data.String
+                                              ]
+                                            fixed: true
+                                        ]
+                                      name: file.package.name.File.List
+                                  range:
+                                    TCon:
+                                      arguments: [
+                                          TRec:
+                                            fields: [
+                                                Pair:
+                                                  first: first
+                                                  second:
+                                                    TCon:
+                                                      arguments: []
+                                                      name: Data.String
+                                                Pair:
+                                                  first: second
+                                                  second:
+                                                    TCon:
+                                                      arguments: []
+                                                      name: Data.String
+                                              ]
+                                            fixed: true
+                                        ]
+                                      name: file.package.name.File.List
+                      type:
+                        TArr:
+                          domain:
+                            TCon:
+                              arguments: [
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: first
+                                          second:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.String
+                                        Pair:
+                                          first: second
+                                          second:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.String
+                                      ]
+                                    fixed: true
+                                ]
+                              name: file.package.name.File.List
+                          range:
+                            TCon:
+                              arguments: [
+                                  TRec:
+                                    fields: [
+                                        Pair:
+                                          first: first
+                                          second:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.String
+                                        Pair:
+                                          first: second
+                                          second:
+                                            TCon:
+                                              arguments: []
+                                              name: Data.String
+                                      ]
+                                    fixed: true
+                                ]
+                              name: file.package.name.File.List
+                  type:
+                    TCon:
+                      arguments: [
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: first
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                                Pair:
+                                  first: second
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                              ]
+                            fixed: true
+                        ]
+                      name: file.package.name.File.List
+              operator:
+                CallExpression:
+                  operand:
+                    IdReference:
+                      name: value
+                      type:
+                        TRec:
+                          fields: [
+                              Pair:
+                                first: first
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                              Pair:
+                                first: second
+                                second:
+                                  TCon:
+                                    arguments: []
+                                    name: Data.String
+                            ]
+                          fixed: true
+                  operator:
+                    IdReference:
+                      name: Cons
+                      type:
+                        TArr:
+                          domain:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: first
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                  Pair:
+                                    first: second
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                ]
+                              fixed: true
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: first
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                            Pair:
+                                              first: second
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                          ]
+                                        fixed: true
+                                    ]
+                                  name: file.package.name.File.List
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: first
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                            Pair:
+                                              first: second
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                          ]
+                                        fixed: true
+                                    ]
+                                  name: file.package.name.File.List
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: first
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                    Pair:
+                                      first: second
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                  ]
+                                fixed: true
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: first
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                    Pair:
+                                      first: second
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                  ]
+                                fixed: true
+                            ]
+                          name: file.package.name.File.List
+              type:
+                TCon:
+                  arguments: [
+                      TRec:
+                        fields: [
+                            Pair:
+                              first: first
+                              second:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                            Pair:
+                              first: second
+                              second:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                          ]
+                        fixed: true
+                    ]
+                  name: file.package.name.File.List
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: values
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TRec:
+                      fields: [
+                          Pair:
+                            first: first
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                          Pair:
+                            first: second
+                            second:
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                        ]
+                      fixed: true
+                  ]
+                name: file.package.name.File.List
+      LetDeclaration:
+        expressions: [
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+                  type:
+                    TVar:
+                      variable: 11
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Nil
+                      parameters: []
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                  expression:
+                    IdReference:
+                      name: Nil
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+              type:
+                TArr:
+                  domain:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 9
+                      range:
+                        TVar:
+                          variable: 10
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+            LambdaExpression:
+              argument:
+                IdReferencePattern:
+                  name: f
+                  type:
+                    TVar:
+                      variable: 14
+              expression:
+                LambdaExpression:
+                  argument:
+                    ConstructorReferencePattern:
+                      name: Cons
+                      parameters: [
+                          IdReferencePattern:
+                            name: x
+                            type:
+                              TVar:
+                                variable: 16
+                          IdReferencePattern:
+                            name: xs
+                            type:
+                              TVar:
+                                variable: 17
+                        ]
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                  expression:
+                    CallExpression:
+                      operand:
+                        CallExpression:
+                          operand:
+                            IdReference:
+                              name: xs
+                              type:
+                                TVar:
+                                  variable: 22
+                          operator:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: f
+                                  type:
+                                    TVar:
+                                      variable: 23
+                              operator:
+                                IdReference:
+                                  name: map
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TVar:
+                                          variable: 23
+                                      range:
+                                        TArr:
+                                          domain:
+                                            TVar:
+                                              variable: 22
+                                          range:
+                                            TVar:
+                                              variable: 18
+                              type:
+                                TArr:
+                                  domain:
+                                    TVar:
+                                      variable: 22
+                                  range:
+                                    TVar:
+                                      variable: 18
+                          type:
+                            TVar:
+                              variable: 18
+                      operator:
+                        CallExpression:
+                          operand:
+                            CallExpression:
+                              operand:
+                                IdReference:
+                                  name: x
+                                  type:
+                                    TVar:
+                                      variable: 21
+                              operator:
+                                IdReference:
+                                  name: f
+                                  type:
+                                    TArr:
+                                      domain:
+                                        TVar:
+                                          variable: 21
+                                      range:
+                                        TVar:
+                                          variable: 19
+                              type:
+                                TVar:
+                                  variable: 19
+                          operator:
+                            IdReference:
+                              name: Cons
+                              type:
+                                TArr:
+                                  domain:
+                                    TVar:
+                                      variable: 19
+                                  range:
+                                    TArr:
+                                      domain:
+                                        TVar:
+                                          variable: 18
+                                      range:
+                                        TCon:
+                                          arguments: [
+                                              TVar:
+                                                variable: 10
+                                            ]
+                                          name: file.package.name.File.List
+                          type:
+                            TArr:
+                              domain:
+                                TVar:
+                                  variable: 18
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TVar:
+                                        variable: 10
+                                    ]
+                                  name: file.package.name.File.List
+                      type:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+              type:
+                TArr:
+                  domain:
+                    TArr:
+                      domain:
+                        TVar:
+                          variable: 9
+                      range:
+                        TVar:
+                          variable: 10
+                  range:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 9
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TVar:
+                                variable: 10
+                            ]
+                          name: file.package.name.File.List
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: map
+        scheme:
+          Scheme:
+            parameters: [
+                0
+                1
+              ]
+            type:
+              TArr:
+                domain:
+                  TArr:
+                    domain:
+                      TVar:
+                        variable: 0
+                    range:
+                      TVar:
+                        variable: 1
+                range:
+                  TArr:
+                    domain:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 0
+                          ]
+                        name: file.package.name.File.List
+                    range:
+                      TCon:
+                        arguments: [
+                            TVar:
+                              variable: 1
+                          ]
+                        name: file.package.name.File.List
+      LetDeclaration:
+        expressions: [
+            CallExpression:
+              operand:
+                IdReference:
+                  name: values
+                  type:
+                    TCon:
+                      arguments: [
+                          TRec:
+                            fields: [
+                                Pair:
+                                  first: first
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                                Pair:
+                                  first: second
+                                  second:
+                                    TCon:
+                                      arguments: []
+                                      name: Data.String
+                              ]
+                            fixed: true
+                        ]
+                      name: file.package.name.File.List
+              operator:
+                CallExpression:
+                  operand:
+                    LambdaExpression:
+                      argument:
+                        RecordPattern:
+                          fields: [
+                              Pair:
+                                first:
+                                  ID:
+                                    name: first
+                                second:
+                                  IdReferencePattern:
+                                    name: first
+                                    type:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                              Pair:
+                                first:
+                                  ID:
+                                    name: second
+                                second:
+                                  IdReferencePattern:
+                                    name: second
+                                    type:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                            ]
+                          type:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: first
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                  Pair:
+                                    first: second
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                ]
+                              fixed: true
+                      expression:
+                        IdReference:
+                          name: second
+                          type:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                      type:
+                        TArr:
+                          domain:
+                            TRec:
+                              fields: [
+                                  Pair:
+                                    first: first
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                  Pair:
+                                    first: second
+                                    second:
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                ]
+                              fixed: true
+                          range:
+                            TCon:
+                              arguments: []
+                              name: Data.String
+                  operator:
+                    IdReference:
+                      name: map
+                      type:
+                        TArr:
+                          domain:
+                            TArr:
+                              domain:
+                                TRec:
+                                  fields: [
+                                      Pair:
+                                        first: first
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                      Pair:
+                                        first: second
+                                        second:
+                                          TCon:
+                                            arguments: []
+                                            name: Data.String
+                                    ]
+                                  fixed: true
+                              range:
+                                TCon:
+                                  arguments: []
+                                  name: Data.String
+                          range:
+                            TArr:
+                              domain:
+                                TCon:
+                                  arguments: [
+                                      TRec:
+                                        fields: [
+                                            Pair:
+                                              first: first
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                            Pair:
+                                              first: second
+                                              second:
+                                                TCon:
+                                                  arguments: []
+                                                  name: Data.String
+                                          ]
+                                        fixed: true
+                                    ]
+                                  name: file.package.name.File.List
+                              range:
+                                TCon:
+                                  arguments: [
+                                      TCon:
+                                        arguments: []
+                                        name: Data.String
+                                    ]
+                                  name: file.package.name.File.List
+                  type:
+                    TArr:
+                      domain:
+                        TCon:
+                          arguments: [
+                              TRec:
+                                fields: [
+                                    Pair:
+                                      first: first
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                    Pair:
+                                      first: second
+                                      second:
+                                        TCon:
+                                          arguments: []
+                                          name: Data.String
+                                  ]
+                                fixed: true
+                            ]
+                          name: file.package.name.File.List
+                      range:
+                        TCon:
+                          arguments: [
+                              TCon:
+                                arguments: []
+                                name: Data.String
+                            ]
+                          name: file.package.name.File.List
+              type:
+                TCon:
+                  arguments: [
+                      TCon:
+                        arguments: []
+                        name: Data.String
+                    ]
+                  name: file.package.name.File.List
+          ]
+        id:
+          LowerIDDeclarationID:
+            name:
+              ID:
+                name: value2
+        scheme:
+          Scheme:
+            parameters: []
+            type:
+              TCon:
+                arguments: [
+                    TCon:
+                      arguments: []
+                      name: Data.String
+                  ]
+                name: file.package.name.File.List
+    ]
+  exports: []

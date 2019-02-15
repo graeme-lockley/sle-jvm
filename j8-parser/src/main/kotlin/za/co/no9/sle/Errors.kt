@@ -90,6 +90,10 @@ data class DeclarationSignatureHasOpenRecord(
         val name: String,
         val scheme: Scheme) : LocationError(location)
 
+data class OperatorTypeIsOpenRecord(
+        override val location: Location,
+        val type: Type) : LocationError(location)
+
 data class UnificationFail(
         val t1: Type,
         val t2: Type) : Error()
