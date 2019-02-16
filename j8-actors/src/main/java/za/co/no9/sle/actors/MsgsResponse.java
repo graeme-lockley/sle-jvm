@@ -17,4 +17,16 @@ public class MsgsResponse<S> extends Response<S> {
         postCommands(cmds);
         return def;
     }
+
+
+    @Override
+    protected S state() {
+        return null;
+    }
+
+
+    @Override
+    protected List<Cmd> cmds() {
+        return cmds;
+    }
 }

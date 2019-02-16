@@ -19,4 +19,15 @@ public class StateMsgsResponse<S> extends Response<S> {
         postCommands(cmds);
         return state;
     }
+
+
+    @Override
+    protected S state() {
+        return state;
+    }
+
+    @Override
+    protected List<Cmd> cmds() {
+        return cmds;
+    }
 }
