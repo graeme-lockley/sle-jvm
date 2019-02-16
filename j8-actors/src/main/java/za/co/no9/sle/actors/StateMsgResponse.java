@@ -32,4 +32,13 @@ public class StateMsgResponse<S> extends Response<S> {
     protected List<Cmd> cmds() {
         return Collections.singletonList(cmd);
     }
+
+
+    @Override
+    public String toString() {
+        return "StateMsgResponse{" +
+                "state=" + state +
+                ", cmd=" + cmd +
+                '}';
+    }
 }

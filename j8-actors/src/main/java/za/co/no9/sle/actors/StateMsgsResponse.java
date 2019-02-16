@@ -30,4 +30,13 @@ public class StateMsgsResponse<S> extends Response<S> {
     protected List<Cmd> cmds() {
         return cmds;
     }
+
+
+    @Override
+    public String toString() {
+        return "StateMsgsResponse{" +
+                "state=" + state +
+                ", cmds=" + cmds +
+                '}';
+    }
 }

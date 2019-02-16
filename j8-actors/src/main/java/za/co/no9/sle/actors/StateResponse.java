@@ -30,4 +30,12 @@ public class StateResponse<S> extends Response<S> {
     protected List<Cmd> cmds() {
         return (List<Cmd>) EMPTY_LIST;
     }
+
+
+    @Override
+    public String toString() {
+        return "StateResponse{" +
+                "state=" + state +
+                '}';
+    }
 }

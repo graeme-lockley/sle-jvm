@@ -29,4 +29,12 @@ public class MsgsResponse<S> extends Response<S> {
     protected List<Cmd> cmds() {
         return cmds;
     }
+
+
+    @Override
+    public String toString() {
+        return "MsgsResponse{" +
+                "cmds=" + cmds +
+                '}';
+    }
 }
