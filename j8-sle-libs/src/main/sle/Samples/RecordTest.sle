@@ -36,5 +36,5 @@ suite =
     , Test "List.map first values" <| List.map first values == ["Hello", "Hello"]
     , Test "List.map second values" <| List.map second values == ["World", "World"]
     , Test "List.map (\\v -> v.first) values" <| List.map (\{first, second} -> first) values == ["Hello", "Hello"]
-    , Test "List.map (\\v -> v.second) values" <| List.map (\{first, second} -> second) values == ["World", "Worl"]
+    , Test "List.map (\\v -> v.second) values" <| List.map (\{first, second} -> second) values == ["World", "World"]
     ]
