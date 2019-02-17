@@ -1,8 +1,8 @@
 export
-  main
+  tests
 
 
-import file:./Unit
+import file:./Unit exposing suite, constant, displayDetail
 
 import file:../Control/Actor
 import file:../Control/Actor/Response
@@ -11,18 +11,21 @@ import file:../Data/List
 import file:../Data/String
 
 
-main =
-  let
-    suite =
-      Unit.suite "Data.Bitwise" []
-        [ Unit.suite "and"
-            [ Unit.constant "and with 32 bit integers" <| Bitwise.and 5 3 == 1
-            , Unit.constant "and with 0 as first argument" <| Bitwise.and 0 1450 == 0
-            ] []
-        , Unit.suite "or"
-            [ Unit.constant "or with 32 bit integers" <| Bitwise.or 9 14 == 15
-            , Unit.constant "or with 0 as first argument" <| Bitwise.or 0 843 == 843
-            ] []
+tests =
+  suite "Data.Bitwise"
+    []
+    [ suite "and"
+        [ constant "and with 32 bit integers" <| Bitwise.and 5 3 == 1
+        , constant "and with 0 as first argument" <| Bitwise.and 0 1450 == 0
         ]
-  in
-    Unit.displayDetail suite
+        []
+    , suite "or"
+        [ constant "or with 32 bit integers" <| Bitwise.or 9 14 == 15
+        , constant "or with 0 as first argument" <| Bitwise.or 0 843 == 843
+        ]
+        []
+    ]
+
+
+main =
+    displayDetail tests

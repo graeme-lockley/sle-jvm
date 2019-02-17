@@ -23,12 +23,12 @@ suite =
     Describe "Test.Actor"
       [ Describe "Unit.constant"
           [ Describe "init"
-              [ Test "\"should be true\" True self" <| Unit.constantInit "should be true" True self == (("should be true", True), [])
-              , Test "\"should be false\" False self" <| Unit.constantInit "should be false" False self == (("should be false", False), [])
+              [ Test "\"should be true\" True self" <| Unit.constantInit (Test "should be true" True) self == (Test "should be true" True, [])
+              , Test "\"should be false\" False self" <| Unit.constantInit (Test "should be false" False) self == (Test "should be false" False, [])
               ]
           , Describe "update"
               [ Test "Unit.RegisterTest suite 100" <|
-                  Unit.constantUpdate ("should be true", True) (Unit.RegisterTest suite 100) ==
+                  Unit.constantUpdate (Test "should be true" True) (Unit.RegisterTest suite 100) ==
                     (Test "should be true" True
                       |> Unit.TestComplete 100
                       |> Actor.cmd suite

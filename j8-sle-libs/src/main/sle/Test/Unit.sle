@@ -39,21 +39,21 @@ console =
   Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
 
 
-constantInit : String -> Bool -> Actor.Actor TestMsg -> ((String, Bool), List Actor.Cmd)
-constantInit name value self =
-  ( (name, value)
+constantInit : Unit -> Actor.Actor TestMsg -> (Unit, List Actor.Cmd)
+constantInit unit self =
+  ( unit
   , [ ]
   )
 
 
-constantUpdate : (String, Bool) -> TestMsg -> Actor.Response (String, Bool)
-constantUpdate (name, value) (RegisterTest suite id) =
-  Response.msg (Actor.cmd suite (TestComplete id (Test name value)))
+constantUpdate : Unit -> TestMsg -> Actor.Response Unit
+constantUpdate unit (RegisterTest suite id) =
+  Response.msg (Actor.cmd suite (TestComplete id unit))
 
 
 constant : String -> Bool -> Actor.Actor TestMsg
 constant name value =
-  Actor.create (constantInit name value) constantUpdate
+  Actor.create (constantInit (Test name value)) constantUpdate
 
 
 
