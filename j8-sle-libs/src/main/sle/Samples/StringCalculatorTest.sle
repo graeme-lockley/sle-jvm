@@ -4,7 +4,7 @@ import file:../Data//List
 import file:../Data/String as S
 import file:../Data/Option
 import file:../Text/Regex
-import file:../Test/Unit exposing Suite(..)
+import file:../Test/Unit exposing Unit(..)
 
 import file:../Debug as D
 

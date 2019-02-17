@@ -1,6 +1,6 @@
 export suite
 
-import file:../Test/Unit exposing Suite(..)
+import file:../Test/Unit exposing Unit(..)
 import file:./String as S
 import file:./Char as C
 import file:../Debug as D

@@ -1,7 +1,7 @@
 export suite
 
 import file:../Data/List
-import file:../Test/Unit exposing Suite(..)
+import file:../Test/Unit exposing Unit(..)
 
 
 typealias Person =
