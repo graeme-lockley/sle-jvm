@@ -1,13 +1,11 @@
 export
   Unit(..)
-, suite
-, suiteInit
-, suiteUpdate
 , constant
 , constantInit
 , constantUpdate
-, displayDetail
-, displaySummary
+, suite
+, suiteInit
+, suiteUpdate
 , SuiteMsg(..)
 
 
@@ -30,10 +28,6 @@ type SuiteMsg
   | RegisterSuite (Actor.Actor SuiteMsg) Int
 
 
-console =
-  Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
-
-
 constantInit : Unit -> Actor.Actor SuiteMsg -> (Unit, List Actor.Cmd)
 constantInit unit self =
   ( unit
@@ -51,7 +45,6 @@ constantUpdate unit (TestComplete id unit) =
 constant : String -> Bool -> Actor.Actor SuiteMsg
 constant name value =
   Actor.create (constantInit (Test name value)) constantUpdate
-
 
 
 typealias SuiteState =
@@ -121,100 +114,3 @@ suiteUpdate state (RegisterSuite parent id) =
 
 suite name tests =
   Actor.create (suiteInit name tests) suiteUpdate
-
-
-summary : Unit -> (Int, Int)
-summary suite =
-  case suite of
-    (Describe _ ss) ->
-      List.map summary ss
-        |> List.foldLeft (\(a1, b1) (a2, b2) -> (a1 + a2, b1 + b2)) (0, 0)
-
-    (Test _ True) ->
-      (1, 1)
-
-    _ ->
-      (0, 1)
-
-
-renderSummary : Unit -> String
-renderSummary suite =
-  case summary suite of
-    (passed, total) ->
-      String.concat
-        [ "("
-        , passed |> String.fromInt
-        , ", "
-        , total |> String.fromInt
-        , ")\n"
-        ]
-
-
-displaySummary : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
-displaySummary suite =
-  Actor.create
-    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
-    (\() msg ->
-      case msg of
-        TestComplete id result ->
-          Response.msg <| Actor.cmd console <| String.concat
-            [ renderSummary result
-            , "\n"
-            ]
-
-        _ ->
-          Response.none
-    )
-
-
-renderDetail : Int -> Unit -> String
-renderDetail indent (Test name value) =
-  if value then
-    String.concat
-      [ String.repeat (indent * 2) " "
-      , "\u001B[32m"
-      , name
-      , "\u001B[0m"
-      ]
-  else
-    String.concat
-      [ String.repeat (indent * 2) " "
-      , "\u001B[31m"
-      , name
-      , "\u001B[0m"
-      ]
-
-
-renderDetail indent (Describe name suites) =
-  String.concat
-    [ String.repeat (indent * 2) " "
-    , name
-    , "\n"
-    , String.join "\n" <| List.map (renderDetail (indent + 1)) suites
-    ]
-
-
-displayDetail : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
-displayDetail suite =
-  Actor.create
-    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
-    (\() msg ->
-      case msg of
-        TestComplete id result ->
-          let
-            detail =
-              renderDetail 0 result
-
-            stats =
-              summary result
-          in
-            Response.msg <| Actor.cmd console <| String.concat
-              [ renderDetail 0 result
-              , "\nSummary: "
-              , renderSummary result
-              , "\n"
-              ]
-
-        _ ->
-          Response.none
-    )

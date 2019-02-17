@@ -1,0 +1,127 @@
+export
+  display
+, displayDetail
+
+
+import file:../../Control/Actor
+import file:../../Control/Actor/Response
+
+import file:../../Data/List
+import file:../../Data/String
+
+import file:../../Test/Unit exposing Unit(..), SuiteMsg(..)
+
+
+console =
+  Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
+
+
+summary : Unit -> (Int, Int)
+summary suite =
+  case suite of
+    (Describe _ ss) ->
+      List.map summary ss
+        |> List.foldLeft (\(a1, b1) (a2, b2) -> (a1 + a2, b1 + b2)) (0, 0)
+
+    (Test _ True) ->
+      (1, 1)
+
+    _ ->
+      (0, 1)
+
+
+renderSummary : Unit -> String
+renderSummary suite =
+  case summary suite of
+    (passed, total) ->
+      String.concat
+        [ "("
+        , passed |> String.fromInt
+        , ", "
+        , total |> String.fromInt
+        , ")\n"
+        ]
+
+
+displaySummary : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
+displaySummary suite =
+  Actor.create
+    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
+    (\() msg ->
+      case msg of
+        TestComplete id result ->
+          Response.msg <| Actor.cmd console <| String.concat
+            [ renderSummary result
+            , "\n"
+            ]
+
+        _ ->
+          Response.none
+    )
+
+
+renderDetail : Int -> Unit -> String
+renderDetail indent (Test name value) =
+  if value then
+    String.concat
+      [ String.repeat (indent * 2) " "
+      , "\u001B[32m"
+      , name
+      , "\u001B[0m"
+      ]
+  else
+    String.concat
+      [ String.repeat (indent * 2) " "
+      , "\u001B[31m"
+      , name
+      , "\u001B[0m"
+      ]
+
+
+renderDetail indent (Describe name suites) =
+  String.concat
+    [ String.repeat (indent * 2) " "
+    , name
+    , "\n"
+    , String.join "\n" <| List.map (renderDetail (indent + 1)) suites
+    ]
+
+
+displayDetail : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
+displayDetail suite =
+  Actor.create
+    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
+    (\() msg ->
+      case msg of
+        TestComplete id result ->
+          let
+            detail =
+              renderDetail 0 result
+
+            stats =
+              summary result
+          in
+            Response.msg <| Actor.cmd console <| String.concat
+              [ renderDetail 0 result
+              , "\nSummary: "
+              , renderSummary result
+              , "\n"
+              ]
+
+        _ ->
+          Response.none
+    )
+
+
+display : Actor.Actor Unit
+display =
+  let
+    render unit =
+      String.concat
+        [ renderDetail 0 unit
+        , "\n"
+        ]
+  in
+    Actor.createStateless (\unit ->
+      [Actor.cmd console <| render unit]
+    )

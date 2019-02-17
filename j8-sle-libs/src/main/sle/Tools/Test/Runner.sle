@@ -1,0 +1,30 @@
+export
+  addUnit
+, addSuite
+
+
+import file:../../Control/Actor
+import file:../../Control/Actor/Response
+import file:../../Test/Unit
+import file:./Report
+
+
+addUnit : Unit.Unit -> Actor.Actor ()
+addUnit unit =
+  Actor.create (\self -> ((), [Actor.cmd Report.display unit])) (\() () -> Response.none)
+
+
+addSuite : Actor.Actor Unit.SuiteMsg -> Actor.Actor Unit.SuiteMsg
+addSuite suite =
+  Actor.create
+    (\self -> (suite, [Actor.cmd suite <| Unit.RegisterSuite self 0]))
+    (\_ msg ->
+      case msg of
+        Unit.TestComplete id unit ->
+          Response.msg <| Actor.cmd Report.display unit
+
+        _ ->
+          Response.none
+    )
+
+
