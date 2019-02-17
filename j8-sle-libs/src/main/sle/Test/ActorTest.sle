@@ -28,7 +28,7 @@ suite =
               ]
           , Describe "update"
               [ Test "Unit.RegisterTest suite 100" <|
-                  Unit.constantUpdate (Test "should be true" True) (Unit.RegisterTest suite 100) ==
+                  Unit.constantUpdate (Test "should be true" True) (Unit.RegisterSuite suite 100) ==
                     (Test "should be true" True
                       |> Unit.TestComplete 100
                       |> Actor.cmd suite
@@ -53,8 +53,8 @@ suite =
                         , tests = 2
                         , results = []
                         }
-                      , [ Actor.cmd test1 (Unit.RegisterTest suite 0)
-                        , Actor.cmd test2 (Unit.RegisterTest suite 1)
+                      , [ Actor.cmd test1 (Unit.RegisterSuite suite 0)
+                        , Actor.cmd test2 (Unit.RegisterSuite suite 1)
                         ]
                       )
                   )
@@ -100,8 +100,8 @@ suite =
                         }
                       , [ Actor.cmd suite1 (Unit.RegisterSuite suite 0)
                         , Actor.cmd suite2 (Unit.RegisterSuite suite 1)
-                        , Actor.cmd test1 (Unit.RegisterTest suite 2)
-                        , Actor.cmd test2 (Unit.RegisterTest suite 3)
+                        , Actor.cmd test1 (Unit.RegisterSuite suite 2)
+                        , Actor.cmd test2 (Unit.RegisterSuite suite 3)
                         ]
                       )
                   )

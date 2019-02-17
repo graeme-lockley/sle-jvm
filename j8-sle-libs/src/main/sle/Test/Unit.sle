@@ -9,7 +9,6 @@ export
 , displayDetail
 , displaySummary
 , SuiteMsg(..)
-, TestMsg(..)
 
 
 import file:../Control/Actor
@@ -31,27 +30,25 @@ type SuiteMsg
   | RegisterSuite (Actor.Actor SuiteMsg) Int
 
 
-type TestMsg
-  = RegisterTest (Actor.Actor SuiteMsg) Int
-
-
 console =
   Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
 
 
-constantInit : Unit -> Actor.Actor TestMsg -> (Unit, List Actor.Cmd)
+constantInit : Unit -> Actor.Actor SuiteMsg -> (Unit, List Actor.Cmd)
 constantInit unit self =
   ( unit
   , [ ]
   )
 
 
-constantUpdate : Unit -> TestMsg -> Actor.Response Unit
-constantUpdate unit (RegisterTest suite id) =
+constantUpdate : Unit -> SuiteMsg -> Actor.Response Unit
+constantUpdate unit (RegisterSuite suite id) =
   Response.msg (Actor.cmd suite (TestComplete id unit))
 
+constantUpdate unit (TestComplete id unit) =
+  Response.none
 
-constant : String -> Bool -> Actor.Actor TestMsg
+constant : String -> Bool -> Actor.Actor SuiteMsg
 constant name value =
   Actor.create (constantInit (Test name value)) constantUpdate
 
@@ -65,7 +62,7 @@ typealias SuiteState =
   }
 
 
-suiteInit : String -> List (Actor.Actor TestMsg) -> List (Actor.Actor SuiteMsg) -> Actor.Actor SuiteMsg -> (SuiteState, List Actor.Cmd)
+suiteInit : String -> List (Actor.Actor SuiteMsg) -> List (Actor.Actor SuiteMsg) -> Actor.Actor SuiteMsg -> (SuiteState, List Actor.Cmd)
 suiteInit name tests suites self =
   let
     numberOfTests =
@@ -76,9 +73,9 @@ suiteInit name tests suites self =
       {index = numberOfTests - 1, cmds = []}
 
 
-    foldTestsFunction : Actor.Actor TestMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
+    foldTestsFunction : Actor.Actor SuiteMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
     foldTestsFunction test result =
-      { index = result.index - 1, cmds = (Actor.cmd test (RegisterTest self result.index)) :: result.cmds }
+      { index = result.index - 1, cmds = (Actor.cmd test (RegisterSuite self result.index)) :: result.cmds }
 
     foldSuitesFunction : Actor.Actor SuiteMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
     foldSuitesFunction suite result =
