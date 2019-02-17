@@ -13,17 +13,14 @@ import file:../Data/String
 
 tests =
   suite "Data.Bitwise"
-    []
     [ suite "and"
         [ constant "and with 32 bit integers" <| Bitwise.and 5 3 == 1
         , constant "and with 0 as first argument" <| Bitwise.and 0 1450 == 0
         ]
-        []
     , suite "or"
         [ constant "or with 32 bit integers" <| Bitwise.or 9 14 == 15
         , constant "or with 0 as first argument" <| Bitwise.or 0 843 == 843
         ]
-        []
     ]
 
 

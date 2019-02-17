@@ -62,27 +62,23 @@ typealias SuiteState =
   }
 
 
-suiteInit : String -> List (Actor.Actor SuiteMsg) -> List (Actor.Actor SuiteMsg) -> Actor.Actor SuiteMsg -> (SuiteState, List Actor.Cmd)
-suiteInit name tests suites self =
+suiteInit : String -> List (Actor.Actor SuiteMsg) -> Actor.Actor SuiteMsg -> (SuiteState, List Actor.Cmd)
+suiteInit name tests self =
   let
     numberOfTests =
-      List.length tests + List.length suites
+      List.length tests
 
     initResult : {index : Int, cmds : List Actor.Cmd}
     initResult =
-      {index = numberOfTests - 1, cmds = []}
+      { index = numberOfTests - 1, cmds = [] }
 
 
-    foldTestsFunction : Actor.Actor SuiteMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
+    foldTestsFunction : Actor.Actor SuiteMsg -> { index : Int, cmds : List Actor.Cmd } -> { index : Int, cmds : List Actor.Cmd }
     foldTestsFunction test result =
       { index = result.index - 1, cmds = (Actor.cmd test (RegisterSuite self result.index)) :: result.cmds }
 
-    foldSuitesFunction : Actor.Actor SuiteMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
-    foldSuitesFunction suite result =
-      { index = result.index - 1, cmds = (Actor.cmd suite (RegisterSuite self result.index)) :: result.cmds }
-
     cmdsResult =
-      List.foldRight foldSuitesFunction (List.foldRight foldTestsFunction initResult tests) suites
+      List.foldRight foldTestsFunction initResult tests
   in
     ( { parent = None
       , name = name
@@ -123,8 +119,8 @@ suiteUpdate state (RegisterSuite parent id) =
     Response.stateMsgs {state | parent = Some (parent, id) } msgs
 
 
-suite name tests suites =
-  Actor.create (suiteInit name tests suites) suiteUpdate
+suite name tests =
+  Actor.create (suiteInit name tests) suiteUpdate
 
 
 summary : Unit -> (Int, Int)

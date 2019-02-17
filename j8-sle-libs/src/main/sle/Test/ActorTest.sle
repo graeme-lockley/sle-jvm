@@ -38,8 +38,8 @@ suite =
 
       , Describe "suite"
           [ Describe "init"
-              [ Test "\"root\" [] [] suite" <| Unit.suiteInit "root" [] [] suite == ({parent = None, name = "root", tests = 0, results = []}, [])
-              , Test "\"root\" [Unit.constant \"Test1\" True, Unit.constant \"Test2\" True] [] suite" <|
+              [ Test "\"root\" [] suite" <| Unit.suiteInit "root" [] suite == ({parent = None, name = "root", tests = 0, results = []}, [])
+              , Test "\"root\" [Unit.constant \"Test1\" True, Unit.constant \"Test2\" True] suite" <|
                   (let
                     test1 =
                       Unit.constant "Test1" True
@@ -47,7 +47,7 @@ suite =
                     test2 =
                       Unit.constant "Test2" True
                   in
-                    Unit.suiteInit "root" [test1, test2] [] suite ==
+                    Unit.suiteInit "root" [test1, test2] suite ==
                       ( { parent = None
                         , name = "root"
                         , tests = 2
@@ -58,15 +58,15 @@ suite =
                         ]
                       )
                   )
-              , Test "\"root\" [] [suite1, suite2] suite" <|
+              , Test "\"root\" [suite1, suite2] suite" <|
                   (let
                     suite1 =
-                      Unit.suite "Suite1" [] []
+                      Unit.suite "Suite1" []
 
                     suite2 =
-                      Unit.suite "Suite2" [] []
+                      Unit.suite "Suite2" []
                   in
-                    Unit.suiteInit "root" [] [suite1, suite2] suite ==
+                    Unit.suiteInit "root" [suite1, suite2] suite ==
                       ( { parent = None
                         , name = "root"
                         , tests = 2
@@ -78,7 +78,7 @@ suite =
                       )
                   )
 
-              , Test "\"root\" [test1, test2] [suite1, suite2] suite" <|
+              , Test "\"root\" [test1, test2, suite1, suite2] suite" <|
                   (let
                     test1 =
                       Unit.constant "Test1" True
@@ -87,21 +87,21 @@ suite =
                       Unit.constant "Test2" True
 
                     suite1 =
-                      Unit.suite "Suite1" [] []
+                      Unit.suite "Suite1" []
 
                     suite2 =
-                      Unit.suite "Suite2" [] []
+                      Unit.suite "Suite2" []
                   in
-                    Unit.suiteInit "root" [test1, test2] [suite1, suite2] suite ==
+                    Unit.suiteInit "root" [test1, test2, suite1, suite2] suite ==
                       ( { parent = None
                         , name = "root"
                         , tests = 4
                         , results = []
                         }
-                      , [ Actor.cmd suite1 (Unit.RegisterSuite suite 0)
-                        , Actor.cmd suite2 (Unit.RegisterSuite suite 1)
-                        , Actor.cmd test1 (Unit.RegisterSuite suite 2)
-                        , Actor.cmd test2 (Unit.RegisterSuite suite 3)
+                      , [ Actor.cmd test1 (Unit.RegisterSuite suite 0)
+                        , Actor.cmd test2 (Unit.RegisterSuite suite 1)
+                        , Actor.cmd suite1 (Unit.RegisterSuite suite 2)
+                        , Actor.cmd suite2 (Unit.RegisterSuite suite 3)
                         ]
                       )
                   )
