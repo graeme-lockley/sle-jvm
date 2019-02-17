@@ -1,6 +1,227 @@
-export Suite(..)
+export
+  Unit(..)
+, suite
+, suiteInit
+, suiteUpdate
+, constant
+, constantInit
+, constantUpdate
+, displayDetail
+, displaySummary
+, SuiteMsg(..)
+, TestMsg(..)
 
 
-type Suite
-	= Describe String (List Suite)
+import file:../Control/Actor
+import file:../Control/Actor/Response
+
+import file:../Data/Bitwise
+import file:../Data/List
+import file:../Data/Option
+import file:../Data/String
+
+
+type Unit
+	= Describe String (List Unit)
 	| Test String Bool
+
+
+type SuiteMsg
+  = TestComplete Int Unit
+  | RegisterSuite (Actor.Actor SuiteMsg) Int
+
+
+type TestMsg
+  = RegisterTest (Actor.Actor SuiteMsg) Int
+
+
+console =
+  Actor.createBuiltin "za.co.no9.sle.runtime.actors.ConsoleActor"
+
+
+constantInit : String -> Bool -> Actor.Actor TestMsg -> ((String, Bool), List Actor.Cmd)
+constantInit name value self =
+  ( (name, value)
+  , [ ]
+  )
+
+
+constantUpdate : (String, Bool) -> TestMsg -> Actor.Response (String, Bool)
+constantUpdate (name, value) (RegisterTest suite id) =
+  Response.msg (Actor.cmd suite (TestComplete id (Test name value)))
+
+
+constant : String -> Bool -> Actor.Actor TestMsg
+constant name value =
+  Actor.create (constantInit name value) constantUpdate
+
+
+
+typealias SuiteState =
+  { parent : Option (Actor.Actor SuiteMsg, Int)
+  , name : String
+  , tests : Int
+  , results : List Unit
+  }
+
+
+suiteInit : String -> List (Actor.Actor TestMsg) -> List (Actor.Actor SuiteMsg) -> Actor.Actor SuiteMsg -> (SuiteState, List Actor.Cmd)
+suiteInit name tests suites self =
+  let
+    numberOfTests =
+      List.length tests + List.length suites
+
+    initResult : {index : Int, cmds : List Actor.Cmd}
+    initResult =
+      {index = numberOfTests - 1, cmds = []}
+
+
+    foldTestsFunction : Actor.Actor TestMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
+    foldTestsFunction test result =
+      { index = result.index - 1, cmds = (Actor.cmd test (RegisterTest self result.index)) :: result.cmds }
+
+    foldSuitesFunction : Actor.Actor SuiteMsg -> {index : Int, cmds : List Actor.Cmd} -> {index : Int, cmds : List Actor.Cmd}
+    foldSuitesFunction suite result =
+      { index = result.index - 1, cmds = (Actor.cmd suite (RegisterSuite self result.index)) :: result.cmds }
+
+    cmdsResult =
+      List.foldRight foldSuitesFunction (List.foldRight foldTestsFunction initResult tests) suites
+  in
+    ( { parent = None
+      , name = name
+      , tests = numberOfTests
+      , results = []
+      }
+    , cmdsResult.cmds
+    )
+
+
+suiteUpdate : SuiteState -> SuiteMsg -> Actor.Response SuiteState
+suiteUpdate state (TestComplete id result) =
+  let
+    newState =
+      { state | results = result :: state.results }
+
+    msgs =
+      if List.length newState.results == newState.tests then
+        case newState.parent of
+          None ->
+            []
+
+          Some (parentSuite, id) ->
+            [ Actor.cmd parentSuite <| TestComplete id (Describe newState.name newState.results) ]
+      else
+        []
+  in
+    Response.stateMsgs newState msgs
+
+suiteUpdate state (RegisterSuite parent id) =
+  let
+    msgs =
+      if List.length state.results == state.tests then
+        [ Actor.cmd parent <| TestComplete id (Describe state.name state.results) ]
+      else
+        []
+  in
+    Response.stateMsgs {state | parent = Some (parent, id) } msgs
+
+
+suite name tests suites =
+  Actor.create (suiteInit name tests suites) suiteUpdate
+
+
+summary : Unit -> (Int, Int)
+summary suite =
+  case suite of
+    (Describe _ ss) ->
+      List.map summary ss
+        |> List.foldLeft (\(a1, b1) (a2, b2) -> (a1 + a2, b1 + b2)) (0, 0)
+
+    (Test _ True) ->
+      (1, 1)
+
+    _ ->
+      (0, 1)
+
+
+renderSummary : Unit -> String
+renderSummary suite =
+  case summary suite of
+    (passed, total) ->
+      String.concat
+        [ "("
+        , passed |> String.fromInt
+        , ", "
+        , total |> String.fromInt
+        , ")\n"
+        ]
+
+
+displaySummary : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
+displaySummary suite =
+  Actor.create
+    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
+    (\() msg ->
+      case msg of
+        TestComplete id result ->
+          Response.msg <| Actor.cmd console <| String.concat
+            [ renderSummary result
+            , "\n"
+            ]
+
+        _ ->
+          Response.none
+    )
+
+
+renderDetail : Int -> Unit -> String
+renderDetail indent (Test name value) =
+  if value then
+    String.concat
+      [ String.repeat (indent * 2) " "
+      , "\u001B[32m"
+      , name
+      , "\u001B[0m"
+      ]
+  else
+    String.concat
+      [ String.repeat (indent * 2) " "
+      , "\u001B[31m"
+      , name
+      , "\u001B[0m"
+      ]
+
+
+renderDetail indent (Describe name suites) =
+  String.concat
+    [ String.repeat (indent * 2) " "
+    , name
+    , "\n"
+    , String.join "\n" <| List.map (renderDetail (indent + 1)) suites
+    ]
+
+
+displayDetail : Actor.Actor SuiteMsg -> Actor.Actor SuiteMsg
+displayDetail suite =
+  Actor.create
+    (\self -> ((), [Actor.cmd suite <| RegisterSuite self 0]))
+    (\() msg ->
+      case msg of
+        TestComplete id result ->
+          let
+            detail =
+              renderDetail 0 result
+
+            stats =
+              summary result
+          in
+            Response.msg <| Actor.cmd console <| String.concat
+              [ renderDetail 0 result
+              , "\nSummary: "
+              , renderSummary result
+              , "\n"
+              ]
+
+        _ ->
+          Response.none
+    )

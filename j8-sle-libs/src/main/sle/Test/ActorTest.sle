@@ -1,0 +1,135 @@
+export
+  suite
+
+import file:../Control/Actor
+import file:../Control/Actor/Response
+
+import file:./Unit
+import file:./Unit exposing Unit(..)
+
+
+suite =
+  let
+    root =
+      Actor.sink
+
+    suite =
+      Actor.sink
+
+    self =
+      Actor.sink
+
+  in
+    Describe "Test.Actor"
+      [ Describe "Unit.constant"
+          [ Describe "init"
+              [ Test "\"should be true\" True self" <| Unit.constantInit "should be true" True self == (("should be true", True), [])
+              , Test "\"should be false\" False self" <| Unit.constantInit "should be false" False self == (("should be false", False), [])
+              ]
+          , Describe "update"
+              [ Test "Unit.RegisterTest suite 100" <|
+                  Unit.constantUpdate ("should be true", True) (Unit.RegisterTest suite 100) ==
+                    (Test "should be true" True
+                      |> Unit.TestComplete 100
+                      |> Actor.cmd suite
+                      |> Response.msg)
+              ]
+          ]
+
+      , Describe "suite"
+          [ Describe "init"
+              [ Test "\"root\" [] [] suite" <| Unit.suiteInit "root" [] [] suite == ({parent = None, name = "root", tests = 0, results = []}, [])
+              , Test "\"root\" [Unit.constant \"Test1\" True, Unit.constant \"Test2\" True] [] suite" <|
+                  (let
+                    test1 =
+                      Unit.constant "Test1" True
+
+                    test2 =
+                      Unit.constant "Test2" True
+                  in
+                    Unit.suiteInit "root" [test1, test2] [] suite ==
+                      ( { parent = None
+                        , name = "root"
+                        , tests = 2
+                        , results = []
+                        }
+                      , [ Actor.cmd test1 (Unit.RegisterTest suite 0)
+                        , Actor.cmd test2 (Unit.RegisterTest suite 1)
+                        ]
+                      )
+                  )
+              , Test "\"root\" [] [suite1, suite2] suite" <|
+                  (let
+                    suite1 =
+                      Unit.suite "Suite1" [] []
+
+                    suite2 =
+                      Unit.suite "Suite2" [] []
+                  in
+                    Unit.suiteInit "root" [] [suite1, suite2] suite ==
+                      ( { parent = None
+                        , name = "root"
+                        , tests = 2
+                        , results = []
+                        }
+                      , [ Actor.cmd suite1 (Unit.RegisterSuite suite 0)
+                        , Actor.cmd suite2 (Unit.RegisterSuite suite 1)
+                        ]
+                      )
+                  )
+
+              , Test "\"root\" [test1, test2] [suite1, suite2] suite" <|
+                  (let
+                    test1 =
+                      Unit.constant "Test1" True
+
+                    test2 =
+                      Unit.constant "Test2" True
+
+                    suite1 =
+                      Unit.suite "Suite1" [] []
+
+                    suite2 =
+                      Unit.suite "Suite2" [] []
+                  in
+                    Unit.suiteInit "root" [test1, test2] [suite1, suite2] suite ==
+                      ( { parent = None
+                        , name = "root"
+                        , tests = 4
+                        , results = []
+                        }
+                      , [ Actor.cmd suite1 (Unit.RegisterSuite suite 0)
+                        , Actor.cmd suite2 (Unit.RegisterSuite suite 1)
+                        , Actor.cmd test1 (Unit.RegisterTest suite 2)
+                        , Actor.cmd test2 (Unit.RegisterTest suite 3)
+                        ]
+                      )
+                  )
+              ]
+          , Describe "update"
+              [ Describe "Unit.TestComplete"
+                  [ Test "over a suite but does not complete the suite" <|
+                      Unit.suiteUpdate { parent = None, name = "suite", tests = 2, results = [] } (Unit.TestComplete 0 (Test "test1" True)) ==
+                        Response.state { parent = None, name = "suite", tests = 2, results = [Test "test1" True] }
+                  , Test "over a suite, completes the suite and without a suite parent" <|
+                      Unit.suiteUpdate { parent = None, name = "suite", tests = 1, results = [] } (Unit.TestComplete 0 (Test "test1" True)) ==
+                        Response.state { parent = None, name = "suite", tests = 1, results = [Test "test1" True] }
+                  , Test "over a suite, completes the suite and with a suite parent" <|
+                      Unit.suiteUpdate { parent = Some (root, 13), name = "suite", tests = 1, results = [] } (Unit.TestComplete 0 (Test "test1" True)) ==
+                        Response.stateMsg
+                          { parent = Some (root, 13), name = "suite", tests = 1, results = [Test "test1" True] }
+                          (Actor.cmd root <| Unit.TestComplete 0 <| Describe "suite" [Test "test1" True])
+                  ]
+              , Describe "Unit.RegisterSuite"
+                  [ Test "over an uncompleted suite" <|
+                      Unit.suiteUpdate { parent = None, name = "suite", tests = 2, results = [] } (Unit.RegisterSuite root 17) ==
+                          Response.state { parent = Some (root, 17), name = "suite", tests = 2, results = [] }
+                  , Test "over a completed suite" <|
+                      Unit.suiteUpdate { parent = None, name = "suite", tests = 2, results = [Test "test1" True, Test "test2" True] } (Unit.RegisterSuite root 17) ==
+                          Response.stateMsg
+                            { parent = Some (root, 17), name = "suite", tests = 2, results = [Test "test1" True, Test "test2" True] }
+                            (Actor.cmd root <| Unit.TestComplete 17 <| Describe "suite" [Test "test1" True, Test "test2" True])
+                  ]
+              ]
+          ]
+      ]
