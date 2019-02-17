@@ -18,11 +18,13 @@ private fun calculateRootDirectory(): File {
     val userDir =
             System.getProperty("user.dir")
 
-    return File(if (userDir.endsWith("j8-sle-libs")) {
-        File(userDir)
-    } else {
-        File(userDir, "j8-sle-libs")
-    }, listOf("src", "main", "sle").joinToString(File.separator))
+    val baseDirectory =
+            if (userDir.endsWith("j8-sle-libs"))
+                File(userDir)
+            else
+                File(userDir, "j8-sle-libs")
+
+    return File(baseDirectory, listOf("src", "main", "sle").joinToString(File.separator))
 }
 
 
