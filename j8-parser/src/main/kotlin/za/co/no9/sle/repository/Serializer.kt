@@ -24,7 +24,6 @@ fun fromJsonString(input: String): Export {
                     Variable(type["variable"].asInt)
 
                 type.has("constant") -> {
-                    println(type)
                     val constant =
                             type["constant"].asString
 
