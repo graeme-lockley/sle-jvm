@@ -4,7 +4,6 @@ import za.co.no9.sle.*
 import za.co.no9.sle.pass4.toClass
 import za.co.no9.sle.pass4.translate
 import za.co.no9.sle.repository.toJsonString
-import za.co.no9.sle.transform.enrichedCoreToCore.EmptyParseCallback
 import za.co.no9.sle.transform.enrichedCoreToCore.parse
 import za.co.no9.sle.transform.typelessPatternToTypedPattern.importAll
 import za.co.no9.sle.typing.*
@@ -91,7 +90,7 @@ class BuildRepository(override val sourcePrefix: File,
 
             if (errors == null) {
                 item.writeJava(output.right() ?: "")
-                item.writeJson(toJsonString(toClass(item, parseDetail.right()!!.module.exports)))
+                item.writeJson(toJsonString(toClass(parseDetail.right()!!.environment, item, parseDetail.right()!!.module.exports)))
             } else {
                 includeErrors(item.sourceURN(), errors)
             }

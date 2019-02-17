@@ -4,8 +4,10 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import za.co.no9.sle.Location
-import za.co.no9.sle.QString
-import za.co.no9.sle.typing.*
+import za.co.no9.sle.typing.TArr
+import za.co.no9.sle.typing.TCon
+import za.co.no9.sle.typing.TRec
+import za.co.no9.sle.typing.TVar
 
 private val gson =
         GsonBuilder().setPrettyPrinting().create()
@@ -22,6 +24,7 @@ fun fromJsonString(input: String): Export {
                     Variable(type["variable"].asInt)
 
                 type.has("constant") -> {
+                    println(type)
                     val constant =
                             type["constant"].asString
 
@@ -36,7 +39,7 @@ fun fromJsonString(input: String): Export {
                         val field =
                                 it.asJsonObject
 
-                        Field(field["name"].asString, jsonToType(type["type"].asJsonObject))
+                        Field(field["name"].asString, jsonToType(field["type"].asJsonObject))
                     })
             }
 
@@ -149,11 +152,6 @@ data class Variable(val variable: Int) : Type() {
 data class Constant(val constant: String, val arguments: List<Type>) : Type() {
     override fun asType(location: Location): za.co.no9.sle.typing.Type =
             TCon(location, constant, arguments.map { it.asType(location) })
-}
-
-data class Alias(val constant: QString, val arguments: List<Type>) : Type() {
-    override fun asType(location: Location): za.co.no9.sle.typing.Type =
-            TAlias(location, constant, arguments.map { it.asType(location) })
 }
 
 data class Arrow(val domain: Type, val range: Type) : Type() {
