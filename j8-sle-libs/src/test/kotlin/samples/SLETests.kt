@@ -1,10 +1,8 @@
 package samples
 
-import io.kotlintest.matchers.boolean.shouldBeTrue
 import io.kotlintest.specs.AbstractFunSpec
 import io.kotlintest.specs.FunSpec
 import za.co.no9.sle.tools.test.Repository
-import za.co.no9.sle.tools.test.TestEvents
 import za.co.no9.sle.tools.test.runTests
 import java.io.File
 
@@ -39,25 +37,5 @@ fun runner(test: AbstractFunSpec) {
     val repository =
             Repository(rootDirectory, File(rootDirectory, "../../../target/generated-sources/sle/java"))
 
-    runTests(repository, testRoot, ReportTestResults(test))
-}
-
-
-class ReportTestResults(val root: AbstractFunSpec) : TestEvents {
-    var names =
-            listOf<String>()
-
-    override fun openDescription(name: String) {
-        names += name
-    }
-
-    override fun closeDescription() {
-        names = names.dropLast(1)
-    }
-
-    override fun test(name: String, result: Boolean) {
-        root.test(names.joinToString(":") + ":" + name) {
-            result.shouldBeTrue()
-        }
-    }
+    runTests("file.tools.test.Runner", repository, testRoot)
 }

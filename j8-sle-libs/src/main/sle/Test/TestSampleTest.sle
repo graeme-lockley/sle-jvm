@@ -1,0 +1,19 @@
+export
+  suite
+
+
+import file:./Unit
+import file:../Data/Bitwise
+
+
+suite =
+  Unit.suite "Data.Bitwise"
+    [ Unit.suite "and"
+        [ Unit.constant "and with 32 bit integers" <| Bitwise.and 5 3 == 1
+        , Unit.constant "and with 0 as first argument" <| Bitwise.and 0 1450 == 0
+        ]
+    , Unit.suite "or"
+        [ Unit.constant "or with 32 bit integers" <| Bitwise.or 9 14 == 15
+        , Unit.constant "or with 0 as first argument" <| Bitwise.or 0 843 == 843
+        ]
+    ]

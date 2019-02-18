@@ -2,4 +2,4 @@
 
 export PROJECT_ROOT=`dirname $0`/../
 
-java -classpath $PROJECT_ROOT/j8-runtime/target/j8-runtime-1.0-SNAPSHOT.jar:$PROJECT_ROOT/j8-tools/target/j8-tools-1.0-SNAPSHOT.jar:$HOME/.sle za.co.no9.sle.tools.test.MainKt $*
+java -classpath $PROJECT_ROOT/j8-runtime/target/j8-runtime-1.0-SNAPSHOT.jar:$PROJECT_ROOT/j8-tools/target/j8-tools-1.0-SNAPSHOT.jar:$HOME/.sle za.co.no9.sle.tools.test.MainKt --runner file.users.graemelockley.projects.slejvm.j8slelibs.src.main.sle.tools.test.Runner $*

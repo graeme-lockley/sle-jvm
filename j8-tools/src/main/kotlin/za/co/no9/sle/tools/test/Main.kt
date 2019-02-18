@@ -6,10 +6,12 @@ import com.xenomachina.argparser.InvalidArgumentException
 import com.xenomachina.argparser.default
 import com.xenomachina.argparser.mainBody
 import za.co.no9.sle.URN
+import za.co.no9.sle.actors.ActorRef
 import za.co.no9.sle.right
 import za.co.no9.sle.runtime.ActorUtil
 import za.co.no9.sle.tools.build.Item
 import java.io.File
+import java.util.function.Function
 
 
 class Arguments(parser: ArgParser) {
@@ -32,6 +34,10 @@ class Arguments(parser: ArgParser) {
     val source by parser
             .storing("-S", "--source", help = "source directory of files to compile")
             .default(File(".").absolutePath)
+
+    val runner by parser
+            .storing("-R", "--runner", help = "class name of test runner")
+            .default("file.tools.test.Runner")
 
     val tests by parser
             .positionalList("test files to run")
@@ -56,10 +62,10 @@ fun main(arguments: Array<String>) =
                         Repository(File(source), File(target))
 
                 if (tests.isEmpty()) {
-                    runTests(repository, File("."), PrintTestResults())
+                    runTests(runner, repository, File("."))
                 } else {
                     tests.forEach {
-                        runTests(repository, File(it), PrintTestResults())
+                        runTests(runner, repository, File(it))
                     }
                 }
 
@@ -69,25 +75,16 @@ fun main(arguments: Array<String>) =
         }
 
 
-interface TestEvents {
-    fun openDescription(name: String)
-    fun closeDescription()
-
-    fun test(name: String, result: Boolean)
-}
-
-
-
-fun runTests(repository: Repository, file: File, listener: TestEvents) {
+fun runTests(runnerClassName: String, repository: Repository, file: File) {
     if (file.isDirectory) {
-        file.walk().filter { it.isFile }.filter { it.name.endsWith("Test.sle") }.map { URN(it) }.forEach { runTest(repository, it, listener) }
+        file.walk().filter { it.isFile }.filter { it.name.endsWith("Test.sle") }.map { URN(it) }.forEach { runTest(runnerClassName, repository, it) }
     } else {
-        runTest(repository, URN(file), listener)
+        runTest(runnerClassName, repository, URN(file))
     }
 }
 
 
-fun runTest(repository: Repository, urn: URN, listener: TestEvents) {
+fun runTest(runnerClassName: String, repository: Repository, urn: URN) {
     val item =
             repository.item(urn)
 
@@ -107,65 +104,26 @@ fun runTest(repository: Repository, urn: URN, listener: TestEvents) {
         val value =
                 field.get(null)
 
-        printResults(value as Array<*>, listener)
+        callTestRunner(runnerClassName, value)
     }
 }
 
 
-class PrintTestResults : TestEvents {
-    var indent =
-            0
+fun callTestRunner(runnerClassName: String, value: Any) {
+    val clazz =
+            Class.forName(runnerClassName)
 
-    override fun openDescription(name: String) {
-        println("  ".repeat(indent) + name)
-        indent += 1
-    }
+    if (value is ActorRef<*, *>) {
+        val field =
+                clazz.getField("addSuite")
 
-    override fun closeDescription() {
-        indent -= 1
-    }
+        (field.get(null) as Function<Any, Any>).apply(value)
 
-    override fun test(name: String, result: Boolean) {
-        if (result) {
-            println("  ".repeat(indent) + ANSI_GREEN + name + ANSI_RESET)
-        } else {
-            println("  ".repeat(indent) + ANSI_RED + name + ANSI_RESET)
-        }
-    }
-}
+    } else {
+        val field =
+                clazz.getField("addUnit")
 
-
-const val ANSI_RESET =
-        "\u001B[0m"
-
-const val ANSI_RED =
-        "\u001B[31m"
-
-const val ANSI_GREEN =
-        "\u001B[32m"
-
-
-fun printResults(value: Array<*>, listener: TestEvents) {
-    when {
-        value[0] == 0 -> {
-            listener.openDescription(value[1] as String)
-
-            var current =
-                    value[2] as Array<*>
-
-            while (current[0] == 1) {
-                printResults(current[1] as Array<*>, listener)
-                current = current[2] as Array<*>
-            }
-
-            listener.closeDescription()
-        }
-
-        value[2] as Boolean ->
-            listener.test(value[1] as String, true)
-
-        else ->
-            listener.test(value[1] as String, false)
+        (field.get(null) as Function<Any, Any>).apply(value)
     }
 }
 
