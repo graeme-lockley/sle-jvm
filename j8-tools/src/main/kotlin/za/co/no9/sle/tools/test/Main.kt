@@ -39,6 +39,10 @@ class Arguments(parser: ArgParser) {
             .storing("-R", "--runner", help = "class name of test runner")
             .default("file.tools.test.Runner")
 
+    val wait by parser
+            .counting("-w", "--wait", help = "duration in ms to wait for all actor messaging activity to subside before terminating tests")
+            .default(100)
+
     val tests by parser
             .positionalList("test files to run")
             .default(emptyList())
@@ -69,7 +73,8 @@ fun main(arguments: Array<String>) =
                     }
                 }
 
-                (ActorUtil.synchronousWait as java.util.function.Function<Int, Any>).apply(100)
+                (ActorUtil.synchronousWait as java.util.function.Function<Int, Any>).apply(wait)
+
                 System.exit(0)
             }
         }
