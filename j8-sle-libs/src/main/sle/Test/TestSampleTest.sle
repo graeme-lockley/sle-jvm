@@ -7,7 +7,7 @@ import file:../Data/Bitwise
 
 
 suite =
-  Unit.suite "Data.Bitwise"
+  Unit.suite "Sample.Data.Bitwise"
     [ Unit.suite "and"
         [ Unit.constant "and with 32 bit integers" <| Bitwise.and 5 3 == 1
         , Unit.constant "and with 0 as first argument" <| Bitwise.and 0 1450 == 0

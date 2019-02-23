@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
 public class ActorUtil {
-    private static Controller controller =
+    public static Controller controller =
             new Controller(10);
 
 
