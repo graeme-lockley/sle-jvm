@@ -1,6 +1,6 @@
 export suite
 
-import file:../Data//List
+import file:../Data/List
 import file:../Data/String as S
 import file:../Data/Option
 import file:../Text/Regex
