@@ -40,7 +40,7 @@ class Arguments(parser: ArgParser) {
             .default("file.tools.test.Runner")
 
     val wait by parser
-            .counting("-w", "--wait", help = "duration in ms to wait for all actor messaging activity to subside before terminating tests")
+            .storing("-w", "--wait", help = "duration in ms to wait for all actor messaging activity to subside before terminating tests")  { toInt() }
             .default(100)
 
     val tests by parser
